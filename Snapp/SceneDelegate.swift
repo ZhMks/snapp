@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Firebase
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
@@ -17,14 +18,14 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let windowScene = (scene as? UIWindowScene) else { return }
 
         let window = UIWindow(windowScene: windowScene)
-        let view = OnBoardingView()
-        let controller = OnBoardingVC(onboardingView: view)
+        let controller = ModuleBuilder.createModule()
         let navigationController = UINavigationController(rootViewController: controller)
         window.rootViewController = navigationController
 
         window.makeKeyAndVisible()
         
         self.window = window
+        FirebaseApp.configure()
 
     }
 
