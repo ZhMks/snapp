@@ -165,9 +165,9 @@ extension SecondOnboardingVC {
 
 extension SecondOnboardingVC: UITextFieldDelegate {
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        let fullstring = textField.text! + string
-        print(fullstring)
-        textField.text = StringFormatter.shared.phoneNumberFormat(string: fullstring, shouldRemoveLastDigit: range.length == 1)
-        return false
+        guard let text = textField.text else { return false }
+           let newString = (text as NSString).replacingCharacters(in: range, with: string)
+           textField.text = StringFormatter.shared.format(with: "+X (XXX) XXX-XXXX", phone: newString)
+           return false
     }
 }

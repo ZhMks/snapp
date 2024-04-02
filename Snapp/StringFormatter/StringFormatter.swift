@@ -15,37 +15,24 @@ final class StringFormatter {
     private init() {}
 
 
-    func phoneNumberFormat(string: String, shouldRemoveLastDigit: Bool) -> String {
+    func format(with mask: String, phone: String) -> String {
+        let numbers = phone.replacingOccurrences(of: "[^0-9]", with: "", options: .regularExpression)
+        var result = ""
+        var index = numbers.startIndex // numbers iterator
 
-        guard (shouldRemoveLastDigit && string.count <= 2)  else { return "+"}
-            let maxNumber = 11
-            let regex = try? NSRegularExpression(pattern: "[\\+\\s-\\(\\)]", options: .caseInsensitive)
-            let range = NSString(string: string).range(of: string)
+        // iterate over the mask characters until the iterator of numbers ends
+        for ch in mask where index < numbers.endIndex {
+            if ch == "X" {
+                // mask requires a number in this place, so take the next one
+                result.append(numbers[index])
 
-            guard var number = regex?.stringByReplacingMatches(in: string, range: range, withTemplate: "") else { return "" }
-            print(number)
+                // move numbers iterator to the next index
+                index = numbers.index(after: index)
 
-            if number.count > maxNumber {
-                let maxIndex = number.index(number.startIndex, offsetBy: maxNumber)
-                number = String(number[number.startIndex ..< maxIndex])
-            }
-
-            if shouldRemoveLastDigit {
-                let maxIndex = number.index(number.startIndex, offsetBy: number.count - 1)
-                number = String(number[number.startIndex ..< maxIndex])
-            }
-
-            let maxIndex = number.index(number.startIndex, offsetBy: number.count)
-            let regRange = number.startIndex ..< maxIndex
-
-            if number.count < 7 {
-              let pattern = "(\\d)(\\d{3})(\\d+))"
-               number = number.replacingOccurrences(of: pattern, with: "$1 ($2) $3", options: .regularExpression, range: regRange)
             } else {
-                let pattern = "(\\d)(\\d{3})(\\d{3})(\\d{2})(\\d+))"
-                number = number.replacingOccurrences(of: pattern, with: "$1 ($2) $3-$4-$5", options: .regularExpression, range: regRange)
+                result.append(ch) // just append a mask character
             }
-
-            return "+" + number
+        }
+        return result
     }
 }
