@@ -8,7 +8,7 @@
 import UIKit
 
 protocol MainViewProtocol: AnyObject {
-    func showSecondOnboardingVC(with number: String)
+    
 }
 
 protocol MainPresenterProtocol: AnyObject {
@@ -16,12 +16,10 @@ protocol MainPresenterProtocol: AnyObject {
 }
 
 final class Presenter: MainPresenterProtocol {
-    
+
     weak var view: MainViewProtocol?
 
     init(view: any MainViewProtocol) {
         self.view = view
     }
-    
-
 }

@@ -9,6 +9,8 @@ import UIKit
 
 class FirstBoardingVC: UIViewController {
 
+    var presener: MainPresenterProtocol!
+
     private lazy var onboardingImage: UIImageView = {
         let onboardingImage = UIImageView(image: UIImage(named: "OnboardingImage"))
         onboardingImage.translatesAutoresizingMaskIntoConstraints = false
@@ -22,6 +24,7 @@ class FirstBoardingVC: UIViewController {
         registerButton.setTitle(.localized(string: "Зарегестрироваться"), for: .normal)
         registerButton.setTitleColor(.systemBackground, for: .normal)
         registerButton.layer.cornerRadius = 10.0
+        registerButton.addTarget(self, action: #selector(showSecondOnboardingVC), for: .touchUpInside)
         return registerButton
     }()
 
@@ -33,8 +36,6 @@ class FirstBoardingVC: UIViewController {
         authorizeButton.setTitleColor(.black, for: .normal)
         return authorizeButton
     }()
-
-    var presener: MainPresenterProtocol!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -49,8 +50,9 @@ class FirstBoardingVC: UIViewController {
 
 extension FirstBoardingVC: MainViewProtocol {
 
-    func showSecondOnboardingVC(with number: String) {
-
+   @objc func showSecondOnboardingVC() {
+       let secondOnboardingVC = ModuleBuilder.createSecondOnboardingScreen()
+       navigationController?.pushViewController(secondOnboardingVC, animated: true)
     }
 
 }

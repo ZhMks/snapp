@@ -1,6 +1,57 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "Ваш номер будет использоваться для входа в аккаунт" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Your number will be used to login into account"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ваш номер будет использоваться для входа в аккаунт"
+          }
+        }
+      }
+    },
+    "Введите номер телефона" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enter your phone number"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Введите номер телефона"
+          }
+        }
+      }
+    },
+    "Далее" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Next"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Далее"
+          }
+        }
+      }
+    },
     "Зарегестрироваться" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -14,6 +65,23 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Зарегестрироваться"
+          }
+        }
+      }
+    },
+    "Нажимая кнопку “Далее” Вы принимаете пользовательское Соглашение и политику конфедициальности" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "By pressing the \"Next\" button you are accepting the User's Agreement and Policy of Confidential information"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Нажимая кнопку “Далее” Вы принимаете пользовательское Соглашение и политику конфедициальности"
           }
         }
       }

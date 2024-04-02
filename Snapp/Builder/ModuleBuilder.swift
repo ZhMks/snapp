@@ -8,17 +8,32 @@
 import UIKit
 
 protocol ModuleBuilderProtocol {
-   static func createModule() -> UIViewController
+   static func createFirstOnboardingScreen() -> UIViewController
+    static func createSecondOnboardingScreen() -> UIViewController
+    static func createThirdOnboardingScreen(with number: String) -> UIViewController
 }
 
 final class ModuleBuilder: ModuleBuilderProtocol {
 
-  static  func createModule() -> UIViewController {
+  static  func createFirstOnboardingScreen() -> UIViewController {
         let controller = FirstBoardingVC()
         let presenter = Presenter(view: controller)
         controller.presener = presenter
         return controller
     }
 
+    static func createSecondOnboardingScreen() -> UIViewController {
+        let secondController = SecondOnboardingVC()
+        let presenter = SecondOnboardingPresenter(view: secondController)
+        secondController.presenter = presenter
+        return secondController
+    }
+
+    static func createThirdOnboardingScreen(with number: String) -> UIViewController {
+        let thirdOnboardingController = ThirdOnboardingViewController(number: number)
+        let presenter = ThirdOnboardingPresenter(view: thirdOnboardingController)
+        thirdOnboardingController.presenter = presenter
+        return thirdOnboardingController
+    }
 
 }
