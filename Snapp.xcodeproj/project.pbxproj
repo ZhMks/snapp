@@ -53,6 +53,8 @@
 		B211C26C2BBC404C00C073EE /* ThirdOnboardingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B211C26B2BBC404C00C073EE /* ThirdOnboardingViewController.swift */; };
 		B211C26E2BBC405A00C073EE /* ThirdOnboardingPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B211C26D2BBC405900C073EE /* ThirdOnboardingPresenter.swift */; };
 		B211C2712BBC4C1700C073EE /* StringFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B211C2702BBC4C1700C073EE /* StringFormatter.swift */; };
+		B211C2742BBC6A1000C073EE /* LoginScreenViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B211C2732BBC6A1000C073EE /* LoginScreenViewController.swift */; };
+		B211C2762BBC6A1D00C073EE /* LoginScreenPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B211C2752BBC6A1D00C073EE /* LoginScreenPresenter.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -97,6 +99,8 @@
 		B211C26B2BBC404C00C073EE /* ThirdOnboardingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThirdOnboardingViewController.swift; sourceTree = "<group>"; };
 		B211C26D2BBC405900C073EE /* ThirdOnboardingPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThirdOnboardingPresenter.swift; sourceTree = "<group>"; };
 		B211C2702BBC4C1700C073EE /* StringFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringFormatter.swift; sourceTree = "<group>"; };
+		B211C2732BBC6A1000C073EE /* LoginScreenViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginScreenViewController.swift; sourceTree = "<group>"; };
+		B211C2752BBC6A1D00C073EE /* LoginScreenPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginScreenPresenter.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -176,9 +180,7 @@
 			isa = PBXGroup;
 			children = (
 				B211C26F2BBC4C0A00C073EE /* StringFormatter */,
-				B211C21A2BBB3CC900C073EE /* FirstBoardingScreen */,
-				B211C2652BBC2ED800C073EE /* SecondOnboardingScreen */,
-				B211C26A2BBC402E00C073EE /* ThirdOnboardingScreen */,
+				B211C2772BBC6B7F00C073EE /* OnboardingModule */,
 				B211C21F2BBBF26500C073EE /* Builder */,
 				B211C2622BBC17AA00C073EE /* Extension+String */,
 				B211C1E72BBB3C2900C073EE /* AppDelegate.swift */,
@@ -258,6 +260,26 @@
 				B211C2702BBC4C1700C073EE /* StringFormatter.swift */,
 			);
 			path = StringFormatter;
+			sourceTree = "<group>";
+		};
+		B211C2722BBC69F800C073EE /* LoginScreen */ = {
+			isa = PBXGroup;
+			children = (
+				B211C2732BBC6A1000C073EE /* LoginScreenViewController.swift */,
+				B211C2752BBC6A1D00C073EE /* LoginScreenPresenter.swift */,
+			);
+			path = LoginScreen;
+			sourceTree = "<group>";
+		};
+		B211C2772BBC6B7F00C073EE /* OnboardingModule */ = {
+			isa = PBXGroup;
+			children = (
+				B211C2722BBC69F800C073EE /* LoginScreen */,
+				B211C21A2BBB3CC900C073EE /* FirstBoardingScreen */,
+				B211C2652BBC2ED800C073EE /* SecondOnboardingScreen */,
+				B211C26A2BBC402E00C073EE /* ThirdOnboardingScreen */,
+			);
+			path = OnboardingModule;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -435,7 +457,9 @@
 				B211C2712BBC4C1700C073EE /* StringFormatter.swift in Sources */,
 				B211C26E2BBC405A00C073EE /* ThirdOnboardingPresenter.swift in Sources */,
 				B211C21E2BBBEACA00C073EE /* OnBoardingPresenter.swift in Sources */,
+				B211C2762BBC6A1D00C073EE /* LoginScreenPresenter.swift in Sources */,
 				B211C2212BBBF27200C073EE /* ModuleBuilder.swift in Sources */,
+				B211C2742BBC6A1000C073EE /* LoginScreenViewController.swift in Sources */,
 				B211C26C2BBC404C00C073EE /* ThirdOnboardingViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

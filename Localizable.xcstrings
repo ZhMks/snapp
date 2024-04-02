@@ -35,6 +35,23 @@
         }
       }
     },
+    "Введите номер телефона для входа в приложение" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enter phone number to access the App"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Введите номер телефона для входа в приложение"
+          }
+        }
+      }
+    },
     "Далее" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -69,6 +86,23 @@
         }
       }
     },
+    "Мы отправили SMS с кодом на номер" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "We've send you an SMS-code on number"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Мы отправили SMS с кодом на номер"
+          }
+        }
+      }
+    },
     "Нажимая кнопку “Далее” Вы принимаете пользовательское Соглашение и политику конфедициальности" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -82,6 +116,40 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Нажимая кнопку “Далее” Вы принимаете пользовательское Соглашение и политику конфедициальности"
+          }
+        }
+      }
+    },
+    "Подтверждение регистрации" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Registration conform"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Подтверждение регистрации"
+          }
+        }
+      }
+    },
+    "С возвращением" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Welcome back"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "C возвращением"
           }
         }
       }

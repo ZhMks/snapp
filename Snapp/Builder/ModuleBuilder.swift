@@ -11,6 +11,7 @@ protocol ModuleBuilderProtocol {
    static func createFirstOnboardingScreen() -> UIViewController
     static func createSecondOnboardingScreen() -> UIViewController
     static func createThirdOnboardingScreen(with number: String) -> UIViewController
+    static func createLoginScreen() -> UIViewController
 }
 
 final class ModuleBuilder: ModuleBuilderProtocol {
@@ -36,4 +37,12 @@ final class ModuleBuilder: ModuleBuilderProtocol {
         return thirdOnboardingController
     }
 
+    static func createLoginScreen() -> UIViewController {
+        let loginScreenVC = LoginScreenViewController()
+        let presenter = LoginPresenter(view: loginScreenVC)
+        loginScreenVC.loginpresenter = presenter
+        return loginScreenVC
+    }
 }
+
+
