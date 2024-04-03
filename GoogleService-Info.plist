@@ -3,28 +3,28 @@
 <plist version="1.0">
 <dict>
 	<key>API_KEY</key>
-	<string>AIzaSyCbuO49iLOTmPy32ymqMvotFY6dgjhAKsg</string>
+	<string>AIzaSyBS3hKloYqFmVoK-aXByTKAWh0p28GWzAo</string>
 	<key>GCM_SENDER_ID</key>
-	<string>949639829321</string>
+	<string>195745639512</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
 	<string>ZhMks.Snapp</string>
 	<key>PROJECT_ID</key>
-	<string>vkproject-a2c95</string>
+	<string>snappproject-9ca98</string>
 	<key>STORAGE_BUCKET</key>
-	<string>vkproject-a2c95.appspot.com</string>
+	<string>snappproject-9ca98.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
-	<false/>
+	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
-	<false/>
+	<false></false>
 	<key>IS_APPINVITE_ENABLED</key>
-	<true/>
+	<true></true>
 	<key>IS_GCM_ENABLED</key>
-	<true/>
+	<true></true>
 	<key>IS_SIGNIN_ENABLED</key>
-	<true/>
+	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:949639829321:ios:5a49b94164b7f2a351ac98</string>
+	<string>1:195745639512:ios:b70c1cdeedb15f0c5f2e2d</string>
 </dict>
 </plist>

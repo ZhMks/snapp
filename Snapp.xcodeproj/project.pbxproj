@@ -18,7 +18,6 @@
 		B211C20E2BBB3C2A00C073EE /* SnappUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B211C20D2BBB3C2A00C073EE /* SnappUITestsLaunchTests.swift */; };
 		B211C21E2BBBEACA00C073EE /* OnBoardingPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B211C21D2BBBEACA00C073EE /* OnBoardingPresenter.swift */; };
 		B211C2212BBBF27200C073EE /* ModuleBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = B211C2202BBBF27200C073EE /* ModuleBuilder.swift */; };
-		B211C2232BBC0E9500C073EE /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = B211C2222BBC0E9500C073EE /* GoogleService-Info.plist */; };
 		B211C2262BBC0F3000C073EE /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = B211C2252BBC0F3000C073EE /* FirebaseAnalytics */; };
 		B211C2282BBC0F3000C073EE /* FirebaseAnalyticsOnDeviceConversion in Frameworks */ = {isa = PBXBuildFile; productRef = B211C2272BBC0F3000C073EE /* FirebaseAnalyticsOnDeviceConversion */; };
 		B211C22A2BBC0F3000C073EE /* FirebaseAnalyticsSwift in Frameworks */ = {isa = PBXBuildFile; productRef = B211C2292BBC0F3000C073EE /* FirebaseAnalyticsSwift */; };
@@ -55,6 +54,11 @@
 		B211C2712BBC4C1700C073EE /* StringFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B211C2702BBC4C1700C073EE /* StringFormatter.swift */; };
 		B211C2742BBC6A1000C073EE /* LoginScreenViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B211C2732BBC6A1000C073EE /* LoginScreenViewController.swift */; };
 		B211C2762BBC6A1D00C073EE /* LoginScreenPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B211C2752BBC6A1D00C073EE /* LoginScreenPresenter.swift */; };
+		B211C27D2BBD321C00C073EE /* Validator.swift in Sources */ = {isa = PBXBuildFile; fileRef = B211C27C2BBD321C00C073EE /* Validator.swift */; };
+		B211C2802BBD3B2F00C073EE /* Extension+UIColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = B211C27F2BBD3B2F00C073EE /* Extension+UIColor.swift */; };
+		B211C2832BBD48EA00C073EE /* FireBaseAuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B211C2822BBD48EA00C073EE /* FireBaseAuthService.swift */; };
+		B211C2872BBD494200C073EE /* FirebaseUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = B211C2862BBD494200C073EE /* FirebaseUser.swift */; };
+		B211C2892BBD558000C073EE /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = B211C2882BBD558000C073EE /* GoogleService-Info.plist */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -90,7 +94,6 @@
 		B211C20D2BBB3C2A00C073EE /* SnappUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnappUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		B211C21D2BBBEACA00C073EE /* OnBoardingPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnBoardingPresenter.swift; sourceTree = "<group>"; };
 		B211C2202BBBF27200C073EE /* ModuleBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModuleBuilder.swift; sourceTree = "<group>"; };
-		B211C2222BBC0E9500C073EE /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		B211C25E2BBC178F00C073EE /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
 		B211C2602BBC179F00C073EE /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		B211C2632BBC17B900C073EE /* Extension+String.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Extension+String.swift"; sourceTree = "<group>"; };
@@ -101,6 +104,11 @@
 		B211C2702BBC4C1700C073EE /* StringFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringFormatter.swift; sourceTree = "<group>"; };
 		B211C2732BBC6A1000C073EE /* LoginScreenViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginScreenViewController.swift; sourceTree = "<group>"; };
 		B211C2752BBC6A1D00C073EE /* LoginScreenPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginScreenPresenter.swift; sourceTree = "<group>"; };
+		B211C27C2BBD321C00C073EE /* Validator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Validator.swift; sourceTree = "<group>"; };
+		B211C27F2BBD3B2F00C073EE /* Extension+UIColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Extension+UIColor.swift"; sourceTree = "<group>"; };
+		B211C2822BBD48EA00C073EE /* FireBaseAuthService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FireBaseAuthService.swift; sourceTree = "<group>"; };
+		B211C2862BBD494200C073EE /* FirebaseUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseUser.swift; sourceTree = "<group>"; };
+		B211C2882BBD558000C073EE /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -158,6 +166,7 @@
 		B211C1DB2BBB3C2900C073EE = {
 			isa = PBXGroup;
 			children = (
+				B211C2882BBD558000C073EE /* GoogleService-Info.plist */,
 				B211C25E2BBC178F00C073EE /* Localizable.xcstrings */,
 				B211C1E62BBB3C2900C073EE /* Snapp */,
 				B211C2002BBB3C2A00C073EE /* SnappTests */,
@@ -179,7 +188,8 @@
 		B211C1E62BBB3C2900C073EE /* Snapp */ = {
 			isa = PBXGroup;
 			children = (
-				B211C26F2BBC4C0A00C073EE /* StringFormatter */,
+				B211C2842BBD493300C073EE /* Model */,
+				B211C27A2BBD320900C073EE /* Services */,
 				B211C2772BBC6B7F00C073EE /* OnboardingModule */,
 				B211C21F2BBBF26500C073EE /* Builder */,
 				B211C2622BBC17AA00C073EE /* Extension+String */,
@@ -189,7 +199,6 @@
 				B211C1F52BBB3C2A00C073EE /* LaunchScreen.storyboard */,
 				B211C1F82BBB3C2A00C073EE /* Info.plist */,
 				B211C1F02BBB3C2900C073EE /* Snapp.xcdatamodeld */,
-				B211C2222BBC0E9500C073EE /* GoogleService-Info.plist */,
 			);
 			path = Snapp;
 			sourceTree = "<group>";
@@ -280,6 +289,57 @@
 				B211C26A2BBC402E00C073EE /* ThirdOnboardingScreen */,
 			);
 			path = OnboardingModule;
+			sourceTree = "<group>";
+		};
+		B211C27A2BBD320900C073EE /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				B211C2812BBD48DE00C073EE /* AuthService */,
+				B211C27E2BBD3B2100C073EE /* ColorCreator */,
+				B211C27B2BBD321000C073EE /* Validator */,
+				B211C26F2BBC4C0A00C073EE /* StringFormatter */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		B211C27B2BBD321000C073EE /* Validator */ = {
+			isa = PBXGroup;
+			children = (
+				B211C27C2BBD321C00C073EE /* Validator.swift */,
+			);
+			path = Validator;
+			sourceTree = "<group>";
+		};
+		B211C27E2BBD3B2100C073EE /* ColorCreator */ = {
+			isa = PBXGroup;
+			children = (
+				B211C27F2BBD3B2F00C073EE /* Extension+UIColor.swift */,
+			);
+			path = ColorCreator;
+			sourceTree = "<group>";
+		};
+		B211C2812BBD48DE00C073EE /* AuthService */ = {
+			isa = PBXGroup;
+			children = (
+				B211C2822BBD48EA00C073EE /* FireBaseAuthService.swift */,
+			);
+			path = AuthService;
+			sourceTree = "<group>";
+		};
+		B211C2842BBD493300C073EE /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				B211C2852BBD493800C073EE /* FirebaseUser */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		B211C2852BBD493800C073EE /* FirebaseUser */ = {
+			isa = PBXGroup;
+			children = (
+				B211C2862BBD494200C073EE /* FirebaseUser.swift */,
+			);
+			path = FirebaseUser;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -420,9 +480,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				B211C1F42BBB3C2A00C073EE /* Assets.xcassets in Resources */,
+				B211C2892BBD558000C073EE /* GoogleService-Info.plist in Resources */,
 				B211C25F2BBC178F00C073EE /* Localizable.xcstrings in Resources */,
 				B211C1F72BBB3C2A00C073EE /* Base in Resources */,
-				B211C2232BBC0E9500C073EE /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -454,6 +514,9 @@
 				B211C1E82BBB3C2900C073EE /* AppDelegate.swift in Sources */,
 				B211C1EA2BBB3C2900C073EE /* SceneDelegate.swift in Sources */,
 				B211C2692BBC2F0200C073EE /* SecondOnboardingPresenter.swift in Sources */,
+				B211C2832BBD48EA00C073EE /* FireBaseAuthService.swift in Sources */,
+				B211C2802BBD3B2F00C073EE /* Extension+UIColor.swift in Sources */,
+				B211C27D2BBD321C00C073EE /* Validator.swift in Sources */,
 				B211C2712BBC4C1700C073EE /* StringFormatter.swift in Sources */,
 				B211C26E2BBC405A00C073EE /* ThirdOnboardingPresenter.swift in Sources */,
 				B211C21E2BBBEACA00C073EE /* OnBoardingPresenter.swift in Sources */,
@@ -461,6 +524,7 @@
 				B211C2212BBBF27200C073EE /* ModuleBuilder.swift in Sources */,
 				B211C2742BBC6A1000C073EE /* LoginScreenViewController.swift in Sources */,
 				B211C26C2BBC404C00C073EE /* ThirdOnboardingViewController.swift in Sources */,
+				B211C2872BBD494200C073EE /* FirebaseUser.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
