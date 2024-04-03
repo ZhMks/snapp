@@ -68,15 +68,30 @@ class LoginScreenViewController: UIViewController {
 
     @objc func pushThirdController() {
         let number = phoneTextField.text ?? "Test Text"
-        let thirdController = ModuleBuilder.createThirdOnboardingScreen(with: number)
-        self.navigationController?.pushViewController(thirdController, animated: true)
+        if loginpresenter.checkPhone(number: number) {
+            if loginpresenter.authentificateUser(phone: number) {
+                DispatchQueue.main.async {
+                    let thirdController = ModuleBuilder.createThirdOnboardingScreen(with: number)
+                    self.navigationController?.pushViewController(thirdController, animated: true)
+                }
+            }
+        }
     }
 
 }
 
 // MARK: -PRESENTEROUTPUT
 
-extension LoginScreenViewController: LoginViewProtocol {}
+extension LoginScreenViewController: LoginViewProtocol {
+    func showAlert() {
+        let alertController = UIAlertController(title: .localized(string: "Ошибка"),
+                                                message: .localized(string: "Пожалуйста, введите номер в формате +7 ХХХ ХХХ ХХ ХХ"),
+                                                preferredStyle: .alert)
+        let alertAction = UIAlertAction(title: .localized(string: "Отмена"), style: .cancel)
+        alertController.addAction(alertAction)
+        navigationController?.present(alertController, animated: true)
+    }
+}
 
 //MARK: -LAYOUT
 
@@ -117,5 +132,17 @@ extension LoginScreenViewController {
 }
 
 extension LoginScreenViewController: UITextFieldDelegate {
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        guard let text = textField.text else { return false }
 
+        let newString = (text as NSString).replacingCharacters(in: range, with: string)
+
+        textField.text = StringFormatter.shared.format(with: "+X (XXX) XXX-XXXX", phone: newString)
+
+        if textField.text!.count > 16 {
+            NotificationCenter.default.post(name: NSNotification.Name("NumberFullFilled"), object: nil)
+        }
+
+        return false
+    }
 }
