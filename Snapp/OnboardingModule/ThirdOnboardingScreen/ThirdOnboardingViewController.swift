@@ -43,6 +43,11 @@ class ThirdOnboardingViewController: UIViewController {
         acceptCodeTextField.layer.borderColor = ColorCreator.shared.createButtonColor().cgColor
         acceptCodeTextField.layer.borderWidth = 1.0
         acceptCodeTextField.keyboardType = .numberPad
+        let centeredParagraphStyle = NSMutableParagraphStyle()
+        centeredParagraphStyle.alignment = .center
+
+        let attributedString = NSAttributedString(string: "___-___", attributes: [NSAttributedString.Key.paragraphStyle: centeredParagraphStyle])
+        acceptCodeTextField.attributedPlaceholder = attributedString
         return acceptCodeTextField
     }()
 

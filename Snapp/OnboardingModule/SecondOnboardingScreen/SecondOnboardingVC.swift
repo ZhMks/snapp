@@ -52,6 +52,11 @@ final class SecondOnboardingVC: UIViewController {
         phoneTextField.layer.borderColor = ColorCreator.shared.createButtonColor().cgColor
         phoneTextField.layer.borderWidth = 1.0
         phoneTextField.keyboardType = .numberPad
+        let centeredParagraphStyle = NSMutableParagraphStyle()
+        centeredParagraphStyle.alignment = .center
+
+        let attributedString = NSAttributedString(string: "___-___-__", attributes: [NSAttributedString.Key.paragraphStyle: centeredParagraphStyle])
+        phoneTextField.attributedPlaceholder = attributedString
         phoneTextField.delegate = self
         return phoneTextField
     }()

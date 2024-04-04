@@ -8,11 +8,11 @@
 import UIKit
 
 class LoginScreenViewController: UIViewController {
-
+    
     // MARK: - PROPERTIES
-
+    
     var loginpresenter: LoginPresenter!
-
+    
     private lazy var greetingsLabel: UILabel = {
         let greetingsLabel = UILabel()
         greetingsLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -22,7 +22,7 @@ class LoginScreenViewController: UIViewController {
         greetingsLabel.textAlignment = .center
         return greetingsLabel
     }()
-
+    
     private lazy var mainTextLabel: UILabel = {
         let maintext = UILabel()
         maintext.translatesAutoresizingMaskIntoConstraints = false
@@ -33,7 +33,7 @@ class LoginScreenViewController: UIViewController {
         maintext.numberOfLines = 0
         return maintext
     }()
-
+    
     private lazy var phoneTextField: UITextField = {
         let phoneTextField = UITextField()
         phoneTextField.translatesAutoresizingMaskIntoConstraints = false
@@ -41,10 +41,16 @@ class LoginScreenViewController: UIViewController {
         phoneTextField.layer.borderColor = ColorCreator.shared.createButtonColor().cgColor
         phoneTextField.layer.borderWidth = 1.0
         phoneTextField.keyboardType = .numberPad
+        let centeredParagraphStyle = NSMutableParagraphStyle()
+        centeredParagraphStyle.alignment = .center
+        
+        let attributedString = NSAttributedString(string: "___-___-__", attributes: [NSAttributedString.Key.paragraphStyle: centeredParagraphStyle])
+        
+        phoneTextField.attributedPlaceholder = attributedString
         phoneTextField.delegate = self
         return phoneTextField
     }()
-
+    
     private lazy var nextButton: UIButton = {
         let nextButton = UIButton(type: .system)
         nextButton.backgroundColor = UIColor(named: "ButtonColor")
@@ -56,9 +62,9 @@ class LoginScreenViewController: UIViewController {
         nextButton.addTarget(self, action: #selector(pushThirdController), for: .touchUpInside)
         return nextButton
     }()
-
+    
     // MARK: -LIFECYCLE
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
@@ -66,7 +72,7 @@ class LoginScreenViewController: UIViewController {
         layout()
         navigationItem.hidesBackButton = true
     }
-
+    
     @objc func pushThirdController() {
         let number = phoneTextField.text ?? "Test Text"
         if loginpresenter.checkPhone(number: number) {
@@ -78,7 +84,7 @@ class LoginScreenViewController: UIViewController {
             }
         }
     }
-
+    
 }
 
 // MARK: -PRESENTEROUTPUT
@@ -103,31 +109,31 @@ extension LoginScreenViewController {
         view.addSubview(phoneTextField)
         view.addSubview(nextButton)
     }
-
+    
     private func layout() {
         let safeArea = view.safeAreaLayoutGuide
-
+        
         NSLayoutConstraint.activate([
             greetingsLabel.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: 177),
             greetingsLabel.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 109),
             greetingsLabel.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -110),
             greetingsLabel.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor, constant: -531),
-
+            
             mainTextLabel.topAnchor.constraint(equalTo: greetingsLabel.bottomAnchor, constant: 26),
             mainTextLabel.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 98),
             mainTextLabel.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -98),
             mainTextLabel.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor, constant: -465),
-
+            
             phoneTextField.topAnchor.constraint(equalTo: mainTextLabel.bottomAnchor, constant: 12),
             phoneTextField.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 57),
             phoneTextField.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -58),
             phoneTextField.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor, constant: -405),
-
+            
             nextButton.topAnchor.constraint(equalTo: phoneTextField.bottomAnchor, constant: 148),
             nextButton.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 93),
             nextButton.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -94),
             nextButton.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor, constant: -210)
-
+            
         ])
     }
 }
@@ -135,15 +141,15 @@ extension LoginScreenViewController {
 extension LoginScreenViewController: UITextFieldDelegate {
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         guard let text = textField.text else { return false }
-
+        
         let newString = (text as NSString).replacingCharacters(in: range, with: string)
-
+        
         textField.text = StringFormatter.shared.format(with: "+X (XXX) XXX-XXXX", phone: newString)
-
+        
         if textField.text!.count > 16 {
             NotificationCenter.default.post(name: NSNotification.Name("NumberFullFilled"), object: nil)
         }
-
+        
         return false
     }
 }

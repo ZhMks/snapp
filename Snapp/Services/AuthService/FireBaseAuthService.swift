@@ -11,7 +11,7 @@ import FirebaseAuth
 protocol FireBaseAuthProtocol {
     var verificationID: String? { get set }
     func signUpUser(phone: String, completion: @escaping (Bool) -> Void)
-    func verifyCode(code: String, completion: @escaping (Result<FirebaseUser, Error>) -> Void)
+    func verifyCode(code: String, completion: @escaping (Result<User, Error>) -> Void)
 }
 
 final class FireBaseAuthService: FireBaseAuthProtocol {
@@ -26,7 +26,6 @@ final class FireBaseAuthService: FireBaseAuthProtocol {
 
             if let verificationID = verificationID {
                 self?.verificationID = verificationID
-                print(verificationID)
                 completion(true)
             }
         }
