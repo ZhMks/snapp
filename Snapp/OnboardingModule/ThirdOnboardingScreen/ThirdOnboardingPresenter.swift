@@ -14,7 +14,7 @@ func showAlert()
 
 protocol ThirdOnboardingPresenterProtocol: AnyObject {
     init (view: ThirdOnboardingViewProtocol, authService: FireBaseAuthService)
-    func checkCode(code: String) -> Bool
+    func checkCode(code: String, completion: @escaping (Result<FirebaseUser,Error>) -> Void)
 }
 
 final class ThirdOnboardingPresenter: ThirdOnboardingPresenterProtocol {
@@ -27,12 +27,16 @@ final class ThirdOnboardingPresenter: ThirdOnboardingPresenterProtocol {
         self.authService = authService
     }
 
-    func checkCode(code: String) -> Bool {
+    func checkCode(code: String, completion: @escaping (Result<FirebaseUser,Error>) -> Void) {
         authService.verifyCode(code: code) { [weak self] result in
-            if !result {
+            switch result {
+            case .success(let success):
+                let user = FirebaseUser(user: success)
+                completion(.success(user))
+            case .failure(let failure):
+                completion(.failure(failure))
                 self?.view?.showAlert()
             }
         }
-        return true
     }
 }

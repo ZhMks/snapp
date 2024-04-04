@@ -11,7 +11,7 @@ import FirebaseAuth
 protocol FireBaseAuthProtocol {
     var verificationID: String? { get set }
     func signUpUser(phone: String, completion: @escaping (Bool) -> Void)
-    func verifyCode(code: String, completion: @escaping (Bool) -> Void)
+    func verifyCode(code: String, completion: @escaping (Result<FirebaseUser, Error>) -> Void)
 }
 
 final class FireBaseAuthService: FireBaseAuthProtocol {
@@ -32,20 +32,19 @@ final class FireBaseAuthService: FireBaseAuthProtocol {
         }
     }
 
-    func verifyCode(code: String, completion: @escaping (Bool) -> Void) {
+    func verifyCode(code: String, completion: @escaping (Result<User, Error>) -> Void) {
         guard let verificationID = verificationID else {
-            completion(false)
             return
         }
 
         let credential = PhoneAuthProvider.provider().credential(withVerificationID: verificationID , verificationCode: code)
 
         Auth.auth().signIn(with: credential) { result, error in
-            if error != nil {
-                completion(false)
+            if let error = error {
+                completion(.failure(error))
             }
-            if result != nil {
-                completion(true)
+            if let result = result {
+                completion(.success(result.user))
             }
         }
     }
