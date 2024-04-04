@@ -9,6 +9,8 @@ import UIKit
 
 class FirstBoardingVC: UIViewController {
 
+    // MARK: -PROPERTIES
+
     var presener: MainPresenterProtocol!
 
     private lazy var onboardingImage: UIImageView = {
@@ -40,12 +42,15 @@ class FirstBoardingVC: UIViewController {
         return authorizeButton
     }()
 
+    // MARK: -LIFECYCLE
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
         addSubviews()
         layout()
     }
+
+    // MARK: -FUNCS
 
     @objc func showSecondOnboardingVC() {
         let secondOnboardingVC = ModuleBuilder.createSecondOnboardingScreen()
@@ -59,11 +64,12 @@ class FirstBoardingVC: UIViewController {
     }
 }
 
-
+// MARK: -OUTPUT PRESENTER
 extension FirstBoardingVC: MainViewProtocol {
 
 }
 
+// MARK: -LAYOUT
 extension FirstBoardingVC {
     private func addSubviews() {
         view.addSubview(onboardingImage)
