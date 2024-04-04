@@ -7,8 +7,12 @@
 
 import UIKit
 
+protocol ValidatorProtocol {
+    func validatePhone(string: String) -> Bool
+}
 
-final class Validator {
+
+final class Validator: ValidatorProtocol {
 
     static let shared = Validator()
 

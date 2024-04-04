@@ -8,9 +8,15 @@
 import Foundation
 import FirebaseAuth
 
-final class FireBaseAuthService {
+protocol FireBaseAuthProtocol {
+    var verificationID: String? { get set }
+    func signUpUser(phone: String, completion: @escaping (Bool) -> Void)
+    func verifyCode(code: String, completion: @escaping (Bool) -> Void)
+}
 
-    private var verificationID: String?
+final class FireBaseAuthService: FireBaseAuthProtocol {
+
+    internal var verificationID: String?
 
     func signUpUser(phone: String, completion: @escaping (Bool) -> Void) {
         PhoneAuthProvider.provider().verifyPhoneNumber(phone, uiDelegate: nil) { [weak self] verificationID, error in

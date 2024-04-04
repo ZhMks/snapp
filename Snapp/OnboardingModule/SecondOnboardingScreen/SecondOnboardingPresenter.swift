@@ -14,7 +14,7 @@ protocol SecondOnboardingViewProtocol: AnyObject {
 }
 
 protocol SecondOnboardingPresenterProtocol: AnyObject {
-    init (view: SecondOnboardingViewProtocol, authService: FireBaseAuthService)
+    init (view: SecondOnboardingViewProtocol, authService: FireBaseAuthProtocol)
     func validateText(phone: String) -> Bool
     func authentificateUser(phone: String) -> Bool
 }
@@ -22,9 +22,9 @@ protocol SecondOnboardingPresenterProtocol: AnyObject {
 final class SecondOnboardingPresenter: SecondOnboardingPresenterProtocol {
 
     weak var view: SecondOnboardingViewProtocol?
-    var authService: FireBaseAuthService
+    var authService: FireBaseAuthProtocol
 
-    init(view: any SecondOnboardingViewProtocol, authService: FireBaseAuthService) {
+    init(view: any SecondOnboardingViewProtocol, authService: FireBaseAuthProtocol) {
         self.view = view
         self.authService = authService
     }

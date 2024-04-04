@@ -49,6 +49,7 @@ class LoginScreenViewController: UIViewController {
         let nextButton = UIButton(type: .system)
         nextButton.backgroundColor = UIColor(named: "ButtonColor")
         nextButton.translatesAutoresizingMaskIntoConstraints = false
+        nextButton.titleLabel?.font = UIFont(name: "Inter-Black", size: 10)
         nextButton.setTitle(.localized(string: "Подтвердить"), for: .normal)
         nextButton.setTitleColor(.systemBackground, for: .normal)
         nextButton.layer.cornerRadius = 10.0

@@ -24,6 +24,7 @@ class FirstBoardingVC: UIViewController {
         registerButton.setTitle(.localized(string: "Зарегестрироваться"), for: .normal)
         registerButton.setTitleColor(.systemBackground, for: .normal)
         registerButton.layer.cornerRadius = 10.0
+        registerButton.titleLabel?.font = UIFont(name: "Inter-Medium", size: 16)
         registerButton.addTarget(self, action: #selector(showSecondOnboardingVC), for: .touchUpInside)
         return registerButton
     }()
@@ -35,6 +36,7 @@ class FirstBoardingVC: UIViewController {
         authorizeButton.setTitle(.localized(string: "Уже есть аккаунт"), for: .normal)
         authorizeButton.setTitleColor(ColorCreator.shared.createTextColor(), for: .normal)
         authorizeButton.addTarget(self, action: #selector(showLoginScreen), for: .touchUpInside)
+        authorizeButton.titleLabel?.font = UIFont(name: "Inter-Medium", size: 14)
         return authorizeButton
     }()
 

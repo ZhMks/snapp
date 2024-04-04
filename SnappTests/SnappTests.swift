@@ -7,32 +7,84 @@
 
 import XCTest
 @testable import Snapp
+@testable import FirebaseAuth
+
+class MockView: SecondOnboardingViewProtocol {
+    func showAlert() {
+    }
+}
+
+class MockValidator: ValidatorProtocol {
+    func validatePhone(string: String) -> Bool {
+        if string.contains("+7") {
+            return true
+        }
+        return false
+    }
+}
+
+class MocFireBaseAuthService: FireBaseAuthProtocol {
+
+    var verificationID: String?
+    
+    func signUpUser(phone: String, completion: @escaping (Bool) -> Void) {
+        Auth.auth().settings?.isAppVerificationDisabledForTesting = true
+        PhoneAuthProvider.provider().verifyPhoneNumber(phone, uiDelegate: nil) { verificationID, error in
+            if let _ = error {
+                completion(false)
+            }
+            if let _ = verificationID {
+                completion(true)
+            }
+        }
+    }
+    
+    func verifyCode(code: String, completion: @escaping (Bool) -> Void) {
+        Auth.auth().settings?.isAppVerificationDisabledForTesting = true
+        let verificationID = ""
+        let credential = PhoneAuthProvider.provider().credential(withVerificationID: verificationID, verificationCode: code)
+        Auth.auth().signIn(with: credential) { authData, error in
+            if let _ = error {
+                completion(false)
+            }
+            if let _ = authData {
+                completion(true)
+            }
+        }
+    }
+    
+
+}
 
 final class SnappTests: XCTestCase {
 
-    
+    var view: SecondOnboardingViewProtocol!
+    var validator: ValidatorProtocol!
+    var presenter: SecondOnboardingPresenterProtocol!
+    var authService: FireBaseAuthProtocol!
 
     override func setUpWithError() throws {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
+        view = MockView()
+        validator = MockValidator()
+        authService = MocFireBaseAuthService()
+        presenter = SecondOnboardingPresenter(view: view, authService: authService)
     }
 
     override func tearDownWithError() throws {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
+        view = nil
+        validator = nil
     }
 
-    func testExample() throws {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
-        // Any test you write for XCTest can be annotated as throws and async.
-        // Mark your test throws to produce an unexpected failure when your test encounters an uncaught error.
-        // Mark your test async to allow awaiting for asynchronous code to complete. Check the results with assertions afterwards.
+    func testRightString() throws {
+        let string = "+71651829830"
+        let expression = validator.validatePhone(string: string)
+        XCTAssertTrue(expression)
     }
 
-    func testPerformanceExample() throws {
-        // This is an example of a performance test case.
-        self.measure {
-            // Put the code you want to measure the time of here.
-        }
+    func testWrongString() throws {
+        let string = "899022124"
+        let expression = validator.validatePhone(string: string)
+        XCTAssertFalse(expression)
     }
 
 }

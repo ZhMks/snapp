@@ -17,9 +17,9 @@ final class SecondOnboardingVC: UIViewController {
     private lazy var mainTitle: UILabel = {
         let mainTitle = UILabel()
         mainTitle.translatesAutoresizingMaskIntoConstraints = false
-        mainTitle.text = .localized(string: "Зарегестрироваться")
+        mainTitle.text = .localized(string: "ЗАРЕГЕСТРИРОВАТЬСЯ")
         mainTitle.textColor = ColorCreator.shared.createTextColor()
-        mainTitle.font = UIFont.systemFont(ofSize: 18)
+        mainTitle.font = UIFont(name: "Inter-Medium", size: 18)
         mainTitle.textAlignment = .center
         return mainTitle
     }()
@@ -29,8 +29,8 @@ final class SecondOnboardingVC: UIViewController {
         enterPhoneTitle.translatesAutoresizingMaskIntoConstraints = false
         enterPhoneTitle.textColor = .systemGray2
         enterPhoneTitle.textAlignment = .center
-        enterPhoneTitle.font = UIFont.systemFont(ofSize: 16)
-        enterPhoneTitle.text = .localized(string: "Введите номер телефона")
+        enterPhoneTitle.font = UIFont(name: "Inter-Light", size: 16)
+        enterPhoneTitle.text = .localized(string: "Введите номер")
         return enterPhoneTitle
     }()
 
@@ -40,7 +40,7 @@ final class SecondOnboardingVC: UIViewController {
         phoneRequiresTitle.textColor = ColorCreator.shared.createTextColor()
         phoneRequiresTitle.textAlignment = .center
         phoneRequiresTitle.numberOfLines = 0
-        phoneRequiresTitle.font = UIFont.systemFont(ofSize: 12)
+        phoneRequiresTitle.font = UIFont(name: "Inter-Medium", size: 12)
         phoneRequiresTitle.text = .localized(string: "Ваш номер будет использоваться для входа в аккаунт")
         return phoneRequiresTitle
     }()
@@ -62,6 +62,7 @@ final class SecondOnboardingVC: UIViewController {
         nextButton.translatesAutoresizingMaskIntoConstraints = false
         nextButton.setTitle(.localized(string: "Далее"), for: .normal)
         nextButton.setTitleColor(.systemBackground, for: .normal)
+        nextButton.titleLabel?.font = UIFont(name: "Inter-Medium", size: 14)
         nextButton.layer.cornerRadius = 10.0
         nextButton.isEnabled = false
         nextButton.addTarget(self, action: #selector(pushThirdController), for: .touchUpInside)
@@ -73,7 +74,7 @@ final class SecondOnboardingVC: UIViewController {
         politicsTitle.translatesAutoresizingMaskIntoConstraints = false
         politicsTitle.numberOfLines = 0
         politicsTitle.textAlignment = .center
-        politicsTitle.font = UIFont.systemFont(ofSize: 12)
+        politicsTitle.font = UIFont(name: "Inter-Medium", size: 12)
         politicsTitle.textColor = .systemGray3
         politicsTitle.text = .localized(string: "Нажимая кнопку “Далее” Вы принимаете пользовательское Соглашение и политику конфедициальности")
         return politicsTitle

@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		B209E60B2BBEBCE50067D751 /* Inter-Black.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B209E60A2BBEBCE50067D751 /* Inter-Black.ttf */; };
+		B209E60D2BBEBCF00067D751 /* Inter-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B209E60C2BBEBCF00067D751 /* Inter-Bold.ttf */; };
+		B209E60F2BBEBD050067D751 /* Inter-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B209E60E2BBEBD050067D751 /* Inter-Light.ttf */; };
+		B209E6112BBEBD100067D751 /* Inter-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B209E6102BBEBD100067D751 /* Inter-Medium.ttf */; };
 		B211C1E82BBB3C2900C073EE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B211C1E72BBB3C2900C073EE /* AppDelegate.swift */; };
 		B211C1EA2BBB3C2900C073EE /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B211C1E92BBB3C2900C073EE /* SceneDelegate.swift */; };
 		B211C1EC2BBB3C2900C073EE /* OnBoardingVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = B211C1EB2BBB3C2900C073EE /* OnBoardingVC.swift */; };
@@ -79,6 +83,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		B209E60A2BBEBCE50067D751 /* Inter-Black.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Inter-Black.ttf"; sourceTree = "<group>"; };
+		B209E60C2BBEBCF00067D751 /* Inter-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Inter-Bold.ttf"; sourceTree = "<group>"; };
+		B209E60E2BBEBD050067D751 /* Inter-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Inter-Light.ttf"; sourceTree = "<group>"; };
+		B209E6102BBEBD100067D751 /* Inter-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Inter-Medium.ttf"; sourceTree = "<group>"; };
 		B211C1E42BBB3C2900C073EE /* Snapp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Snapp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B211C1E72BBB3C2900C073EE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		B211C1E92BBB3C2900C073EE /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -163,6 +171,17 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		B209E6092BBEBCB20067D751 /* Fonts */ = {
+			isa = PBXGroup;
+			children = (
+				B209E6102BBEBD100067D751 /* Inter-Medium.ttf */,
+				B209E60E2BBEBD050067D751 /* Inter-Light.ttf */,
+				B209E60C2BBEBCF00067D751 /* Inter-Bold.ttf */,
+				B209E60A2BBEBCE50067D751 /* Inter-Black.ttf */,
+			);
+			path = Fonts;
+			sourceTree = "<group>";
+		};
 		B211C1DB2BBB3C2900C073EE = {
 			isa = PBXGroup;
 			children = (
@@ -192,7 +211,6 @@
 				B211C27A2BBD320900C073EE /* Services */,
 				B211C2772BBC6B7F00C073EE /* OnboardingModule */,
 				B211C21F2BBBF26500C073EE /* Builder */,
-				B211C2622BBC17AA00C073EE /* Extension+String */,
 				B211C1E72BBB3C2900C073EE /* AppDelegate.swift */,
 				B211C1E92BBB3C2900C073EE /* SceneDelegate.swift */,
 				B211C1F32BBB3C2A00C073EE /* Assets.xcassets */,
@@ -294,6 +312,8 @@
 		B211C27A2BBD320900C073EE /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				B209E6092BBEBCB20067D751 /* Fonts */,
+				B211C2622BBC17AA00C073EE /* Extension+String */,
 				B211C2812BBD48DE00C073EE /* AuthService */,
 				B211C27E2BBD3B2100C073EE /* ColorCreator */,
 				B211C27B2BBD321000C073EE /* Validator */,
@@ -479,10 +499,14 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B209E60D2BBEBCF00067D751 /* Inter-Bold.ttf in Resources */,
 				B211C1F42BBB3C2A00C073EE /* Assets.xcassets in Resources */,
 				B211C2892BBD558000C073EE /* GoogleService-Info.plist in Resources */,
+				B209E60B2BBEBCE50067D751 /* Inter-Black.ttf in Resources */,
+				B209E6112BBEBD100067D751 /* Inter-Medium.ttf in Resources */,
 				B211C25F2BBC178F00C073EE /* Localizable.xcstrings in Resources */,
 				B211C1F72BBB3C2A00C073EE /* Base in Resources */,
+				B209E60F2BBEBD050067D751 /* Inter-Light.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -21,7 +21,7 @@ class ThirdOnboardingViewController: UIViewController {
         registrationAccept.text = .localized(string: "Подтверждение регистрации")
         registrationAccept.textAlignment = .center
         registrationAccept.textColor = .systemYellow
-        registrationAccept.font = UIFont.systemFont(ofSize: 18)
+        registrationAccept.font = UIFont(name: "Inter-Medium", size: 18)
         return registrationAccept
     }()
 
@@ -29,7 +29,7 @@ class ThirdOnboardingViewController: UIViewController {
         let informationText = UILabel()
         informationText.translatesAutoresizingMaskIntoConstraints = false
         informationText.text = .localized(string: "Мы отправили SMS с кодом на номер") + "     \(number)"
-        informationText.font = UIFont.systemFont(ofSize: 14)
+        informationText.font = UIFont(name: "Inter-Medium", size: 14)
         informationText.textColor = ColorCreator.shared.createTextColor()
         informationText.textAlignment = .center
         informationText.numberOfLines = 0
@@ -52,6 +52,7 @@ class ThirdOnboardingViewController: UIViewController {
         registerButton.setTitle(.localized(string: "Зарегестрироваться"), for: .normal)
         registerButton.setTitleColor(.systemBackground, for: .normal)
         registerButton.layer.cornerRadius = 10.0
+        registerButton.titleLabel?.font = UIFont(name: "Inter-Medium", size: 12)
         registerButton.translatesAutoresizingMaskIntoConstraints = false
         registerButton.addTarget(self, action: #selector(registerButtonTapped), for: .touchUpInside)
         return registerButton
@@ -102,7 +103,7 @@ class ThirdOnboardingViewController: UIViewController {
 // MARK: -OUTPUT PRESENTER
 extension ThirdOnboardingViewController: ThirdOnboardingViewProtocol {
     func showAlert() {
-        let alertController = UIAlertController(title: .localized(string: "ОШибка"), message: "Ошибка", preferredStyle: .alert)
+        let alertController = UIAlertController(title: .localized(string: "Ошибка"), message: "Ошибка", preferredStyle: .alert)
         let alertAction = UIAlertAction(title: "Ошибка", style: .cancel)
         alertController.addAction(alertAction)
         navigationController?.present(alertController, animated: true)
