@@ -8,10 +8,27 @@
 import Foundation
 import FirebaseAuth
 
+enum AuthorisationErrors: Error {
+    case invalidCredential
+    case operationNotAllowed
+    case userDisabled
+
+    var description: String {
+        switch self {
+        case .invalidCredential:
+            return .localized(string: "Учетная запись не действительна")
+        case .operationNotAllowed:
+            return .localized(string: "Учетная запись не включена. Обратитесь в службу поддержки.")
+        case .userDisabled:
+            return .localized(string: "Учетная запись отключена")
+        }
+    }
+}
+
 protocol FireBaseAuthProtocol {
     var verificationID: String? { get set }
     func signUpUser(phone: String, completion: @escaping (Bool) -> Void)
-    func verifyCode(code: String, completion: @escaping (Result<User, Error>) -> Void)
+    func verifyCode(code: String, completion: @escaping (Result<User, AuthorisationErrors>) -> Void)
     func logOut(completion: @escaping (Result<Void, Error>) -> Void)
 }
 
@@ -32,7 +49,7 @@ final class FireBaseAuthService: FireBaseAuthProtocol {
         }
     }
 
-    func verifyCode(code: String, completion: @escaping (Result<User, Error>) -> Void) {
+    func verifyCode(code: String, completion: @escaping (Result<User, AuthorisationErrors>) -> Void) {
         guard let verificationID = verificationID else {
             return
         }
@@ -41,7 +58,15 @@ final class FireBaseAuthService: FireBaseAuthProtocol {
 
         Auth.auth().signIn(with: credential) { result, error in
             if let error = error {
-                completion(.failure(error))
+                switch error.localizedDescription {
+                case "FIRAuthErrorCodeInvalidCredential":
+                    completion(.failure(.invalidCredential))
+                case "FIRAuthErrorCodeOperationNotAllowed":
+                    completion(.failure(.operationNotAllowed))
+                case "FIRAuthErrorCodeUserDisabled":
+                    completion(.failure(.userDisabled))
+                default: break
+                }
             }
             if let result = result {
                 completion(.success(result.user))
@@ -57,4 +82,6 @@ final class FireBaseAuthService: FireBaseAuthProtocol {
             completion(.failure(error))
         }
     }
+
+
 }

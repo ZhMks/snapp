@@ -143,6 +143,15 @@ extension SecondOnboardingVC: SecondOnboardingViewProtocol {
         alertController.addAction(alertAction)
         navigationController?.present(alertController, animated: true)
     }
+
+    func showAuthoriseErrorAlert() {
+        let alertController = UIAlertController(title: .localized(string: "Ошибка"),
+                                                message: .localized(string: "Ошибка авторизации пользователя"),
+                                                preferredStyle: .alert)
+        let alertAction = UIAlertAction(title: .localized(string: "Отмена"), style: .cancel)
+        alertController.addAction(alertAction)
+        navigationController?.present(alertController, animated: true)
+    }
 }
 
 // MARK: - LAYOUT

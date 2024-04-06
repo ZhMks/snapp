@@ -238,6 +238,57 @@
           }
         }
       }
+    },
+    "Учетная запись не включена. Обратитесь в службу поддержки." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Account not enabled. Contact Support."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Учетная запись не включена. Обратитесь в службу поддержки."
+          }
+        }
+      }
+    },
+    "Учетная запись не действительна" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Account is not valid"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Учетная запись не действительна"
+          }
+        }
+      }
+    },
+    "Учетная запись отключена" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Account is disabled"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Учетная запись отключена"
+          }
+        }
+      }
     }
   },
   "version" : "1.0"

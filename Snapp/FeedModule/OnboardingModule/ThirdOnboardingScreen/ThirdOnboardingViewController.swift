@@ -104,6 +104,7 @@ class ThirdOnboardingViewController: UIViewController {
                 DispatchQueue.main.async {
                     let feedController = FeedViewController()
                     let feedPresenter = FeedPresenter(view: feedController, user: success)
+                    feedController.presenter = feedPresenter
                     (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootViewController(feedController)
                 }
             case .failure(let failure):
@@ -117,8 +118,8 @@ class ThirdOnboardingViewController: UIViewController {
 
 // MARK: -OUTPUT PRESENTER
 extension ThirdOnboardingViewController: ThirdOnboardingViewProtocol {
-    func showAlert() {
-        let alertController = UIAlertController(title: .localized(string: "Ошибка"), message: "Ошибка", preferredStyle: .alert)
+    func showAlert(error: String) {
+        let alertController = UIAlertController(title: .localized(string: "Ошибка"), message: error, preferredStyle: .alert)
         let alertAction = UIAlertAction(title: "Ошибка", style: .cancel)
         alertController.addAction(alertAction)
         navigationController?.present(alertController, animated: true)

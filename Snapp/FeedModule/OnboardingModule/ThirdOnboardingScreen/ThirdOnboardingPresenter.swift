@@ -14,7 +14,7 @@ import FirebaseDatabase
 
 
 protocol ThirdOnboardingViewProtocol: AnyObject {
-func showAlert()
+    func showAlert(error: String)
 }
 
 protocol ThirdOnboardingPresenterProtocol: AnyObject {
@@ -42,7 +42,7 @@ final class ThirdOnboardingPresenter: ThirdOnboardingPresenterProtocol {
                 completion(.success(firebaseUser))
             case .failure(let failure):
                 completion(.failure(failure))
-                self?.view?.showAlert()
+                self?.view?.showAlert(error: failure.description)
             }
         }
     }
