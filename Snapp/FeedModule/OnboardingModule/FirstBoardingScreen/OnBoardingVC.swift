@@ -53,14 +53,19 @@ class FirstBoardingVC: UIViewController {
     // MARK: -FUNCS
 
     @objc func showSecondOnboardingVC() {
-        let secondOnboardingVC = ModuleBuilder.createSecondOnboardingScreen()
-        navigationController?.pushViewController(secondOnboardingVC, animated: true)
+        let authService = FireBaseAuthService()
+        let secondController = SecondOnboardingVC()
+        let presenter = SecondOnboardingPresenter(view: secondController, authService: authService)
+        secondController.presenter = presenter
+        navigationController?.pushViewController(secondController, animated: true)
      }
 
     @objc func showLoginScreen() {
-        let loginScreen = ModuleBuilder.createLoginScreen()
-        loginScreen.modalPresentationStyle = .fullScreen
-        navigationController?.pushViewController(loginScreen, animated: true)
+        let authService = FireBaseAuthService()
+        let loginScreenVC = LoginScreenViewController()
+        let presenter = LoginPresenter(view: loginScreenVC, authService: authService)
+        loginScreenVC.loginpresenter = presenter
+        navigationController?.pushViewController(loginScreenVC, animated: true)
     }
 }
 

@@ -6,6 +6,11 @@
 //
 
 import Foundation
+import FirebaseFirestore
+import FirebaseFirestoreSwift
+import FirebaseStorage
+import FirebaseAuth
+import FirebaseDatabase
 
 
 protocol ThirdOnboardingViewProtocol: AnyObject {
@@ -13,26 +18,28 @@ func showAlert()
 }
 
 protocol ThirdOnboardingPresenterProtocol: AnyObject {
-    init (view: ThirdOnboardingViewProtocol, authService: FireBaseAuthService)
+    var authService: FireBaseAuthProtocol? { get set }
+    init (view: ThirdOnboardingViewProtocol, authService: FireBaseAuthProtocol)
     func checkCode(code: String, completion: @escaping (Result<FirebaseUser,Error>) -> Void)
 }
 
 final class ThirdOnboardingPresenter: ThirdOnboardingPresenterProtocol {
 
     weak var view: ThirdOnboardingViewProtocol?
-    let authService: FireBaseAuthService
+    var authService: FireBaseAuthProtocol?
+    let firestore = Firestore.firestore()
 
-    init(view: any ThirdOnboardingViewProtocol, authService: FireBaseAuthService) {
+    init(view: any ThirdOnboardingViewProtocol, authService: FireBaseAuthProtocol) {
         self.view = view
         self.authService = authService
     }
 
     func checkCode(code: String, completion: @escaping (Result<FirebaseUser,Error>) -> Void) {
-        authService.verifyCode(code: code) { [weak self] result in
+        authService?.verifyCode(code: code) { [weak self] result in
             switch result {
             case .success(let success):
-                let user = FirebaseUser(user: success)
-                completion(.success(user))
+                let firebaseUser = FirebaseUser(user: success, name: "NewName", surname: "NewSurname", job: "NewJob")
+                completion(.success(firebaseUser))
             case .failure(let failure):
                 completion(.failure(failure))
                 self?.view?.showAlert()

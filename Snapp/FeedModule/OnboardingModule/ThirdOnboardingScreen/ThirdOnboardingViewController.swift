@@ -54,7 +54,7 @@ class ThirdOnboardingViewController: UIViewController {
     private lazy var registerButton: UIButton = {
         let registerButton = UIButton(type: .system)
         registerButton.backgroundColor = ColorCreator.shared.createButtonColor()
-        registerButton.setTitle(.localized(string: "Зарегестрироваться"), for: .normal)
+        registerButton.setTitle(.localized(string: "Подтвердить"), for: .normal)
         registerButton.setTitleColor(.systemBackground, for: .normal)
         registerButton.layer.cornerRadius = 10.0
         registerButton.titleLabel?.font = UIFont(name: "Inter-Medium", size: 12)
@@ -101,7 +101,11 @@ class ThirdOnboardingViewController: UIViewController {
         presenter.checkCode(code: text) { result in
             switch result {
             case .success(let success):
-                print(success)
+                DispatchQueue.main.async {
+                    let feedController = FeedViewController()
+                    let feedPresenter = FeedPresenter(view: feedController, user: success)
+                    (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootViewController(feedController)
+                }
             case .failure(let failure):
                 print(failure.localizedDescription)
             }
@@ -124,6 +128,7 @@ extension ThirdOnboardingViewController: ThirdOnboardingViewProtocol {
 // MARK: -LAYOUT
 
 extension ThirdOnboardingViewController {
+    
     private func addSubviews() {
         view.addSubview(registrationAccept)
         view.addSubview(informationText)
@@ -160,9 +165,9 @@ extension ThirdOnboardingViewController {
             checkMarkImage.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 145),
             checkMarkImage.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -144),
             checkMarkImage.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor, constant: -93)
-
         ])
     }
+
     private func tuneNavItem() {
         let backButton = UIBarButtonItem(image: UIImage(systemName: "arrow.left"), style: .plain, target: self, action: #selector(dismissController))
         backButton.tintColor = .black

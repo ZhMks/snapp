@@ -18,7 +18,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let windowScene = (scene as? UIWindowScene) else { return }
 
         let window = UIWindow(windowScene: windowScene)
-        let controller = ModuleBuilder.createFirstOnboardingScreen()
+        let controller = FirstBoardingVC()
+        let presenter = Presenter(view: controller)
+        controller.presener = presenter
         let navigationController = UINavigationController(rootViewController: controller)
         window.rootViewController = navigationController
 
@@ -60,6 +62,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         (UIApplication.shared.delegate as? AppDelegate)?.saveContext()
     }
 
+    func changeRootViewController(_ vc: UIViewController) {
+            guard let window = self.window else {
+                return
+            }
+            window.rootViewController = vc
+        }
 
 }
 

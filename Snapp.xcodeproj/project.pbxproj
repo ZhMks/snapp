@@ -11,6 +11,9 @@
 		B209E60D2BBEBCF00067D751 /* Inter-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B209E60C2BBEBCF00067D751 /* Inter-Bold.ttf */; };
 		B209E60F2BBEBD050067D751 /* Inter-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B209E60E2BBEBD050067D751 /* Inter-Light.ttf */; };
 		B209E6112BBEBD100067D751 /* Inter-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B209E6102BBEBD100067D751 /* Inter-Medium.ttf */; };
+		B209E6142BBFD6DA0067D751 /* FireStoreService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B209E6132BBFD6DA0067D751 /* FireStoreService.swift */; };
+		B209E6192BC138790067D751 /* FeedPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B209E6182BC138790067D751 /* FeedPresenter.swift */; };
+		B209E61B2BC139000067D751 /* FeedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B209E61A2BC139000067D751 /* FeedViewController.swift */; };
 		B211C1E82BBB3C2900C073EE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B211C1E72BBB3C2900C073EE /* AppDelegate.swift */; };
 		B211C1EA2BBB3C2900C073EE /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B211C1E92BBB3C2900C073EE /* SceneDelegate.swift */; };
 		B211C1EC2BBB3C2900C073EE /* OnBoardingVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = B211C1EB2BBB3C2900C073EE /* OnBoardingVC.swift */; };
@@ -21,7 +24,6 @@
 		B211C20C2BBB3C2A00C073EE /* SnappUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B211C20B2BBB3C2A00C073EE /* SnappUITests.swift */; };
 		B211C20E2BBB3C2A00C073EE /* SnappUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B211C20D2BBB3C2A00C073EE /* SnappUITestsLaunchTests.swift */; };
 		B211C21E2BBBEACA00C073EE /* OnBoardingPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B211C21D2BBBEACA00C073EE /* OnBoardingPresenter.swift */; };
-		B211C2212BBBF27200C073EE /* ModuleBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = B211C2202BBBF27200C073EE /* ModuleBuilder.swift */; };
 		B211C2262BBC0F3000C073EE /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = B211C2252BBC0F3000C073EE /* FirebaseAnalytics */; };
 		B211C2282BBC0F3000C073EE /* FirebaseAnalyticsOnDeviceConversion in Frameworks */ = {isa = PBXBuildFile; productRef = B211C2272BBC0F3000C073EE /* FirebaseAnalyticsOnDeviceConversion */; };
 		B211C22A2BBC0F3000C073EE /* FirebaseAnalyticsSwift in Frameworks */ = {isa = PBXBuildFile; productRef = B211C2292BBC0F3000C073EE /* FirebaseAnalyticsSwift */; };
@@ -87,6 +89,9 @@
 		B209E60C2BBEBCF00067D751 /* Inter-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Inter-Bold.ttf"; sourceTree = "<group>"; };
 		B209E60E2BBEBD050067D751 /* Inter-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Inter-Light.ttf"; sourceTree = "<group>"; };
 		B209E6102BBEBD100067D751 /* Inter-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Inter-Medium.ttf"; sourceTree = "<group>"; };
+		B209E6132BBFD6DA0067D751 /* FireStoreService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FireStoreService.swift; sourceTree = "<group>"; };
+		B209E6182BC138790067D751 /* FeedPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedPresenter.swift; sourceTree = "<group>"; };
+		B209E61A2BC139000067D751 /* FeedViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedViewController.swift; sourceTree = "<group>"; };
 		B211C1E42BBB3C2900C073EE /* Snapp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Snapp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B211C1E72BBB3C2900C073EE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		B211C1E92BBB3C2900C073EE /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -101,7 +106,6 @@
 		B211C20B2BBB3C2A00C073EE /* SnappUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnappUITests.swift; sourceTree = "<group>"; };
 		B211C20D2BBB3C2A00C073EE /* SnappUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnappUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		B211C21D2BBBEACA00C073EE /* OnBoardingPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnBoardingPresenter.swift; sourceTree = "<group>"; };
-		B211C2202BBBF27200C073EE /* ModuleBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModuleBuilder.swift; sourceTree = "<group>"; };
 		B211C25E2BBC178F00C073EE /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
 		B211C2602BBC179F00C073EE /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		B211C2632BBC17B900C073EE /* Extension+String.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Extension+String.swift"; sourceTree = "<group>"; };
@@ -182,6 +186,40 @@
 			path = Fonts;
 			sourceTree = "<group>";
 		};
+		B209E6122BBFD6C80067D751 /* FirestoreService */ = {
+			isa = PBXGroup;
+			children = (
+				B209E6132BBFD6DA0067D751 /* FireStoreService.swift */,
+			);
+			path = FirestoreService;
+			sourceTree = "<group>";
+		};
+		B209E6152BBFD7880067D751 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				B211C2622BBC17AA00C073EE /* Extension+String */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		B209E6162BC1384F0067D751 /* FeedModule */ = {
+			isa = PBXGroup;
+			children = (
+				B211C2772BBC6B7F00C073EE /* OnboardingModule */,
+				B209E6172BC1386C0067D751 /* FeedScreen */,
+			);
+			path = FeedModule;
+			sourceTree = "<group>";
+		};
+		B209E6172BC1386C0067D751 /* FeedScreen */ = {
+			isa = PBXGroup;
+			children = (
+				B209E6182BC138790067D751 /* FeedPresenter.swift */,
+				B209E61A2BC139000067D751 /* FeedViewController.swift */,
+			);
+			path = FeedScreen;
+			sourceTree = "<group>";
+		};
 		B211C1DB2BBB3C2900C073EE = {
 			isa = PBXGroup;
 			children = (
@@ -207,10 +245,10 @@
 		B211C1E62BBB3C2900C073EE /* Snapp */ = {
 			isa = PBXGroup;
 			children = (
+				B209E6162BC1384F0067D751 /* FeedModule */,
+				B209E6152BBFD7880067D751 /* Extensions */,
 				B211C2842BBD493300C073EE /* Model */,
 				B211C27A2BBD320900C073EE /* Services */,
-				B211C2772BBC6B7F00C073EE /* OnboardingModule */,
-				B211C21F2BBBF26500C073EE /* Builder */,
 				B211C1E72BBB3C2900C073EE /* AppDelegate.swift */,
 				B211C1E92BBB3C2900C073EE /* SceneDelegate.swift */,
 				B211C1F32BBB3C2A00C073EE /* Assets.xcassets */,
@@ -245,14 +283,6 @@
 				B211C21D2BBBEACA00C073EE /* OnBoardingPresenter.swift */,
 			);
 			path = FirstBoardingScreen;
-			sourceTree = "<group>";
-		};
-		B211C21F2BBBF26500C073EE /* Builder */ = {
-			isa = PBXGroup;
-			children = (
-				B211C2202BBBF27200C073EE /* ModuleBuilder.swift */,
-			);
-			path = Builder;
 			sourceTree = "<group>";
 		};
 		B211C2622BBC17AA00C073EE /* Extension+String */ = {
@@ -312,8 +342,8 @@
 		B211C27A2BBD320900C073EE /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				B209E6122BBFD6C80067D751 /* FirestoreService */,
 				B209E6092BBEBCB20067D751 /* Fonts */,
-				B211C2622BBC17AA00C073EE /* Extension+String */,
 				B211C2812BBD48DE00C073EE /* AuthService */,
 				B211C27E2BBD3B2100C073EE /* ColorCreator */,
 				B211C27B2BBD321000C073EE /* Validator */,
@@ -537,15 +567,17 @@
 				B211C2672BBC2EF700C073EE /* SecondOnboardingVC.swift in Sources */,
 				B211C1E82BBB3C2900C073EE /* AppDelegate.swift in Sources */,
 				B211C1EA2BBB3C2900C073EE /* SceneDelegate.swift in Sources */,
+				B209E6142BBFD6DA0067D751 /* FireStoreService.swift in Sources */,
 				B211C2692BBC2F0200C073EE /* SecondOnboardingPresenter.swift in Sources */,
 				B211C2832BBD48EA00C073EE /* FireBaseAuthService.swift in Sources */,
 				B211C2802BBD3B2F00C073EE /* Extension+UIColor.swift in Sources */,
+				B209E6192BC138790067D751 /* FeedPresenter.swift in Sources */,
 				B211C27D2BBD321C00C073EE /* Validator.swift in Sources */,
 				B211C2712BBC4C1700C073EE /* StringFormatter.swift in Sources */,
+				B209E61B2BC139000067D751 /* FeedViewController.swift in Sources */,
 				B211C26E2BBC405A00C073EE /* ThirdOnboardingPresenter.swift in Sources */,
 				B211C21E2BBBEACA00C073EE /* OnBoardingPresenter.swift in Sources */,
 				B211C2762BBC6A1D00C073EE /* LoginScreenPresenter.swift in Sources */,
-				B211C2212BBBF27200C073EE /* ModuleBuilder.swift in Sources */,
 				B211C2742BBC6A1000C073EE /* LoginScreenViewController.swift in Sources */,
 				B211C26C2BBC404C00C073EE /* ThirdOnboardingViewController.swift in Sources */,
 				B211C2872BBD494200C073EE /* FirebaseUser.swift in Sources */,

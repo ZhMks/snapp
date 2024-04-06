@@ -14,6 +14,7 @@ protocol SecondOnboardingViewProtocol: AnyObject {
 }
 
 protocol SecondOnboardingPresenterProtocol: AnyObject {
+    var authService: FireBaseAuthProtocol { get set }
     init (view: SecondOnboardingViewProtocol, authService: FireBaseAuthProtocol)
     func validateText(phone: String) -> Bool
     func authentificateUser(phone: String) -> Bool

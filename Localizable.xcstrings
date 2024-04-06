@@ -52,6 +52,23 @@
         }
       }
     },
+    "Войти" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Log in"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Войти"
+          }
+        }
+      }
+    },
     "Далее" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -150,23 +167,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ошибка"
-          }
-        }
-      }
-    },
-    "Подтвердить" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Accept"
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Подтвердить"
           }
         }
       }

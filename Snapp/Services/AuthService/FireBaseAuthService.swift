@@ -12,6 +12,7 @@ protocol FireBaseAuthProtocol {
     var verificationID: String? { get set }
     func signUpUser(phone: String, completion: @escaping (Bool) -> Void)
     func verifyCode(code: String, completion: @escaping (Result<User, Error>) -> Void)
+    func logOut(completion: @escaping (Result<Void, Error>) -> Void)
 }
 
 final class FireBaseAuthService: FireBaseAuthProtocol {
@@ -45,6 +46,15 @@ final class FireBaseAuthService: FireBaseAuthProtocol {
             if let result = result {
                 completion(.success(result.user))
             }
+        }
+    }
+
+    func logOut(completion: @escaping (Result<Void, any Error>) -> Void) {
+        do {
+            try Auth.auth().signOut()
+            completion(.success(()))
+        } catch {
+            completion(.failure(error))
         }
     }
 }

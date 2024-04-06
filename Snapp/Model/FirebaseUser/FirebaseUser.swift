@@ -10,4 +10,8 @@ import FirebaseAuth
 
 struct FirebaseUser {
     let user: User
+    let name: String
+    let surname: String
+    let job: String
+
 }

@@ -13,7 +13,8 @@ func showAlert()
 }
 
 protocol LoginPresenterProtocol: AnyObject {
-    init (view: LoginViewProtocol, authService: FireBaseAuthService)
+    var authService: FireBaseAuthProtocol? { get set }
+    init (view: LoginViewProtocol, authService: FireBaseAuthProtocol)
     func checkPhone(number: String) -> Bool
     func authentificateUser(phone: String) -> Bool
 }
@@ -21,9 +22,9 @@ protocol LoginPresenterProtocol: AnyObject {
 final class LoginPresenter: LoginPresenterProtocol {
 
     weak var view: LoginViewProtocol?
-    let authService: FireBaseAuthService
+    var authService: FireBaseAuthProtocol?
 
-    init(view: any LoginViewProtocol, authService: FireBaseAuthService) {
+    init(view: any LoginViewProtocol, authService: FireBaseAuthProtocol) {
         self.view = view
         self.authService = authService
    }
@@ -38,7 +39,7 @@ final class LoginPresenter: LoginPresenterProtocol {
 
     func authentificateUser(phone: String) -> Bool {
         print(phone)
-        authService.signUpUser(phone: phone, completion: { [weak self] success in
+        authService?.signUpUser(phone: phone, completion: { [weak self] success in
             if !success {
                 self?.view?.showAlert()
             }

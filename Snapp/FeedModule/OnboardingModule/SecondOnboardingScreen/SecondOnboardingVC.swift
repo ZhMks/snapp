@@ -110,16 +110,19 @@ final class SecondOnboardingVC: UIViewController {
         let number = phoneTextField.text ?? "Test Text"
         if presenter.validateText(phone: number) {
             if presenter.authentificateUser(phone: number) {
-                DispatchQueue.main.async {
-                    let thirdController = ModuleBuilder.createThirdOnboardingScreen(with: number)
-                    self.navigationController?.pushViewController(thirdController, animated: true)
+                DispatchQueue.main.async { [weak self] in
+                    guard let self else { return }
+                    let thirdController = ThirdOnboardingViewController(number: number)
+                    let thirdPresenter = ThirdOnboardingPresenter(view: thirdController, authService: presenter.authService)
+                    thirdController.presenter = thirdPresenter
+                    navigationController?.pushViewController(thirdController, animated: true)
                 }
             }
         }
     }
 
     @objc func changeStateOfButton() {
-        nextButton.backgroundColor = UIColor(named: "ButtonColor")
+        nextButton.backgroundColor = ColorCreator.shared.createButtonColor()
         nextButton.isEnabled = true
     }
 
