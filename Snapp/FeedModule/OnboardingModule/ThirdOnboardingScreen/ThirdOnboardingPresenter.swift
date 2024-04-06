@@ -38,6 +38,11 @@ final class ThirdOnboardingPresenter: ThirdOnboardingPresenterProtocol {
         authService?.verifyCode(code: code) { [weak self] result in
             switch result {
             case .success(let success):
+                print(success.uid)
+                self?.firestore.collection("Users").document("\(success.uid)").setData(["name": "jack", "surname" : "jaxon", "job" : "worker",
+                                                                                        "stories": ["firstStorie": "URL1", "SecondStorie": "URL2"],
+                                                                                        "subscribers" : ["firstSub": "URL1", "secondSub": "URL2"],
+                                                                                        "subscriptions" : ["firstSub": "URL1", "secondSub": "URL2"]])
                 let firebaseUser = FirebaseUser(user: success, name: "NewName", surname: "NewSurname", job: "NewJob")
                 completion(.success(firebaseUser))
             case .failure(let failure):
