@@ -3,4 +3,100 @@
    uuid = "6B03ED86-8579-4E5B-8EB3-AD77247CD6BA"
    type = "1"
    version = "2.0">
+   <Breakpoints>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "29742703-67BA-4764-AA7D-32BE9BCEDA22"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Snapp/Services/FirestoreService/FireStoreService.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "57"
+            endingLineNumber = "57"
+            landmarkName = "getPosts(user:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "F51A0BFC-6C54-4C91-BC0C-26150070DB6B"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Snapp/Services/FirestoreService/FireStoreService.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "52"
+            endingLineNumber = "52"
+            landmarkName = "getPosts(user:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "4841D576-F8A6-41A6-8B73-346E3EFE89EA"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Snapp/FeedModule/OnboardingModule/SecondOnboardingScreen/SecondOnboardingPresenter.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "46"
+            endingLineNumber = "46"
+            landmarkName = "authentificateUser(phone:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "9070160E-7261-4141-90ED-93C3680D3385"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Snapp/Services/AuthService/FireBaseAuthService.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "60"
+            endingLineNumber = "60"
+            landmarkName = "verifyCode(code:completion:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "9070160E-7261-4141-90ED-93C3680D3385 - 29fc9200ae620a11"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (Swift.Optional&lt;__C.FIRAuthDataResult&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in Snapp.FireBaseAuthService.verifyCode(code: Swift.String, completion: (Swift.Result&lt;__C.FIRUser, Snapp.AuthorisationErrors&gt;) -&gt; ()) -&gt; ()"
+                  moduleName = "Snapp"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/makszh/Desktop/Snapp/Snapp/Services/AuthService/FireBaseAuthService.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "60"
+                  endingLineNumber = "60">
+               </Location>
+               <Location
+                  uuid = "9070160E-7261-4141-90ED-93C3680D3385 - 29fc9200ae620a11"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (Swift.Optional&lt;__C.FIRAuthDataResult&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in Snapp.FireBaseAuthService.verifyCode(code: Swift.String, completion: (Swift.Result&lt;__C.FIRUser, Snapp.AuthorisationErrors&gt;) -&gt; ()) -&gt; ()"
+                  moduleName = "Snapp"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/makszh/Desktop/Snapp/Snapp/Services/AuthService/FireBaseAuthService.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "60"
+                  endingLineNumber = "60">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+   </Breakpoints>
 </Bucket>

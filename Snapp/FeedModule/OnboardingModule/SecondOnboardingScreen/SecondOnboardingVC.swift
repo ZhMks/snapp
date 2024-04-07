@@ -113,7 +113,8 @@ final class SecondOnboardingVC: UIViewController {
                 DispatchQueue.main.async { [weak self] in
                     guard let self else { return }
                     let thirdController = ThirdOnboardingViewController(number: number)
-                    let thirdPresenter = ThirdOnboardingPresenter(view: thirdController, authService: presenter.authService)
+                    let firestoreService = FireStoreService()
+                    let thirdPresenter = ThirdOnboardingPresenter(view: thirdController, authService: presenter.authService, firestoreService: firestoreService)
                     thirdController.presenter = thirdPresenter
                     navigationController?.pushViewController(thirdController, animated: true)
                 }

@@ -19,7 +19,8 @@ protocol ThirdOnboardingViewProtocol: AnyObject {
 
 protocol ThirdOnboardingPresenterProtocol: AnyObject {
     var authService: FireBaseAuthProtocol? { get set }
-    init (view: ThirdOnboardingViewProtocol, authService: FireBaseAuthProtocol)
+    var firestoreService: FireStoreServiceProtocol? { get set }
+    init (view: ThirdOnboardingViewProtocol, authService: FireBaseAuthProtocol, firestoreService: FireStoreServiceProtocol)
     func checkCode(code: String, completion: @escaping (Result<FirebaseUser,Error>) -> Void)
 }
 
@@ -27,24 +28,39 @@ final class ThirdOnboardingPresenter: ThirdOnboardingPresenterProtocol {
 
     weak var view: ThirdOnboardingViewProtocol?
     var authService: FireBaseAuthProtocol?
+    var firestoreService: FireStoreServiceProtocol?
     let firestore = Firestore.firestore()
 
-    init(view: any ThirdOnboardingViewProtocol, authService: FireBaseAuthProtocol) {
+    init(view: any ThirdOnboardingViewProtocol, authService: FireBaseAuthProtocol, firestoreService: FireStoreServiceProtocol) {
         self.view = view
         self.authService = authService
+        self.firestoreService = firestoreService
     }
 
     func checkCode(code: String, completion: @escaping (Result<FirebaseUser,Error>) -> Void) {
         authService?.verifyCode(code: code) { [weak self] result in
             switch result {
             case .success(let success):
-                print(success.uid)
-                self?.firestore.collection("Users").document("\(success.uid)").setData(["name": "jack", "surname" : "jaxon", "job" : "worker",
-                                                                                        "stories": ["firstStorie": "URL1", "SecondStorie": "URL2"],
-                                                                                        "subscribers" : ["firstSub": "URL1", "secondSub": "URL2"],
-                                                                                        "subscriptions" : ["firstSub": "URL1", "secondSub": "URL2"]])
-                let firebaseUser = FirebaseUser(user: success, name: "NewName", surname: "NewSurname", job: "NewJob")
-                completion(.success(firebaseUser))
+                self?.firestore.collection("Users").getDocuments(completion: { snapshot, error in
+                    if let error = error {
+                        self?.view?.showAlert(error: error.localizedDescription)
+                    }
+
+                    if let snapshot = snapshot {
+                        var eachPost = EachPost(date: "", text: "", image: Data())
+                        var posts = Posts(postsArray: [eachPost])
+                        var firestoreUser = FirebaseUser(name: "", surname: "", job: "", posts: posts)
+                        guard  let newUser = self?.firestoreService?.decodeUser(snapshot: snapshot,
+                                                                                user: success.uid,
+                                                                                firestoreUser: firestoreUser) else {
+                            return
+                        }
+                        firestoreUser = newUser
+                    }
+                })
+                print()
+                //                let firebaseUser = FirebaseUser(user: success, name: "NewName", surname: "NewSurname", job: "NewJob")
+                //                completion(.success(firebaseUser))
             case .failure(let failure):
                 completion(.failure(failure))
                 self?.view?.showAlert(error: failure.description)

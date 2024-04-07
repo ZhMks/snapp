@@ -7,6 +7,7 @@
 
 import Foundation
 import FirebaseAuth
+import FirebaseFirestore
 
 
 protocol SecondOnboardingViewProtocol: AnyObject {
