@@ -105,11 +105,12 @@ class ThirdOnboardingViewController: UIViewController {
                 presenter.firestoreService?.getPosts(id: user.id!, completion: { result in
                     switch result {
                     case .success(let success):
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak self] in
+                            guard let self else { return }
                             let feedController = FeedViewController()
                             let feedPresenter = FeedPresenter(view: feedController, user: user, posts: success)
                             feedController.presenter = feedPresenter
-                            (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootViewController(feedController)
+                            (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootViewController(feedController, user: user, posts: success, firestoreService: presenter.firestoreService!)
                         }
                     case .failure(let failure):
                         print(failure.localizedDescription)

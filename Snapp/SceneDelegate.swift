@@ -25,7 +25,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window.rootViewController = navigationController
 
         window.makeKeyAndVisible()
-        
+
         self.window = window
         FirebaseApp.configure()
 
@@ -62,12 +62,35 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         (UIApplication.shared.delegate as? AppDelegate)?.saveContext()
     }
 
-    func changeRootViewController(_ vc: UIViewController) {
-            guard let window = self.window else {
-                return
-            }
-            window.rootViewController = vc
+    func changeRootViewController(_ vc: UIViewController, user: FirebaseUser, posts: [EachPost], firestoreService: FireStoreServiceProtocol) {
+        guard let window = self.window else {
+            return
         }
+
+        let favouritesVC = FavouritesViewController()
+        let favouritesPresenter = FavouritesPresenter(view: favouritesVC, posts: posts, user: user)
+        favouritesVC.presenter = favouritesPresenter
+        let favouriteNavVC = UINavigationController(rootViewController: favouritesVC)
+        favouriteNavVC.tabBarItem = UITabBarItem(title: "Сохраненные", image: UIImage(systemName: "heart"), tag: 2)
+
+        let feedNavVc = UINavigationController(rootViewController: vc)
+        feedNavVc.tabBarItem = UITabBarItem(title: "Главная", image: UIImage(systemName: "house"), tag: 0)
+
+        let profileVC = ProfileViewController()
+        let profilePresenter = ProfilePresenter(view: profileVC, firebaseUser: user, posts: posts, firestoreService: firestoreService)
+        profileVC.presenter = profilePresenter
+        let profileNavVC = UINavigationController(rootViewController: profileVC)
+        profileNavVC.tabBarItem = UITabBarItem(title: "Профиль", image: UIImage(systemName: "person.crop.circle"), tag: 1)
+
+        let tabBarController = UITabBarController()
+
+        let viewControllers = [feedNavVc, profileNavVC, favouriteNavVC]
+        tabBarController.setViewControllers(viewControllers, animated: true)
+        tabBarController.selectedIndex = 0
+        tabBarController.tabBar.tintColor = .systemYellow
+
+        window.rootViewController = tabBarController
+    }
 
 }
 
