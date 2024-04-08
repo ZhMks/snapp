@@ -76,19 +76,23 @@ class LoginScreenViewController: UIViewController {
     @objc func pushThirdController() {
         let number = phoneTextField.text ?? "Test Text"
         if loginpresenter.checkPhone(number: number) {
-            if loginpresenter.authentificateUser(phone: number) {
-                DispatchQueue.main.async { [weak self] in
-                    guard let self else { return }
-                    let firestoreService = FireStoreService()
-                    let thirdController = ThirdOnboardingViewController(number: number)
-                    let thirdPresenter = ThirdOnboardingPresenter(view: thirdController, authService: loginpresenter.authService!, firestoreService: firestoreService)
-                    thirdController.presenter = thirdPresenter
-                    self.navigationController?.pushViewController(thirdController, animated: true)
+            loginpresenter.authentificateUser(phone: number) { [weak self] result in
+                switch result {
+                case true:
+                    DispatchQueue.main.async { [weak self] in
+                        guard let self else { return }
+                        let firestoreService = FireStoreService()
+                        let thirdController = ThirdOnboardingViewController(number: number)
+                        let thirdPresenter = ThirdOnboardingPresenter(view: thirdController, authService: loginpresenter.authService!, firestoreService: firestoreService)
+                        thirdController.presenter = thirdPresenter
+                        self.navigationController?.pushViewController(thirdController, animated: true)
+                    }
+                case false:
+                    print("ERROR in NUMBER")
                 }
             }
         }
     }
-
 }
 
 // MARK: -PRESENTEROUTPUT
@@ -153,7 +157,7 @@ extension LoginScreenViewController {
 
 extension LoginScreenViewController: UITextFieldDelegate {
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        
+
         guard let text = textField.text else { return false }
 
         let newString = (text as NSString).replacingCharacters(in: range, with: string)

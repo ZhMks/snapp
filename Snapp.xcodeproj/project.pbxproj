@@ -14,6 +14,14 @@
 		B209E6142BBFD6DA0067D751 /* FireStoreService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B209E6132BBFD6DA0067D751 /* FireStoreService.swift */; };
 		B209E6192BC138790067D751 /* FeedPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B209E6182BC138790067D751 /* FeedPresenter.swift */; };
 		B209E61B2BC139000067D751 /* FeedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B209E61A2BC139000067D751 /* FeedViewController.swift */; };
+		B209E61F2BC3FC290067D751 /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B209E61E2BC3FC280067D751 /* ProfileViewController.swift */; };
+		B209E6212BC3FC320067D751 /* ProfilePresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B209E6202BC3FC320067D751 /* ProfilePresenter.swift */; };
+		B209E6252BC3FD450067D751 /* FavouritesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B209E6242BC3FD450067D751 /* FavouritesViewController.swift */; };
+		B209E6272BC3FD5B0067D751 /* FavouritesPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B209E6262BC3FD5B0067D751 /* FavouritesPresenter.swift */; };
+		B209E62B2BC3FDDB0067D751 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B209E62A2BC3FDDB0067D751 /* SettingsViewController.swift */; };
+		B209E62E2BC3FDEC0067D751 /* SettingPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B209E62D2BC3FDEC0067D751 /* SettingPresenter.swift */; };
+		B209E6312BC3FEB10067D751 /* ProfileChangeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B209E6302BC3FEB10067D751 /* ProfileChangeViewController.swift */; };
+		B209E6332BC3FEBE0067D751 /* ProfileChangePresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B209E6322BC3FEBE0067D751 /* ProfileChangePresenter.swift */; };
 		B211C1E82BBB3C2900C073EE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B211C1E72BBB3C2900C073EE /* AppDelegate.swift */; };
 		B211C1EA2BBB3C2900C073EE /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B211C1E92BBB3C2900C073EE /* SceneDelegate.swift */; };
 		B211C1EC2BBB3C2900C073EE /* OnBoardingVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = B211C1EB2BBB3C2900C073EE /* OnBoardingVC.swift */; };
@@ -92,6 +100,14 @@
 		B209E6132BBFD6DA0067D751 /* FireStoreService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FireStoreService.swift; sourceTree = "<group>"; };
 		B209E6182BC138790067D751 /* FeedPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedPresenter.swift; sourceTree = "<group>"; };
 		B209E61A2BC139000067D751 /* FeedViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedViewController.swift; sourceTree = "<group>"; };
+		B209E61E2BC3FC280067D751 /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
+		B209E6202BC3FC320067D751 /* ProfilePresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfilePresenter.swift; sourceTree = "<group>"; };
+		B209E6242BC3FD450067D751 /* FavouritesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavouritesViewController.swift; sourceTree = "<group>"; };
+		B209E6262BC3FD5B0067D751 /* FavouritesPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavouritesPresenter.swift; sourceTree = "<group>"; };
+		B209E62A2BC3FDDB0067D751 /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
+		B209E62D2BC3FDEC0067D751 /* SettingPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingPresenter.swift; sourceTree = "<group>"; };
+		B209E6302BC3FEB10067D751 /* ProfileChangeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileChangeViewController.swift; sourceTree = "<group>"; };
+		B209E6322BC3FEBE0067D751 /* ProfileChangePresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileChangePresenter.swift; sourceTree = "<group>"; };
 		B211C1E42BBB3C2900C073EE /* Snapp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Snapp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B211C1E72BBB3C2900C073EE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		B211C1E92BBB3C2900C073EE /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -205,7 +221,6 @@
 		B209E6162BC1384F0067D751 /* FeedModule */ = {
 			isa = PBXGroup;
 			children = (
-				B211C2772BBC6B7F00C073EE /* OnboardingModule */,
 				B209E6172BC1386C0067D751 /* FeedScreen */,
 			);
 			path = FeedModule;
@@ -218,6 +233,67 @@
 				B209E61A2BC139000067D751 /* FeedViewController.swift */,
 			);
 			path = FeedScreen;
+			sourceTree = "<group>";
+		};
+		B209E61C2BC3FC0D0067D751 /* ProfileModule */ = {
+			isa = PBXGroup;
+			children = (
+				B209E61D2BC3FC180067D751 /* ProfileScreen */,
+			);
+			path = ProfileModule;
+			sourceTree = "<group>";
+		};
+		B209E61D2BC3FC180067D751 /* ProfileScreen */ = {
+			isa = PBXGroup;
+			children = (
+				B209E61E2BC3FC280067D751 /* ProfileViewController.swift */,
+				B209E6202BC3FC320067D751 /* ProfilePresenter.swift */,
+			);
+			path = ProfileScreen;
+			sourceTree = "<group>";
+		};
+		B209E6222BC3FD270067D751 /* FavouritesModule */ = {
+			isa = PBXGroup;
+			children = (
+				B209E6232BC3FD370067D751 /* FavouritesScreen */,
+			);
+			path = FavouritesModule;
+			sourceTree = "<group>";
+		};
+		B209E6232BC3FD370067D751 /* FavouritesScreen */ = {
+			isa = PBXGroup;
+			children = (
+				B209E6242BC3FD450067D751 /* FavouritesViewController.swift */,
+				B209E6262BC3FD5B0067D751 /* FavouritesPresenter.swift */,
+			);
+			path = FavouritesScreen;
+			sourceTree = "<group>";
+		};
+		B209E6282BC3FDBE0067D751 /* SettingModule */ = {
+			isa = PBXGroup;
+			children = (
+				B209E62F2BC3FEA10067D751 /* ProfileChangeScreen */,
+				B209E6292BC3FDCB0067D751 /* SettingsScreen */,
+			);
+			path = SettingModule;
+			sourceTree = "<group>";
+		};
+		B209E6292BC3FDCB0067D751 /* SettingsScreen */ = {
+			isa = PBXGroup;
+			children = (
+				B209E62A2BC3FDDB0067D751 /* SettingsViewController.swift */,
+				B209E62D2BC3FDEC0067D751 /* SettingPresenter.swift */,
+			);
+			path = SettingsScreen;
+			sourceTree = "<group>";
+		};
+		B209E62F2BC3FEA10067D751 /* ProfileChangeScreen */ = {
+			isa = PBXGroup;
+			children = (
+				B209E6302BC3FEB10067D751 /* ProfileChangeViewController.swift */,
+				B209E6322BC3FEBE0067D751 /* ProfileChangePresenter.swift */,
+			);
+			path = ProfileChangeScreen;
 			sourceTree = "<group>";
 		};
 		B211C1DB2BBB3C2900C073EE = {
@@ -245,6 +321,10 @@
 		B211C1E62BBB3C2900C073EE /* Snapp */ = {
 			isa = PBXGroup;
 			children = (
+				B209E6282BC3FDBE0067D751 /* SettingModule */,
+				B209E6222BC3FD270067D751 /* FavouritesModule */,
+				B209E61C2BC3FC0D0067D751 /* ProfileModule */,
+				B211C2772BBC6B7F00C073EE /* OnboardingModule */,
 				B209E6162BC1384F0067D751 /* FeedModule */,
 				B209E6152BBFD7880067D751 /* Extensions */,
 				B211C2842BBD493300C073EE /* Model */,
@@ -561,24 +641,32 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B209E6212BC3FC320067D751 /* ProfilePresenter.swift in Sources */,
 				B211C1F22BBB3C2900C073EE /* Snapp.xcdatamodeld in Sources */,
 				B211C2642BBC17B900C073EE /* Extension+String.swift in Sources */,
 				B211C1EC2BBB3C2900C073EE /* OnBoardingVC.swift in Sources */,
 				B211C2672BBC2EF700C073EE /* SecondOnboardingVC.swift in Sources */,
 				B211C1E82BBB3C2900C073EE /* AppDelegate.swift in Sources */,
+				B209E6312BC3FEB10067D751 /* ProfileChangeViewController.swift in Sources */,
 				B211C1EA2BBB3C2900C073EE /* SceneDelegate.swift in Sources */,
 				B209E6142BBFD6DA0067D751 /* FireStoreService.swift in Sources */,
+				B209E62B2BC3FDDB0067D751 /* SettingsViewController.swift in Sources */,
 				B211C2692BBC2F0200C073EE /* SecondOnboardingPresenter.swift in Sources */,
 				B211C2832BBD48EA00C073EE /* FireBaseAuthService.swift in Sources */,
 				B211C2802BBD3B2F00C073EE /* Extension+UIColor.swift in Sources */,
 				B209E6192BC138790067D751 /* FeedPresenter.swift in Sources */,
 				B211C27D2BBD321C00C073EE /* Validator.swift in Sources */,
+				B209E6252BC3FD450067D751 /* FavouritesViewController.swift in Sources */,
 				B211C2712BBC4C1700C073EE /* StringFormatter.swift in Sources */,
 				B209E61B2BC139000067D751 /* FeedViewController.swift in Sources */,
 				B211C26E2BBC405A00C073EE /* ThirdOnboardingPresenter.swift in Sources */,
 				B211C21E2BBBEACA00C073EE /* OnBoardingPresenter.swift in Sources */,
 				B211C2762BBC6A1D00C073EE /* LoginScreenPresenter.swift in Sources */,
 				B211C2742BBC6A1000C073EE /* LoginScreenViewController.swift in Sources */,
+				B209E6332BC3FEBE0067D751 /* ProfileChangePresenter.swift in Sources */,
+				B209E62E2BC3FDEC0067D751 /* SettingPresenter.swift in Sources */,
+				B209E6272BC3FD5B0067D751 /* FavouritesPresenter.swift in Sources */,
+				B209E61F2BC3FC290067D751 /* ProfileViewController.swift in Sources */,
 				B211C26C2BBC404C00C073EE /* ThirdOnboardingViewController.swift in Sources */,
 				B211C2872BBD494200C073EE /* FirebaseUser.swift in Sources */,
 			);

@@ -109,14 +109,21 @@ final class SecondOnboardingVC: UIViewController {
     @objc func pushThirdController() {
         let number = phoneTextField.text ?? "Test Text"
         if presenter.validateText(phone: number) {
-            if presenter.authentificateUser(phone: number) {
-                DispatchQueue.main.async { [weak self] in
-                    guard let self else { return }
-                    let thirdController = ThirdOnboardingViewController(number: number)
-                    let firestoreService = FireStoreService()
-                    let thirdPresenter = ThirdOnboardingPresenter(view: thirdController, authService: presenter.authService, firestoreService: firestoreService)
-                    thirdController.presenter = thirdPresenter
-                    navigationController?.pushViewController(thirdController, animated: true)
+
+            presenter.authentificateUser(phone: number) { [weak self] isAuthorised in
+                guard let self else { return }
+                switch isAuthorised {
+                case true:
+                    DispatchQueue.main.async { [weak self] in
+                        guard let self else { return }
+                        let thirdController = ThirdOnboardingViewController(number: number)
+                        let firestoreService = FireStoreService()
+                        let thirdPresenter = ThirdOnboardingPresenter(view: thirdController, authService: presenter.authService, firestoreService: firestoreService)
+                        thirdController.presenter = thirdPresenter
+                        navigationController?.pushViewController(thirdController, animated: true)
+                    }
+                case false:
+                    print("Error in authorisation")
                 }
             }
         }
@@ -136,6 +143,16 @@ final class SecondOnboardingVC: UIViewController {
 // MARK: -OUTPUT PRESENTER
 
 extension SecondOnboardingVC: SecondOnboardingViewProtocol {
+
+    func showAuthorisationAlert(error: String) {
+        let alertController = UIAlertController(title: .localized(string: "Ошибка"),
+                                                message: .localized(string: "\(error)"),
+                                                preferredStyle: .alert)
+        let alertAction = UIAlertAction(title: .localized(string: "Отмена"), style: .cancel)
+        alertController.addAction(alertAction)
+        navigationController?.present(alertController, animated: true)
+    }
+
     func showAlert() {
         let alertController = UIAlertController(title: .localized(string: "Ошибка"),
                                                 message: .localized(string: "Пожалуйста, введите номер в формате +7 ХХХ ХХХ ХХ ХХ"),
@@ -145,14 +162,7 @@ extension SecondOnboardingVC: SecondOnboardingViewProtocol {
         navigationController?.present(alertController, animated: true)
     }
 
-    func showAuthoriseErrorAlert() {
-        let alertController = UIAlertController(title: .localized(string: "Ошибка"),
-                                                message: .localized(string: "Ошибка авторизации пользователя"),
-                                                preferredStyle: .alert)
-        let alertAction = UIAlertAction(title: .localized(string: "Отмена"), style: .cancel)
-        alertController.addAction(alertAction)
-        navigationController?.present(alertController, animated: true)
-    }
+
 }
 
 // MARK: - LAYOUT

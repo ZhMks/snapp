@@ -16,7 +16,7 @@ protocol LoginPresenterProtocol: AnyObject {
     var authService: FireBaseAuthProtocol? { get set }
     init (view: LoginViewProtocol, authService: FireBaseAuthProtocol)
     func checkPhone(number: String) -> Bool
-    func authentificateUser(phone: String) -> Bool
+    func authentificateUser(phone: String, completions: @escaping (Bool) -> Void)
 }
 
 final class LoginPresenter: LoginPresenterProtocol {
@@ -37,13 +37,16 @@ final class LoginPresenter: LoginPresenterProtocol {
         return false
     }
 
-    func authentificateUser(phone: String) -> Bool {
-        print(phone)
+    func authentificateUser(phone: String, completions: @escaping (Bool) -> Void){
+
         authService?.signUpUser(phone: phone, completion: { [weak self] success in
-            if !success {
+            switch success {
+            case .success(_):
+                completions(true)
+            case .failure(_):
                 self?.view?.showAlert()
+                completions(false)
             }
         })
-        return true
     }
 }

@@ -59,7 +59,7 @@ class ThirdOnboardingViewController: UIViewController {
         registerButton.layer.cornerRadius = 10.0
         registerButton.titleLabel?.font = UIFont(name: "Inter-Medium", size: 12)
         registerButton.translatesAutoresizingMaskIntoConstraints = false
-        registerButton.addTarget(self, action: #selector(registerButtonTapped), for: .touchUpInside)
+        registerButton.addTarget(self, action: #selector(acceptButtonTapped), for: .touchUpInside)
         return registerButton
     }()
 
@@ -96,17 +96,25 @@ class ThirdOnboardingViewController: UIViewController {
         self.navigationController?.popViewController(animated: true)
     }
 
-    @objc func registerButtonTapped() {
+    @objc func acceptButtonTapped() {
         guard let text = acceptCodeTextField.text else { return }
-        presenter.checkCode(code: text) { result in
-            switch result {
-            case .success(let success):
-                DispatchQueue.main.async {
-                    let feedController = FeedViewController()
-                    let feedPresenter = FeedPresenter(view: feedController, user: success)
-                    feedController.presenter = feedPresenter
-                    (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootViewController(feedController)
-                }
+        presenter.checkCode(code: text) { [weak self] resultUser in
+            guard let self else { return }
+            switch resultUser {
+            case .success(let user):
+                presenter.firestoreService?.getPosts(id: user.id!, completion: { result in
+                    switch result {
+                    case .success(let success):
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                            let feedController = FeedViewController()
+                            let feedPresenter = FeedPresenter(view: feedController, user: user, posts: success)
+                            feedController.presenter = feedPresenter
+                            (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootViewController(feedController)
+                        }
+                    case .failure(let failure):
+                        print(failure.localizedDescription)
+                    }
+                })
             case .failure(let failure):
                 print(failure.localizedDescription)
             }
@@ -119,10 +127,28 @@ class ThirdOnboardingViewController: UIViewController {
 // MARK: -OUTPUT PRESENTER
 extension ThirdOnboardingViewController: ThirdOnboardingViewProtocol {
     func showAlert(error: String) {
-        let alertController = UIAlertController(title: .localized(string: "Ошибка"), message: error, preferredStyle: .alert)
-        let alertAction = UIAlertAction(title: "Ошибка", style: .cancel)
-        alertController.addAction(alertAction)
-        navigationController?.present(alertController, animated: true)
+        switch error {
+        case "Не удалось прочесть данные, так как они отсутствуют.":
+            let settingsVC = SettingsViewController()
+            let firestoreService = FireStoreService()
+            let user = FirebaseUser(name: "",
+                                    surname: "",
+                                    job: "",
+                                    subscribers: [],
+                                    subscriptions: [],
+                                    stories: [],
+                                    interests: "",
+                                    contacts: "",
+                                    city: "")
+            let settingsPresenter = SettingPresenter(view: settingsVC, user: user, firestoreService: firestoreService)
+            settingsVC.presenter = settingsPresenter
+            navigationController?.pushViewController(settingsVC, animated: true)
+        default:
+            let alertController = UIAlertController(title: .localized(string: "Ошибка"), message: error, preferredStyle: .alert)
+            let alertAction = UIAlertAction(title: "Отмена", style: .cancel)
+            alertController.addAction(alertAction)
+            navigationController?.present(alertController, animated: true)
+        }
     }
 }
 

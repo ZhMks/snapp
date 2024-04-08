@@ -18,7 +18,9 @@ struct FirebaseUser: Codable {
     var subscribers: [String]
     var subscriptions: [String]
     var stories: [String]
-    var posts: [EachPost]
+    var interests: String
+    var contacts: String
+    var city: String
 }
 
 struct EachPost: Codable {

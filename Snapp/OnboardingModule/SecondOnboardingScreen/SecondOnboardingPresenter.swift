@@ -12,13 +12,14 @@ import FirebaseFirestore
 
 protocol SecondOnboardingViewProtocol: AnyObject {
     func showAlert()
+    func showAuthorisationAlert(error: String)
 }
 
 protocol SecondOnboardingPresenterProtocol: AnyObject {
     var authService: FireBaseAuthProtocol { get set }
     init (view: SecondOnboardingViewProtocol, authService: FireBaseAuthProtocol)
     func validateText(phone: String) -> Bool
-    func authentificateUser(phone: String) -> Bool
+    func authentificateUser(phone: String, completions: @escaping (Bool) -> Void)
 }
 
 final class SecondOnboardingPresenter: SecondOnboardingPresenterProtocol {
@@ -39,13 +40,15 @@ final class SecondOnboardingPresenter: SecondOnboardingPresenterProtocol {
         return false
     }
 
-    func authentificateUser(phone: String) -> Bool {
-        print(phone)
-        authService.signUpUser(phone: phone, completion: { [weak self] success in
-            if !success {
-                self?.view?.showAlert()
+    func authentificateUser(phone: String, completions: @escaping (Bool) -> Void) {
+
+        authService.signUpUser(phone: phone, completion: { [weak self] result in
+            switch result {
+            case .success(let success):
+                completions(true)
+            case .failure(let failure):
+                self?.view?.showAuthorisationAlert(error: failure.localizedDescription)
             }
         })
-        return true
     }
 }

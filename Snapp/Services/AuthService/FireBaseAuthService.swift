@@ -27,7 +27,7 @@ enum AuthorisationErrors: Error {
 
 protocol FireBaseAuthProtocol {
     var verificationID: String? { get set }
-    func signUpUser(phone: String, completion: @escaping (Bool) -> Void)
+    func signUpUser(phone: String, completion: @escaping (Result<Bool, Error>) -> Void)
     func verifyCode(code: String, completion: @escaping (Result<User, AuthorisationErrors>) -> Void)
     func logOut(completion: @escaping (Result<Void, Error>) -> Void)
 }
@@ -36,16 +36,16 @@ final class FireBaseAuthService: FireBaseAuthProtocol {
 
     internal var verificationID: String?
 
-    func signUpUser(phone: String, completion: @escaping (Bool) -> Void) {
+    func signUpUser(phone: String, completion: @escaping (Result<Bool, Error>) -> Void) {
         PhoneAuthProvider.provider().verifyPhoneNumber(phone, uiDelegate: nil) { [weak self] verificationID, error in
             if error != nil {
                 print("Error: \(error!.localizedDescription)")
-                completion(false)
+                completion(.failure(error!))
             }
 
             if let verificationID = verificationID {
                 self?.verificationID = verificationID
-                completion(true)
+                completion(.success(true))
             }
         }
     }

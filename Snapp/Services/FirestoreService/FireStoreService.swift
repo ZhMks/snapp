@@ -10,21 +10,39 @@ import FirebaseFirestore
 import FirebaseStorage
 import FirebaseFirestoreSwift
 
+enum ChangeStates {
+    case name
+    case job
+    case city
+    case interests
+    case contacts
+    case surname
+}
+
 protocol FireStoreServiceProtocol {
     func getUser(id: String, completion: @escaping (Result<FirebaseUser, Error>) -> Void)
     func getPosts(id: String, completion: @escaping (Result<[EachPost], Error>) -> Void)
+    func changeData(id: String, text: String, state: ChangeStates) async
 }
 
 
 final class FireStoreService: FireStoreServiceProtocol {
 
+
     func getUser(id: String, completion: @escaping (Result<FirebaseUser, Error>) -> Void) {
         let ref = Firestore.firestore().collection("Users").document(id)
-        let docoder = JSONDecoder()
-        var firuser = FirebaseUser(name: "", surname: "", job: "", subscribers: [""], subscriptions: [""], stories: [""], posts: [])
+        var firuser = FirebaseUser(name: "test",
+                                   surname: "test",
+                                   job: "test",
+                                   subscribers: ["test"],
+                                   subscriptions: ["test"],
+                                   stories: ["test"],
+                                   interests: ",",
+                                   contacts: "fdfs",
+                                   city: "TestCituy")
+        firuser.id = ref.documentID
         ref.getDocument(as: FirebaseUser.self) { [weak self] result in
-            guard let self else { return }
-            firuser.id = ref.documentID
+            guard self != nil else { return }
             switch result {
             case .success(let user):
                 firuser.name = user.name
@@ -32,16 +50,11 @@ final class FireStoreService: FireStoreServiceProtocol {
                 firuser.stories = user.stories
                 firuser.subscribers = user.subscribers
                 firuser.subscriptions = user.subscriptions
-                getPosts(id: firuser.id!) { [weak self] result in
-                    guard let self else { return }
-                    switch result {
-                    case .success(let success):
-                        firuser.posts = success
-                        completion(.success(firuser))
-                    case .failure(let failure):
-                        print("Error in decoding doc \(failure.localizedDescription)")
-                    }
-                }
+                firuser.contacts = user.contacts
+                firuser.city = user.city
+                firuser.interests = user.interests
+                firuser.surname = user.surname
+                completion(.success(firuser))
             case .failure(let error):
                 print("Error in decoding doc \(error.localizedDescription)")
                 completion(.failure(error))
@@ -51,18 +64,18 @@ final class FireStoreService: FireStoreServiceProtocol {
 
     func getPosts(id: String, completion: @escaping (Result<[EachPost], Error>) -> Void) {
         let ref = Firestore.firestore().collection("Users").document(id).collection("posts")
-        let decoder = JSONDecoder()
         var posts: [EachPost] = []
 
         ref.getDocuments { snapshot, error in
             if let error = error {
                 print("error in getting doc \(error.localizedDescription)")
+                completion(.failure(error))
             }
 
             if let snapshot = snapshot {
-                var eachPost = EachPost(date: "", text: "", image: "", likes: 0, views: 0)
                 for document in snapshot.documents {
                     do {
+                        var eachPost = EachPost(date: "", text: "", image: "", likes: 0, views: 0)
                         let firpost = try document.data(as: EachPost.self)
                         eachPost.date = firpost.date
                         eachPost.text = firpost.text
@@ -70,13 +83,57 @@ final class FireStoreService: FireStoreServiceProtocol {
                         eachPost.likes = firpost.likes
                         eachPost.views = firpost.views
                         posts.append(eachPost)
-                        completion(.success(posts))
                     } catch {
                         print("error in getting data from doc \(error.localizedDescription)")
                         completion(.failure(error))
                     }
                 }
+                completion(.success(posts))
+            }
+        }
+    }
+
+    func changeData(id: String, text: String, state: ChangeStates) async {
+        let ref = Firestore.firestore().collection("Users").document(id)
+
+        switch state {
+        case .name:
+            do {
+                try await ref.updateData(["name" : text])
+            } catch {
+                print("error in updating \(error.localizedDescription)")
+            }
+        case .job:
+            do {
+                try await ref.updateData(["job" : text])
+            } catch {
+                print("error in updating \(error.localizedDescription)")
+            }
+        case .city:
+            do {
+                try await ref.updateData(["city" : text])
+            } catch {
+                print("error in updating \(error.localizedDescription)")
+            }
+        case .interests:
+            do {
+                try await ref.updateData(["interests" : text])
+            } catch {
+                print("error in updating \(error.localizedDescription)")
+            }
+        case .contacts:
+            do {
+                try await ref.updateData(["contacts" : text])
+            } catch {
+                print("error in updating \(error.localizedDescription)")
+            }
+        case .surname:
+            do {
+                try await ref.updateData(["surname" : text])
+            } catch {
+                print("error in updating \(error.localizedDescription)")
             }
         }
     }
 }
+

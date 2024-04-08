@@ -43,12 +43,8 @@ final class ThirdOnboardingPresenter: ThirdOnboardingPresenterProtocol {
             case .success(let success):
                 self?.firestoreService?.getUser(id: success.uid) { result in
                     switch result {
-                    case .success(let success):
-                        DispatchQueue.main.async { [weak self] in
-                            guard let self else { return }
-                            guard let id = success.id else { return }
-                        }
-                        completion(.success(success))
+                    case .success(let user):
+                        completion(.success(user))
                     case .failure(let failure):
                         self?.view?.showAlert(error: failure.localizedDescription)
                     }
