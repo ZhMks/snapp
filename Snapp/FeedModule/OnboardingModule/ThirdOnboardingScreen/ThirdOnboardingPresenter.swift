@@ -41,23 +41,7 @@ final class ThirdOnboardingPresenter: ThirdOnboardingPresenterProtocol {
         authService?.verifyCode(code: code) { [weak self] result in
             switch result {
             case .success(let success):
-                self?.firestore.collection("Users").getDocuments(completion: { snapshot, error in
-                    if let error = error {
-                        self?.view?.showAlert(error: error.localizedDescription)
-                    }
-
-                    if let snapshot = snapshot {
-                        var eachPost = EachPost(date: "", text: "", image: Data())
-                        var posts = Posts(postsArray: [eachPost])
-                        var firestoreUser = FirebaseUser(name: "", surname: "", job: "", posts: posts)
-                        guard  let newUser = self?.firestoreService?.decodeUser(snapshot: snapshot,
-                                                                                user: success.uid,
-                                                                                firestoreUser: firestoreUser) else {
-                            return
-                        }
-                        firestoreUser = newUser
-                    }
-                })
+                self?.firestoreService?.getUser(id: success.uid)
                 print()
                 //                let firebaseUser = FirebaseUser(user: success, name: "NewName", surname: "NewSurname", job: "NewJob")
                 //                completion(.success(firebaseUser))
