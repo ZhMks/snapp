@@ -22,6 +22,7 @@ final class FeedViewController: UIViewController {
         currentUserStorie.layer.cornerRadius = 12.0
         currentUserStorie.layer.borderWidth = 1.0
         currentUserStorie.layer.borderColor = UIColor.orange.cgColor
+        currentUserStorie.backgroundColor = ColorCreator.shared.createTextColor()
         return currentUserStorie
     }()
 
@@ -31,6 +32,7 @@ final class FeedViewController: UIViewController {
         storiesCollection.dataSource = self
         storiesCollection.delegate = self
         storiesCollection.translatesAutoresizingMaskIntoConstraints = false
+        storiesCollection.backgroundColor = ColorCreator.shared.createTextColor()
         return storiesCollection
     }()
 
@@ -39,12 +41,14 @@ final class FeedViewController: UIViewController {
         feedTableView.translatesAutoresizingMaskIntoConstraints = false
         feedTableView.delegate = self
         feedTableView.dataSource = self
+        feedTableView.backgroundColor = ColorCreator.shared.createTextColor()
         return feedTableView
     }()
 
     private lazy var feedScrollView: UIScrollView = {
         let feedScrollView = UIScrollView()
         feedScrollView.translatesAutoresizingMaskIntoConstraints = false
+        feedScrollView.backgroundColor = .red
         return feedScrollView
     }()
 
@@ -53,6 +57,8 @@ final class FeedViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
+        print(presenter.user)
+        print(presenter.user.posts.count)
     }
 
     // MARK: -FUNCS

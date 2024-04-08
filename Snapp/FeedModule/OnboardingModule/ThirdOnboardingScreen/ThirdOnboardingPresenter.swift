@@ -41,10 +41,18 @@ final class ThirdOnboardingPresenter: ThirdOnboardingPresenterProtocol {
         authService?.verifyCode(code: code) { [weak self] result in
             switch result {
             case .success(let success):
-                self?.firestoreService?.getUser(id: success.uid)
-                print()
-                //                let firebaseUser = FirebaseUser(user: success, name: "NewName", surname: "NewSurname", job: "NewJob")
-                //                completion(.success(firebaseUser))
+                self?.firestoreService?.getUser(id: success.uid) { result in
+                    switch result {
+                    case .success(let success):
+                        DispatchQueue.main.async { [weak self] in
+                            guard let self else { return }
+                            guard let id = success.id else { return }
+                        }
+                        completion(.success(success))
+                    case .failure(let failure):
+                        self?.view?.showAlert(error: failure.localizedDescription)
+                    }
+                }
             case .failure(let failure):
                 completion(.failure(failure))
                 self?.view?.showAlert(error: failure.description)

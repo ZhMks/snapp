@@ -11,19 +11,20 @@ import FirebaseStorage
 import FirebaseFirestoreSwift
 
 protocol FireStoreServiceProtocol {
-    func getUser(id: String)
-    func getPosts(id: String)
+    func getUser(id: String, completion: @escaping (Result<FirebaseUser, Error>) -> Void)
+    func getPosts(id: String, completion: @escaping (Result<[EachPost], Error>) -> Void)
 }
 
 
 final class FireStoreService: FireStoreServiceProtocol {
 
-    func getUser(id: String) {
+    func getUser(id: String, completion: @escaping (Result<FirebaseUser, Error>) -> Void) {
         let ref = Firestore.firestore().collection("Users").document(id)
         let docoder = JSONDecoder()
-        var firuser = FirebaseUser(name: "", surname: "", job: "", subscribers: [""], subscriptions: [""], stories: [""])
-        getPosts(id: id)
-        ref.getDocument(as: FirebaseUser.self) { result in
+        var firuser = FirebaseUser(name: "", surname: "", job: "", subscribers: [""], subscriptions: [""], stories: [""], posts: [])
+        ref.getDocument(as: FirebaseUser.self) { [weak self] result in
+            guard let self else { return }
+            firuser.id = ref.documentID
             switch result {
             case .success(let user):
                 firuser.name = user.name
@@ -31,14 +32,24 @@ final class FireStoreService: FireStoreServiceProtocol {
                 firuser.stories = user.stories
                 firuser.subscribers = user.subscribers
                 firuser.subscriptions = user.subscriptions
-                print(firuser)
+                getPosts(id: firuser.id!) { [weak self] result in
+                    guard let self else { return }
+                    switch result {
+                    case .success(let success):
+                        firuser.posts = success
+                        completion(.success(firuser))
+                    case .failure(let failure):
+                        print("Error in decoding doc \(failure.localizedDescription)")
+                    }
+                }
             case .failure(let error):
                 print("Error in decoding doc \(error.localizedDescription)")
+                completion(.failure(error))
             }
         }
     }
 
-    func getPosts(id: String) {
+    func getPosts(id: String, completion: @escaping (Result<[EachPost], Error>) -> Void) {
         let ref = Firestore.firestore().collection("Users").document(id).collection("posts")
         let decoder = JSONDecoder()
         var posts: [EachPost] = []
@@ -59,9 +70,10 @@ final class FireStoreService: FireStoreServiceProtocol {
                         eachPost.likes = firpost.likes
                         eachPost.views = firpost.views
                         posts.append(eachPost)
-                        print(posts)
+                        completion(.success(posts))
                     } catch {
                         print("error in getting data from doc \(error.localizedDescription)")
+                        completion(.failure(error))
                     }
                 }
             }

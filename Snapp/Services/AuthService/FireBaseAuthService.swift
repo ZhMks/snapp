@@ -39,6 +39,7 @@ final class FireBaseAuthService: FireBaseAuthProtocol {
     func signUpUser(phone: String, completion: @escaping (Bool) -> Void) {
         PhoneAuthProvider.provider().verifyPhoneNumber(phone, uiDelegate: nil) { [weak self] verificationID, error in
             if error != nil {
+                print("Error: \(error!.localizedDescription)")
                 completion(false)
             }
 
@@ -65,7 +66,8 @@ final class FireBaseAuthService: FireBaseAuthProtocol {
                     completion(.failure(.operationNotAllowed))
                 case "FIRAuthErrorCodeUserDisabled":
                     completion(.failure(.userDisabled))
-                default: break
+                default:
+                    print("Error: \(error.localizedDescription)")
                 }
             }
             if let result = result {

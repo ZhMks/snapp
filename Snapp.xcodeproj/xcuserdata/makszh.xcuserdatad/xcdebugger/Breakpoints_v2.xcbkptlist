@@ -7,16 +7,16 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "4841D576-F8A6-41A6-8B73-346E3EFE89EA"
+            uuid = "DE4ADC8D-F8CB-4B14-8F09-78BDBD0B4A0F"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Snapp/FeedModule/OnboardingModule/SecondOnboardingScreen/SecondOnboardingPresenter.swift"
+            filePath = "Snapp/FeedModule/FeedScreen/FeedViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "46"
-            endingLineNumber = "46"
-            landmarkName = "authentificateUser(phone:)"
+            startingLineNumber = "60"
+            endingLineNumber = "60"
+            landmarkName = "viewDidLoad()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
