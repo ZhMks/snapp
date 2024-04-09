@@ -24,6 +24,11 @@
 		B209E6332BC3FEBE0067D751 /* ProfileChangePresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B209E6322BC3FEBE0067D751 /* ProfileChangePresenter.swift */; };
 		B209E6362BC430FC0067D751 /* FeedCollectionVIewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B209E6352BC430FC0067D751 /* FeedCollectionVIewCell.swift */; };
 		B209E6382BC431080067D751 /* FeedTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B209E6372BC431080067D751 /* FeedTableViewCell.swift */; };
+		B209E63B2BC560770067D751 /* UserModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = B209E6392BC560770067D751 /* UserModel.xcdatamodeld */; };
+		B209E63E2BC5626C0067D751 /* UserCoreDataModelService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B209E63D2BC5626C0067D751 /* UserCoreDataModelService.swift */; };
+		B209E6412BC5628C0067D751 /* CoreDataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B209E6402BC5628C0067D751 /* CoreDataService.swift */; };
+		B209E6432BC565340067D751 /* PostCoreDataModelService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B209E6422BC565340067D751 /* PostCoreDataModelService.swift */; };
+		B209E6452BC566D90067D751 /* EachPostCoreDataModelService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B209E6442BC566D90067D751 /* EachPostCoreDataModelService.swift */; };
 		B211C1E82BBB3C2900C073EE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B211C1E72BBB3C2900C073EE /* AppDelegate.swift */; };
 		B211C1EA2BBB3C2900C073EE /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B211C1E92BBB3C2900C073EE /* SceneDelegate.swift */; };
 		B211C1EC2BBB3C2900C073EE /* OnBoardingVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = B211C1EB2BBB3C2900C073EE /* OnBoardingVC.swift */; };
@@ -112,6 +117,11 @@
 		B209E6322BC3FEBE0067D751 /* ProfileChangePresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileChangePresenter.swift; sourceTree = "<group>"; };
 		B209E6352BC430FC0067D751 /* FeedCollectionVIewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedCollectionVIewCell.swift; sourceTree = "<group>"; };
 		B209E6372BC431080067D751 /* FeedTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedTableViewCell.swift; sourceTree = "<group>"; };
+		B209E63A2BC560770067D751 /* UserModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = UserModel.xcdatamodel; sourceTree = "<group>"; };
+		B209E63D2BC5626C0067D751 /* UserCoreDataModelService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserCoreDataModelService.swift; sourceTree = "<group>"; };
+		B209E6402BC5628C0067D751 /* CoreDataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataService.swift; sourceTree = "<group>"; };
+		B209E6422BC565340067D751 /* PostCoreDataModelService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostCoreDataModelService.swift; sourceTree = "<group>"; };
+		B209E6442BC566D90067D751 /* EachPostCoreDataModelService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EachPostCoreDataModelService.swift; sourceTree = "<group>"; };
 		B211C1E42BBB3C2900C073EE /* Snapp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Snapp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B211C1E72BBB3C2900C073EE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		B211C1E92BBB3C2900C073EE /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -310,9 +320,28 @@
 			path = Cells;
 			sourceTree = "<group>";
 		};
+		B209E63C2BC562550067D751 /* CoreDataModel */ = {
+			isa = PBXGroup;
+			children = (
+				B209E63D2BC5626C0067D751 /* UserCoreDataModelService.swift */,
+				B209E6422BC565340067D751 /* PostCoreDataModelService.swift */,
+				B209E6442BC566D90067D751 /* EachPostCoreDataModelService.swift */,
+			);
+			path = CoreDataModel;
+			sourceTree = "<group>";
+		};
+		B209E63F2BC5627F0067D751 /* CoreDataService */ = {
+			isa = PBXGroup;
+			children = (
+				B209E6402BC5628C0067D751 /* CoreDataService.swift */,
+			);
+			path = CoreDataService;
+			sourceTree = "<group>";
+		};
 		B211C1DB2BBB3C2900C073EE = {
 			isa = PBXGroup;
 			children = (
+				B209E6392BC560770067D751 /* UserModel.xcdatamodeld */,
 				B211C2882BBD558000C073EE /* GoogleService-Info.plist */,
 				B211C25E2BBC178F00C073EE /* Localizable.xcstrings */,
 				B211C1E62BBB3C2900C073EE /* Snapp */,
@@ -473,6 +502,8 @@
 		B211C2842BBD493300C073EE /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				B209E63F2BC5627F0067D751 /* CoreDataService */,
+				B209E63C2BC562550067D751 /* CoreDataModel */,
 				B211C2852BBD493800C073EE /* FirebaseUser */,
 			);
 			path = Model;
@@ -660,6 +691,8 @@
 				B211C2642BBC17B900C073EE /* Extension+String.swift in Sources */,
 				B211C1EC2BBB3C2900C073EE /* OnBoardingVC.swift in Sources */,
 				B211C2672BBC2EF700C073EE /* SecondOnboardingVC.swift in Sources */,
+				B209E63E2BC5626C0067D751 /* UserCoreDataModelService.swift in Sources */,
+				B209E63B2BC560770067D751 /* UserModel.xcdatamodeld in Sources */,
 				B211C1E82BBB3C2900C073EE /* AppDelegate.swift in Sources */,
 				B209E6312BC3FEB10067D751 /* ProfileChangeViewController.swift in Sources */,
 				B209E6362BC430FC0067D751 /* FeedCollectionVIewCell.swift in Sources */,
@@ -672,6 +705,7 @@
 				B209E6192BC138790067D751 /* FeedPresenter.swift in Sources */,
 				B211C27D2BBD321C00C073EE /* Validator.swift in Sources */,
 				B209E6252BC3FD450067D751 /* FavouritesViewController.swift in Sources */,
+				B209E6412BC5628C0067D751 /* CoreDataService.swift in Sources */,
 				B211C2712BBC4C1700C073EE /* StringFormatter.swift in Sources */,
 				B209E61B2BC139000067D751 /* FeedViewController.swift in Sources */,
 				B209E6382BC431080067D751 /* FeedTableViewCell.swift in Sources */,
@@ -680,10 +714,12 @@
 				B211C2762BBC6A1D00C073EE /* LoginScreenPresenter.swift in Sources */,
 				B211C2742BBC6A1000C073EE /* LoginScreenViewController.swift in Sources */,
 				B209E6332BC3FEBE0067D751 /* ProfileChangePresenter.swift in Sources */,
+				B209E6432BC565340067D751 /* PostCoreDataModelService.swift in Sources */,
 				B209E62E2BC3FDEC0067D751 /* SettingPresenter.swift in Sources */,
 				B209E6272BC3FD5B0067D751 /* FavouritesPresenter.swift in Sources */,
 				B209E61F2BC3FC290067D751 /* ProfileViewController.swift in Sources */,
 				B211C26C2BBC404C00C073EE /* ThirdOnboardingViewController.swift in Sources */,
+				B209E6452BC566D90067D751 /* EachPostCoreDataModelService.swift in Sources */,
 				B211C2872BBD494200C073EE /* FirebaseUser.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1183,6 +1219,17 @@
 /* End XCSwiftPackageProductDependency section */
 
 /* Begin XCVersionGroup section */
+		B209E6392BC560770067D751 /* UserModel.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				B209E63A2BC560770067D751 /* UserModel.xcdatamodel */,
+			);
+			currentVersion = B209E63A2BC560770067D751 /* UserModel.xcdatamodel */;
+			name = UserModel.xcdatamodeld;
+			path = /Users/makszh/Desktop/Snapp/UserModel.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
 		B211C1F02BBB3C2900C073EE /* Snapp.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (

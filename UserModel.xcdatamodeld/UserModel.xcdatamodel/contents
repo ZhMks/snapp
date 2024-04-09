@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="22757" systemVersion="23E224" minimumToolsVersion="Automatic" sourceLanguage="Swift" usedWithSwiftData="YES" userDefinedModelVersionIdentifier="">
+    <entity name="EachPostModel" representedClassName="EachPostModel" syncable="YES" codeGenerationType="class">
+        <attribute name="image" optional="YES" attributeType="String"/>
+        <attribute name="likes" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="text" optional="YES" attributeType="String"/>
+        <attribute name="views" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <relationship name="postMainModel" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="PostsMainModel" inverseName="posts" inverseEntity="PostsMainModel"/>
+    </entity>
+    <entity name="PostsMainModel" representedClassName="PostsMainModel" syncable="YES" codeGenerationType="class">
+        <attribute name="date" optional="YES" attributeType="String"/>
+        <relationship name="mainUser" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="UserMainModel" inverseName="postsMainModel" inverseEntity="UserMainModel"/>
+        <relationship name="posts" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="EachPostModel" inverseName="postMainModel" inverseEntity="EachPostModel"/>
+    </entity>
+    <entity name="UserMainModel" representedClassName="UserMainModel" syncable="YES" codeGenerationType="class">
+        <attribute name="id" optional="YES" attributeType="String"/>
+        <relationship name="postsMainModel" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="PostsMainModel" inverseName="mainUser" inverseEntity="PostsMainModel"/>
+    </entity>
+</model>

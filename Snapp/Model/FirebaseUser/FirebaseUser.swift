@@ -24,7 +24,6 @@ struct FirebaseUser: Codable {
 }
 
 struct EachPost: Codable {
-    var date: String
     var text: String
     var image: String
     var likes: Int

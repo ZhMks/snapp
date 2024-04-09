@@ -58,7 +58,8 @@ final class FeedViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
         print("INSIDEFEEDVIEW USER: \(presenter.user)")
-        print("INSIDEFEEDVIEW POSTS: \(presenter.posts)")
+        print("INSIDEFEEDVIEW POSTS: \(presenter.posts.keys)")
+        print("INSIDEFEEDVIEW POSTS: \(presenter.posts.values)")
     }
 
     // MARK: -FUNCS
@@ -120,11 +121,13 @@ extension FeedViewController: UICollectionViewDelegateFlowLayout {
 extension FeedViewController: UICollectionViewDataSource {
 
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        0
+        4
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        return UICollectionViewCell()
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Cell", for: indexPath)
+        cell.backgroundColor = .blue
+        return cell
     }
 }
 
@@ -136,11 +139,13 @@ extension FeedViewController: UITableViewDelegate {
 // MARK: -TABLEVIEWDATASOURCE
 extension FeedViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        0
+        4
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        return UITableViewCell()
+        let cell = tableView.dequeueReusableCell(withIdentifier: "TableCell", for: indexPath)
+        cell.backgroundColor = .blue
+        return cell
     }
     
 

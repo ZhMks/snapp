@@ -11,6 +11,7 @@ import FirebaseFirestoreSwift
 import FirebaseStorage
 import FirebaseAuth
 import FirebaseDatabase
+import CoreData
 
 
 protocol ThirdOnboardingViewProtocol: AnyObject {
@@ -20,8 +21,8 @@ protocol ThirdOnboardingViewProtocol: AnyObject {
 protocol ThirdOnboardingPresenterProtocol: AnyObject {
     var authService: FireBaseAuthProtocol? { get set }
     var firestoreService: FireStoreServiceProtocol? { get set }
-    init (view: ThirdOnboardingViewProtocol, authService: FireBaseAuthProtocol, firestoreService: FireStoreServiceProtocol)
-    func checkCode(code: String, completion: @escaping (Result<FirebaseUser,Error>) -> Void)
+    init (view: ThirdOnboardingViewProtocol, authService: FireBaseAuthProtocol, firestoreService: FireStoreServiceProtocol, userModelService: UserCoreDataModelService)
+    func checkCode(code: String, completion: @escaping (Result<UserMainModel,Error>) -> Void)
 }
 
 final class ThirdOnboardingPresenter: ThirdOnboardingPresenterProtocol {
@@ -30,21 +31,23 @@ final class ThirdOnboardingPresenter: ThirdOnboardingPresenterProtocol {
     var authService: FireBaseAuthProtocol?
     var firestoreService: FireStoreServiceProtocol?
     let firestore = Firestore.firestore()
+    let userModelService: UserCoreDataModelService
 
-    init(view: any ThirdOnboardingViewProtocol, authService: FireBaseAuthProtocol, firestoreService: FireStoreServiceProtocol) {
+    init(view: any ThirdOnboardingViewProtocol, authService: FireBaseAuthProtocol, firestoreService: FireStoreServiceProtocol, userModelService: UserCoreDataModelService ) {
         self.view = view
         self.authService = authService
         self.firestoreService = firestoreService
+        self.userModelService = userModelService
     }
 
-    func checkCode(code: String, completion: @escaping (Result<FirebaseUser,Error>) -> Void) {
+    func checkCode(code: String, completion: @escaping (Result<UserMainModel,Error>) -> Void) {
         authService?.verifyCode(code: code) { [weak self] result in
             switch result {
             case .success(let success):
                 self?.firestoreService?.getUser(id: success.uid) { result in
                     switch result {
                     case .success(let user):
-                        completion(.success(user))
+                        self?.userModelService.saveModelToCoreData(user: user)
                     case .failure(let failure):
                         self?.view?.showAlert(error: failure.localizedDescription)
                     }
