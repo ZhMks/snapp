@@ -8,6 +8,7 @@
 import UIKit
 
 final class UserCoreDataModelService {
+
     private(set) var modelArray: [UserMainModel]?
     let coredataService = CoreDataService.shared
 
@@ -26,13 +27,17 @@ final class UserCoreDataModelService {
     }
 
     func saveModelToCoreData(user: FirebaseUser, posts: [String: [String: EachPost]], completion: @escaping (Result<UserMainModel, Error>) -> Void) {
-        guard let modelArray = modelArray else { return }
-        let newModelToSave = UserMainModel(context: coredataService.managedContext)
-        newModelToSave.id = user.id
-        savePostsToCoreData(posts: posts, mainModel: newModelToSave)
-        coredataService.saveContext()
-        fetchFromCoreData()
-        completion(.success(newModelToSave))
+        guard let modelsArray = modelArray else { return }
+        if modelsArray.isEmpty {
+            let newModelToSave = UserMainModel(context: coredataService.managedContext)
+            newModelToSave.id = user.id
+            savePostsToCoreData(posts: posts, mainModel: newModelToSave)
+            coredataService.saveContext()
+            fetchFromCoreData()
+            completion(.success(newModelToSave))
+        } else {
+            completion(.success(modelsArray.first!g))
+        }
     }
 
     func savePostsToCoreData(posts: [String : [String : EachPost]], mainModel: UserMainModel) {
@@ -45,41 +50,29 @@ final class UserCoreDataModelService {
             saveEachPostToCoreData(posts: value, mainModel: newPosts)
             newPosts.date = key
         }
-
+        newPosts.mainUser = mainModel
         coredataService.saveContext()
+        fetchFromCoreData()
+
     }
 
     func saveEachPostToCoreData(posts: [String : EachPost], mainModel: PostsMainModel) {
         guard let context = mainModel.managedObjectContext else { return }
-        let eachPost = EachPostModel(context: context)
 
-        
+        print(posts.keys.count)
+
         for (key, value) in posts {
+            let eachPost = EachPostModel(context: context)
             eachPost.identifier = key
-            if key == "text" {
-                eachPost.text = value.text
-                print(eachPost.text)
-            }
-
-            if key == "image" {
-                eachPost.image = value.image
-                print(eachPost.image)
-            }
-
-            if key == "likes" {
-                eachPost.likes = Int16(value.likes)
-                print(eachPost.likes)
-            }
-
-            if key == "views" {
-                eachPost.views = Int16(value.views)
-                print(eachPost.views)
-            }
+            eachPost.text = value.text
+            eachPost.image = value.image
+            eachPost.likes = Int64(value.likes)
+            eachPost.views = Int64(value.views)
+            print(eachPost)
+            eachPost.postMainModel = mainModel
+            coredataService.saveContext()
         }
-        print(eachPost.likes)
-        print(eachPost.views)
-        print(eachPost.text)
-        coredataService.saveContext()
+        fetchFromCoreData()
     }
 }
 

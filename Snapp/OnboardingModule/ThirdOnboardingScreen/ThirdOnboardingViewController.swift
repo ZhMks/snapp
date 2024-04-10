@@ -101,6 +101,7 @@ class ThirdOnboardingViewController: UIViewController {
             guard let self else { return }
             switch resultUser {
             case .success(let user):
+                print(user.postsMainModel?.count)
                 let postsModelService = PostsCoreDataModelService(mainModel: user)
                 var eachPostArray: [EachPostModel] = []
                 print(postsModelService.modelArray)
@@ -110,13 +111,9 @@ class ThirdOnboardingViewController: UIViewController {
                     eachPostArray = eachPostsModelService.modelArray!
                     print(eachPostArray)
                 }
-
-                DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
                     let feedVC = FeedViewController()
                     let feedPresenter = FeedPresenter(view: feedVC, user: user, posts: array, eachPost: eachPostArray)
                     feedVC.presenter = feedPresenter
-                    self.navigationController?.pushViewController(feedVC, animated: true)
-                }
             case .failure(let failure):
                 print(failure.localizedDescription)
             }
