@@ -25,7 +25,62 @@ final class UserCoreDataModelService {
         }
     }
 
-    func saveModelToCoreData(user: FirebaseUser) {}
+    func saveModelToCoreData(user: FirebaseUser, posts: [String: [String: EachPost]], completion: @escaping (Result<UserMainModel, Error>) -> Void) {
+        guard let modelArray = modelArray else { return }
+        let newModelToSave = UserMainModel(context: coredataService.managedContext)
+        newModelToSave.id = user.id
+        savePostsToCoreData(posts: posts, mainModel: newModelToSave)
+        coredataService.saveContext()
+        fetchFromCoreData()
+        completion(.success(newModelToSave))
+    }
+
+    func savePostsToCoreData(posts: [String : [String : EachPost]], mainModel: UserMainModel) {
+        
+        guard let context = mainModel.managedObjectContext else { return }
+        
+        let newPosts = PostsMainModel(context: context)
+
+        for (key, value) in posts {
+            saveEachPostToCoreData(posts: value, mainModel: newPosts)
+            newPosts.date = key
+        }
+
+        coredataService.saveContext()
+    }
+
+    func saveEachPostToCoreData(posts: [String : EachPost], mainModel: PostsMainModel) {
+        guard let context = mainModel.managedObjectContext else { return }
+        let eachPost = EachPostModel(context: context)
+
+        
+        for (key, value) in posts {
+            eachPost.identifier = key
+            if key == "text" {
+                eachPost.text = value.text
+                print(eachPost.text)
+            }
+
+            if key == "image" {
+                eachPost.image = value.image
+                print(eachPost.image)
+            }
+
+            if key == "likes" {
+                eachPost.likes = Int16(value.likes)
+                print(eachPost.likes)
+            }
+
+            if key == "views" {
+                eachPost.views = Int16(value.views)
+                print(eachPost.views)
+            }
+        }
+        print(eachPost.likes)
+        print(eachPost.views)
+        print(eachPost.text)
+        coredataService.saveContext()
+    }
 }
 
 

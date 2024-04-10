@@ -34,7 +34,7 @@ final class CoreDataService {
                 do {
                     try managedContext.save()
                 } catch {
-                    print(error.localizedDescription)
+                    print("Error in CoreDataSave: \(error.localizedDescription)")
                 }
             }
         }

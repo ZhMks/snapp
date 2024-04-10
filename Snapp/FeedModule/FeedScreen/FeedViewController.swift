@@ -58,8 +58,7 @@ final class FeedViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
         print("INSIDEFEEDVIEW USER: \(presenter.user)")
-        print("INSIDEFEEDVIEW POSTS: \(presenter.posts.keys)")
-        print("INSIDEFEEDVIEW POSTS: \(presenter.posts.values)")
+        print("InsideFEEDVEIW USERPOST: \(presenter.user.postsMainModel)")
     }
 
     // MARK: -FUNCS

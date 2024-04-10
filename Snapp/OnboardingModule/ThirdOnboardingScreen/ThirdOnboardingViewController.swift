@@ -85,7 +85,6 @@ class ThirdOnboardingViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
         tuneNavItem()
-        print(number)
         addSubviews()
         layout()
     }
@@ -102,20 +101,22 @@ class ThirdOnboardingViewController: UIViewController {
             guard let self else { return }
             switch resultUser {
             case .success(let user):
-                presenter.firestoreService?.getPosts(id: user.id!, completion: { result in
-                    switch result {
-                    case .success(let success):
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak self] in
-                            guard let self else { return }
-                            let feedController = FeedViewController()
-                            let feedPresenter = FeedPresenter(view: feedController, user: user, posts: success)
-                            feedController.presenter = feedPresenter
-                            (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootViewController(feedController, user: user, posts: success, firestoreService: presenter.firestoreService!)
-                        }
-                    case .failure(let failure):
-                        print(failure.localizedDescription)
-                    }
-                })
+                let postsModelService = PostsCoreDataModelService(mainModel: user)
+                var eachPostArray: [EachPostModel] = []
+                print(postsModelService.modelArray)
+                guard let array = postsModelService.modelArray else { return }
+                for model in array {
+                    let eachPostsModelService = EachPostCoreDataModelService(mainModel: model)
+                    eachPostArray = eachPostsModelService.modelArray!
+                    print(eachPostArray)
+                }
+
+                DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                    let feedVC = FeedViewController()
+                    let feedPresenter = FeedPresenter(view: feedVC, user: user, posts: array, eachPost: eachPostArray)
+                    feedVC.presenter = feedPresenter
+                    self.navigationController?.pushViewController(feedVC, animated: true)
+                }
             case .failure(let failure):
                 print(failure.localizedDescription)
             }

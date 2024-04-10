@@ -47,7 +47,21 @@ final class ThirdOnboardingPresenter: ThirdOnboardingPresenterProtocol {
                 self?.firestoreService?.getUser(id: success.uid) { result in
                     switch result {
                     case .success(let user):
-                        self?.userModelService.saveModelToCoreData(user: user)
+                        self?.firestoreService?.getPosts(id: user.id!, completion: { result in
+                                switch result {
+                                case .success(let success):
+                                        self?.userModelService.saveModelToCoreData(user: user, posts: success) { result in
+                                            switch result {
+                                            case .success(let success):
+                                                completion(.success(success))
+                                            case .failure(let failure):
+                                                print("Error in saving Model to Coredata: \(failure.localizedDescription)")
+                                            }
+                                        }
+                                case .failure(let failure):
+                                    print("Error in getting POST: \(failure.localizedDescription)")
+                                }
+                            })
                     case .failure(let failure):
                         self?.view?.showAlert(error: failure.localizedDescription)
                     }

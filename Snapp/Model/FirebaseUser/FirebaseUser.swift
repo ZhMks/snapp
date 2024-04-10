@@ -11,7 +11,7 @@ import UIKit
 import FirebaseFirestore
 
 struct FirebaseUser: Codable {
-    @DocumentID var id: String?
+    var id: String?
     var name: String
     var surname: String
     var job: String

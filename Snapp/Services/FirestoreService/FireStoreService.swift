@@ -22,7 +22,7 @@ enum ChangeStates {
 protocol FireStoreServiceProtocol {
     func getUser(id: String, completion: @escaping (Result<FirebaseUser, Error>) -> Void)
     func getPosts(id: String, completion: @escaping (Result<[String : [String : EachPost]], Error>) -> Void)
-    func getEachPost(id: String, completion: @escaping (Result<[String: EachPost], Error>) ->Void)
+    func getEachPost(userid: String, documentid: String, completion: @escaping (Result<[String: EachPost], Error>) ->Void)
     func changeData(id: String, text: String, state: ChangeStates) async
 }
 
@@ -41,11 +41,11 @@ final class FireStoreService: FireStoreServiceProtocol {
                                    interests: ",",
                                    contacts: "fdfs",
                                    city: "TestCituy")
-        firuser.id = ref.documentID
         ref.getDocument(as: FirebaseUser.self) { [weak self] result in
             guard self != nil else { return }
             switch result {
             case .success(let user):
+                firuser.id = id
                 firuser.name = user.name
                 firuser.job = user.job
                 firuser.stories = user.stories
@@ -75,22 +75,24 @@ final class FireStoreService: FireStoreServiceProtocol {
 
             if let snapshot = snapshot {
                 for document in snapshot.documents {
-                    self.getEachPost(id: document.documentID) { result in
+                    self.getEachPost(userid: id, documentid: document.documentID) { result in
                         switch result {
                         case .success(let success):
+                            print(success.keys)
+                            print(success.values)
                             posts.updateValue(success, forKey: document.documentID)
                         case .failure(let failure):
                             completion(.failure(failure))
                         }
+                        completion(.success(posts))
                     }
                 }
-                completion(.success(posts))
             }
         }
     }
 
-    func getEachPost(id: String, completion: @escaping (Result<[String: EachPost], Error>) ->Void) {
-        let postRef = Firestore.firestore().collection("Users").document(id).collection("posts").document(id)
+    func getEachPost(userid: String, documentid: String, completion: @escaping (Result<[String: EachPost], Error>) ->Void) {
+        let postRef = Firestore.firestore().collection("Users").document(userid).collection("posts").document(documentid)
         var postsArray: [String : EachPost] = [:]
 
             postRef.collection("PostsInThisDate").getDocuments { snapshot, error in

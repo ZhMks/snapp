@@ -22,6 +22,7 @@ final class EachPostCoreDataModelService {
         guard let array = mainModel.posts?.sortedArray(using: [NSSortDescriptor(key: "date", ascending: true)]) as? [EachPostModel] else {
             return self.modelArray = []
         }
+        print(array)
         modelArray = array
     }
 

@@ -83,7 +83,8 @@ class LoginScreenViewController: UIViewController {
                         guard let self else { return }
                         let firestoreService = FireStoreService()
                         let thirdController = ThirdOnboardingViewController(number: number)
-                        let thirdPresenter = ThirdOnboardingPresenter(view: thirdController, authService: loginpresenter.authService!, firestoreService: firestoreService)
+                        let userModelService = UserCoreDataModelService()
+                        let thirdPresenter = ThirdOnboardingPresenter(view: thirdController, authService: loginpresenter.authService!, firestoreService: firestoreService, userModelService: userModelService)
                         thirdController.presenter = thirdPresenter
                         self.navigationController?.pushViewController(thirdController, animated: true)
                     }
