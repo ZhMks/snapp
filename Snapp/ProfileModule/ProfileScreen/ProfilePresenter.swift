@@ -12,20 +12,18 @@ protocol ProfileViewProtocol {
 }
 
 protocol ProfilePresenterProtocol {
-    init(view: ProfileViewProtocol, firebaseUser: FirebaseUser, posts: [String : [String:EachPost]], firestoreService: FireStoreServiceProtocol)
+    init(view: ProfileViewProtocol, mainUser: UserMainModel, firestoreService: FireStoreServiceProtocol)
 }
 
 final class ProfilePresenter: ProfilePresenterProtocol {
 
     var view: ProfileViewProtocol?
-    var firebaseUser: FirebaseUser
-    var posts: [String : [String:EachPost]]
+    var mainUser: UserMainModel
     var firestoreService: FireStoreServiceProtocol
 
-    init(view: ProfileViewProtocol, firebaseUser: FirebaseUser, posts: [String : [String:EachPost]], firestoreService: FireStoreServiceProtocol) {
+    init(view: ProfileViewProtocol, mainUser: UserMainModel, firestoreService: FireStoreServiceProtocol) {
         self.view = view
-        self.firebaseUser = firebaseUser
-        self.posts = posts
+        self.mainUser = mainUser
         self.firestoreService = firestoreService
     }
 }

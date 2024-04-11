@@ -14,7 +14,7 @@ protocol AddProfileViewProtocol: AnyObject {
 
 protocol AddProfilePresenterProtocol: AnyObject {
     init(view: AddProfileViewProtocol, firebaseUser: FirebaseUser, firestoreService: FireStoreService, userCoreDataService: UserCoreDataModelService)
-    func createUser(name: String, surname: String, job: String, city: String, interests: String, contacts: String, image: UIImage)
+    func createUser(name: String, surname: String, job: String, city: String, interests: String, contacts: String, image: UIImage, completion: @escaping (Result <FirebaseUser, Error>) -> Void)
 }
 
 
@@ -32,7 +32,7 @@ final class AddProfilePresenter: AddProfilePresenterProtocol {
         self.firestoreService = firestoreService
         self.userCoreDataService = userCoreDataService
     }
-    func createUser(name: String, surname: String, job: String, city: String, interests: String, contacts: String, image: UIImage) {
+    func createUser(name: String, surname: String, job: String, city: String, interests: String, contacts: String, image: UIImage, completion: @escaping (Result <FirebaseUser, Error>) -> Void) {
 
         firebaseUser.name = name
         firebaseUser.surname = surname
@@ -47,6 +47,7 @@ final class AddProfilePresenter: AddProfilePresenterProtocol {
             case .success(let success):
                 firebaseUser.image = success.absoluteString
                 firestoreService.createUser(user: firebaseUser)
+                completion(.success(firebaseUser))
             case .failure(let failure):
                 print(failure.localizedDescription)
             }

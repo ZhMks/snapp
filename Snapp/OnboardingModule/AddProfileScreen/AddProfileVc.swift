@@ -112,19 +112,28 @@ final class AddProfileVc: UIViewController {
     // MARK: -FUNCS
 
     @objc func pushMainScreen() {
-        print(nameTextField.text)
-        print(surNameTextField.text)
-        print(jobNameTextField.text)
-        print(cityTextField.text)
-        print(interestsTextField.text)
-        print(contactsTextField.text)
         presenter.createUser(name: nameTextField.text!,
                              surname: surNameTextField.text!,
                              job: jobNameTextField.text!,
                              city: cityTextField.text!,
                              interests: interestsTextField.text!,
                              contacts: contactsTextField.text!,
-                             image: avatarImage.image!)
+                             image: avatarImage.image!) { result in
+            switch result {
+            case .success(let user):
+                self.presenter.firestoreService.getPosts(id: user.id!) { result in
+                    switch result {
+                    case .success(let posts):
+                        print(posts)
+                    case .failure(let failure):
+                        print(failure.localizedDescription)
+                    }
+                }
+            case .failure(let failure):
+                print(failure.localizedDescription)
+            }
+
+        }
     }
 
     @objc func tapOnView() {

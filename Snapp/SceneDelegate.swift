@@ -22,12 +22,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let presenter = Presenter(view: controller)
         controller.presener = presenter
 
-//        let firebaseUser = FirebaseUser(name: "", surname: "", job: "", subscribers: [], subscriptions: [], stories: [], interests: "", contacts: "", city: "", image: "")
-//        let firestoreService = FireStoreService()
-//        let userCoreDataService = UserCoreDataModelService()
-//        let controller = AddProfileVc()
-//        let presenter = AddProfilePresenter(view: controller, firebaseUser: firebaseUser, firestoreService: firestoreService, userCoreDataService: userCoreDataService)
-//        controller.presenter = presenter
         let navigationController = UINavigationController(rootViewController: controller)
         window.rootViewController = navigationController
 
@@ -69,13 +63,13 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         (UIApplication.shared.delegate as? AppDelegate)?.saveContext()
     }
 
-    func changeRootViewController(_ vc: UIViewController, user: FirebaseUser, posts: [String : [String:EachPost]], firestoreService: FireStoreServiceProtocol) {
+    func changeRootViewController(_ vc: UIViewController, user: UserMainModel, firestoreService: FireStoreServiceProtocol) {
         guard let window = self.window else {
             return
         }
 
         let favouritesVC = FavouritesViewController()
-        let favouritesPresenter = FavouritesPresenter(view: favouritesVC, posts: posts, user: user)
+        let favouritesPresenter = FavouritesPresenter(view: favouritesVC, user: user)
         favouritesVC.presenter = favouritesPresenter
         let favouriteNavVC = UINavigationController(rootViewController: favouritesVC)
         favouriteNavVC.tabBarItem = UITabBarItem(title: "Сохраненные", image: UIImage(systemName: "heart"), tag: 2)
@@ -84,7 +78,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         feedNavVc.tabBarItem = UITabBarItem(title: "Главная", image: UIImage(systemName: "house"), tag: 0)
 
         let profileVC = ProfileViewController()
-        let profilePresenter = ProfilePresenter(view: profileVC, firebaseUser: user, posts: posts, firestoreService: firestoreService)
+        let profilePresenter = ProfilePresenter(view: profileVC, mainUser: user, firestoreService: firestoreService)
         profileVC.presenter = profilePresenter
         let profileNavVC = UINavigationController(rootViewController: profileVC)
         profileNavVC.tabBarItem = UITabBarItem(title: "Профиль", image: UIImage(systemName: "person.crop.circle"), tag: 1)

@@ -40,9 +40,9 @@ extension ProfileViewController {
     }
 
     @objc func showSettingsVC() {
-        let settingsVC = SettingsViewController()
-        let settingsPresenter = SettingPresenter(view: settingsVC, user: presenter.firebaseUser, firestoreService: presenter.firestoreService)
-        settingsVC.presenter = settingsPresenter
-        navigationController?.present(settingsVC, animated: true)
+//        let settingsVC = SettingsViewController()
+//        let settingsPresenter = SettingPresenter(view: settingsVC, user: presenter.firebaseUser, firestoreService: presenter.firestoreService)
+//        settingsVC.presenter = settingsPresenter
+//        navigationController?.present(settingsVC, animated: true)
     }
 }
