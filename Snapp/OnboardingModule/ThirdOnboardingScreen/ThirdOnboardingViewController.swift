@@ -101,19 +101,7 @@ class ThirdOnboardingViewController: UIViewController {
             guard let self else { return }
             switch resultUser {
             case .success(let user):
-                print(user.postsMainModel?.count)
-                let postsModelService = PostsCoreDataModelService(mainModel: user)
-                var eachPostArray: [EachPostModel] = []
-                print(postsModelService.modelArray)
-                guard let array = postsModelService.modelArray else { return }
-                for model in array {
-                    let eachPostsModelService = EachPostCoreDataModelService(mainModel: model)
-                    eachPostArray = eachPostsModelService.modelArray!
-                    print(eachPostArray)
-                }
-                    let feedVC = FeedViewController()
-                    let feedPresenter = FeedPresenter(view: feedVC, user: user, posts: array, eachPost: eachPostArray)
-                    feedVC.presenter = feedPresenter
+                print(user.id)
             case .failure(let failure):
                 print(failure.localizedDescription)
             }
@@ -125,36 +113,46 @@ class ThirdOnboardingViewController: UIViewController {
 
 // MARK: -OUTPUT PRESENTER
 extension ThirdOnboardingViewController: ThirdOnboardingViewProtocol {
-    func showAlert(error: String) {
-        switch error {
-        case "Не удалось прочесть данные, так как они отсутствуют.":
-            let settingsVC = SettingsViewController()
-            let firestoreService = FireStoreService()
-            let user = FirebaseUser(name: "",
-                                    surname: "",
-                                    job: "",
-                                    subscribers: [],
-                                    subscriptions: [],
-                                    stories: [],
-                                    interests: "",
-                                    contacts: "",
-                                    city: "")
-            let settingsPresenter = SettingPresenter(view: settingsVC, user: user, firestoreService: firestoreService)
-            settingsVC.presenter = settingsPresenter
-            navigationController?.pushViewController(settingsVC, animated: true)
-        default:
-            let alertController = UIAlertController(title: .localized(string: "Ошибка"), message: error, preferredStyle: .alert)
-            let alertAction = UIAlertAction(title: "Отмена", style: .cancel)
-            alertController.addAction(alertAction)
-            navigationController?.present(alertController, animated: true)
-        }
+
+    func showCreateUserScreen(id: String) {
+        let userCoreDataService = UserCoreDataModelService()
+        let firestoreService = FireStoreService()
+        let user = FirebaseUser(id: id,
+                                name: "",
+                                surname: "",
+                                job: "",
+                                subscribers: [],
+                                subscriptions: [],
+                                stories: [],
+                                interests: "",
+                                contacts: "",
+                                city: "",
+                                image: "Data()")
+        let addProfileVC = AddProfileVc()
+        let addProfilePresenter = AddProfilePresenter(view: addProfileVC, firebaseUser: user, firestoreService: firestoreService, userCoreDataService: userCoreDataService)
+        addProfileVC.presenter = addProfilePresenter
+        navigationController?.pushViewController(addProfileVC, animated: true)
+    }
+
+    func showUserExistAlert(id: String) {
+        let alertController = UIAlertController(title: .localized(string: "Ошибка"), message: .localized(string: "Пользователь с таким номером уже зарегестрирован в системе. ID: \(id)"), preferredStyle: .alert)
+        let alertAction = UIAlertAction(title: "Отмена", style: .cancel)
+        alertController.addAction(alertAction)
+        navigationController?.present(alertController, animated: true)
+    }
+
+    func showErrorAlert(error: String) {
+        let alertController = UIAlertController(title: .localized(string: "Ошибка"), message: .localized(string: "\(error)"), preferredStyle: .alert)
+        let alertAction = UIAlertAction(title: "Отмена", style: .cancel)
+        alertController.addAction(alertAction)
+        navigationController?.present(alertController, animated: true)
     }
 }
 
 // MARK: -LAYOUT
 
 extension ThirdOnboardingViewController {
-    
+
     private func addSubviews() {
         view.addSubview(registrationAccept)
         view.addSubview(informationText)

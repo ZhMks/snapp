@@ -36,7 +36,7 @@ final class UserCoreDataModelService {
             fetchFromCoreData()
             completion(.success(newModelToSave))
         } else {
-            completion(.success(modelsArray.first!g))
+            completion(.success(modelsArray.first!))
         }
     }
 
@@ -59,8 +59,6 @@ final class UserCoreDataModelService {
     func saveEachPostToCoreData(posts: [String : EachPost], mainModel: PostsMainModel) {
         guard let context = mainModel.managedObjectContext else { return }
 
-        print(posts.keys.count)
-
         for (key, value) in posts {
             let eachPost = EachPostModel(context: context)
             eachPost.identifier = key
@@ -68,7 +66,6 @@ final class UserCoreDataModelService {
             eachPost.image = value.image
             eachPost.likes = Int64(value.likes)
             eachPost.views = Int64(value.views)
-            print(eachPost)
             eachPost.postMainModel = mainModel
             coredataService.saveContext()
         }

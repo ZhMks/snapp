@@ -21,6 +21,13 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let controller = FirstBoardingVC()
         let presenter = Presenter(view: controller)
         controller.presener = presenter
+
+//        let firebaseUser = FirebaseUser(name: "", surname: "", job: "", subscribers: [], subscriptions: [], stories: [], interests: "", contacts: "", city: "", image: "")
+//        let firestoreService = FireStoreService()
+//        let userCoreDataService = UserCoreDataModelService()
+//        let controller = AddProfileVc()
+//        let presenter = AddProfilePresenter(view: controller, firebaseUser: firebaseUser, firestoreService: firestoreService, userCoreDataService: userCoreDataService)
+//        controller.presenter = presenter
         let navigationController = UINavigationController(rootViewController: controller)
         window.rootViewController = navigationController
 

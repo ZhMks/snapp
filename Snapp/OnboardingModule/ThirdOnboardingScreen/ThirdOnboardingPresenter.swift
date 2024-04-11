@@ -15,7 +15,9 @@ import CoreData
 
 
 protocol ThirdOnboardingViewProtocol: AnyObject {
-    func showAlert(error: String)
+    func showCreateUserScreen(id: String)
+    func showUserExistAlert(id: String)
+    func showErrorAlert(error: String)
 }
 
 protocol ThirdOnboardingPresenterProtocol: AnyObject {
@@ -47,28 +49,14 @@ final class ThirdOnboardingPresenter: ThirdOnboardingPresenterProtocol {
                 self?.firestoreService?.getUser(id: success.uid) { result in
                     switch result {
                     case .success(let user):
-                        self?.firestoreService?.getPosts(id: user.id!, completion: { result in
-                                switch result {
-                                case .success(let success):
-                                        self?.userModelService.saveModelToCoreData(user: user, posts: success) { result in
-                                            switch result {
-                                            case .success(let success):
-                                                completion(.success(success))
-                                            case .failure(let failure):
-                                                print("Error in saving Model to Coredata: \(failure.localizedDescription)")
-                                            }
-                                        }
-                                case .failure(let failure):
-                                    print("Error in getting POST: \(failure.localizedDescription)")
-                                }
-                            })
+                        self?.view?.showUserExistAlert(id: user.id!)
                     case .failure(let failure):
-                        self?.view?.showAlert(error: failure.localizedDescription)
+                        self?.view?.showCreateUserScreen(id: success.uid)
                     }
                 }
             case .failure(let failure):
                 completion(.failure(failure))
-                self?.view?.showAlert(error: failure.description)
+                self?.view?.showErrorAlert(error: failure.description)
             }
         }
     }

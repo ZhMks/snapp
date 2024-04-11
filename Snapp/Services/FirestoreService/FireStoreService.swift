@@ -29,7 +29,6 @@ protocol FireStoreServiceProtocol {
 
 final class FireStoreService: FireStoreServiceProtocol {
 
-
     func getUser(id: String, completion: @escaping (Result<FirebaseUser, Error>) -> Void) {
         let ref = Firestore.firestore().collection("Users").document(id)
         var firuser = FirebaseUser(name: "test",
@@ -40,7 +39,8 @@ final class FireStoreService: FireStoreServiceProtocol {
                                    stories: ["test"],
                                    interests: ",",
                                    contacts: "fdfs",
-                                   city: "TestCituy")
+                                   city: "TestCituy",
+                                   image: "")
         ref.getDocument(as: FirebaseUser.self) { [weak self] result in
             guard self != nil else { return }
             switch result {
@@ -161,6 +161,46 @@ final class FireStoreService: FireStoreServiceProtocol {
                 print("error in updating \(error.localizedDescription)")
             }
         }
+    }
+
+    func createUser(user: FirebaseUser) {
+    print(user)
+     Firestore.firestore().collection("Users").document(user.id!).setData([
+            "name" : user.name,
+            "job" : user.job,
+            "city" : user.city,
+            "contacts" : user.contacts,
+            "interests" : user.interests,
+            "surname" : user.surname,
+            "subscribers" : user.subscribers,
+            "stories" : user.stories,
+            "subsribtions" : user.subscriptions,
+            "image" : user.image
+        ])
+    }
+
+    func saveImageIntoStorage(photo: UIImage, for user: String, completion: @escaping (Result <URL, Error>) -> Void) {
+        let ref = Storage.storage().reference().child("users").child(user).child("avatar")
+        guard let imageData = photo.jpegData(compressionQuality: 0.7) else { return }
+        let metaData = StorageMetadata()
+        metaData.contentType = "image/jpeg"
+
+        ref.putData(imageData, metadata: metaData) { metada, error in
+            guard let metadata = metada else {
+                completion(.failure(error!))
+                return
+            }
+
+            ref.downloadURL { url, error in
+                guard let url = url else {
+                    completion(.failure(error!))
+                    return
+                }
+                completion(.success(url))
+            }
+        }
+
+
     }
 }
 
