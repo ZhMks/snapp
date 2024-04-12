@@ -30,36 +30,23 @@ protocol FireStoreServiceProtocol {
 final class FireStoreService: FireStoreServiceProtocol {
 
     func getUser(id: String, completion: @escaping (Result<FirebaseUser, Error>) -> Void) {
-        let ref = Firestore.firestore().collection("Users").document(id)
-        var firuser = FirebaseUser(name: "test",
-                                   surname: "test",
-                                   job: "test",
-                                   subscribers: ["test"],
-                                   subscriptions: ["test"],
-                                   stories: ["test"],
-                                   interests: ",",
-                                   contacts: "fdfs",
-                                   city: "TestCituy",
-                                   image: "")
-        ref.getDocument(as: FirebaseUser.self) { [weak self] result in
-            guard self != nil else { return }
-            switch result {
-            case .success(let user):
-                firuser.id = id
-                firuser.name = user.name
-                firuser.job = user.job
-                firuser.stories = user.stories
-                firuser.subscribers = user.subscribers
-                firuser.subscriptions = user.subscriptions
-                firuser.contacts = user.contacts
-                firuser.city = user.city
-                firuser.interests = user.interests
-                firuser.surname = user.surname
-                completion(.success(firuser))
-            case .failure(let error):
-                print("Error in decoding doc \(error.localizedDescription)")
+        let dbReference = Firestore.firestore().collection("Users").document(id)
+        dbReference.getDocument { snapshot, error in
+            if let error = error {
+                print("Error in gettingUser: \(error.localizedDescription)")
                 completion(.failure(error))
             }
+
+            if let snapshot = snapshot {
+                do {
+                    let currentUser = try snapshot.data(as: FirebaseUser.self)
+                    completion(.success(currentUser))
+                } catch {
+                    completion(.failure(error))
+                }
+            }
+
+
         }
     }
 
@@ -74,18 +61,27 @@ final class FireStoreService: FireStoreServiceProtocol {
             }
 
             if let snapshot = snapshot {
-                for document in snapshot.documents {
-                    self.getEachPost(userid: id, documentid: document.documentID) { result in
-                        switch result {
-                        case .success(let success):
-                            print(success.keys)
-                            print(success.values)
-                            posts.updateValue(success, forKey: document.documentID)
-                        case .failure(let failure):
-                            completion(.failure(failure))
+                if !snapshot.documents.isEmpty {
+                    for document in snapshot.documents {
+                        self.getEachPost(userid: id, documentid: document.documentID) { result in
+                            switch result {
+                            case .success(let success):
+                                print(success.keys)
+                                print(success.values)
+                                posts.updateValue(success, forKey: document.documentID)
+                            case .failure(let failure):
+                                completion(.failure(failure))
+                            }
+                            completion(.success(posts))
                         }
-                        completion(.success(posts))
                     }
+                } else {
+                    let currentDate = Date()
+                    let dateFormatter = DateFormatter()
+                    dateFormatter.dateFormat = "dd-MM-yyyy"
+                    let dateString =  dateFormatter.string(from: currentDate)
+                    posts.updateValue([:], forKey: dateString)
+                    completion(.success(posts))
                 }
             }
         }
@@ -95,7 +91,7 @@ final class FireStoreService: FireStoreServiceProtocol {
         let postRef = Firestore.firestore().collection("Users").document(userid).collection("posts").document(documentid)
         var postsArray: [String : EachPost] = [:]
 
-            postRef.collection("PostsInThisDate").getDocuments { snapshot, error in
+        postRef.collection("PostsInThisDate").getDocuments { snapshot, error in
             if let error = error {
                 completion(.failure(error))
             }
@@ -120,7 +116,7 @@ final class FireStoreService: FireStoreServiceProtocol {
     }
 
     func changeData(id: String, text: String, state: ChangeStates) async {
-        
+
         let ref = Firestore.firestore().collection("Users").document(id)
 
         switch state {
@@ -163,8 +159,8 @@ final class FireStoreService: FireStoreServiceProtocol {
         }
     }
 
-    func createUser(user: FirebaseUser) {
-     Firestore.firestore().collection("Users").document(user.id!).setData([
+    func createUser(user: FirebaseUser, id: String) {
+        Firestore.firestore().collection("Users").document(id).setData([
             "name" : user.name,
             "job" : user.job,
             "city" : user.city,
@@ -173,7 +169,7 @@ final class FireStoreService: FireStoreServiceProtocol {
             "surname" : user.surname,
             "subscribers" : user.subscribers,
             "stories" : user.stories,
-            "subsribtions" : user.subscriptions,
+            "subscribtions" : user.subscribtions,
             "image" : user.image
         ])
     }
@@ -198,8 +194,6 @@ final class FireStoreService: FireStoreServiceProtocol {
                 completion(.success(url))
             }
         }
-
-
     }
 }
 

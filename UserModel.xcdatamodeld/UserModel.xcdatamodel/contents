@@ -16,7 +16,9 @@
     <entity name="UserMainModel" representedClassName="UserMainModel" syncable="YES" codeGenerationType="class">
         <attribute name="avatarImage" optional="YES" attributeType="Binary"/>
         <attribute name="city" optional="YES" attributeType="String"/>
+        <attribute name="contacts" optional="YES" attributeType="String"/>
         <attribute name="id" optional="YES" attributeType="String"/>
+        <attribute name="interests" optional="YES" attributeType="String"/>
         <attribute name="job" optional="YES" attributeType="String"/>
         <attribute name="name" optional="YES" attributeType="String"/>
         <attribute name="surname" optional="YES" attributeType="String"/>

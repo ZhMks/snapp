@@ -8,17 +8,17 @@
 import UIKit
 
 
-protocol SettingsViewProtocol {
+protocol SettingsViewProtocol: AnyObject {
 
 }
 
-protocol SettingsPresenterProtocol {
+protocol SettingsPresenterProtocol: AnyObject {
     var firestoreService: FireStoreServiceProtocol? { get set }
     init(view: SettingsViewProtocol?, user: UserMainModel, firestoreService: FireStoreServiceProtocol)
 }
 
 final class SettingPresenter: SettingsPresenterProtocol {
-    var view: SettingsViewProtocol?
+   weak var view: SettingsViewProtocol?
     var user: UserMainModel
     var firestoreService: FireStoreServiceProtocol?
 

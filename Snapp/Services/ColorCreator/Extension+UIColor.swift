@@ -22,6 +22,7 @@ extension UIColor {
 
 
 class ColorCreator {
+
     static let shared = ColorCreator()
 
     private init() {}
@@ -34,6 +35,12 @@ class ColorCreator {
 
     func createTextColor() -> UIColor {
         let color = UIColor.createColor(lightMode: .black, darkMode: .white)
+        return color
+    }
+
+    func createBackgroundColorWithAlpah(alpha: Double) -> UIColor {
+        let color = UIColor.createColor(lightMode: UIColor(red: 255/255, green: 255/255, blue: 255/255, alpha: alpha),
+                                        darkMode: UIColor(red: 0/255, green: 0/255, blue: 0/255, alpha: alpha))
         return color
     }
 }

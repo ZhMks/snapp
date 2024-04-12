@@ -31,6 +31,8 @@
 		B209E6452BC566D90067D751 /* EachPostCoreDataModelService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B209E6442BC566D90067D751 /* EachPostCoreDataModelService.swift */; };
 		B209E64A2BC7C8D70067D751 /* AddProfilePresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B209E6492BC7C8D70067D751 /* AddProfilePresenter.swift */; };
 		B209E64C2BC7C8DE0067D751 /* AddProfileVc.swift in Sources */ = {isa = PBXBuildFile; fileRef = B209E64B2BC7C8DE0067D751 /* AddProfileVc.swift */; };
+		B209E64F2BC95E850067D751 /* SignInPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B209E64E2BC95E850067D751 /* SignInPresenter.swift */; };
+		B209E6512BC95E930067D751 /* SignInViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B209E6502BC95E930067D751 /* SignInViewController.swift */; };
 		B211C1E82BBB3C2900C073EE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B211C1E72BBB3C2900C073EE /* AppDelegate.swift */; };
 		B211C1EA2BBB3C2900C073EE /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B211C1E92BBB3C2900C073EE /* SceneDelegate.swift */; };
 		B211C1EC2BBB3C2900C073EE /* OnBoardingVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = B211C1EB2BBB3C2900C073EE /* OnBoardingVC.swift */; };
@@ -126,6 +128,8 @@
 		B209E6442BC566D90067D751 /* EachPostCoreDataModelService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EachPostCoreDataModelService.swift; sourceTree = "<group>"; };
 		B209E6492BC7C8D70067D751 /* AddProfilePresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddProfilePresenter.swift; sourceTree = "<group>"; };
 		B209E64B2BC7C8DE0067D751 /* AddProfileVc.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddProfileVc.swift; sourceTree = "<group>"; };
+		B209E64E2BC95E850067D751 /* SignInPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInPresenter.swift; sourceTree = "<group>"; };
+		B209E6502BC95E930067D751 /* SignInViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInViewController.swift; sourceTree = "<group>"; };
 		B211C1E42BBB3C2900C073EE /* Snapp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Snapp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B211C1E72BBB3C2900C073EE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		B211C1E92BBB3C2900C073EE /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -351,6 +355,15 @@
 			path = AddProfileScreen;
 			sourceTree = "<group>";
 		};
+		B209E64D2BC95E130067D751 /* SignInScreen */ = {
+			isa = PBXGroup;
+			children = (
+				B209E64E2BC95E850067D751 /* SignInPresenter.swift */,
+				B209E6502BC95E930067D751 /* SignInViewController.swift */,
+			);
+			path = SignInScreen;
+			sourceTree = "<group>";
+		};
 		B211C1DB2BBB3C2900C073EE = {
 			isa = PBXGroup;
 			children = (
@@ -467,6 +480,7 @@
 		B211C2772BBC6B7F00C073EE /* OnboardingModule */ = {
 			isa = PBXGroup;
 			children = (
+				B209E64D2BC95E130067D751 /* SignInScreen */,
 				B209E6482BC7C8C60067D751 /* AddProfileScreen */,
 				B211C2722BBC69F800C073EE /* LoginScreen */,
 				B211C21A2BBB3CC900C073EE /* FirstBoardingScreen */,
@@ -705,7 +719,9 @@
 				B211C2642BBC17B900C073EE /* Extension+String.swift in Sources */,
 				B211C1EC2BBB3C2900C073EE /* OnBoardingVC.swift in Sources */,
 				B211C2672BBC2EF700C073EE /* SecondOnboardingVC.swift in Sources */,
+				B209E6512BC95E930067D751 /* SignInViewController.swift in Sources */,
 				B209E63E2BC5626C0067D751 /* UserCoreDataModelService.swift in Sources */,
+				B209E64F2BC95E850067D751 /* SignInPresenter.swift in Sources */,
 				B209E63B2BC560770067D751 /* UserModel.xcdatamodeld in Sources */,
 				B211C1E82BBB3C2900C073EE /* AppDelegate.swift in Sources */,
 				B209E6312BC3FEB10067D751 /* ProfileChangeViewController.swift in Sources */,

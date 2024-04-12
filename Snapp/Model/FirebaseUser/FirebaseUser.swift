@@ -11,12 +11,12 @@ import UIKit
 import FirebaseFirestore
 
 struct FirebaseUser: Codable {
-    var id: String?
+    @DocumentID var documentID: String?
     var name: String
     var surname: String
     var job: String
     var subscribers: [String]
-    var subscriptions: [String]
+    var subscribtions: [String]
     var stories: [String]
     var interests: String
     var contacts: String

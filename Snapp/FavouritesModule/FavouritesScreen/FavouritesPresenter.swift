@@ -7,15 +7,15 @@
 
 import UIKit
 
-protocol FavouritesViewProtocol {}
+protocol FavouritesViewProtocol: AnyObject {}
 
-protocol FavouritesPresenterProtocol {
+protocol FavouritesPresenterProtocol: AnyObject {
     init(view: FavouritesViewProtocol, user: UserMainModel)
 }
 
 final class FavouritesPresenter: FavouritesViewProtocol {
 
-    var view: FavouritesViewProtocol?
+   weak var view: FavouritesViewProtocol?
     var user: UserMainModel
 
     init(view: FavouritesViewProtocol?, user: UserMainModel) {

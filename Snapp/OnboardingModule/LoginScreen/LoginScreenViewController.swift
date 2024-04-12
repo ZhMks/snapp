@@ -79,14 +79,12 @@ class LoginScreenViewController: UIViewController {
             loginpresenter.authentificateUser(phone: number) { [weak self] result in
                 switch result {
                 case true:
-                    DispatchQueue.main.async { [weak self] in
-                        guard let self else { return }
-                        let firestoreService = FireStoreService()
-                        let thirdController = ThirdOnboardingViewController(number: number)
-                        let userModelService = UserCoreDataModelService()
-                        let thirdPresenter = ThirdOnboardingPresenter(view: thirdController, authService: loginpresenter.authService!, firestoreService: firestoreService, userModelService: userModelService)
-                        thirdController.presenter = thirdPresenter
-                        self.navigationController?.pushViewController(thirdController, animated: true)
+                    DispatchQueue.main.async {
+                        let signInVC = SignInViewController()
+                        let signInPresenter = SignInPresenter(view: signInVC)
+                        signInVC.modalPresentationStyle = .fullScreen
+                        signInVC.presenter = signInPresenter
+                        self?.navigationController?.present(signInVC, animated: true)
                     }
                 case false:
                     print("ERROR in NUMBER")

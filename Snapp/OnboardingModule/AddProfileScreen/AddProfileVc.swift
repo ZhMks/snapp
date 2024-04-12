@@ -84,7 +84,7 @@ final class AddProfileVc: UIViewController {
         submitButton.setTitleColor(.systemBackground, for: .normal)
         submitButton.titleLabel?.font = UIFont(name: "Inter-Medium", size: 14)
         submitButton.layer.cornerRadius = 10.0
-        submitButton.addTarget(self, action: #selector(pushMainScreen), for: .touchUpInside)
+        submitButton.addTarget(self, action: #selector(submitButtonTapped), for: .touchUpInside)
         return submitButton
     }()
 
@@ -111,7 +111,8 @@ final class AddProfileVc: UIViewController {
 
     // MARK: -FUNCS
 
-    @objc func pushMainScreen() {
+    @objc func submitButtonTapped() {
+        let userModelService = UserCoreDataModelService()
         presenter.createUser(name: nameTextField.text!,
                              surname: surNameTextField.text!,
                              job: jobNameTextField.text!,
@@ -121,10 +122,21 @@ final class AddProfileVc: UIViewController {
                              image: avatarImage.image!) { result in
             switch result {
             case .success(let user):
-                self.presenter.firestoreService.getPosts(id: user.id!) { result in
+                print("FIREBASUSER: \(user)")
+                self.presenter.firestoreService.getPosts(id:self.presenter.fireAuthUser.uid) { [weak self] result in
+                    guard let self else { return }
                     switch result {
                     case .success(let posts):
-                        print(posts)
+                        print("Posts: \(posts)")
+                        userModelService.saveModelToCoreData(user: user, id: self.presenter.fireAuthUser.uid, posts: posts) { result in
+                            switch result {
+                            case .success(let success):
+                                print("CoreData: \(success)")
+                                self.pushMainScreen(user: success)
+                            case .failure(let failure):
+                                print()
+                            }
+                        }
                     case .failure(let failure):
                         print(failure.localizedDescription)
                     }
@@ -145,6 +157,14 @@ final class AddProfileVc: UIViewController {
         imagePickerController.delegate = self
         imagePickerController.sourceType = .photoLibrary
         present(imagePickerController, animated: true)
+    }
+
+    private func pushMainScreen(user: UserMainModel) {
+        let feedVC = FeedViewController()
+        let feedPresenter = FeedPresenter(view: feedVC, user: user)
+        feedVC.presenter = feedPresenter
+
+        (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootViewController(feedVC, user: user, firestoreService: presenter.firestoreService)
     }
 }
 

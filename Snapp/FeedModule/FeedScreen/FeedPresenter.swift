@@ -10,7 +10,7 @@ import UIKit
 protocol FeedViewProtocol: AnyObject {}
 
 protocol FeedPresenterProtocol: AnyObject {
-    init(view: FeedViewProtocol, user: UserMainModel, posts: [PostsMainModel], eachPost: [EachPostModel])
+    init(view: FeedViewProtocol, user: UserMainModel)
 }
 
 
@@ -18,14 +18,10 @@ final class FeedPresenter: FeedPresenterProtocol {
 
     weak var view: FeedViewProtocol?
     let user: UserMainModel
-    let posts: [PostsMainModel]
-    let eachPost: [EachPostModel]
 
-    init(view: FeedViewProtocol, user: UserMainModel, posts: [PostsMainModel], eachPost: [EachPostModel]) {
+    init(view: FeedViewProtocol, user: UserMainModel) {
         self.view = view
         self.user = user
-        self.posts = posts
-        self.eachPost = eachPost
     }
 
 }

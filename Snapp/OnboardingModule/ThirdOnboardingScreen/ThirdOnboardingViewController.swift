@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import FirebaseAuth
 
 class ThirdOnboardingViewController: UIViewController {
 
@@ -117,19 +118,12 @@ extension ThirdOnboardingViewController: ThirdOnboardingViewProtocol {
     func showCreateUserScreen(id: String) {
         let userCoreDataService = UserCoreDataModelService()
         let firestoreService = FireStoreService()
-        let user = FirebaseUser(id: id,
-                                name: "",
-                                surname: "",
-                                job: "",
-                                subscribers: [],
-                                subscriptions: [],
-                                stories: [],
-                                interests: "",
-                                contacts: "",
-                                city: "",
-                                image: "Data()")
+        guard let user = Auth.auth().currentUser else { return }
         let addProfileVC = AddProfileVc()
-        let addProfilePresenter = AddProfilePresenter(view: addProfileVC, firebaseUser: user, firestoreService: firestoreService, userCoreDataService: userCoreDataService)
+        let addProfilePresenter = AddProfilePresenter(view: addProfileVC,
+                                                      firebaseUser: user,
+                                                      firestoreService: firestoreService,
+                                                      userCoreDataService: userCoreDataService)
         addProfileVC.presenter = addProfilePresenter
         navigationController?.pushViewController(addProfileVC, animated: true)
     }

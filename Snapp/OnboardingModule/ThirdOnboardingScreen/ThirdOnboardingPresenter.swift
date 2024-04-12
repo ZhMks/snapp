@@ -49,8 +49,8 @@ final class ThirdOnboardingPresenter: ThirdOnboardingPresenterProtocol {
                 self?.firestoreService?.getUser(id: success.uid) { result in
                     switch result {
                     case .success(let user):
-                        self?.view?.showUserExistAlert(id: user.id!)
-                    case .failure(let failure):
+                        self?.view?.showUserExistAlert(id: user.documentID!)
+                    case .failure(_):
                         self?.view?.showCreateUserScreen(id: success.uid)
                     }
                 }

@@ -26,11 +26,16 @@ final class UserCoreDataModelService {
         }
     }
 
-    func saveModelToCoreData(user: FirebaseUser, posts: [String: [String: EachPost]], completion: @escaping (Result<UserMainModel, Error>) -> Void) {
+    func saveModelToCoreData(user: FirebaseUser, id: String, posts: [String: [String: EachPost]], completion: @escaping (Result<UserMainModel, Error>) -> Void) {
         guard let modelsArray = modelArray else { return }
         if modelsArray.isEmpty {
             let newModelToSave = UserMainModel(context: coredataService.managedContext)
-            newModelToSave.id = user.id
+            newModelToSave.id = id
+            newModelToSave.name = user.name
+            newModelToSave.surname = user.surname
+            newModelToSave.job = user.job
+            newModelToSave.city = user.city
+            newModelToSave.interests = user.interests
             savePostsToCoreData(posts: posts, mainModel: newModelToSave)
             coredataService.saveContext()
             fetchFromCoreData()

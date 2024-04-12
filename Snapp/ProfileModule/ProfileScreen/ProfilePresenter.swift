@@ -7,17 +7,17 @@
 
 import UIKit
 
-protocol ProfileViewProtocol {
-    
+protocol ProfileViewProtocol: AnyObject {
+
 }
 
-protocol ProfilePresenterProtocol {
+protocol ProfilePresenterProtocol: AnyObject {
     init(view: ProfileViewProtocol, mainUser: UserMainModel, firestoreService: FireStoreServiceProtocol)
 }
 
 final class ProfilePresenter: ProfilePresenterProtocol {
 
-    var view: ProfileViewProtocol?
+   weak var view: ProfileViewProtocol?
     var mainUser: UserMainModel
     var firestoreService: FireStoreServiceProtocol
 
