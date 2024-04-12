@@ -14,7 +14,7 @@ protocol SignInViewProtocol: AnyObject {
 }
 
 protocol SignInPresenterProtocol: AnyObject {
-    init(view: SignInViewProtocol?, firebaseAuth: FireBaseAuthProtocol, userModelService: UserCoreDataModelService)
+    init(view: SignInViewProtocol?, firebaseAuth: FireBaseAuthProtocol, userModelService: UserCoreDataModelService, firestoreService: FireStoreServiceProtocol)
     func checkCode(code: String, completion: @escaping (Result<UserMainModel, Error>) -> Void)
 }
 
@@ -23,11 +23,13 @@ final class SignInPresenter: SignInPresenterProtocol {
    weak var view: SignInViewProtocol?
     let fireBaseAuthService: FireBaseAuthProtocol
     let userModelService: UserCoreDataModelService
+    let firestoreService: FireStoreServiceProtocol
 
-    init(view: SignInViewProtocol?, firebaseAuth: FireBaseAuthProtocol, userModelService: UserCoreDataModelService) {
+    init(view: SignInViewProtocol?, firebaseAuth: FireBaseAuthProtocol, userModelService: UserCoreDataModelService, firestoreService: FireStoreServiceProtocol) {
         self.view = view
         self.fireBaseAuthService = firebaseAuth
         self.userModelService = userModelService
+        self.firestoreService = firestoreService
     }
 
     func checkCode(code: String, completion: @escaping (Result<UserMainModel, Error>) -> Void) {

@@ -54,7 +54,11 @@ class SignInViewController: UIViewController {
         presenter.checkCode(code: code) { [weak self] result in
             switch result {
             case .success(let user):
-                print(user)
+                let feedVC = FeedViewController()
+                let feedPresenter = FeedPresenter(view: feedVC, user: user)
+                feedVC.presenter = feedPresenter
+
+                (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootViewController(feedVC, user: user, firestoreService: (self?.presenter.firestoreService)!)
             case .failure(let error):
                 print(error.localizedDescription)
             }

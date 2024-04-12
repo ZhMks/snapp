@@ -37,6 +37,7 @@ final class UserCoreDataModelService {
             newModelToSave.job = user.job
             newModelToSave.city = user.city
             newModelToSave.interests = user.interests
+            newModelToSave.contacts = user.contacts
             savePostsToCoreData(posts: posts, mainModel: newModelToSave)
             coredataService.saveContext()
             fetchFromCoreData()
