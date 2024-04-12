@@ -7,22 +7,6 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "26BA170A-BC15-4A59-B2BE-FBEF3A8A87DC"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Snapp/Services/AuthService/FireBaseAuthService.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "43"
-            endingLineNumber = "43"
-            landmarkName = "signUpUser(phone:completion:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
             uuid = "0EAA8CD6-B42D-4EDB-A820-9326D64F2CFF"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
@@ -50,100 +34,6 @@
             endingLineNumber = "25"
             landmarkName = "fetchData()"
             landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "79D0E3D3-6C92-430C-A30F-E3715CF09DC2"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Snapp/Model/CoreDataModel/UserCoreDataModelService.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "42"
-            endingLineNumber = "42"
-            landmarkName = "saveModelToCoreData(user:id:posts:completion:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "4C834336-AFD9-4411-9659-B4734ABD542F"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Snapp/Model/CoreDataModel/UserCoreDataModelService.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "44"
-            endingLineNumber = "44"
-            landmarkName = "saveModelToCoreData(user:id:posts:completion:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "8596E175-02CE-4CF6-AC8C-09CB82FF88C8"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Snapp/OnboardingModule/ThirdOnboardingScreen/ThirdOnboardingPresenter.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "54"
-            endingLineNumber = "54"
-            landmarkName = "checkCode(code:completion:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "39483639-F761-4E72-8157-868CF8E76C41"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Snapp/OnboardingModule/ThirdOnboardingScreen/ThirdOnboardingPresenter.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "49"
-            endingLineNumber = "49"
-            landmarkName = "checkCode(code:completion:)"
-            landmarkType = "7">
-            <Locations>
-               <Location
-                  uuid = "39483639-F761-4E72-8157-868CF8E76C41 - b67053084957e00f"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "closure #1 (Swift.Result&lt;__C.FIRUser, Snapp.AuthorisationErrors&gt;) -&gt; () in Snapp.ThirdOnboardingPresenter.checkCode(code: Swift.String, completion: (Swift.Result&lt;Snapp.UserMainModel, Swift.Error&gt;) -&gt; ()) -&gt; ()"
-                  moduleName = "Snapp"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/makszh/Desktop/Snapp/Snapp/OnboardingModule/ThirdOnboardingScreen/ThirdOnboardingPresenter.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "49"
-                  endingLineNumber = "49">
-               </Location>
-               <Location
-                  uuid = "39483639-F761-4E72-8157-868CF8E76C41 - bca7ab3b76712842"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "closure #1 (Swift.Result&lt;Snapp.FirebaseUser, Swift.Error&gt;) -&gt; () in closure #1 (Swift.Result&lt;__C.FIRUser, Snapp.AuthorisationErrors&gt;) -&gt; () in Snapp.ThirdOnboardingPresenter.checkCode(code: Swift.String, completion: (Swift.Result&lt;Snapp.UserMainModel, Swift.Error&gt;) -&gt; ()) -&gt; ()"
-                  moduleName = "Snapp"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/makszh/Desktop/Snapp/Snapp/OnboardingModule/ThirdOnboardingScreen/ThirdOnboardingPresenter.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "46"
-                  endingLineNumber = "46">
-               </Location>
-            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

@@ -10,7 +10,7 @@ import UIKit
 class SignInViewController: UIViewController {
 
     // MARK: -PROPERTIES
-    weak var presenter: SignInPresenter!
+    var presenter: SignInPresenter!
 
     private lazy var acceptCodeTextField: UITextField = {
         let acceptCodeTextField = UITextField()
@@ -49,13 +49,27 @@ class SignInViewController: UIViewController {
 
 //MARK: -FUNCS
     @objc func verifyCodeButtonTapped() {
-
+        guard let code = acceptCodeTextField.text else { return }
+        print(code)
+        presenter.checkCode(code: code) { [weak self] result in
+            switch result {
+            case .success(let user):
+                print(user)
+            case .failure(let error):
+                print(error.localizedDescription)
+            }
+        }
     }
 }
 
 // MARK: -PRESENTEROUTPUT
 extension SignInViewController: SignInViewProtocol {
-    
+    func showAlert() {
+        let alertController = UIAlertController(title: .localized(string: "Ошибка"), message: .localized(string: "Пользователь не существует"), preferredStyle: .alert)
+        let alertAction = UIAlertAction(title: "Отмена", style: .cancel)
+        alertController.addAction(alertAction)
+        navigationController?.present(alertController, animated: true)
+    }
 }
 
 //MARK: -LAYOUT

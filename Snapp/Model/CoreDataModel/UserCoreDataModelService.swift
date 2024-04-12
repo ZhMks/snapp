@@ -14,6 +14,7 @@ final class UserCoreDataModelService {
 
     init() {
         fetchFromCoreData()
+        print(modelArray?.count)
     }
 
     private func fetchFromCoreData() {

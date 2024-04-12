@@ -358,8 +358,8 @@
 		B209E64D2BC95E130067D751 /* SignInScreen */ = {
 			isa = PBXGroup;
 			children = (
-				B209E64E2BC95E850067D751 /* SignInPresenter.swift */,
 				B209E6502BC95E930067D751 /* SignInViewController.swift */,
+				B209E64E2BC95E850067D751 /* SignInPresenter.swift */,
 			);
 			path = SignInScreen;
 			sourceTree = "<group>";

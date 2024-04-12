@@ -81,7 +81,11 @@ class LoginScreenViewController: UIViewController {
                 case true:
                     DispatchQueue.main.async {
                         let signInVC = SignInViewController()
-                        let signInPresenter = SignInPresenter(view: signInVC)
+                        let userCoreDataService = UserCoreDataModelService()
+                        let authService = self?.loginpresenter.authService
+                        let signInPresenter = SignInPresenter(view: signInVC,
+                                                              firebaseAuth:authService!,
+                                                              userModelService: userCoreDataService)
                         signInVC.modalPresentationStyle = .fullScreen
                         signInVC.presenter = signInPresenter
                         self?.navigationController?.present(signInVC, animated: true)
