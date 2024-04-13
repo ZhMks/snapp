@@ -10,16 +10,18 @@ import UIKit
 protocol FavouritesViewProtocol: AnyObject {}
 
 protocol FavouritesPresenterProtocol: AnyObject {
-    init(view: FavouritesViewProtocol, user: UserMainModel)
+    init(view: FavouritesViewProtocol, user: UserMainModel, userModelService: UserCoreDataModelService)
 }
 
 final class FavouritesPresenter: FavouritesViewProtocol {
 
    weak var view: FavouritesViewProtocol?
     var user: UserMainModel
+    let userModelService: UserCoreDataModelService
 
-    init(view: FavouritesViewProtocol?, user: UserMainModel) {
+    init(view: FavouritesViewProtocol?, user: UserMainModel, userModelService: UserCoreDataModelService) {
         self.view = view
         self.user = user
+        self.userModelService = userModelService
     }
 }

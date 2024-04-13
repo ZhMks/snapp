@@ -20,6 +20,7 @@ final class UserCoreDataModelService {
         let request = UserMainModel.fetchRequest()
         do {
             modelArray = try coredataService.managedContext.fetch(request)
+            print(modelArray)
         } catch {
             modelArray = []
             print("Cannot fetch data from CoreData modelsArray = []")
@@ -40,7 +41,6 @@ final class UserCoreDataModelService {
             savePostsToCoreData(posts: posts, mainModel: newModelToSave)
             coredataService.saveContext()
             fetchFromCoreData()
-            print(newModelToSave.id)
             completion(.success(newModelToSave))
         } else {
             completion(.success(modelsArray.first!))
@@ -48,7 +48,7 @@ final class UserCoreDataModelService {
     }
 
     func savePostsToCoreData(posts: [String : [String : EachPost]], mainModel: UserMainModel) {
-        
+
         guard let context = mainModel.managedObjectContext else { return }
         
         let newPosts = PostsMainModel(context: context)
@@ -60,13 +60,17 @@ final class UserCoreDataModelService {
 
         newPosts.mainUser = mainModel
         coredataService.saveContext()
+        print(newPosts.date)
+        print(newPosts.posts)
         fetchFromCoreData()
-
     }
 
     func saveEachPostToCoreData(posts: [String : EachPost], mainModel: PostsMainModel) {
         
         guard let context = mainModel.managedObjectContext else { return }
+        print(mainModel.date)
+        print(posts.keys)
+        print(posts.values)
 
         for (key, value) in posts {
             let eachPost = EachPostModel(context: context)
@@ -77,6 +81,8 @@ final class UserCoreDataModelService {
             eachPost.views = Int64(value.views)
             eachPost.postMainModel = mainModel
             coredataService.saveContext()
+            print(context.hasChanges)
+            print(eachPost.text)
         }
         fetchFromCoreData()
     }

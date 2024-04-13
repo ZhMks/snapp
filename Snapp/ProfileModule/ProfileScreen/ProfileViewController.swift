@@ -30,12 +30,6 @@ class ProfileViewController: UIViewController {
         tuneNavItem()
         addSubviews()
         layout()
-        let postModelService = PostsCoreDataModelService(mainModel: presenter.mainUser)
-        let postModel = postModelService.modelArray?.first
-      //  let eachpostService = EachPostCoreDataModelService(mainModel: postModel!)
-
-        print(postModel?.date)
-    //    print(eachpostService.modelArray?.first)
     }
     
 // MARK: -FUNCS

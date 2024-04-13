@@ -12,7 +12,7 @@ class ThirdOnboardingViewController: UIViewController {
 
     // MARK: -PROPERTIES
 
-    var presenter: ThirdOnboardingPresenterProtocol!
+    var presenter: ThirdOnboardingPresenter!
 
     var number: String
 
@@ -116,14 +116,13 @@ class ThirdOnboardingViewController: UIViewController {
 extension ThirdOnboardingViewController: ThirdOnboardingViewProtocol {
 
     func showCreateUserScreen(id: String) {
-        let userCoreDataService = UserCoreDataModelService()
         let firestoreService = FireStoreService()
         guard let user = Auth.auth().currentUser else { return }
         let addProfileVC = AddProfileVc()
         let addProfilePresenter = AddProfilePresenter(view: addProfileVC,
                                                       firebaseUser: user,
                                                       firestoreService: firestoreService,
-                                                      userCoreDataService: userCoreDataService)
+                                                      userCoreDataService: presenter.userModelService)
         addProfileVC.presenter = addProfilePresenter
         navigationController?.pushViewController(addProfileVC, animated: true)
     }

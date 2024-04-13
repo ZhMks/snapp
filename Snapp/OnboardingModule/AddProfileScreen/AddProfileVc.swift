@@ -112,7 +112,6 @@ final class AddProfileVc: UIViewController {
     // MARK: -FUNCS
 
     @objc func submitButtonTapped() {
-        let userModelService = UserCoreDataModelService()
         presenter.createUser(id: self.presenter.fireAuthUser.uid,
                              name: nameTextField.text!,
                              surname: surNameTextField.text!,
@@ -123,13 +122,11 @@ final class AddProfileVc: UIViewController {
                              image: avatarImage.image!) { result in
             switch result {
             case .success(let user):
-                print("FIREBASUSER: \(user)")
                 self.presenter.firestoreService.getPosts(id:self.presenter.fireAuthUser.uid) { [weak self] result in
                     guard let self else { return }
                     switch result {
                     case .success(let posts):
-                        print(self.presenter.fireAuthUser.uid)
-                        userModelService.saveModelToCoreData(user: user, id: self.presenter.fireAuthUser.uid, posts: posts) { result in
+                        presenter.userCoreDataService.saveModelToCoreData(user: user, id: self.presenter.fireAuthUser.uid, posts: posts) { result in
                             switch result {
                             case .success(let success):
                                 print("CoreData: \(success)")
@@ -165,7 +162,10 @@ final class AddProfileVc: UIViewController {
         let feedPresenter = FeedPresenter(view: feedVC, user: user)
         feedVC.presenter = feedPresenter
 
-        (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootViewController(feedVC, user: user, firestoreService: presenter.firestoreService)
+        (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootViewController(feedVC,
+                                                                                                           user: user,
+                                                                                                           firestoreService: presenter.firestoreService,
+                                                                                                           userModelService: presenter.userCoreDataService)
     }
 }
 

@@ -12,7 +12,7 @@ protocol ProfileViewProtocol: AnyObject {
 }
 
 protocol ProfilePresenterProtocol: AnyObject {
-    init(view: ProfileViewProtocol, mainUser: UserMainModel, firestoreService: FireStoreServiceProtocol)
+    init(view: ProfileViewProtocol, mainUser: UserMainModel, firestoreService: FireStoreServiceProtocol, userModelService: UserCoreDataModelService)
 }
 
 final class ProfilePresenter: ProfilePresenterProtocol {
@@ -20,11 +20,13 @@ final class ProfilePresenter: ProfilePresenterProtocol {
    weak var view: ProfileViewProtocol?
     var mainUser: UserMainModel
     var firestoreService: FireStoreServiceProtocol
+    let userModelService: UserCoreDataModelService
 
-    init(view: ProfileViewProtocol, mainUser: UserMainModel, firestoreService: FireStoreServiceProtocol) {
+    init(view: ProfileViewProtocol, mainUser: UserMainModel, firestoreService: FireStoreServiceProtocol, userModelService: UserCoreDataModelService) {
         self.view = view
         self.mainUser = mainUser
         self.firestoreService = firestoreService
+        self.userModelService = userModelService
     }
 
     func createPost(text: String, image: UIImage, completion: @escaping (Result<PostsMainModel, Error>) -> Void) {
@@ -38,10 +40,11 @@ final class ProfilePresenter: ProfilePresenterProtocol {
             guard let self else { return }
             switch result {
             case .success(let firestorePost):
-              let userModelService = UserCoreDataModelService()
               let postsModelService = PostsCoreDataModelService(mainModel: mainUser)
                 guard let postsArray = postsModelService.modelArray else { return }
-                userModelService.savePostsToCoreData(posts: [stringFromDate : [timeString : firestorePost]], mainModel: mainUser)
+                DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                    self.userModelService.savePostsToCoreData(posts: [stringFromDate : [timeString : firestorePost]], mainModel: self.mainUser)
+                }
             case .failure(let error):
                 view?.showErrorAler(error: error.localizedDescription)
             }

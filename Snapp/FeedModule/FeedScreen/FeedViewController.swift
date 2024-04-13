@@ -57,8 +57,6 @@ final class FeedViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
-        print("INSIDEFEEDVIEW USER: \(presenter.user)")
-        print("InsideFEEDVEIW USERPOST: \(presenter.user)")
     }
 
     // MARK: -FUNCS

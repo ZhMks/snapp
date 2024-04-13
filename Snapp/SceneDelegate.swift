@@ -63,13 +63,13 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         (UIApplication.shared.delegate as? AppDelegate)?.saveContext()
     }
 
-    func changeRootViewController(_ vc: UIViewController, user: UserMainModel, firestoreService: FireStoreServiceProtocol) {
+    func changeRootViewController(_ vc: UIViewController, user: UserMainModel, firestoreService: FireStoreServiceProtocol, userModelService: UserCoreDataModelService) {
         guard let window = self.window else {
             return
         }
 
         let favouritesVC = FavouritesViewController()
-        let favouritesPresenter = FavouritesPresenter(view: favouritesVC, user: user)
+        let favouritesPresenter = FavouritesPresenter(view: favouritesVC, user: user, userModelService: userModelService)
         favouritesVC.presenter = favouritesPresenter
         let favouriteNavVC = UINavigationController(rootViewController: favouritesVC)
         favouriteNavVC.tabBarItem = UITabBarItem(title: "Сохраненные", image: UIImage(systemName: "heart"), tag: 2)
@@ -78,7 +78,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         feedNavVc.tabBarItem = UITabBarItem(title: "Главная", image: UIImage(systemName: "house"), tag: 0)
 
         let profileVC = ProfileViewController()
-        let profilePresenter = ProfilePresenter(view: profileVC, mainUser: user, firestoreService: firestoreService)
+        let profilePresenter = ProfilePresenter(view: profileVC, mainUser: user, firestoreService: firestoreService, userModelService: userModelService)
         profileVC.presenter = profilePresenter
         let profileNavVC = UINavigationController(rootViewController: profileVC)
         profileNavVC.tabBarItem = UITabBarItem(title: "Профиль", image: UIImage(systemName: "person.crop.circle"), tag: 1)

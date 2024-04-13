@@ -161,7 +161,6 @@ final class FireStoreService: FireStoreServiceProtocol {
     }
 
     func createUser(user: FirebaseUser, id: String) {
-        print(id)
         Firestore.firestore().collection("Users").document(id).setData([
             "name" : user.name,
             "job" : user.job,

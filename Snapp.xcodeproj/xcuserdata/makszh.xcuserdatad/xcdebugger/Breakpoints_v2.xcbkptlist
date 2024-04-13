@@ -23,16 +23,16 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "3D28D954-0FE8-433D-B15F-BD874A82D79F"
+            uuid = "172D4603-8EE6-4A1C-AE6A-DCBA92B05B04"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Snapp/Model/CoreDataModel/UserCoreDataModelService.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "43"
-            endingLineNumber = "43"
-            landmarkName = "saveModelToCoreData(user:id:posts:completion:)"
+            startingLineNumber = "85"
+            endingLineNumber = "85"
+            landmarkName = "saveEachPostToCoreData(posts:mainModel:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

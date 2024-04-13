@@ -57,8 +57,8 @@ class SignInViewController: UIViewController {
                 let feedVC = FeedViewController()
                 let feedPresenter = FeedPresenter(view: feedVC, user: user)
                 feedVC.presenter = feedPresenter
-
-                (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootViewController(feedVC, user: user, firestoreService: (self?.presenter.firestoreService)!)
+                guard let userModelService = self?.presenter?.userModelService else { return }
+                (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootViewController(feedVC, user: user, firestoreService: (self?.presenter.firestoreService)!, userModelService: userModelService)
             case .failure(let error):
                 print(error.localizedDescription)
             }
