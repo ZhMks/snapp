@@ -113,7 +113,8 @@ final class AddProfileVc: UIViewController {
 
     @objc func submitButtonTapped() {
         let userModelService = UserCoreDataModelService()
-        presenter.createUser(name: nameTextField.text!,
+        presenter.createUser(id: self.presenter.fireAuthUser.uid,
+                             name: nameTextField.text!,
                              surname: surNameTextField.text!,
                              job: jobNameTextField.text!,
                              city: cityTextField.text!,
@@ -127,7 +128,7 @@ final class AddProfileVc: UIViewController {
                     guard let self else { return }
                     switch result {
                     case .success(let posts):
-                        print("Posts: \(posts)")
+                        print(self.presenter.fireAuthUser.uid)
                         userModelService.saveModelToCoreData(user: user, id: self.presenter.fireAuthUser.uid, posts: posts) { result in
                             switch result {
                             case .success(let success):

@@ -7,6 +7,7 @@
 
 import UIKit
 import FirebaseAuth
+import FirebaseStorage
 
 protocol AddProfileViewProtocol: AnyObject {
 
@@ -14,7 +15,7 @@ protocol AddProfileViewProtocol: AnyObject {
 
 protocol AddProfilePresenterProtocol: AnyObject {
     init(view: AddProfileViewProtocol, firebaseUser: User, firestoreService: FireStoreService, userCoreDataService: UserCoreDataModelService)
-    func createUser(name: String, surname: String, job: String, city: String, interests: String, contacts: String, image: UIImage, completion: @escaping (Result <FirebaseUser, Error>) -> Void)
+    func createUser(id: String, name: String, surname: String, job: String, city: String, interests: String, contacts: String, image: UIImage, completion: @escaping (Result <FirebaseUser, Error>) -> Void)
 }
 
 
@@ -33,8 +34,9 @@ final class AddProfilePresenter: AddProfilePresenterProtocol {
         self.userCoreDataService = userCoreDataService
     }
 
-    func createUser(name: String, surname: String, job: String, city: String, interests: String, contacts: String, image: UIImage, completion: @escaping (Result <FirebaseUser, Error>) -> Void) {
-
+    func createUser(id: String, name: String, surname: String, job: String, city: String, interests: String, contacts: String, image: UIImage, completion: @escaping (Result <FirebaseUser, Error>) -> Void) {
+        print(id)
+        let ref = Storage.storage().reference().child("users").child(id).child("avatar")
         var firebaseUser = FirebaseUser(name: "", surname: "", job: "", subscribers: [], subscribtions: [], stories: [], interests: "", contacts: "", city: "", image: "")
 
         firebaseUser.name = name
@@ -47,7 +49,7 @@ final class AddProfilePresenter: AddProfilePresenterProtocol {
         firebaseUser.subscribers = []
         firebaseUser.subscribtions = []
 
-        firestoreService.saveImageIntoStorage(photo: image, for: fireAuthUser.uid) { [weak self] result in
+        firestoreService.saveImageIntoStorage(urlLink: ref, photo: image, for: fireAuthUser.uid) { [weak self] result in
             guard let self else { return }
             switch result {
             case .success(let success):

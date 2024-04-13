@@ -24,6 +24,7 @@ protocol FireStoreServiceProtocol {
     func getPosts(id: String, completion: @escaping (Result<[String : [String : EachPost]], Error>) -> Void)
     func getEachPost(userid: String, documentid: String, completion: @escaping (Result<[String: EachPost], Error>) ->Void)
     func changeData(id: String, text: String, state: ChangeStates) async
+    func createPost(date: String, time: String, text: String, image: UIImage, for user: UserMainModel, completion: @escaping (Result<EachPost, Error>) -> Void)
 }
 
 
@@ -160,6 +161,7 @@ final class FireStoreService: FireStoreServiceProtocol {
     }
 
     func createUser(user: FirebaseUser, id: String) {
+        print(id)
         Firestore.firestore().collection("Users").document(id).setData([
             "name" : user.name,
             "job" : user.job,
@@ -174,24 +176,47 @@ final class FireStoreService: FireStoreServiceProtocol {
         ])
     }
 
-    func saveImageIntoStorage(photo: UIImage, for user: String, completion: @escaping (Result <URL, Error>) -> Void) {
-        let ref = Storage.storage().reference().child("users").child(user).child("avatar")
+    func saveImageIntoStorage(urlLink: StorageReference, photo: UIImage, for user: String, completion: @escaping (Result <URL, Error>) -> Void) {
         guard let imageData = photo.jpegData(compressionQuality: 0.7) else { return }
         let metaData = StorageMetadata()
         metaData.contentType = "image/jpeg"
 
-        ref.putData(imageData, metadata: metaData) { metada, error in
+        urlLink.putData(imageData, metadata: metaData) { metada, error in
             guard let metadata = metada else {
                 completion(.failure(error!))
                 return
             }
 
-            ref.downloadURL { url, error in
+            urlLink.downloadURL { url, error in
                 guard let url = url else {
                     completion(.failure(error!))
                     return
                 }
                 completion(.success(url))
+            }
+        }
+    }
+
+    func createPost(date: String, time: String, text: String, image: UIImage, for user: UserMainModel, completion: @escaping (Result<EachPost, Error>) -> Void) {
+        print(user.id)
+        let docRef = Firestore.firestore().collection("Users").document(user.id!).collection("posts").document(date).collection(time).document()
+        let postRef = Storage.storage().reference().child("users").child(user.id!).child("posts").child(date)
+        var fireStorePost = EachPost(text: "", image: "", likes: 0, views: 0)
+        saveImageIntoStorage(urlLink: postRef, photo: image, for: user.id!) { result in
+            switch result {
+            case .success(let url):
+                fireStorePost.image = url.absoluteString
+                fireStorePost.text = text
+                docRef.setData([
+                    "text" : fireStorePost.text,
+                    "image" : fireStorePost.image,
+                    "likes" : fireStorePost.likes,
+                    "views" : fireStorePost.views
+                ])
+                completion(.success(fireStorePost))
+            case .failure(let error):
+                print(error.localizedDescription)
+                completion(.failure(error))
             }
         }
     }

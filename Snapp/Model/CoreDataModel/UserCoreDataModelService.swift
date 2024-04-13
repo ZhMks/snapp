@@ -14,7 +14,6 @@ final class UserCoreDataModelService {
 
     init() {
         fetchFromCoreData()
-        print(modelArray?.count)
     }
 
     private func fetchFromCoreData() {
@@ -41,6 +40,7 @@ final class UserCoreDataModelService {
             savePostsToCoreData(posts: posts, mainModel: newModelToSave)
             coredataService.saveContext()
             fetchFromCoreData()
+            print(newModelToSave.id)
             completion(.success(newModelToSave))
         } else {
             completion(.success(modelsArray.first!))
@@ -57,6 +57,7 @@ final class UserCoreDataModelService {
             saveEachPostToCoreData(posts: value, mainModel: newPosts)
             newPosts.date = key
         }
+
         newPosts.mainUser = mainModel
         coredataService.saveContext()
         fetchFromCoreData()
@@ -64,6 +65,7 @@ final class UserCoreDataModelService {
     }
 
     func saveEachPostToCoreData(posts: [String : EachPost], mainModel: PostsMainModel) {
+        
         guard let context = mainModel.managedObjectContext else { return }
 
         for (key, value) in posts {

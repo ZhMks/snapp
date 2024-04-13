@@ -58,12 +58,19 @@ final class FeedViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
         print("INSIDEFEEDVIEW USER: \(presenter.user)")
-        print("InsideFEEDVEIW USERPOST: \(presenter.user.postsMainModel)")
+        print("InsideFEEDVEIW USERPOST: \(presenter.user)")
     }
 
     // MARK: -FUNCS
 
 
+}
+
+// MARK: -OUTPUT PRESENTER
+extension FeedViewController: FeedViewProtocol {
+    func showEmptyScreen() {
+        print("SHOWFEEDEMPTYSCREEN")
+    }
 }
 
 // MARK: -LAYOUT
@@ -103,11 +110,6 @@ extension FeedViewController {
             feedTableView.widthAnchor.constraint(equalTo: feedScrollView.widthAnchor)
         ])
     }
-
-}
-
-// MARK: -OUTPUT PRESENTER
-extension FeedViewController: FeedViewProtocol {
 
 }
 
