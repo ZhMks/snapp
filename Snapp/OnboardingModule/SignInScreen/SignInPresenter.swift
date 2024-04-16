@@ -38,8 +38,6 @@ final class SignInPresenter: SignInPresenterProtocol {
             case .success(let user):
                 guard let userModel = self?.userModelService.modelArray else { return }
                 userModel.forEach { model in
-                    print(model.id!)
-                    print(user.uid)
                     if model.id! == user.uid {
                         completion(.success(model))
                     } else {

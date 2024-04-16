@@ -21,10 +21,12 @@ enum ChangeStates {
 
 protocol FireStoreServiceProtocol {
     func getUser(id: String, completion: @escaping (Result<FirebaseUser, Error>) -> Void)
-    func getPosts(id: String, completion: @escaping (Result<[String : [String : EachPost]], Error>) -> Void)
-    func getEachPost(userid: String, documentid: String, completion: @escaping (Result<[String: EachPost], Error>) ->Void)
+    func getPosts(sub: String, time: String, completion: @escaping (Result<[String : [String : EachPost]], Error>) -> Void)
+    func getEachPost(userid: String, date: String, time: String, completion: @escaping (Result<[String: EachPost], Error>) ->Void)
     func changeData(id: String, text: String, state: ChangeStates) async
     func createPost(date: String, time: String, text: String, image: UIImage, for user: UserMainModel, completion: @escaping (Result<EachPost, Error>) -> Void)
+    func saveImageIntoStorage(urlLink: StorageReference, photo: UIImage, for user: String, completion: @escaping (Result <URL, Error>) -> Void)
+    func createUser(user: FirebaseUser, id: String)
 }
 
 
@@ -46,13 +48,11 @@ final class FireStoreService: FireStoreServiceProtocol {
                     completion(.failure(error))
                 }
             }
-
-
         }
     }
 
-    func getPosts(id: String, completion: @escaping (Result<[String : [String : EachPost]], Error>) -> Void) {
-        let ref = Firestore.firestore().collection("Users").document(id).collection("posts")
+    func getPosts(sub: String, time: String, completion: @escaping (Result<[String : [String : EachPost]], Error>) -> Void) {
+        let ref = Firestore.firestore().collection("Users").document(sub).collection("posts")
         var posts: [String : [String : EachPost]] = [:]
 
         ref.getDocuments { snapshot, error in
@@ -64,7 +64,7 @@ final class FireStoreService: FireStoreServiceProtocol {
             if let snapshot = snapshot {
                 if !snapshot.documents.isEmpty {
                     for document in snapshot.documents {
-                        self.getEachPost(userid: id, documentid: document.documentID) { result in
+                        self.getEachPost(userid: sub, date: document.documentID, time: time) { result in
                             switch result {
                             case .success(let success):
                                 print(success.keys)
@@ -76,23 +76,16 @@ final class FireStoreService: FireStoreServiceProtocol {
                             completion(.success(posts))
                         }
                     }
-                } else {
-                    let currentDate = Date()
-                    let dateFormatter = DateFormatter()
-                    dateFormatter.dateFormat = "dd-MM-yyyy"
-                    let dateString =  dateFormatter.string(from: currentDate)
-                    posts.updateValue([:], forKey: dateString)
-                    completion(.success(posts))
                 }
             }
         }
     }
 
-    func getEachPost(userid: String, documentid: String, completion: @escaping (Result<[String: EachPost], Error>) ->Void) {
-        let postRef = Firestore.firestore().collection("Users").document(userid).collection("posts").document(documentid)
+    func getEachPost(userid: String, date: String, time: String, completion: @escaping (Result<[String: EachPost], Error>) ->Void) {
+        let postRef = Firestore.firestore().collection("Users").document(userid).collection("posts").document(date)
         var postsArray: [String : EachPost] = [:]
 
-        postRef.collection("PostsInThisDate").getDocuments { snapshot, error in
+        postRef.collection(time).getDocuments { snapshot, error in
             if let error = error {
                 completion(.failure(error))
             }
@@ -197,7 +190,6 @@ final class FireStoreService: FireStoreServiceProtocol {
     }
 
     func createPost(date: String, time: String, text: String, image: UIImage, for user: UserMainModel, completion: @escaping (Result<EachPost, Error>) -> Void) {
-        print(user.id)
         let docRef = Firestore.firestore().collection("Users").document(user.id!).collection("posts").document(date).collection(time).document()
         let postRef = Storage.storage().reference().child("users").child(user.id!).child("posts").child(date)
         var fireStorePost = EachPost(text: "", image: "", likes: 0, views: 0)
@@ -218,6 +210,11 @@ final class FireStoreService: FireStoreServiceProtocol {
                 completion(.failure(error))
             }
         }
+    }
+
+    func saveSubscriber(mainUser: String, id: String) {
+        let docRef = Firestore.firestore().collection("Users").document(mainUser)
+        docRef.updateData(["subscribers" : id])
     }
 }
 

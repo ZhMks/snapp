@@ -30,6 +30,14 @@ class ProfileViewController: UIViewController {
         tuneNavItem()
         addSubviews()
         layout()
+        let postService = PostsCoreDataModelService(mainModel: presenter.mainUser)
+        postService.modelArray?.forEach({ model in
+            let eachPostService = EachPostCoreDataModelService(mainModel: model)
+            guard let eachPostArray = eachPostService.modelArray else { return }
+            for post in eachPostArray {
+                print(post.identifier, post.image, post.text)
+            }
+        })
     }
     
 // MARK: -FUNCS

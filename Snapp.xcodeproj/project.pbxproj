@@ -84,6 +84,9 @@
 		B211C2832BBD48EA00C073EE /* FireBaseAuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B211C2822BBD48EA00C073EE /* FireBaseAuthService.swift */; };
 		B211C2872BBD494200C073EE /* FirebaseUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = B211C2862BBD494200C073EE /* FirebaseUser.swift */; };
 		B211C2892BBD558000C073EE /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = B211C2882BBD558000C073EE /* GoogleService-Info.plist */; };
+		B29D0ACE2BCE582900101029 /* SubscribersCoreDataModelService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B29D0ACD2BCE582900101029 /* SubscribersCoreDataModelService.swift */; };
+		B29D0AD02BCE5E6600101029 /* EachSubscriberPostService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B29D0ACF2BCE5E6600101029 /* EachSubscriberPostService.swift */; };
+		B29D0AD22BCE618400101029 /* MainSubscriberPostService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B29D0AD12BCE618400101029 /* MainSubscriberPostService.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -159,6 +162,9 @@
 		B211C2822BBD48EA00C073EE /* FireBaseAuthService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FireBaseAuthService.swift; sourceTree = "<group>"; };
 		B211C2862BBD494200C073EE /* FirebaseUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseUser.swift; sourceTree = "<group>"; };
 		B211C2882BBD558000C073EE /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		B29D0ACD2BCE582900101029 /* SubscribersCoreDataModelService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscribersCoreDataModelService.swift; sourceTree = "<group>"; };
+		B29D0ACF2BCE5E6600101029 /* EachSubscriberPostService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EachSubscriberPostService.swift; sourceTree = "<group>"; };
+		B29D0AD12BCE618400101029 /* MainSubscriberPostService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainSubscriberPostService.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -334,6 +340,9 @@
 				B209E63D2BC5626C0067D751 /* UserCoreDataModelService.swift */,
 				B209E6422BC565340067D751 /* PostCoreDataModelService.swift */,
 				B209E6442BC566D90067D751 /* EachPostCoreDataModelService.swift */,
+				B29D0ACD2BCE582900101029 /* SubscribersCoreDataModelService.swift */,
+				B29D0ACF2BCE5E6600101029 /* EachSubscriberPostService.swift */,
+				B29D0AD12BCE618400101029 /* MainSubscriberPostService.swift */,
 			);
 			path = CoreDataModel;
 			sourceTree = "<group>";
@@ -724,6 +733,7 @@
 				B209E64F2BC95E850067D751 /* SignInPresenter.swift in Sources */,
 				B209E63B2BC560770067D751 /* UserModel.xcdatamodeld in Sources */,
 				B211C1E82BBB3C2900C073EE /* AppDelegate.swift in Sources */,
+				B29D0AD22BCE618400101029 /* MainSubscriberPostService.swift in Sources */,
 				B209E6312BC3FEB10067D751 /* ProfileChangeViewController.swift in Sources */,
 				B209E6362BC430FC0067D751 /* FeedCollectionVIewCell.swift in Sources */,
 				B209E64A2BC7C8D70067D751 /* AddProfilePresenter.swift in Sources */,
@@ -736,6 +746,7 @@
 				B209E6192BC138790067D751 /* FeedPresenter.swift in Sources */,
 				B211C27D2BBD321C00C073EE /* Validator.swift in Sources */,
 				B209E6252BC3FD450067D751 /* FavouritesViewController.swift in Sources */,
+				B29D0AD02BCE5E6600101029 /* EachSubscriberPostService.swift in Sources */,
 				B209E6412BC5628C0067D751 /* CoreDataService.swift in Sources */,
 				B211C2712BBC4C1700C073EE /* StringFormatter.swift in Sources */,
 				B209E64C2BC7C8DE0067D751 /* AddProfileVc.swift in Sources */,
@@ -750,6 +761,7 @@
 				B209E62E2BC3FDEC0067D751 /* SettingPresenter.swift in Sources */,
 				B209E6272BC3FD5B0067D751 /* FavouritesPresenter.swift in Sources */,
 				B209E61F2BC3FC290067D751 /* ProfileViewController.swift in Sources */,
+				B29D0ACE2BCE582900101029 /* SubscribersCoreDataModelService.swift in Sources */,
 				B211C26C2BBC404C00C073EE /* ThirdOnboardingViewController.swift in Sources */,
 				B209E6452BC566D90067D751 /* EachPostCoreDataModelService.swift in Sources */,
 				B211C2872BBD494200C073EE /* FirebaseUser.swift in Sources */,

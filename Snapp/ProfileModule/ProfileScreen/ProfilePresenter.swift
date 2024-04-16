@@ -21,12 +21,15 @@ final class ProfilePresenter: ProfilePresenterProtocol {
     var mainUser: UserMainModel
     var firestoreService: FireStoreServiceProtocol
     let userModelService: UserCoreDataModelService
+    var posts: [PostsMainModel]?
+
 
     init(view: ProfileViewProtocol, mainUser: UserMainModel, firestoreService: FireStoreServiceProtocol, userModelService: UserCoreDataModelService) {
         self.view = view
         self.mainUser = mainUser
         self.firestoreService = firestoreService
         self.userModelService = userModelService
+        fetchPosts()
     }
 
     func createPost(text: String, image: UIImage, completion: @escaping (Result<PostsMainModel, Error>) -> Void) {
@@ -36,18 +39,23 @@ final class ProfilePresenter: ProfilePresenterProtocol {
         formatter.dateFormat = "dd-MM-yyyy"
         let stringFromDate = formatter.string(from: date)
         let timeString = String(time)
+
         firestoreService.createPost(date: stringFromDate, time: timeString, text: text, image: image, for: mainUser) { [weak self] result in
             guard let self else { return }
             switch result {
             case .success(let firestorePost):
-              let postsModelService = PostsCoreDataModelService(mainModel: mainUser)
-                guard let postsArray = postsModelService.modelArray else { return }
                 DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                    self.userModelService.savePostsToCoreData(posts: [stringFromDate : [timeString : firestorePost]], mainModel: self.mainUser)
+                    self.userModelService.savePostsToCoreData(posts: [stringFromDate : [timeString : firestorePost]], postsArray: self.posts, user: self.mainUser)
                 }
             case .failure(let error):
                 view?.showErrorAler(error: error.localizedDescription)
             }
         }
+    }
+
+    func fetchPosts() {
+        let postsModelService = PostsCoreDataModelService(mainModel: mainUser)
+        guard let postsArray = postsModelService.modelArray else { return }
+        self.posts = postsArray
     }
 }

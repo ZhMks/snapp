@@ -63,7 +63,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         (UIApplication.shared.delegate as? AppDelegate)?.saveContext()
     }
 
-    func changeRootViewController(_ vc: UIViewController, user: UserMainModel, firestoreService: FireStoreServiceProtocol, userModelService: UserCoreDataModelService) {
+    func changeRootViewController(_ vc: UIViewController,
+                                  user: UserMainModel,
+                                  firestoreService: FireStoreServiceProtocol,
+                                  userModelService: UserCoreDataModelService
+                                 ) {
         guard let window = self.window else {
             return
         }

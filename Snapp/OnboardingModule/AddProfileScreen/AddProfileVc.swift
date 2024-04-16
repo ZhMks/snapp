@@ -119,25 +119,15 @@ final class AddProfileVc: UIViewController {
                              city: cityTextField.text!,
                              interests: interestsTextField.text!,
                              contacts: contactsTextField.text!,
-                             image: avatarImage.image!) { result in
+                             image: avatarImage.image!) { [weak self] result in
+            guard let self else { return }
             switch result {
             case .success(let user):
-                self.presenter.firestoreService.getPosts(id:self.presenter.fireAuthUser.uid) { [weak self] result in
-                    guard let self else { return }
-                    switch result {
-                    case .success(let posts):
-                        presenter.userCoreDataService.saveModelToCoreData(user: user, id: self.presenter.fireAuthUser.uid, posts: posts) { result in
-                            switch result {
-                            case .success(let success):
-                                print("CoreData: \(success)")
-                                self.pushMainScreen(user: success)
-                            case .failure(let failure):
-                                print()
-                            }
-                        }
-                    case .failure(let failure):
-                        print(failure.localizedDescription)
-                    }
+                presenter.userCoreDataService.saveModelToCoreData(user: user, id: self.presenter.fireAuthUser.uid)
+                DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                    let userModelService = UserCoreDataModelService()
+                    guard let model = userModelService.modelArray?.first(where: { $0.id! == self.presenter.fireAuthUser.uid }) else { return }
+                    self.pushMainScreen(user: model)
                 }
             case .failure(let failure):
                 print(failure.localizedDescription)
@@ -159,12 +149,14 @@ final class AddProfileVc: UIViewController {
 
     private func pushMainScreen(user: UserMainModel) {
         let feedVC = FeedViewController()
+        let postsModelService = PostsCoreDataModelService(mainModel: user)
+        let postsArray = postsModelService.modelArray
         let feedPresenter = FeedPresenter(view: feedVC, user: user)
         feedVC.presenter = feedPresenter
 
         (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootViewController(feedVC,
                                                                                                            user: user,
-                                                                                                           firestoreService: presenter.firestoreService,
+                                                                                                           firestoreService: presenter.firestoreService!,
                                                                                                            userModelService: presenter.userCoreDataService)
     }
 }

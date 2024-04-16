@@ -14,7 +14,7 @@ protocol AddProfileViewProtocol: AnyObject {
 }
 
 protocol AddProfilePresenterProtocol: AnyObject {
-    init(view: AddProfileViewProtocol, firebaseUser: User, firestoreService: FireStoreService, userCoreDataService: UserCoreDataModelService)
+    init(view: AddProfileViewProtocol, firebaseUser: User, firestoreService: FireStoreServiceProtocol, userCoreDataService: UserCoreDataModelService)
     func createUser(id: String, name: String, surname: String, job: String, city: String, interests: String, contacts: String, image: UIImage, completion: @escaping (Result <FirebaseUser, Error>) -> Void)
 }
 
@@ -24,10 +24,10 @@ final class AddProfilePresenter: AddProfilePresenterProtocol {
 
     weak var view: AddProfileViewProtocol?
     var fireAuthUser: User
-    let firestoreService: FireStoreService
+    let firestoreService: FireStoreServiceProtocol?
     let userCoreDataService: UserCoreDataModelService
 
-    init(view: AddProfileViewProtocol, firebaseUser: User, firestoreService: FireStoreService, userCoreDataService: UserCoreDataModelService) {
+    init(view: AddProfileViewProtocol, firebaseUser: User, firestoreService: FireStoreServiceProtocol, userCoreDataService: UserCoreDataModelService) {
         self.view = view
         self.fireAuthUser = firebaseUser
         self.firestoreService = firestoreService
@@ -35,7 +35,7 @@ final class AddProfilePresenter: AddProfilePresenterProtocol {
     }
 
     func createUser(id: String, name: String, surname: String, job: String, city: String, interests: String, contacts: String, image: UIImage, completion: @escaping (Result <FirebaseUser, Error>) -> Void) {
-        print(id)
+
         let ref = Storage.storage().reference().child("users").child(id).child("avatar")
         var firebaseUser = FirebaseUser(name: "", surname: "", job: "", subscribers: [], subscribtions: [], stories: [], interests: "", contacts: "", city: "", image: "")
 
@@ -49,12 +49,13 @@ final class AddProfilePresenter: AddProfilePresenterProtocol {
         firebaseUser.subscribers = []
         firebaseUser.subscribtions = []
 
-        firestoreService.saveImageIntoStorage(urlLink: ref, photo: image, for: fireAuthUser.uid) { [weak self] result in
+
+        firestoreService?.saveImageIntoStorage(urlLink: ref, photo: image, for: fireAuthUser.uid) { [weak self] result in
             guard let self else { return }
             switch result {
             case .success(let success):
                 firebaseUser.image = success.absoluteString
-                firestoreService.createUser(user: firebaseUser, id: fireAuthUser.uid)
+                firestoreService?.createUser(user: firebaseUser, id: fireAuthUser.uid)
                 completion(.success(firebaseUser))
             case .failure(let failure):
                 print(failure.localizedDescription)

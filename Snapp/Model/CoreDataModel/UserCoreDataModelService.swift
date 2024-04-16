@@ -20,16 +20,14 @@ final class UserCoreDataModelService {
         let request = UserMainModel.fetchRequest()
         do {
             modelArray = try coredataService.managedContext.fetch(request)
-            print(modelArray)
         } catch {
             modelArray = []
             print("Cannot fetch data from CoreData modelsArray = []")
         }
     }
 
-    func saveModelToCoreData(user: FirebaseUser, id: String, posts: [String: [String: EachPost]], completion: @escaping (Result<UserMainModel, Error>) -> Void) {
+    func saveModelToCoreData(user: FirebaseUser, id: String)  {
         guard let modelsArray = modelArray else { return }
-        if modelsArray.isEmpty {
             let newModelToSave = UserMainModel(context: coredataService.managedContext)
             newModelToSave.id = id
             newModelToSave.name = user.name
@@ -38,40 +36,47 @@ final class UserCoreDataModelService {
             newModelToSave.city = user.city
             newModelToSave.interests = user.interests
             newModelToSave.contacts = user.contacts
-            savePostsToCoreData(posts: posts, mainModel: newModelToSave)
             coredataService.saveContext()
             fetchFromCoreData()
-            completion(.success(newModelToSave))
-        } else {
-            completion(.success(modelsArray.first!))
-        }
     }
 
-    func savePostsToCoreData(posts: [String : [String : EachPost]], mainModel: UserMainModel) {
+    func savePostsToCoreData(posts: [String : [String : EachPost]],
+                             postsArray: [PostsMainModel]?,
+                             user: UserMainModel) {
 
-        guard let context = mainModel.managedObjectContext else { return }
-        
-        let newPosts = PostsMainModel(context: context)
+        guard let postsArray = postsArray else { return }
 
-        for (key, value) in posts {
-            saveEachPostToCoreData(posts: value, mainModel: newPosts)
-            newPosts.date = key
+        if postsArray.isEmpty {
+            guard let context = user.managedObjectContext else { return }
+            let newPost = PostsMainModel(context: context)
+            for (key, value) in posts {
+                newPost.date = key
+                saveEachPostToCoreData(posts: value, mainModel: newPost)
+                user.addToPostsMainModel(newPost)
+                coredataService.saveContext()
+            }
+        } else {
+            postsArray.forEach { model in
+                for (key, value) in posts {
+                    if model.date! == key {
+                        saveEachPostToCoreData(posts: value, mainModel: model)
+                        coredataService.saveContext()
+                    } else {
+                        guard let context = user.managedObjectContext else { return }
+                        let newPost = PostsMainModel(context: context)
+                        newPost.date = key
+                        user.addToPostsMainModel(newPost)
+                        saveEachPostToCoreData(posts: value, mainModel: newPost)
+                        coredataService.saveContext()
+                    }
+                }
+            }
         }
-
-        newPosts.mainUser = mainModel
-        coredataService.saveContext()
-        print(newPosts.date)
-        print(newPosts.posts)
-        fetchFromCoreData()
     }
 
     func saveEachPostToCoreData(posts: [String : EachPost], mainModel: PostsMainModel) {
-        
-        guard let context = mainModel.managedObjectContext else { return }
-        print(mainModel.date)
-        print(posts.keys)
-        print(posts.values)
 
+        guard let context = mainModel.managedObjectContext else { return }
         for (key, value) in posts {
             let eachPost = EachPostModel(context: context)
             eachPost.identifier = key
@@ -80,11 +85,56 @@ final class UserCoreDataModelService {
             eachPost.likes = Int64(value.likes)
             eachPost.views = Int64(value.views)
             eachPost.postMainModel = mainModel
+            mainModel.addToPosts(eachPost)
             coredataService.saveContext()
-            print(context.hasChanges)
-            print(eachPost.text)
         }
         fetchFromCoreData()
+    }
+
+    func saveSubscriber(id: String, mainModel: UserMainModel, posts: [String : [String : EachPost]]) {
+        guard let context = mainModel.managedObjectContext else { return }
+        let subscribers = Subscribers(context: context)
+        subscribers.url = id
+        saveMainSubscriberPost(model: subscribers, posts: posts)
+        mainModel.addToSubscribers(subscribers)
+        coredataService.saveContext()
+        fetchFromCoreData()
+    }
+
+    func saveMainSubscriberPost(model: Subscribers, posts: [String: [String: EachPost]]) {
+        guard let context = model.managedObjectContext else { return }
+        let mainSubscriberPost = SubscriberPostMain(context: context)
+        for (key, value) in posts {
+            mainSubscriberPost.date = key
+            model.addToSubscriberPostMain(mainSubscriberPost)
+            saveSubscriberPost(model: mainSubscriberPost, posts: value)
+            coredataService.saveContext()
+        }
+        fetchFromCoreData()
+    }
+
+    func saveSubscriberPost(model: SubscriberPostMain, posts: [String: EachPost]) {
+
+        print("\(model.date)")
+        print(posts.keys, posts.values)
+
+        guard let context = model.managedObjectContext else { return }
+
+        let subcribersPost = SubscribersPosts(context: context)
+
+        for (key, value) in posts {
+            subcribersPost.identifier = key
+            subcribersPost.image = value.image
+            subcribersPost.text = value.text
+            subcribersPost.likes = Int64(value.likes)
+            subcribersPost.views = Int64(value.views)
+            subcribersPost.mainPostModel = model
+            print(subcribersPost.text, subcribersPost.image)
+            model.addToSubscriberPosts(subcribersPost)
+            coredataService.saveContext()
+        }
+        fetchFromCoreData()
+        print("Array: \(model.subscriberPosts?.count)")
     }
 }
 

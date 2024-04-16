@@ -50,11 +50,12 @@ class SignInViewController: UIViewController {
 //MARK: -FUNCS
     @objc func verifyCodeButtonTapped() {
         guard let code = acceptCodeTextField.text else { return }
-        print(code)
         presenter.checkCode(code: code) { [weak self] result in
             switch result {
             case .success(let user):
                 let feedVC = FeedViewController()
+                let postsModelService = PostsCoreDataModelService(mainModel: user)
+                let postsArray = postsModelService.modelArray
                 let feedPresenter = FeedPresenter(view: feedVC, user: user)
                 feedVC.presenter = feedPresenter
                 guard let userModelService = self?.presenter?.userModelService else { return }

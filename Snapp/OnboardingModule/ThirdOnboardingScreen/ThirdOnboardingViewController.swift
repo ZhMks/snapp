@@ -102,7 +102,7 @@ class ThirdOnboardingViewController: UIViewController {
             guard let self else { return }
             switch resultUser {
             case .success(let user):
-                print(user.id)
+                print(user.id!)
             case .failure(let failure):
                 print(failure.localizedDescription)
             }
@@ -116,9 +116,9 @@ class ThirdOnboardingViewController: UIViewController {
 extension ThirdOnboardingViewController: ThirdOnboardingViewProtocol {
 
     func showCreateUserScreen(id: String) {
-        let firestoreService = FireStoreService()
         guard let user = Auth.auth().currentUser else { return }
         let addProfileVC = AddProfileVc()
+        let firestoreService = FireStoreService()
         let addProfilePresenter = AddProfilePresenter(view: addProfileVC,
                                                       firebaseUser: user,
                                                       firestoreService: firestoreService,

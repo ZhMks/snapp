@@ -1,26 +1,26 @@
 //
-//  EachPostCoreDataModel.swift
+//  SubscribersCoreDataModelService.swift
 //  Snapp
 //
-//  Created by Максим Жуин on 09.04.2024.
+//  Created by Максим Жуин on 16.04.2024.
 //
 
 import Foundation
 
 
-final class EachPostCoreDataModelService {
+final class SubscribersCoreDataModelService {
 
-    private(set) var modelArray: [EachPostModel]?
-    private let mainModel: PostsMainModel
+    private(set) var modelArray: [Subscribers]?
+    private let mainModel: UserMainModel
     let coredataService = CoreDataService.shared
-    
-    init(mainModel: PostsMainModel) {
+
+    init(mainModel: UserMainModel) {
         self.mainModel = mainModel
         fetchData()
     }
 
     private func fetchData() {
-        guard let array = mainModel.posts?.sortedArray(using: [NSSortDescriptor(key: "date", ascending: true)]) as? [EachPostModel] else {
+        guard let array = mainModel.subscribers?.sortedArray(using: [NSSortDescriptor(key: "url", ascending: true)]) as? [Subscribers] else {
             print("Cannot get array!")
             return self.modelArray = []
         }

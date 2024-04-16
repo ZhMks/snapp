@@ -13,6 +13,24 @@
         <relationship name="mainUser" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="UserMainModel" inverseName="postsMainModel" inverseEntity="UserMainModel"/>
         <relationship name="posts" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="EachPostModel" inverseName="postMainModel" inverseEntity="EachPostModel"/>
     </entity>
+    <entity name="SubscriberPostMain" representedClassName="SubscriberPostMain" syncable="YES" codeGenerationType="class">
+        <attribute name="date" optional="YES" attributeType="String"/>
+        <relationship name="subscriberModel" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Subscribers" inverseName="subscriberPostMain" inverseEntity="Subscribers"/>
+        <relationship name="subscriberPosts" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="SubscribersPosts" inverseName="mainPostModel" inverseEntity="SubscribersPosts"/>
+    </entity>
+    <entity name="Subscribers" representedClassName="Subscribers" syncable="YES" codeGenerationType="class">
+        <attribute name="url" optional="YES" attributeType="String"/>
+        <relationship name="mainUser" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="UserMainModel" inverseName="subscribers" inverseEntity="UserMainModel"/>
+        <relationship name="subscriberPostMain" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="SubscriberPostMain" inverseName="subscriberModel" inverseEntity="SubscriberPostMain"/>
+    </entity>
+    <entity name="SubscribersPosts" representedClassName="SubscribersPosts" syncable="YES" codeGenerationType="class">
+        <attribute name="identifier" optional="YES" attributeType="String"/>
+        <attribute name="image" optional="YES" attributeType="String"/>
+        <attribute name="likes" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="text" optional="YES" attributeType="String"/>
+        <attribute name="views" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <relationship name="mainPostModel" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="SubscriberPostMain" inverseName="subscriberPosts" inverseEntity="SubscriberPostMain"/>
+    </entity>
     <entity name="UserMainModel" representedClassName="UserMainModel" syncable="YES" codeGenerationType="class">
         <attribute name="avatarImage" optional="YES" attributeType="Binary"/>
         <attribute name="city" optional="YES" attributeType="String"/>
@@ -23,5 +41,6 @@
         <attribute name="name" optional="YES" attributeType="String"/>
         <attribute name="surname" optional="YES" attributeType="String"/>
         <relationship name="postsMainModel" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="PostsMainModel" inverseName="mainUser" inverseEntity="PostsMainModel"/>
+        <relationship name="subscribers" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Subscribers" inverseName="mainUser" inverseEntity="Subscribers"/>
     </entity>
 </model>
