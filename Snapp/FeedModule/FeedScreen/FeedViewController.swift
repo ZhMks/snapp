@@ -33,6 +33,7 @@ final class FeedViewController: UIViewController {
         storiesCollection.delegate = self
         storiesCollection.translatesAutoresizingMaskIntoConstraints = false
         storiesCollection.backgroundColor = ColorCreator.shared.createTextColor()
+        storiesCollection.register(FeedCollectionViewCell.self, forCellWithReuseIdentifier: FeedCollectionViewCell.identifier)
         return storiesCollection
     }()
 
@@ -60,7 +61,6 @@ final class FeedViewController: UIViewController {
         createPost.layer.cornerRadius = 10.0
         createPost.titleLabel?.font = UIFont(name: "Inter-Medium", size: 12)
         createPost.translatesAutoresizingMaskIntoConstraints = false
-        createPost.addTarget(self, action: #selector(testSubscriberSave), for: .touchUpInside)
         return createPost
     }()
 
@@ -71,33 +71,11 @@ final class FeedViewController: UIViewController {
         view.backgroundColor = .systemBackground
         addSubviews()
         layout()
-        let subscriberService = SubscribersCoreDataModelService(mainModel: presenter.user)
-        subscriberService.modelArray?.forEach({ model in
-            print("INSIDE FEEDVC SUBS: \(model.subscriberPostMain?.count)")
-            let mainSubPostService = MainSubscriberPostService(mainModel: model)
-            mainSubPostService.modelArray?.forEach({ model in
-                print("INSIDE FEEDVC MAINPOST: \(model.date)")
-                let eachPostService = EachSubscriberPostService(mainModel: model)
-                eachPostService.modelArray?.forEach({ model in
-                    print("INSIDE FEEDVC MAINPOST: \(model.text), \(model.image), \(model.likes)")
-                })
-            })
-        })
     }
 
     // MARK: -FUNCS
 
-    @objc func testSubscriberSave() {
-        let subscriber = "yosu0PCY7EUpX3E3bAfmSjxyGdQ2"
-        presenter.saveSubscriber(id: subscriber) { [weak self] result in
-            switch result {
-            case .success(let success):
-                print(success.subscribers?.count)
-            case .failure(let failure):
-                print(failure.localizedDescription)
-            }
-        }
-    }
+
 }
 
 // MARK: -OUTPUT PRESENTER
@@ -112,40 +90,37 @@ extension FeedViewController: FeedViewProtocol {
 extension FeedViewController {
 
     private func addSubviews() {
-        //        view.addSubview(currentUserStorie)
-        //        view.addSubview(storiesCollection)
-        //        view.addSubview(feedScrollView)
+        view.addSubview(currentUserStorie)
+        view.addSubview(storiesCollection)
+        view.addSubview(feedScrollView)
         view.addSubview(createPostButton)
-        //  feedScrollView.addSubview(feedTableView)
+        feedScrollView.addSubview(feedTableView)
     }
 
     private func layout() {
         let safeArea = view.safeAreaLayoutGuide
 
         NSLayoutConstraint.activate([
-            //            currentUserStorie.topAnchor.constraint(equalTo: safeArea.topAnchor),
-            //            currentUserStorie.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 16),
-            //            currentUserStorie.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -299),
-            //            currentUserStorie.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor, constant: -563),
-            //
-            //            storiesCollection.topAnchor.constraint(equalTo: safeArea.topAnchor),
-            //            storiesCollection.leadingAnchor.constraint(equalTo: currentUserStorie.trailingAnchor, constant: 12),
-            //            storiesCollection.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
-            //            storiesCollection.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor, constant: -563),
-            //
-            //            feedScrollView.topAnchor.constraint(equalTo: storiesCollection.bottomAnchor, constant: 22),
-            //            feedScrollView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 16),
-            //            feedScrollView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -15),
-            //            feedScrollView.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor),
-            //
-            //            feedTableView.topAnchor.constraint(equalTo: feedScrollView.topAnchor),
-            //            feedTableView.leadingAnchor.constraint(equalTo: feedScrollView.leadingAnchor),
-            //            feedTableView.trailingAnchor.constraint(equalTo: feedScrollView.trailingAnchor),
-            //            feedTableView.bottomAnchor.constraint(equalTo: feedScrollView.bottomAnchor),
-            //            feedTableView.widthAnchor.constraint(equalTo: feedScrollView.widthAnchor),
+            currentUserStorie.topAnchor.constraint(equalTo: safeArea.topAnchor),
+            currentUserStorie.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 16),
+            currentUserStorie.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -299),
+            currentUserStorie.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor, constant: -563),
 
-            createPostButton.centerXAnchor.constraint(equalTo: safeArea.centerXAnchor),
-            createPostButton.centerYAnchor.constraint(equalTo: safeArea.centerYAnchor)
+            storiesCollection.topAnchor.constraint(equalTo: safeArea.topAnchor),
+            storiesCollection.leadingAnchor.constraint(equalTo: currentUserStorie.trailingAnchor, constant: 12),
+            storiesCollection.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
+            storiesCollection.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor, constant: -563),
+
+            feedScrollView.topAnchor.constraint(equalTo: storiesCollection.bottomAnchor, constant: 22),
+            feedScrollView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 16),
+            feedScrollView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -15),
+            feedScrollView.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor),
+
+            feedTableView.topAnchor.constraint(equalTo: feedScrollView.topAnchor),
+            feedTableView.leadingAnchor.constraint(equalTo: feedScrollView.leadingAnchor),
+            feedTableView.trailingAnchor.constraint(equalTo: feedScrollView.trailingAnchor),
+            feedTableView.bottomAnchor.constraint(equalTo: feedScrollView.bottomAnchor),
+            feedTableView.widthAnchor.constraint(equalTo: feedScrollView.widthAnchor)
         ])
     }
 
@@ -164,8 +139,9 @@ extension FeedViewController: UICollectionViewDataSource {
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Cell", for: indexPath)
+       guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: FeedCollectionViewCell.identifier, for: indexPath) as? FeedCollectionViewCell else { return UICollectionViewCell() }
         cell.backgroundColor = .blue
+        cell.updateCell(image: <#T##UIImage#>)
         return cell
     }
 }
@@ -178,7 +154,8 @@ extension FeedViewController: UITableViewDelegate {
 // MARK: -TABLEVIEWDATASOURCE
 extension FeedViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        4
+        //presenter.user.subscribers
+        0
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {

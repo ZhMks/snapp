@@ -124,7 +124,7 @@ final class AddProfileVc: UIViewController {
             switch result {
             case .success(let user):
                 presenter.userCoreDataService.saveModelToCoreData(user: user, id: self.presenter.fireAuthUser.uid)
-                DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
                     let userModelService = UserCoreDataModelService()
                     guard let model = userModelService.modelArray?.first(where: { $0.id! == self.presenter.fireAuthUser.uid }) else { return }
                     self.pushMainScreen(user: model)
@@ -149,8 +149,6 @@ final class AddProfileVc: UIViewController {
 
     private func pushMainScreen(user: UserMainModel) {
         let feedVC = FeedViewController()
-        let postsModelService = PostsCoreDataModelService(mainModel: user)
-        let postsArray = postsModelService.modelArray
         let feedPresenter = FeedPresenter(view: feedVC, user: user)
         feedVC.presenter = feedPresenter
 

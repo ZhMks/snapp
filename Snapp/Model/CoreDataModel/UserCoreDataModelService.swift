@@ -122,6 +122,7 @@ final class UserCoreDataModelService {
 
         let subcribersPost = SubscribersPosts(context: context)
 
+
         for (key, value) in posts {
             subcribersPost.identifier = key
             subcribersPost.image = value.image

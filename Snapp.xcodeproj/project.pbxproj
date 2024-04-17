@@ -87,6 +87,7 @@
 		B29D0ACE2BCE582900101029 /* SubscribersCoreDataModelService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B29D0ACD2BCE582900101029 /* SubscribersCoreDataModelService.swift */; };
 		B29D0AD02BCE5E6600101029 /* EachSubscriberPostService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B29D0ACF2BCE5E6600101029 /* EachSubscriberPostService.swift */; };
 		B29D0AD22BCE618400101029 /* MainSubscriberPostService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B29D0AD12BCE618400101029 /* MainSubscriberPostService.swift */; };
+		B29D0AD72BCEB17B00101029 /* NetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B29D0AD62BCEB17B00101029 /* NetworkService.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -165,6 +166,7 @@
 		B29D0ACD2BCE582900101029 /* SubscribersCoreDataModelService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscribersCoreDataModelService.swift; sourceTree = "<group>"; };
 		B29D0ACF2BCE5E6600101029 /* EachSubscriberPostService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EachSubscriberPostService.swift; sourceTree = "<group>"; };
 		B29D0AD12BCE618400101029 /* MainSubscriberPostService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainSubscriberPostService.swift; sourceTree = "<group>"; };
+		B29D0AD62BCEB17B00101029 /* NetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkService.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -502,6 +504,7 @@
 		B211C27A2BBD320900C073EE /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				B29D0AD52BCEB16C00101029 /* NetworkService */,
 				B209E6122BBFD6C80067D751 /* FirestoreService */,
 				B209E6092BBEBCB20067D751 /* Fonts */,
 				B211C2812BBD48DE00C073EE /* AuthService */,
@@ -552,6 +555,14 @@
 				B211C2862BBD494200C073EE /* FirebaseUser.swift */,
 			);
 			path = FirebaseUser;
+			sourceTree = "<group>";
+		};
+		B29D0AD52BCEB16C00101029 /* NetworkService */ = {
+			isa = PBXGroup;
+			children = (
+				B29D0AD62BCEB17B00101029 /* NetworkService.swift */,
+			);
+			path = NetworkService;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -727,6 +738,7 @@
 				B211C1F22BBB3C2900C073EE /* Snapp.xcdatamodeld in Sources */,
 				B211C2642BBC17B900C073EE /* Extension+String.swift in Sources */,
 				B211C1EC2BBB3C2900C073EE /* OnBoardingVC.swift in Sources */,
+				B29D0AD72BCEB17B00101029 /* NetworkService.swift in Sources */,
 				B211C2672BBC2EF700C073EE /* SecondOnboardingVC.swift in Sources */,
 				B209E6512BC95E930067D751 /* SignInViewController.swift in Sources */,
 				B209E63E2BC5626C0067D751 /* UserCoreDataModelService.swift in Sources */,

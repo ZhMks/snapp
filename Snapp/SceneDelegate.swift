@@ -63,11 +63,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         (UIApplication.shared.delegate as? AppDelegate)?.saveContext()
     }
 
-    func changeRootViewController(_ vc: UIViewController,
-                                  user: UserMainModel,
-                                  firestoreService: FireStoreServiceProtocol,
-                                  userModelService: UserCoreDataModelService
-                                 ) {
+    func changeRootViewController(_ vc: UIViewController, user: UserMainModel) {
+        
+        let fireStoreService = FireStoreService()
+        let userModelService = UserCoreDataModelService()
+
         guard let window = self.window else {
             return
         }
@@ -82,7 +82,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         feedNavVc.tabBarItem = UITabBarItem(title: "Главная", image: UIImage(systemName: "house"), tag: 0)
 
         let profileVC = ProfileViewController()
-        let profilePresenter = ProfilePresenter(view: profileVC, mainUser: user, firestoreService: firestoreService, userModelService: userModelService)
+        let profilePresenter = ProfilePresenter(view: profileVC, mainUser: user, firestoreService: fireStoreService, userModelService: userModelService)
         profileVC.presenter = profilePresenter
         let profileNavVC = UINavigationController(rootViewController: profileVC)
         profileNavVC.tabBarItem = UITabBarItem(title: "Профиль", image: UIImage(systemName: "person.crop.circle"), tag: 1)

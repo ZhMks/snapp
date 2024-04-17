@@ -30,14 +30,6 @@ class ProfileViewController: UIViewController {
         tuneNavItem()
         addSubviews()
         layout()
-        let postService = PostsCoreDataModelService(mainModel: presenter.mainUser)
-        postService.modelArray?.forEach({ model in
-            let eachPostService = EachPostCoreDataModelService(mainModel: model)
-            guard let eachPostArray = eachPostService.modelArray else { return }
-            for post in eachPostArray {
-                print(post.identifier, post.image, post.text)
-            }
-        })
     }
     
 // MARK: -FUNCS
@@ -46,8 +38,8 @@ class ProfileViewController: UIViewController {
         let image = UIImage(systemName: "checkmark")
         presenter.createPost(text: text, image: image!) { result in
             switch result {
-            case .success(let success):
-                print(success.date)
+            case .success(let postMainModel):
+                print()
             case .failure(let failure):
                 print(failure.localizedDescription)
             }

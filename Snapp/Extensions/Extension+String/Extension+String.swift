@@ -12,4 +12,6 @@ extension String {
     static func localized(string: String) -> String  {
         NSLocalizedString(string, comment: "")
     }
+
+    
 }

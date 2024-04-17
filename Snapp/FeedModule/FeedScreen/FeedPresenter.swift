@@ -31,8 +31,6 @@ final class FeedPresenter: FeedPresenterProtocol {
         let firestoreService = FireStoreService()
 
         firestoreService.saveSubscriber(mainUser: user.id!, id: id)
-        print(user.id!)
-        print(id)
 
         let subscribersModelService = SubscribersCoreDataModelService(mainModel: user)
 
@@ -52,15 +50,6 @@ final class FeedPresenter: FeedPresenterProtocol {
                         switch result {
                         case .success(let posts):
                             DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
-                                for (key,value) in posts {
-                                    print(key)
-                                    print(value.keys)
-                                    for (key, value) in value {
-                                        print(key)
-                                        print(value.image)
-                                        print(value.text)
-                                    }
-                                }
                                 userModelService.saveSubscriber(id: id, mainModel: self.user, posts: posts)
                                 completion(.success(self.user))
                             }
@@ -77,7 +66,41 @@ final class FeedPresenter: FeedPresenterProtocol {
     func fetchPosts() {
         let firestoreService = FireStoreService()
         let subscribersModelService = SubscribersCoreDataModelService(mainModel: user)
-        let userModelService = UserCoreDataModelService()
-        guard let subscribersArray = subscribersModelService.modelArray else { return }
+        let mainUserModelService = UserCoreDataModelService()
+
+        if checkCoreData() {
+            guard let subscribersArray = subscribersModelService.modelArray else { return }
+            for subscriber in subscribersArray {
+                let mainSubService = MainSubscriberPostService(mainModel: subscriber)
+                guard let mainSubArray = mainSubService.modelArray else { return }
+                for mainSub in mainSubArray {
+                    let eachSubPost = EachSubscriberPostService(mainModel: mainSub)
+                    guard let eachSubArray = eachSubPost.modelArray else { return }
+                    for eachPost in eachSubArray {
+                        firestoreService.getPosts(sub: subscriber.url!, time: eachPost.identifier!) { [weak self] result in
+                            guard let self else { return }
+                            switch result {
+                            case .success(let fireStorePosts):
+                                mainUserModelService.saveMainSubscriberPost(model: subscriber, posts: fireStorePosts)
+                            case .failure(let failure):
+                                print(failure.localizedDescription)
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    func checkCoreData() -> Bool {
+
+        let subscribersModelService = SubscribersCoreDataModelService(mainModel: user)
+
+        guard let subscribersArray = subscribersModelService.modelArray else { return false }
+
+        if subscribersArray.isEmpty {
+            return false
+        }
+        return true
     }
 }
