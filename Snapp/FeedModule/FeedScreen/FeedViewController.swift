@@ -61,6 +61,20 @@ final class FeedViewController: UIViewController {
         createPost.layer.cornerRadius = 10.0
         createPost.titleLabel?.font = UIFont(name: "Inter-Medium", size: 12)
         createPost.translatesAutoresizingMaskIntoConstraints = false
+        createPost.addTarget(self, action: #selector(createSub), for: .touchUpInside)
+        return createPost
+    }()
+
+
+    private lazy var createStorieButton: UIButton = {
+        let createPost = UIButton(type: .system)
+        createPost.backgroundColor = ColorCreator.shared.createButtonColor()
+        createPost.setTitle(.localized(string: "Storie"), for: .normal)
+        createPost.setTitleColor(.systemBackground, for: .normal)
+        createPost.layer.cornerRadius = 10.0
+        createPost.titleLabel?.font = UIFont(name: "Inter-Medium", size: 12)
+        createPost.translatesAutoresizingMaskIntoConstraints = false
+        createPost.addTarget(self, action: #selector(createStorie), for: .touchUpInside)
         return createPost
     }()
 
@@ -76,6 +90,23 @@ final class FeedViewController: UIViewController {
     // MARK: -FUNCS
 
 
+    @objc func createStorie() {
+        let image = UIImage(named: "f")
+    }
+
+    @objc func createSub() {
+        let string = "PkMeY82d1PXWs8yoPcRebAB764x2"
+        presenter.saveSubscriber(id: string) { [weak self] result in
+            guard let self else { return }
+            switch result {
+            case .success(let success):
+                print(success.name, success.job)
+            case .failure(let failure):
+                print(failure.localizedDescription)
+            }
+        }
+    }
+
 }
 
 // MARK: -OUTPUT PRESENTER
@@ -90,37 +121,46 @@ extension FeedViewController: FeedViewProtocol {
 extension FeedViewController {
 
     private func addSubviews() {
-        view.addSubview(currentUserStorie)
-        view.addSubview(storiesCollection)
-        view.addSubview(feedScrollView)
+//        view.addSubview(currentUserStorie)
+//        view.addSubview(storiesCollection)
+//        view.addSubview(feedScrollView)
         view.addSubview(createPostButton)
-        feedScrollView.addSubview(feedTableView)
+        view.addSubview(createStorieButton)
+//        feedScrollView.addSubview(feedTableView)
     }
 
     private func layout() {
         let safeArea = view.safeAreaLayoutGuide
 
         NSLayoutConstraint.activate([
-            currentUserStorie.topAnchor.constraint(equalTo: safeArea.topAnchor),
-            currentUserStorie.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 16),
-            currentUserStorie.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -299),
-            currentUserStorie.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor, constant: -563),
+//            currentUserStorie.topAnchor.constraint(equalTo: safeArea.topAnchor),
+//            currentUserStorie.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 16),
+//            currentUserStorie.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -299),
+//            currentUserStorie.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor, constant: -563),
+//
+//            storiesCollection.topAnchor.constraint(equalTo: safeArea.topAnchor),
+//            storiesCollection.leadingAnchor.constraint(equalTo: currentUserStorie.trailingAnchor, constant: 12),
+//            storiesCollection.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
+//            storiesCollection.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor, constant: -563),
+//
+//            feedScrollView.topAnchor.constraint(equalTo: storiesCollection.bottomAnchor, constant: 22),
+//            feedScrollView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 16),
+//            feedScrollView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -15),
+//            feedScrollView.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor),
+//
+//            feedTableView.topAnchor.constraint(equalTo: feedScrollView.topAnchor),
+//            feedTableView.leadingAnchor.constraint(equalTo: feedScrollView.leadingAnchor),
+//            feedTableView.trailingAnchor.constraint(equalTo: feedScrollView.trailingAnchor),
+//            feedTableView.bottomAnchor.constraint(equalTo: feedScrollView.bottomAnchor),
+//            feedTableView.widthAnchor.constraint(equalTo: feedScrollView.widthAnchor)
 
-            storiesCollection.topAnchor.constraint(equalTo: safeArea.topAnchor),
-            storiesCollection.leadingAnchor.constraint(equalTo: currentUserStorie.trailingAnchor, constant: 12),
-            storiesCollection.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
-            storiesCollection.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor, constant: -563),
+            createPostButton.centerXAnchor.constraint(equalTo: safeArea.centerXAnchor),
+            createPostButton.centerYAnchor.constraint(equalTo: safeArea.centerYAnchor),
 
-            feedScrollView.topAnchor.constraint(equalTo: storiesCollection.bottomAnchor, constant: 22),
-            feedScrollView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 16),
-            feedScrollView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -15),
-            feedScrollView.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor),
-
-            feedTableView.topAnchor.constraint(equalTo: feedScrollView.topAnchor),
-            feedTableView.leadingAnchor.constraint(equalTo: feedScrollView.leadingAnchor),
-            feedTableView.trailingAnchor.constraint(equalTo: feedScrollView.trailingAnchor),
-            feedTableView.bottomAnchor.constraint(equalTo: feedScrollView.bottomAnchor),
-            feedTableView.widthAnchor.constraint(equalTo: feedScrollView.widthAnchor)
+            createStorieButton.topAnchor.constraint(equalTo: createPostButton.bottomAnchor, constant: 30),
+            createStorieButton.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 150),
+            createStorieButton.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -140),
+            createStorieButton.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor, constant: -102)
         ])
     }
 
@@ -135,13 +175,15 @@ extension FeedViewController: UICollectionViewDelegateFlowLayout {
 extension FeedViewController: UICollectionViewDataSource {
 
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        4
+        guard let number = presenter.posts?.count else { return 0 }
+        return number
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: FeedCollectionViewCell.identifier, for: indexPath) as? FeedCollectionViewCell else { return UICollectionViewCell() }
         cell.backgroundColor = .blue
-        cell.updateCell(image: <#T##UIImage#>)
+        guard let data = presenter.posts?[indexPath.section] else { return  UICollectionViewCell() }
+
         return cell
     }
 }

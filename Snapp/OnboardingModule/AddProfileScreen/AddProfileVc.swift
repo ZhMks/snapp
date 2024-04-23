@@ -152,10 +152,7 @@ final class AddProfileVc: UIViewController {
         let feedPresenter = FeedPresenter(view: feedVC, user: user)
         feedVC.presenter = feedPresenter
 
-        (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootViewController(feedVC,
-                                                                                                           user: user,
-                                                                                                           firestoreService: presenter.firestoreService!,
-                                                                                                           userModelService: presenter.userCoreDataService)
+        (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootViewController(feedVC, user: user)
     }
 }
 

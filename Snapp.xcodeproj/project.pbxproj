@@ -88,6 +88,15 @@
 		B29D0AD02BCE5E6600101029 /* EachSubscriberPostService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B29D0ACF2BCE5E6600101029 /* EachSubscriberPostService.swift */; };
 		B29D0AD22BCE618400101029 /* MainSubscriberPostService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B29D0AD12BCE618400101029 /* MainSubscriberPostService.swift */; };
 		B29D0AD72BCEB17B00101029 /* NetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B29D0AD62BCEB17B00101029 /* NetworkService.swift */; };
+		B29D0AD92BD0FB6600101029 /* SubscriberStoriesModelService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B29D0AD82BD0FB6600101029 /* SubscriberStoriesModelService.swift */; };
+		B29D0ADB2BD1073800101029 /* UserStorieService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B29D0ADA2BD1073800101029 /* UserStorieService.swift */; };
+		B29D0ADF2BD63AD000101029 /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B29D0ADE2BD63AD000101029 /* SearchViewController.swift */; };
+		B29D0AE12BD63AE200101029 /* SearchPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B29D0AE02BD63AE200101029 /* SearchPresenter.swift */; };
+		B29D0AE42BD6427100101029 /* SearchTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B29D0AE32BD6427100101029 /* SearchTableViewCell.swift */; };
+		B29D0AE82BD680B100101029 /* DetailUserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B29D0AE72BD680B100101029 /* DetailUserViewController.swift */; };
+		B29D0AEA2BD680BE00101029 /* DetailPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B29D0AE92BD680BE00101029 /* DetailPresenter.swift */; };
+		B29D0AED2BD68C9300101029 /* DetailUserTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B29D0AEC2BD68C9300101029 /* DetailUserTableCell.swift */; };
+		B29D0AEF2BD68CA100101029 /* DetailUserCollectionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B29D0AEE2BD68CA100101029 /* DetailUserCollectionCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -167,6 +176,15 @@
 		B29D0ACF2BCE5E6600101029 /* EachSubscriberPostService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EachSubscriberPostService.swift; sourceTree = "<group>"; };
 		B29D0AD12BCE618400101029 /* MainSubscriberPostService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainSubscriberPostService.swift; sourceTree = "<group>"; };
 		B29D0AD62BCEB17B00101029 /* NetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkService.swift; sourceTree = "<group>"; };
+		B29D0AD82BD0FB6600101029 /* SubscriberStoriesModelService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriberStoriesModelService.swift; sourceTree = "<group>"; };
+		B29D0ADA2BD1073800101029 /* UserStorieService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserStorieService.swift; sourceTree = "<group>"; };
+		B29D0ADE2BD63AD000101029 /* SearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewController.swift; sourceTree = "<group>"; };
+		B29D0AE02BD63AE200101029 /* SearchPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchPresenter.swift; sourceTree = "<group>"; };
+		B29D0AE32BD6427100101029 /* SearchTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchTableViewCell.swift; sourceTree = "<group>"; };
+		B29D0AE72BD680B100101029 /* DetailUserViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailUserViewController.swift; sourceTree = "<group>"; };
+		B29D0AE92BD680BE00101029 /* DetailPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailPresenter.swift; sourceTree = "<group>"; };
+		B29D0AEC2BD68C9300101029 /* DetailUserTableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailUserTableCell.swift; sourceTree = "<group>"; };
+		B29D0AEE2BD68CA100101029 /* DetailUserCollectionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailUserCollectionCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -345,6 +363,8 @@
 				B29D0ACD2BCE582900101029 /* SubscribersCoreDataModelService.swift */,
 				B29D0ACF2BCE5E6600101029 /* EachSubscriberPostService.swift */,
 				B29D0AD12BCE618400101029 /* MainSubscriberPostService.swift */,
+				B29D0AD82BD0FB6600101029 /* SubscriberStoriesModelService.swift */,
+				B29D0ADA2BD1073800101029 /* UserStorieService.swift */,
 			);
 			path = CoreDataModel;
 			sourceTree = "<group>";
@@ -401,6 +421,8 @@
 		B211C1E62BBB3C2900C073EE /* Snapp */ = {
 			isa = PBXGroup;
 			children = (
+				B29D0AE52BD6809300101029 /* DetailUserModule */,
+				B29D0ADC2BD63AAE00101029 /* SearchModule */,
 				B209E6282BC3FDBE0067D751 /* SettingModule */,
 				B209E6222BC3FD270067D751 /* FavouritesModule */,
 				B209E61C2BC3FC0D0067D751 /* ProfileModule */,
@@ -563,6 +585,59 @@
 				B29D0AD62BCEB17B00101029 /* NetworkService.swift */,
 			);
 			path = NetworkService;
+			sourceTree = "<group>";
+		};
+		B29D0ADC2BD63AAE00101029 /* SearchModule */ = {
+			isa = PBXGroup;
+			children = (
+				B29D0ADD2BD63ABB00101029 /* SearchScreeen */,
+			);
+			path = SearchModule;
+			sourceTree = "<group>";
+		};
+		B29D0ADD2BD63ABB00101029 /* SearchScreeen */ = {
+			isa = PBXGroup;
+			children = (
+				B29D0AE22BD6426100101029 /* TableViewCell */,
+				B29D0ADE2BD63AD000101029 /* SearchViewController.swift */,
+				B29D0AE02BD63AE200101029 /* SearchPresenter.swift */,
+			);
+			path = SearchScreeen;
+			sourceTree = "<group>";
+		};
+		B29D0AE22BD6426100101029 /* TableViewCell */ = {
+			isa = PBXGroup;
+			children = (
+				B29D0AE32BD6427100101029 /* SearchTableViewCell.swift */,
+			);
+			path = TableViewCell;
+			sourceTree = "<group>";
+		};
+		B29D0AE52BD6809300101029 /* DetailUserModule */ = {
+			isa = PBXGroup;
+			children = (
+				B29D0AE62BD680A000101029 /* DetailUserScreen */,
+			);
+			path = DetailUserModule;
+			sourceTree = "<group>";
+		};
+		B29D0AE62BD680A000101029 /* DetailUserScreen */ = {
+			isa = PBXGroup;
+			children = (
+				B29D0AEB2BD68C8200101029 /* DetailUserScreenCells */,
+				B29D0AE72BD680B100101029 /* DetailUserViewController.swift */,
+				B29D0AE92BD680BE00101029 /* DetailPresenter.swift */,
+			);
+			path = DetailUserScreen;
+			sourceTree = "<group>";
+		};
+		B29D0AEB2BD68C8200101029 /* DetailUserScreenCells */ = {
+			isa = PBXGroup;
+			children = (
+				B29D0AEC2BD68C9300101029 /* DetailUserTableCell.swift */,
+				B29D0AEE2BD68CA100101029 /* DetailUserCollectionCell.swift */,
+			);
+			path = DetailUserScreenCells;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -738,6 +813,7 @@
 				B211C1F22BBB3C2900C073EE /* Snapp.xcdatamodeld in Sources */,
 				B211C2642BBC17B900C073EE /* Extension+String.swift in Sources */,
 				B211C1EC2BBB3C2900C073EE /* OnBoardingVC.swift in Sources */,
+				B29D0AE12BD63AE200101029 /* SearchPresenter.swift in Sources */,
 				B29D0AD72BCEB17B00101029 /* NetworkService.swift in Sources */,
 				B211C2672BBC2EF700C073EE /* SecondOnboardingVC.swift in Sources */,
 				B209E6512BC95E930067D751 /* SignInViewController.swift in Sources */,
@@ -745,6 +821,7 @@
 				B209E64F2BC95E850067D751 /* SignInPresenter.swift in Sources */,
 				B209E63B2BC560770067D751 /* UserModel.xcdatamodeld in Sources */,
 				B211C1E82BBB3C2900C073EE /* AppDelegate.swift in Sources */,
+				B29D0AE82BD680B100101029 /* DetailUserViewController.swift in Sources */,
 				B29D0AD22BCE618400101029 /* MainSubscriberPostService.swift in Sources */,
 				B209E6312BC3FEB10067D751 /* ProfileChangeViewController.swift in Sources */,
 				B209E6362BC430FC0067D751 /* FeedCollectionVIewCell.swift in Sources */,
@@ -759,22 +836,29 @@
 				B211C27D2BBD321C00C073EE /* Validator.swift in Sources */,
 				B209E6252BC3FD450067D751 /* FavouritesViewController.swift in Sources */,
 				B29D0AD02BCE5E6600101029 /* EachSubscriberPostService.swift in Sources */,
+				B29D0AD92BD0FB6600101029 /* SubscriberStoriesModelService.swift in Sources */,
+				B29D0AED2BD68C9300101029 /* DetailUserTableCell.swift in Sources */,
 				B209E6412BC5628C0067D751 /* CoreDataService.swift in Sources */,
 				B211C2712BBC4C1700C073EE /* StringFormatter.swift in Sources */,
 				B209E64C2BC7C8DE0067D751 /* AddProfileVc.swift in Sources */,
 				B209E61B2BC139000067D751 /* FeedViewController.swift in Sources */,
 				B209E6382BC431080067D751 /* FeedTableViewCell.swift in Sources */,
+				B29D0AEA2BD680BE00101029 /* DetailPresenter.swift in Sources */,
 				B211C26E2BBC405A00C073EE /* ThirdOnboardingPresenter.swift in Sources */,
 				B211C21E2BBBEACA00C073EE /* OnBoardingPresenter.swift in Sources */,
 				B211C2762BBC6A1D00C073EE /* LoginScreenPresenter.swift in Sources */,
 				B211C2742BBC6A1000C073EE /* LoginScreenViewController.swift in Sources */,
 				B209E6332BC3FEBE0067D751 /* ProfileChangePresenter.swift in Sources */,
+				B29D0ADF2BD63AD000101029 /* SearchViewController.swift in Sources */,
+				B29D0ADB2BD1073800101029 /* UserStorieService.swift in Sources */,
 				B209E6432BC565340067D751 /* PostCoreDataModelService.swift in Sources */,
 				B209E62E2BC3FDEC0067D751 /* SettingPresenter.swift in Sources */,
 				B209E6272BC3FD5B0067D751 /* FavouritesPresenter.swift in Sources */,
 				B209E61F2BC3FC290067D751 /* ProfileViewController.swift in Sources */,
 				B29D0ACE2BCE582900101029 /* SubscribersCoreDataModelService.swift in Sources */,
+				B29D0AEF2BD68CA100101029 /* DetailUserCollectionCell.swift in Sources */,
 				B211C26C2BBC404C00C073EE /* ThirdOnboardingViewController.swift in Sources */,
+				B29D0AE42BD6427100101029 /* SearchTableViewCell.swift in Sources */,
 				B209E6452BC566D90067D751 /* EachPostCoreDataModelService.swift in Sources */,
 				B211C2872BBD494200C073EE /* FirebaseUser.swift in Sources */,
 			);

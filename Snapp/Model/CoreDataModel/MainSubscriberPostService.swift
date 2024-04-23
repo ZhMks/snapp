@@ -27,9 +27,11 @@ final class MainSubscriberPostService {
         self.modelArray = array
     }
 
-    func delete(item: PostsMainModel) {
-            mainModel.managedObjectContext?.delete(item)
-            coredataService.saveContext()
-            fetchData()
-        }
+    func delete(item: SubscriberPostMain) {
+        mainModel.managedObjectContext?.delete(item)
+        coredataService.saveContext()
+        fetchData()
+    }
+
+
 }

@@ -76,7 +76,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let favouritesPresenter = FavouritesPresenter(view: favouritesVC, user: user, userModelService: userModelService)
         favouritesVC.presenter = favouritesPresenter
         let favouriteNavVC = UINavigationController(rootViewController: favouritesVC)
-        favouriteNavVC.tabBarItem = UITabBarItem(title: "Сохраненные", image: UIImage(systemName: "heart"), tag: 2)
+        favouriteNavVC.tabBarItem = UITabBarItem(title: "Сохраненные", image: UIImage(systemName: "heart"), tag: 3)
 
         let feedNavVc = UINavigationController(rootViewController: vc)
         feedNavVc.tabBarItem = UITabBarItem(title: "Главная", image: UIImage(systemName: "house"), tag: 0)
@@ -87,9 +87,15 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let profileNavVC = UINavigationController(rootViewController: profileVC)
         profileNavVC.tabBarItem = UITabBarItem(title: "Профиль", image: UIImage(systemName: "person.crop.circle"), tag: 1)
 
+        let searchVC = SearchViewController()
+        let searchPresenter = SearchPresenter(view: searchVC, firestoreService: fireStoreService)
+        searchVC.presenter = searchPresenter
+        let searchNavVC = UINavigationController(rootViewController: searchVC)
+        searchNavVC.tabBarItem = UITabBarItem(title: "Поиск", image: UIImage(systemName: "magnifyingglass"), tag: 2)
+
         let tabBarController = UITabBarController()
 
-        let viewControllers = [feedNavVc, profileNavVC, favouriteNavVC]
+        let viewControllers = [feedNavVc, profileNavVC, searchNavVC, favouriteNavVC]
         tabBarController.setViewControllers(viewControllers, animated: true)
         tabBarController.selectedIndex = 0
         tabBarController.tabBar.tintColor = .systemYellow

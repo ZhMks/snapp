@@ -22,6 +22,7 @@ struct FirebaseUser: Codable {
     var contacts: String
     var city: String
     var image: String
+    var nickName: String
 }
 
 struct EachPost: Codable {

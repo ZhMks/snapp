@@ -87,7 +87,6 @@ class LoginScreenViewController: UIViewController {
                         let signInPresenter = SignInPresenter(view: signInVC,
                                                               firebaseAuth:authService!,
                                                               userModelService: userCoreDataService, firestoreService: firestoreService)
-                        signInVC.modalPresentationStyle = .fullScreen
                         signInVC.presenter = signInPresenter
                         self?.navigationController?.present(signInVC, animated: true)
                     }

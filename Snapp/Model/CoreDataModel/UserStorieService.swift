@@ -1,16 +1,15 @@
 //
-//  SubscribersCoreDataModelService.swift
+//  UserStorieService.swift
 //  Snapp
 //
-//  Created by Максим Жуин on 16.04.2024.
+//  Created by Максим Жуин on 18.04.2024.
 //
 
 import Foundation
 
+final class UserStorieService {
 
-final class SubscribersCoreDataModelService {
-
-    private(set) var modelArray: [Subscribers]?
+    private(set) var modelArray: [UserStory]?
     private let mainModel: UserMainModel
     let coredataService = CoreDataService.shared
 
@@ -20,14 +19,14 @@ final class SubscribersCoreDataModelService {
     }
 
     private func fetchData() {
-        guard let array = mainModel.subscribers?.sortedArray(using: [NSSortDescriptor(key: "url", ascending: true)]) as? [Subscribers] else {
+        guard let array = mainModel.stories?.sortedArray(using: [NSSortDescriptor(key: "id", ascending: true)]) as? [UserStory] else {
             print("Cannot get array!")
             return self.modelArray = []
         }
         modelArray = array
     }
 
-    func delete(item: Subscribers) {
+    func delete(item: UserStory) {
         mainModel.managedObjectContext?.delete(item)
         coredataService.saveContext()
         fetchData()

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="22757" systemVersion="23E224" minimumToolsVersion="Automatic" sourceLanguage="Swift" usedWithSwiftData="YES" userDefinedModelVersionIdentifier="">
     <entity name="EachPostModel" representedClassName="EachPostModel" syncable="YES" codeGenerationType="class">
-        <attribute name="identifier" optional="YES" attributeType="String"/>
         <attribute name="image" optional="YES" attributeType="Binary"/>
         <attribute name="likes" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="text" optional="YES" attributeType="String"/>
@@ -19,8 +18,14 @@
         <relationship name="subscriberPosts" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="SubscribersPosts" inverseName="mainPostModel" inverseEntity="SubscribersPosts"/>
     </entity>
     <entity name="Subscribers" representedClassName="Subscribers" syncable="YES" codeGenerationType="class">
+        <attribute name="avatarImage" optional="YES" attributeType="Binary"/>
+        <attribute name="job" optional="YES" attributeType="String"/>
+        <attribute name="name" optional="YES" attributeType="String"/>
+        <attribute name="nickname" optional="YES" attributeType="String"/>
+        <attribute name="surname" optional="YES" attributeType="String"/>
         <attribute name="url" optional="YES" attributeType="String"/>
         <relationship name="mainUser" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="UserMainModel" inverseName="subscribers" inverseEntity="UserMainModel"/>
+        <relationship name="stories" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="SubStory" inverseName="subscriberMain" inverseEntity="SubStory"/>
         <relationship name="subscriberPostMain" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="SubscriberPostMain" inverseName="subscriberModel" inverseEntity="SubscriberPostMain"/>
     </entity>
     <entity name="SubscribersPosts" representedClassName="SubscribersPosts" syncable="YES" codeGenerationType="class">
@@ -30,6 +35,11 @@
         <attribute name="text" optional="YES" attributeType="String"/>
         <attribute name="views" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <relationship name="mainPostModel" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="SubscriberPostMain" inverseName="subscriberPosts" inverseEntity="SubscriberPostMain"/>
+    </entity>
+    <entity name="SubStory" representedClassName="SubStory" syncable="YES" codeGenerationType="class">
+        <attribute name="image" optional="YES" attributeType="Binary"/>
+        <relationship name="mainUser" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="UserMainModel"/>
+        <relationship name="subscriberMain" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Subscribers" inverseName="stories" inverseEntity="Subscribers"/>
     </entity>
     <entity name="UserMainModel" representedClassName="UserMainModel" syncable="YES" codeGenerationType="class">
         <attribute name="avatarImage" optional="YES" attributeType="Binary"/>
@@ -41,6 +51,11 @@
         <attribute name="name" optional="YES" attributeType="String"/>
         <attribute name="surname" optional="YES" attributeType="String"/>
         <relationship name="postsMainModel" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="PostsMainModel" inverseName="mainUser" inverseEntity="PostsMainModel"/>
+        <relationship name="stories" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="UserStory" inverseName="useMain" inverseEntity="UserStory"/>
         <relationship name="subscribers" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Subscribers" inverseName="mainUser" inverseEntity="Subscribers"/>
+    </entity>
+    <entity name="UserStory" representedClassName="UserStory" syncable="YES" codeGenerationType="class">
+        <attribute name="image" optional="YES" attributeType="Binary"/>
+        <relationship name="useMain" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="UserMainModel" inverseName="stories" inverseEntity="UserMainModel"/>
     </entity>
 </model>

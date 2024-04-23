@@ -34,10 +34,28 @@ final class AddProfilePresenter: AddProfilePresenterProtocol {
         self.userCoreDataService = userCoreDataService
     }
 
-    func createUser(id: String, name: String, surname: String, job: String, city: String, interests: String, contacts: String, image: UIImage, completion: @escaping (Result <FirebaseUser, Error>) -> Void) {
+    func createUser(id: String,
+                    name: String,
+                    surname: String,
+                    job: String,
+                    city: String,
+                    interests: String,
+                    contacts: String,
+                    image: UIImage,
+                    completion: @escaping (Result <FirebaseUser, Error>) -> Void) {
 
         let ref = Storage.storage().reference().child("users").child(id).child("avatar")
-        var firebaseUser = FirebaseUser(name: "", surname: "", job: "", subscribers: [], subscribtions: [], stories: [], interests: "", contacts: "", city: "", image: "")
+        var firebaseUser = FirebaseUser(name: "",
+                                        surname: "",
+                                        job: "",
+                                        subscribers: [],
+                                        subscribtions: [],
+                                        stories: [],
+                                        interests: "",
+                                        contacts: "",
+                                        city: "",
+                                        image: "",
+                                        nickName: "")
 
         firebaseUser.name = name
         firebaseUser.surname = surname

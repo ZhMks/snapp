@@ -20,7 +20,8 @@ final class FeedCollectionViewCell: UICollectionViewCell {
         return storieImage
     }()
 
-    func updateCell(image: UIImage) {
-        self.storieImage.image = image
+    func updateCell(image: Data?) {
+        guard let image = image else { return }
+        self.storieImage.image = UIImage(data: image)
     }
 }

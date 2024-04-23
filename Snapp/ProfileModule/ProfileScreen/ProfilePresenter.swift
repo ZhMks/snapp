@@ -38,14 +38,15 @@ final class ProfilePresenter: ProfilePresenterProtocol {
         let formatter = DateFormatter()
         formatter.dateFormat = "dd-MM-yyyy"
         let stringFromDate = formatter.string(from: date)
-        let timeString = String(time)
 
-        firestoreService.createPost(date: stringFromDate, time: timeString, text: text, image: image, for: mainUser) { [weak self] result in
+        firestoreService.createPost(date: stringFromDate, text: text, image: image, for: mainUser) { [weak self] result in
             guard let self else { return }
             switch result {
             case .success(let firestorePost):
                 DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                    self.userModelService.savePostsToCoreData(posts: [stringFromDate : [timeString : firestorePost]], postsArray: self.posts, user: self.mainUser)
+                    self.userModelService.savePostsToCoreData(posts: [stringFromDate : [firestorePost]],
+                                                              postsArray: self.posts,
+                                                              user: self.mainUser)
                 }
             case .failure(let error):
                 view?.showErrorAler(error: error.localizedDescription)
