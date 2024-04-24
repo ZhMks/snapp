@@ -34,7 +34,6 @@ final class ProfilePresenter: ProfilePresenterProtocol {
 
     func createPost(text: String, image: UIImage, completion: @escaping (Result<PostsMainModel, Error>) -> Void) {
         let date = Date()
-        let time = date.timeIntervalSinceNow
         let formatter = DateFormatter()
         formatter.dateFormat = "dd-MM-yyyy"
         let stringFromDate = formatter.string(from: date)

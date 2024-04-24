@@ -22,6 +22,7 @@ final class SearchPresenter: SearchPresenterProtocol {
     weak var view: SearchViewProtocol?
     let firestoreService: FireStoreServiceProtocol
     var usersArray: [FirebaseUser] = []
+    var posts: [String: [String : EachPost]] = [:]
 
     init(view: SearchViewProtocol?, firestoreService: FireStoreServiceProtocol) {
         self.view = view
@@ -42,6 +43,20 @@ final class SearchPresenter: SearchPresenterProtocol {
             case .failure(let failure):
                 view?.showErrorAlert()
             }
+        }
+    }
+
+    func fetchPosts()  {
+        guard let currentUser = Auth.auth().currentUser else { return }
+        firestoreService.getPosts(sub: currentUser.uid) { [weak self] result in
+                guard let self else { return }
+                switch result {
+                case .success(let success):
+                    print(success)
+                    posts = success
+                case .failure(let failure):
+                    view?.showErrorAlert()
+                }
         }
     }
 }

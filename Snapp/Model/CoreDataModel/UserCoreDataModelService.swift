@@ -60,18 +60,18 @@ final class UserCoreDataModelService {
                 coredataService.saveContext()
             }
         } else {
-            postsArray.forEach { model in
-                print(model.date)
+            for model in postsArray {
                 for (key, value) in posts {
                     if model.date! == key {
                         saveEachPostToCoreData(posts: value, mainModel: model)
                         coredataService.saveContext()
+                        fetchFromCoreData()
                     } else {
+                        guard let context = user.managedObjectContext else { return }
                         let newPost = PostsMainModel(context: context)
-                        newPost.date = key
                         saveEachPostToCoreData(posts: value, mainModel: newPost)
-                        user.addToPostsMainModel(newPost)
                         coredataService.saveContext()
+                        fetchFromCoreData()
                     }
                 }
             }

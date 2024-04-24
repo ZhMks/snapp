@@ -45,6 +45,7 @@ class SearchViewController: UIViewController {
             guard let self else { return }
             allUsersTable.reloadData()
         }
+        presenter.fetchPosts()
     }
 
 
