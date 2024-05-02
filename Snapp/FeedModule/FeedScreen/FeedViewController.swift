@@ -91,20 +91,11 @@ final class FeedViewController: UIViewController {
 
 
     @objc func createStorie() {
-        let image = UIImage(named: "f")
+       
     }
 
     @objc func createSub() {
-        let string = "PkMeY82d1PXWs8yoPcRebAB764x2"
-        presenter.saveSubscriber(id: string) { [weak self] result in
-            guard let self else { return }
-            switch result {
-            case .success(let success):
-                print(success.name, success.job)
-            case .failure(let failure):
-                print(failure.localizedDescription)
-            }
-        }
+
     }
 
 }

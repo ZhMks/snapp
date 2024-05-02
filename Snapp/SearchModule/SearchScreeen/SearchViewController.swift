@@ -41,16 +41,17 @@ class SearchViewController: UIViewController {
         view.backgroundColor = .systemBackground
         addSubviews()
         layout()
-        DispatchQueue.main.asyncAfter(deadline: .now() + 3) { [weak self] in
-            guard let self else { return }
-            allUsersTable.reloadData()
-        }
-        presenter.fetchPosts()
+        performUpdate()
     }
 
 
     //MARK: -FUNCS
-
+    func performUpdate() {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2) { [weak self] in
+            guard let self else { return }
+            allUsersTable.reloadData()
+        }
+    }
 }
 
 
@@ -112,5 +113,12 @@ extension SearchViewController: UITableViewDataSource {
 
 // MARK: -TABLEVIEWDELEGATE
 extension SearchViewController: UITableViewDelegate {
-
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let user = presenter.usersArray[indexPath.row]
+        self.presenter.fetchPostsFor(user: user.identifier)
+        let detailUserController = DetailUserViewController()
+        let detailPresenter = DetailPresenter(view: detailUserController, user: user, eachPosts: presenter.posts)
+        detailUserController.presenter = detailPresenter
+        navigationController?.pushViewController(detailUserController, animated: true)
+    }
 }

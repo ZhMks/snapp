@@ -3,4 +3,84 @@
    uuid = "6B03ED86-8579-4E5B-8EB3-AD77247CD6BA"
    type = "1"
    version = "2.0">
+   <Breakpoints>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "D3E79CAA-B7C9-4A29-AFA5-C694A3B75369"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Snapp/OnboardingModule/ThirdOnboardingScreen/ThirdOnboardingPresenter.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "46"
+            endingLineNumber = "46"
+            landmarkName = "checkCode(code:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "D3E79CAA-B7C9-4A29-AFA5-C694A3B75369 - 316f8b0bf0bef5ec"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (Swift.Result&lt;__C.FIRUser, Snapp.AuthorisationErrors&gt;) -&gt; () in Snapp.ThirdOnboardingPresenter.checkCode(code: Swift.String) -&gt; ()"
+                  moduleName = "Snapp"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/makszh/Desktop/Snapp/Snapp/OnboardingModule/ThirdOnboardingScreen/ThirdOnboardingPresenter.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "46"
+                  endingLineNumber = "46">
+               </Location>
+               <Location
+                  uuid = "D3E79CAA-B7C9-4A29-AFA5-C694A3B75369 - 316f8b0bf0bef5ec"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (Swift.Result&lt;__C.FIRUser, Snapp.AuthorisationErrors&gt;) -&gt; () in Snapp.ThirdOnboardingPresenter.checkCode(code: Swift.String) -&gt; ()"
+                  moduleName = "Snapp"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/makszh/Desktop/Snapp/Snapp/OnboardingModule/ThirdOnboardingScreen/ThirdOnboardingPresenter.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "46"
+                  endingLineNumber = "46">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "BE1E4A6C-D5AF-46EB-99FE-49F07F65155B"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Snapp/OnboardingModule/ThirdOnboardingScreen/ThirdOnboardingPresenter.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "55"
+            endingLineNumber = "55"
+            landmarkName = "checkCode(code:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "2E912967-1F0D-46D6-ACCD-925B329FC83C"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Snapp/OnboardingModule/ThirdOnboardingScreen/ThirdOnboardingViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "102"
+            endingLineNumber = "102"
+            landmarkName = "acceptButtonTapped()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+   </Breakpoints>
 </Bucket>

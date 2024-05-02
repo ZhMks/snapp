@@ -49,6 +49,7 @@
         <attribute name="interests" optional="YES" attributeType="String"/>
         <attribute name="job" optional="YES" attributeType="String"/>
         <attribute name="name" optional="YES" attributeType="String"/>
+        <attribute name="nickname" optional="YES" attributeType="String"/>
         <attribute name="surname" optional="YES" attributeType="String"/>
         <relationship name="postsMainModel" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="PostsMainModel" inverseName="mainUser" inverseEntity="PostsMainModel"/>
         <relationship name="stories" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="UserStory" inverseName="useMain" inverseEntity="UserStory"/>

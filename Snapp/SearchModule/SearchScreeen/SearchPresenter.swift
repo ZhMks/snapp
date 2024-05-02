@@ -46,13 +46,11 @@ final class SearchPresenter: SearchPresenterProtocol {
         }
     }
 
-    func fetchPosts()  {
-        guard let currentUser = Auth.auth().currentUser else { return }
-        firestoreService.getPosts(sub: currentUser.uid) { [weak self] result in
+    func fetchPostsFor(user: String) {
+        firestoreService.getPosts(sub: user) { [weak self] result in
                 guard let self else { return }
                 switch result {
                 case .success(let success):
-                    print(success)
                     posts = success
                 case .failure(let failure):
                     view?.showErrorAlert()

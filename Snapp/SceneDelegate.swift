@@ -18,6 +18,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let windowScene = (scene as? UIWindowScene) else { return }
 
         let window = UIWindow(windowScene: windowScene)
+
         let controller = FirstBoardingVC()
         let presenter = Presenter(view: controller)
         controller.presener = presenter
@@ -63,28 +64,27 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         (UIApplication.shared.delegate as? AppDelegate)?.saveContext()
     }
 
-    func changeRootViewController(_ vc: UIViewController, user: UserMainModel) {
-        
+    func changeRootViewController(_ vc: UIViewController, user: FirebaseUser) {
+
         let fireStoreService = FireStoreService()
-        let userModelService = UserCoreDataModelService()
 
         guard let window = self.window else {
             return
         }
 
         let favouritesVC = FavouritesViewController()
-        let favouritesPresenter = FavouritesPresenter(view: favouritesVC, user: user, userModelService: userModelService)
+        let favouritesPresenter = FavouritesPresenter(view: favouritesVC, user: user)
         favouritesVC.presenter = favouritesPresenter
         let favouriteNavVC = UINavigationController(rootViewController: favouritesVC)
         favouriteNavVC.tabBarItem = UITabBarItem(title: "Сохраненные", image: UIImage(systemName: "heart"), tag: 3)
 
-        let feedNavVc = UINavigationController(rootViewController: vc)
+        let feedVC = FeedViewController()
+        let feedPresenter = FeedPresenter(view: feedVC, user: user)
+        feedVC.presenter = feedPresenter
+        let feedNavVc = UINavigationController(rootViewController: feedVC)
         feedNavVc.tabBarItem = UITabBarItem(title: "Главная", image: UIImage(systemName: "house"), tag: 0)
 
-        let profileVC = ProfileViewController()
-        let profilePresenter = ProfilePresenter(view: profileVC, mainUser: user, firestoreService: fireStoreService, userModelService: userModelService)
-        profileVC.presenter = profilePresenter
-        let profileNavVC = UINavigationController(rootViewController: profileVC)
+        let profileNavVC = UINavigationController(rootViewController: vc)
         profileNavVC.tabBarItem = UITabBarItem(title: "Профиль", image: UIImage(systemName: "person.crop.circle"), tag: 1)
 
         let searchVC = SearchViewController()
@@ -97,7 +97,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
         let viewControllers = [feedNavVc, profileNavVC, searchNavVC, favouriteNavVC]
         tabBarController.setViewControllers(viewControllers, animated: true)
-        tabBarController.selectedIndex = 0
+        tabBarController.selectedIndex = 1
         tabBarController.tabBar.tintColor = .systemYellow
 
         window.rootViewController = tabBarController

@@ -12,6 +12,7 @@ enum AuthorisationErrors: Error {
     case invalidCredential
     case operationNotAllowed
     case userDisabled
+    case userAlreadyExist
 
     var description: String {
         switch self {
@@ -21,6 +22,8 @@ enum AuthorisationErrors: Error {
             return .localized(string: "Учетная запись не включена. Обратитесь в службу поддержки.")
         case .userDisabled:
             return .localized(string: "Учетная запись отключена")
+        case .userAlreadyExist:
+            return .localized(string: "Пользователь уже зарегестрирован")
         }
     }
 }

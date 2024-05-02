@@ -147,6 +147,7 @@ class DetailUserViewController: UIViewController {
     //MARK: -LIFECYCLE
     override func viewDidLoad() {
         super.viewDidLoad()
+        view.backgroundColor = .systemBackground
         addSubviews()
         layout()
     }

@@ -13,16 +13,16 @@ protocol DetailViewProtocol: AnyObject {
 }
 
 protocol DetailPresenterProtocol: AnyObject {
-    init(view: DetailViewProtocol, user: FirebaseUser, eachPosts: [EachPost])
+    init(view: DetailViewProtocol, user: FirebaseUser, eachPosts: [String: [String : EachPost]])
 }
 
 final class DetailPresenter: DetailPresenterProtocol {
 
     weak var view: DetailViewProtocol?
     var user: FirebaseUser
-    var posts: [EachPost]
+    var posts: [String: [String : EachPost]]
 
-    init(view: DetailViewProtocol, user: FirebaseUser, eachPosts: [EachPost]) {
+    init(view: DetailViewProtocol, user: FirebaseUser, eachPosts: [String: [String : EachPost]]) {
         self.view = view
         self.user = user
         self.posts = eachPosts

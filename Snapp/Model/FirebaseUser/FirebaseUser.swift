@@ -14,17 +14,18 @@ struct FirebaseUser: Codable {
     @DocumentID var documentID: String?
     var name: String
     var surname: String
+    var identifier: String
     var job: String
     var subscribers: [String]
     var subscribtions: [String]
     var stories: [String]
-    var interests: String
-    var contacts: String
-    var city: String
     var image: String
-    var nickName: String
 }
 
+struct MainPost: Codable {
+    var date: String
+    var postsArray: [EachPost]
+}
 struct EachPost: Codable {
     var text: String
     var image: String

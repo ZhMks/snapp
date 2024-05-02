@@ -14,34 +14,34 @@ protocol SignInViewProtocol: AnyObject {
 }
 
 protocol SignInPresenterProtocol: AnyObject {
-    init(view: SignInViewProtocol?, firebaseAuth: FireBaseAuthProtocol, userModelService: UserCoreDataModelService, firestoreService: FireStoreServiceProtocol)
-    func checkCode(code: String, completion: @escaping (Result<UserMainModel, Error>) -> Void)
+    init(view: SignInViewProtocol?, firebaseAuth: FireBaseAuthProtocol, firestoreService: FireStoreServiceProtocol)
+    func checkCode(code: String, completion: @escaping (Result<FirebaseUser, Error>) -> Void)
 }
 
 final class SignInPresenter: SignInPresenterProtocol {
     
    weak var view: SignInViewProtocol?
     let fireBaseAuthService: FireBaseAuthProtocol
-    let userModelService: UserCoreDataModelService
     let firestoreService: FireStoreServiceProtocol
 
-    init(view: SignInViewProtocol?, firebaseAuth: FireBaseAuthProtocol, userModelService: UserCoreDataModelService, firestoreService: FireStoreServiceProtocol) {
+    init(view: SignInViewProtocol?, firebaseAuth: FireBaseAuthProtocol, firestoreService: FireStoreServiceProtocol) {
         self.view = view
         self.fireBaseAuthService = firebaseAuth
-        self.userModelService = userModelService
         self.firestoreService = firestoreService
     }
 
-    func checkCode(code: String, completion: @escaping (Result<UserMainModel, Error>) -> Void) {
+    func checkCode(code: String, completion: @escaping (Result<FirebaseUser, Error>) -> Void) {
         fireBaseAuthService.verifyCode(code: code) { [weak self] result in
+            guard let self else { return }
             switch result {
             case .success(let user):
-                guard let userModel = self?.userModelService.modelArray else { return }
-                userModel.forEach { model in
-                    if model.id! == user.uid {
-                        completion(.success(model))
-                    } else {
-                        self?.view?.showAlert()
+                firestoreService.getUser(id: user.uid) { result in
+                    switch result {
+                    case .success(let user):
+                        completion(.success(user))
+                    case .failure(let failure):
+                        completion(.failure(failure))
+                        self.view?.showAlert()
                     }
                 }
             case .failure(let error):

@@ -15,7 +15,7 @@ import CoreData
 
 
 protocol ThirdOnboardingViewProtocol: AnyObject {
-    func showCreateUserScreen(id: String)
+    func showCreateUserScreen()
     func showUserExistAlert(id: String)
     func showErrorAlert(error: String)
 }
@@ -23,8 +23,8 @@ protocol ThirdOnboardingViewProtocol: AnyObject {
 protocol ThirdOnboardingPresenterProtocol: AnyObject {
     var authService: FireBaseAuthProtocol? { get set }
     var firestoreService: FireStoreServiceProtocol? { get set }
-    init (view: ThirdOnboardingViewProtocol, authService: FireBaseAuthProtocol, firestoreService: FireStoreServiceProtocol, userModelService: UserCoreDataModelService)
-    func checkCode(code: String, completion: @escaping (Result<UserMainModel,Error>) -> Void)
+    init (view: ThirdOnboardingViewProtocol, authService: FireBaseAuthProtocol, firestoreService: FireStoreServiceProtocol)
+    func checkCode(code: String)
 }
 
 final class ThirdOnboardingPresenter: ThirdOnboardingPresenterProtocol {
@@ -33,16 +33,14 @@ final class ThirdOnboardingPresenter: ThirdOnboardingPresenterProtocol {
     var authService: FireBaseAuthProtocol?
     var firestoreService: FireStoreServiceProtocol?
     let firestore = Firestore.firestore()
-    let userModelService: UserCoreDataModelService
 
-    init(view: any ThirdOnboardingViewProtocol, authService: FireBaseAuthProtocol, firestoreService: FireStoreServiceProtocol, userModelService: UserCoreDataModelService ) {
+    init(view: any ThirdOnboardingViewProtocol, authService: FireBaseAuthProtocol, firestoreService: FireStoreServiceProtocol) {
         self.view = view
         self.authService = authService
         self.firestoreService = firestoreService
-        self.userModelService = userModelService
     }
 
-    func checkCode(code: String, completion: @escaping (Result<UserMainModel,Error>) -> Void) {
+    func checkCode(code: String) {
         authService?.verifyCode(code: code) { [weak self] result in
             switch result {
             case .success(let success):
@@ -51,11 +49,10 @@ final class ThirdOnboardingPresenter: ThirdOnboardingPresenterProtocol {
                     case .success(let user):
                         self?.view?.showUserExistAlert(id: user.documentID!)
                     case .failure(_):
-                        self?.view?.showCreateUserScreen(id: success.uid)
+                        self?.view?.showCreateUserScreen()
                     }
                 }
             case .failure(let failure):
-                completion(.failure(failure))
                 self?.view?.showErrorAlert(error: failure.description)
             }
         }

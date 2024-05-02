@@ -118,11 +118,9 @@ final class SecondOnboardingVC: UIViewController {
                         guard let self else { return }
                         let thirdController = ThirdOnboardingViewController(number: number)
                         let firestoreService = FireStoreService()
-                        let userModelService = UserCoreDataModelService()
                         let thirdPresenter = ThirdOnboardingPresenter(view: thirdController,
                                                                       authService: presenter.authService,
-                                                                      firestoreService: firestoreService,
-                                                                      userModelService: userModelService)
+                                                                      firestoreService: firestoreService)
                         thirdController.presenter = thirdPresenter
                         navigationController?.pushViewController(thirdController, animated: true)
                     }

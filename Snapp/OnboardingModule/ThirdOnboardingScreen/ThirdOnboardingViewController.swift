@@ -98,15 +98,8 @@ class ThirdOnboardingViewController: UIViewController {
 
     @objc func acceptButtonTapped() {
         guard let text = acceptCodeTextField.text else { return }
-        presenter.checkCode(code: text) { [weak self] resultUser in
-            guard let self else { return }
-            switch resultUser {
-            case .success(let user):
-                print(user.id!)
-            case .failure(let failure):
-                print(failure.localizedDescription)
-            }
-        }
+        print(text)
+        presenter.checkCode(code: text)
     }
 }
 
@@ -115,14 +108,11 @@ class ThirdOnboardingViewController: UIViewController {
 // MARK: -OUTPUT PRESENTER
 extension ThirdOnboardingViewController: ThirdOnboardingViewProtocol {
 
-    func showCreateUserScreen(id: String) {
-        guard let user = Auth.auth().currentUser else { return }
+    func showCreateUserScreen() {
         let addProfileVC = AddProfileVc()
         let firestoreService = FireStoreService()
         let addProfilePresenter = AddProfilePresenter(view: addProfileVC,
-                                                      firebaseUser: user,
-                                                      firestoreService: firestoreService,
-                                                      userCoreDataService: presenter.userModelService)
+                                                      firestoreService: firestoreService)
         addProfileVC.presenter = addProfilePresenter
         navigationController?.pushViewController(addProfileVC, animated: true)
     }

@@ -53,13 +53,11 @@ class SignInViewController: UIViewController {
         presenter.checkCode(code: code) { [weak self] result in
             switch result {
             case .success(let user):
-                let feedVC = FeedViewController()
-                let postsModelService = PostsCoreDataModelService(mainModel: user)
-                let postsArray = postsModelService.modelArray
-                let feedPresenter = FeedPresenter(view: feedVC, user: user)
-                feedVC.presenter = feedPresenter
-                guard let userModelService = self?.presenter?.userModelService else { return }
-                (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootViewController(feedVC, user: user)
+                let firestoreService = self?.presenter.firestoreService
+                let profileVC = ProfileViewController()
+                let presenter = ProfilePresenter(view: profileVC, mainUser: user, firestoreService: firestoreService!)
+                profileVC.presenter = presenter
+                (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootViewController(profileVC, user: user)
             case .failure(let error):
                 print(error.localizedDescription)
             }

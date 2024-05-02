@@ -81,12 +81,11 @@ class LoginScreenViewController: UIViewController {
                 case true:
                     DispatchQueue.main.async {
                         let signInVC = SignInViewController()
-                        let userCoreDataService = UserCoreDataModelService()
                         let authService = self?.loginpresenter.authService
                         let firestoreService = FireStoreService()
                         let signInPresenter = SignInPresenter(view: signInVC,
                                                               firebaseAuth:authService!,
-                                                              userModelService: userCoreDataService, firestoreService: firestoreService)
+                                                              firestoreService: firestoreService)
                         signInVC.presenter = signInPresenter
                         self?.navigationController?.present(signInVC, animated: true)
                     }

@@ -24,11 +24,6 @@
 		B209E6332BC3FEBE0067D751 /* ProfileChangePresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B209E6322BC3FEBE0067D751 /* ProfileChangePresenter.swift */; };
 		B209E6362BC430FC0067D751 /* FeedCollectionVIewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B209E6352BC430FC0067D751 /* FeedCollectionVIewCell.swift */; };
 		B209E6382BC431080067D751 /* FeedTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B209E6372BC431080067D751 /* FeedTableViewCell.swift */; };
-		B209E63B2BC560770067D751 /* UserModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = B209E6392BC560770067D751 /* UserModel.xcdatamodeld */; };
-		B209E63E2BC5626C0067D751 /* UserCoreDataModelService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B209E63D2BC5626C0067D751 /* UserCoreDataModelService.swift */; };
-		B209E6412BC5628C0067D751 /* CoreDataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B209E6402BC5628C0067D751 /* CoreDataService.swift */; };
-		B209E6432BC565340067D751 /* PostCoreDataModelService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B209E6422BC565340067D751 /* PostCoreDataModelService.swift */; };
-		B209E6452BC566D90067D751 /* EachPostCoreDataModelService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B209E6442BC566D90067D751 /* EachPostCoreDataModelService.swift */; };
 		B209E64A2BC7C8D70067D751 /* AddProfilePresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B209E6492BC7C8D70067D751 /* AddProfilePresenter.swift */; };
 		B209E64C2BC7C8DE0067D751 /* AddProfileVc.swift in Sources */ = {isa = PBXBuildFile; fileRef = B209E64B2BC7C8DE0067D751 /* AddProfileVc.swift */; };
 		B209E64F2BC95E850067D751 /* SignInPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B209E64E2BC95E850067D751 /* SignInPresenter.swift */; };
@@ -84,12 +79,7 @@
 		B211C2832BBD48EA00C073EE /* FireBaseAuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B211C2822BBD48EA00C073EE /* FireBaseAuthService.swift */; };
 		B211C2872BBD494200C073EE /* FirebaseUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = B211C2862BBD494200C073EE /* FirebaseUser.swift */; };
 		B211C2892BBD558000C073EE /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = B211C2882BBD558000C073EE /* GoogleService-Info.plist */; };
-		B29D0ACE2BCE582900101029 /* SubscribersCoreDataModelService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B29D0ACD2BCE582900101029 /* SubscribersCoreDataModelService.swift */; };
-		B29D0AD02BCE5E6600101029 /* EachSubscriberPostService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B29D0ACF2BCE5E6600101029 /* EachSubscriberPostService.swift */; };
-		B29D0AD22BCE618400101029 /* MainSubscriberPostService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B29D0AD12BCE618400101029 /* MainSubscriberPostService.swift */; };
 		B29D0AD72BCEB17B00101029 /* NetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B29D0AD62BCEB17B00101029 /* NetworkService.swift */; };
-		B29D0AD92BD0FB6600101029 /* SubscriberStoriesModelService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B29D0AD82BD0FB6600101029 /* SubscriberStoriesModelService.swift */; };
-		B29D0ADB2BD1073800101029 /* UserStorieService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B29D0ADA2BD1073800101029 /* UserStorieService.swift */; };
 		B29D0ADF2BD63AD000101029 /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B29D0ADE2BD63AD000101029 /* SearchViewController.swift */; };
 		B29D0AE12BD63AE200101029 /* SearchPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B29D0AE02BD63AE200101029 /* SearchPresenter.swift */; };
 		B29D0AE42BD6427100101029 /* SearchTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B29D0AE32BD6427100101029 /* SearchTableViewCell.swift */; };
@@ -134,11 +124,6 @@
 		B209E6322BC3FEBE0067D751 /* ProfileChangePresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileChangePresenter.swift; sourceTree = "<group>"; };
 		B209E6352BC430FC0067D751 /* FeedCollectionVIewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedCollectionVIewCell.swift; sourceTree = "<group>"; };
 		B209E6372BC431080067D751 /* FeedTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedTableViewCell.swift; sourceTree = "<group>"; };
-		B209E63A2BC560770067D751 /* UserModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = UserModel.xcdatamodel; sourceTree = "<group>"; };
-		B209E63D2BC5626C0067D751 /* UserCoreDataModelService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserCoreDataModelService.swift; sourceTree = "<group>"; };
-		B209E6402BC5628C0067D751 /* CoreDataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataService.swift; sourceTree = "<group>"; };
-		B209E6422BC565340067D751 /* PostCoreDataModelService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostCoreDataModelService.swift; sourceTree = "<group>"; };
-		B209E6442BC566D90067D751 /* EachPostCoreDataModelService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EachPostCoreDataModelService.swift; sourceTree = "<group>"; };
 		B209E6492BC7C8D70067D751 /* AddProfilePresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddProfilePresenter.swift; sourceTree = "<group>"; };
 		B209E64B2BC7C8DE0067D751 /* AddProfileVc.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddProfileVc.swift; sourceTree = "<group>"; };
 		B209E64E2BC95E850067D751 /* SignInPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInPresenter.swift; sourceTree = "<group>"; };
@@ -172,12 +157,7 @@
 		B211C2822BBD48EA00C073EE /* FireBaseAuthService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FireBaseAuthService.swift; sourceTree = "<group>"; };
 		B211C2862BBD494200C073EE /* FirebaseUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseUser.swift; sourceTree = "<group>"; };
 		B211C2882BBD558000C073EE /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
-		B29D0ACD2BCE582900101029 /* SubscribersCoreDataModelService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscribersCoreDataModelService.swift; sourceTree = "<group>"; };
-		B29D0ACF2BCE5E6600101029 /* EachSubscriberPostService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EachSubscriberPostService.swift; sourceTree = "<group>"; };
-		B29D0AD12BCE618400101029 /* MainSubscriberPostService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainSubscriberPostService.swift; sourceTree = "<group>"; };
 		B29D0AD62BCEB17B00101029 /* NetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkService.swift; sourceTree = "<group>"; };
-		B29D0AD82BD0FB6600101029 /* SubscriberStoriesModelService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriberStoriesModelService.swift; sourceTree = "<group>"; };
-		B29D0ADA2BD1073800101029 /* UserStorieService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserStorieService.swift; sourceTree = "<group>"; };
 		B29D0ADE2BD63AD000101029 /* SearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewController.swift; sourceTree = "<group>"; };
 		B29D0AE02BD63AE200101029 /* SearchPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchPresenter.swift; sourceTree = "<group>"; };
 		B29D0AE32BD6427100101029 /* SearchTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchTableViewCell.swift; sourceTree = "<group>"; };
@@ -354,29 +334,6 @@
 			path = Cells;
 			sourceTree = "<group>";
 		};
-		B209E63C2BC562550067D751 /* CoreDataModel */ = {
-			isa = PBXGroup;
-			children = (
-				B209E63D2BC5626C0067D751 /* UserCoreDataModelService.swift */,
-				B209E6422BC565340067D751 /* PostCoreDataModelService.swift */,
-				B209E6442BC566D90067D751 /* EachPostCoreDataModelService.swift */,
-				B29D0ACD2BCE582900101029 /* SubscribersCoreDataModelService.swift */,
-				B29D0ACF2BCE5E6600101029 /* EachSubscriberPostService.swift */,
-				B29D0AD12BCE618400101029 /* MainSubscriberPostService.swift */,
-				B29D0AD82BD0FB6600101029 /* SubscriberStoriesModelService.swift */,
-				B29D0ADA2BD1073800101029 /* UserStorieService.swift */,
-			);
-			path = CoreDataModel;
-			sourceTree = "<group>";
-		};
-		B209E63F2BC5627F0067D751 /* CoreDataService */ = {
-			isa = PBXGroup;
-			children = (
-				B209E6402BC5628C0067D751 /* CoreDataService.swift */,
-			);
-			path = CoreDataService;
-			sourceTree = "<group>";
-		};
 		B209E6482BC7C8C60067D751 /* AddProfileScreen */ = {
 			isa = PBXGroup;
 			children = (
@@ -398,7 +355,6 @@
 		B211C1DB2BBB3C2900C073EE = {
 			isa = PBXGroup;
 			children = (
-				B209E6392BC560770067D751 /* UserModel.xcdatamodeld */,
 				B211C2882BBD558000C073EE /* GoogleService-Info.plist */,
 				B211C25E2BBC178F00C073EE /* Localizable.xcstrings */,
 				B211C1E62BBB3C2900C073EE /* Snapp */,
@@ -564,8 +520,6 @@
 		B211C2842BBD493300C073EE /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				B209E63F2BC5627F0067D751 /* CoreDataService */,
-				B209E63C2BC562550067D751 /* CoreDataModel */,
 				B211C2852BBD493800C073EE /* FirebaseUser */,
 			);
 			path = Model;
@@ -817,12 +771,9 @@
 				B29D0AD72BCEB17B00101029 /* NetworkService.swift in Sources */,
 				B211C2672BBC2EF700C073EE /* SecondOnboardingVC.swift in Sources */,
 				B209E6512BC95E930067D751 /* SignInViewController.swift in Sources */,
-				B209E63E2BC5626C0067D751 /* UserCoreDataModelService.swift in Sources */,
 				B209E64F2BC95E850067D751 /* SignInPresenter.swift in Sources */,
-				B209E63B2BC560770067D751 /* UserModel.xcdatamodeld in Sources */,
 				B211C1E82BBB3C2900C073EE /* AppDelegate.swift in Sources */,
 				B29D0AE82BD680B100101029 /* DetailUserViewController.swift in Sources */,
-				B29D0AD22BCE618400101029 /* MainSubscriberPostService.swift in Sources */,
 				B209E6312BC3FEB10067D751 /* ProfileChangeViewController.swift in Sources */,
 				B209E6362BC430FC0067D751 /* FeedCollectionVIewCell.swift in Sources */,
 				B209E64A2BC7C8D70067D751 /* AddProfilePresenter.swift in Sources */,
@@ -835,10 +786,7 @@
 				B209E6192BC138790067D751 /* FeedPresenter.swift in Sources */,
 				B211C27D2BBD321C00C073EE /* Validator.swift in Sources */,
 				B209E6252BC3FD450067D751 /* FavouritesViewController.swift in Sources */,
-				B29D0AD02BCE5E6600101029 /* EachSubscriberPostService.swift in Sources */,
-				B29D0AD92BD0FB6600101029 /* SubscriberStoriesModelService.swift in Sources */,
 				B29D0AED2BD68C9300101029 /* DetailUserTableCell.swift in Sources */,
-				B209E6412BC5628C0067D751 /* CoreDataService.swift in Sources */,
 				B211C2712BBC4C1700C073EE /* StringFormatter.swift in Sources */,
 				B209E64C2BC7C8DE0067D751 /* AddProfileVc.swift in Sources */,
 				B209E61B2BC139000067D751 /* FeedViewController.swift in Sources */,
@@ -850,16 +798,12 @@
 				B211C2742BBC6A1000C073EE /* LoginScreenViewController.swift in Sources */,
 				B209E6332BC3FEBE0067D751 /* ProfileChangePresenter.swift in Sources */,
 				B29D0ADF2BD63AD000101029 /* SearchViewController.swift in Sources */,
-				B29D0ADB2BD1073800101029 /* UserStorieService.swift in Sources */,
-				B209E6432BC565340067D751 /* PostCoreDataModelService.swift in Sources */,
 				B209E62E2BC3FDEC0067D751 /* SettingPresenter.swift in Sources */,
 				B209E6272BC3FD5B0067D751 /* FavouritesPresenter.swift in Sources */,
 				B209E61F2BC3FC290067D751 /* ProfileViewController.swift in Sources */,
-				B29D0ACE2BCE582900101029 /* SubscribersCoreDataModelService.swift in Sources */,
 				B29D0AEF2BD68CA100101029 /* DetailUserCollectionCell.swift in Sources */,
 				B211C26C2BBC404C00C073EE /* ThirdOnboardingViewController.swift in Sources */,
 				B29D0AE42BD6427100101029 /* SearchTableViewCell.swift in Sources */,
-				B209E6452BC566D90067D751 /* EachPostCoreDataModelService.swift in Sources */,
 				B211C2872BBD494200C073EE /* FirebaseUser.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1359,17 +1303,6 @@
 /* End XCSwiftPackageProductDependency section */
 
 /* Begin XCVersionGroup section */
-		B209E6392BC560770067D751 /* UserModel.xcdatamodeld */ = {
-			isa = XCVersionGroup;
-			children = (
-				B209E63A2BC560770067D751 /* UserModel.xcdatamodel */,
-			);
-			currentVersion = B209E63A2BC560770067D751 /* UserModel.xcdatamodel */;
-			name = UserModel.xcdatamodeld;
-			path = /Users/makszh/Desktop/Snapp/UserModel.xcdatamodeld;
-			sourceTree = "<group>";
-			versionGroupType = wrapper.xcdatamodel;
-		};
 		B211C1F02BBB3C2900C073EE /* Snapp.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
