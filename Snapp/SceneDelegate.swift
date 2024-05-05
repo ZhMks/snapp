@@ -18,6 +18,13 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let windowScene = (scene as? UIWindowScene) else { return }
 
         let window = UIWindow(windowScene: windowScene)
+//
+//        let profileVC = ProfileViewController()
+//        let firebaseUser = FirebaseUser(name: "Yeji", surname: "Hwang", identifier: "YezyIzHere", job: "ITZY", subscribers: ["Sub1", "Sub2"], subscribtions: ["Subscibtion1", "Subscribtion2"], stories: ["Storie2", "Storie1"], image: "https://firebasestorage.googleapis.com:443/v0/b/snappproject-9ca98.appspot.com/o/users%2FYezyizhere%2Favatar?alt=media&token=c9353e2f-2d07-4e02-8ea6-3e66928c101e"
+//)
+//        let firestoreService = FireStoreService()
+//        let profilePresenter = ProfilePresenter(view: profileVC, mainUser: firebaseUser, firestoreService: firestoreService)
+//        profileVC.presenter = profilePresenter
 
         let controller = FirstBoardingVC()
         let presenter = Presenter(view: controller)
@@ -98,7 +105,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let viewControllers = [feedNavVc, profileNavVC, searchNavVC, favouriteNavVC]
         tabBarController.setViewControllers(viewControllers, animated: true)
         tabBarController.selectedIndex = 1
-        tabBarController.tabBar.tintColor = .systemYellow
+        tabBarController.tabBar.tintColor = .systemOrange
 
         window.rootViewController = tabBarController
     }

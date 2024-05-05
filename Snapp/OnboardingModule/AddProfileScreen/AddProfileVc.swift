@@ -141,9 +141,10 @@ final class AddProfileVc: UIViewController {
                              job: jobNameTextField.text!,
                              image: avatarImage.image!) { [weak self] result in
             guard let self else { return }
+            guard let userID = Auth.auth().currentUser?.uid else { return }
             switch result {
             case .success(let user):
-                self.plusButtonTapped(user: user)
+                self.plusButtonTapped(user: user, id: userID)
             case .failure(let failure):
                 print(failure.localizedDescription)
             }
@@ -158,10 +159,10 @@ final class AddProfileVc: UIViewController {
         }
     }
 
-    func plusButtonTapped(user: FirebaseUser) {
+    func plusButtonTapped(user: FirebaseUser, id: String) {
         let profileVC = ProfileViewController()
         let firestoreService = presenter.firestoreService
-        let presenter = ProfilePresenter(view: profileVC, mainUser: user, firestoreService: firestoreService!)
+        let presenter = ProfilePresenter(view: profileVC, mainUser: user, userID: id, firestoreService: firestoreService!)
         profileVC.presenter = presenter
 
         (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootViewController(profileVC, user: user)

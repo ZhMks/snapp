@@ -51,7 +51,7 @@ final class SearchPresenter: SearchPresenterProtocol {
                 guard let self else { return }
                 switch result {
                 case .success(let success):
-                    posts = success
+                    print()
                 case .failure(let failure):
                     view?.showErrorAlert()
                 }

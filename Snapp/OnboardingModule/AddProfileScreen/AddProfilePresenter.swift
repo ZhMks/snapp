@@ -36,8 +36,8 @@ final class AddProfilePresenter: AddProfilePresenterProtocol {
                     job: String,
                     image: UIImage,
                     completion: @escaping (Result <FirebaseUser, Error>) -> Void) {
-
-        let ref = Storage.storage().reference().child("users").child(id).child("avatar")
+        guard let identifier = Auth.auth().currentUser?.uid else { return }
+        let ref = Storage.storage().reference().child("users").child(identifier).child("avatar")
         var firebaseUser = FirebaseUser(name: name,
                                         surname: surname,
                                         identifier: id,
@@ -46,13 +46,12 @@ final class AddProfilePresenter: AddProfilePresenterProtocol {
                                         subscribtions: [],
                                         stories: [],
                                         image: "")
-        guard let id = Auth.auth().currentUser?.uid else { return }
-        firestoreService?.saveImageIntoStorage(urlLink: ref, photo: image, for: id) { [weak self] result in
+        firestoreService?.saveImageIntoStorage(urlLink: ref, photo: image) { [weak self] result in
             guard let self else { return }
             switch result {
             case .success(let success):
                 firebaseUser.image = success.absoluteString
-                firestoreService?.createUser(user: firebaseUser, id: id)
+                firestoreService?.createUser(user: firebaseUser, id: identifier)
                 completion(.success(firebaseUser))
             case .failure(let failure):
                 print(failure.localizedDescription)

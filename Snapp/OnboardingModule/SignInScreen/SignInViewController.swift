@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import FirebaseAuth
 
 class SignInViewController: UIViewController {
 
@@ -55,7 +56,8 @@ class SignInViewController: UIViewController {
             case .success(let user):
                 let firestoreService = self?.presenter.firestoreService
                 let profileVC = ProfileViewController()
-                let presenter = ProfilePresenter(view: profileVC, mainUser: user, firestoreService: firestoreService!)
+                guard let userID = Auth.auth().currentUser?.uid else { return }
+                let presenter = ProfilePresenter(view: profileVC, mainUser: user, userID: userID , firestoreService: firestoreService!)
                 profileVC.presenter = presenter
                 (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootViewController(profileVC, user: user)
             case .failure(let error):

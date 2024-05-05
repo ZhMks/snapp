@@ -79,6 +79,9 @@
 		B211C2832BBD48EA00C073EE /* FireBaseAuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B211C2822BBD48EA00C073EE /* FireBaseAuthService.swift */; };
 		B211C2872BBD494200C073EE /* FirebaseUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = B211C2862BBD494200C073EE /* FirebaseUser.swift */; };
 		B211C2892BBD558000C073EE /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = B211C2882BBD558000C073EE /* GoogleService-Info.plist */; };
+		B26804B22BE4E63700DE74A4 /* PostTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B26804B12BE4E63700DE74A4 /* PostTableCell.swift */; };
+		B26804B52BE6229600DE74A4 /* ExtensionTableVIew.swift in Sources */ = {isa = PBXBuildFile; fileRef = B26804B42BE6229600DE74A4 /* ExtensionTableVIew.swift */; };
+		B26804B72BE655BA00DE74A4 /* HeaderTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B26804B62BE655BA00DE74A4 /* HeaderTableCell.swift */; };
 		B29D0AD72BCEB17B00101029 /* NetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B29D0AD62BCEB17B00101029 /* NetworkService.swift */; };
 		B29D0ADF2BD63AD000101029 /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B29D0ADE2BD63AD000101029 /* SearchViewController.swift */; };
 		B29D0AE12BD63AE200101029 /* SearchPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B29D0AE02BD63AE200101029 /* SearchPresenter.swift */; };
@@ -157,6 +160,9 @@
 		B211C2822BBD48EA00C073EE /* FireBaseAuthService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FireBaseAuthService.swift; sourceTree = "<group>"; };
 		B211C2862BBD494200C073EE /* FirebaseUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseUser.swift; sourceTree = "<group>"; };
 		B211C2882BBD558000C073EE /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		B26804B12BE4E63700DE74A4 /* PostTableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostTableCell.swift; sourceTree = "<group>"; };
+		B26804B42BE6229600DE74A4 /* ExtensionTableVIew.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionTableVIew.swift; sourceTree = "<group>"; };
+		B26804B62BE655BA00DE74A4 /* HeaderTableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeaderTableCell.swift; sourceTree = "<group>"; };
 		B29D0AD62BCEB17B00101029 /* NetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkService.swift; sourceTree = "<group>"; };
 		B29D0ADE2BD63AD000101029 /* SearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewController.swift; sourceTree = "<group>"; };
 		B29D0AE02BD63AE200101029 /* SearchPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchPresenter.swift; sourceTree = "<group>"; };
@@ -241,6 +247,7 @@
 		B209E6152BBFD7880067D751 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				B26804B32BE6228400DE74A4 /* Extension+TableView */,
 				B211C2622BBC17AA00C073EE /* Extension+String */,
 			);
 			path = Extensions;
@@ -275,6 +282,7 @@
 		B209E61D2BC3FC180067D751 /* ProfileScreen */ = {
 			isa = PBXGroup;
 			children = (
+				B26804B02BE4E62500DE74A4 /* PostTableCell */,
 				B209E61E2BC3FC280067D751 /* ProfileViewController.swift */,
 				B209E6202BC3FC320067D751 /* ProfilePresenter.swift */,
 			);
@@ -533,6 +541,23 @@
 			path = FirebaseUser;
 			sourceTree = "<group>";
 		};
+		B26804B02BE4E62500DE74A4 /* PostTableCell */ = {
+			isa = PBXGroup;
+			children = (
+				B26804B12BE4E63700DE74A4 /* PostTableCell.swift */,
+				B26804B62BE655BA00DE74A4 /* HeaderTableCell.swift */,
+			);
+			path = PostTableCell;
+			sourceTree = "<group>";
+		};
+		B26804B32BE6228400DE74A4 /* Extension+TableView */ = {
+			isa = PBXGroup;
+			children = (
+				B26804B42BE6229600DE74A4 /* ExtensionTableVIew.swift */,
+			);
+			path = "Extension+TableView";
+			sourceTree = "<group>";
+		};
 		B29D0AD52BCEB16C00101029 /* NetworkService */ = {
 			isa = PBXGroup;
 			children = (
@@ -771,6 +796,7 @@
 				B29D0AD72BCEB17B00101029 /* NetworkService.swift in Sources */,
 				B211C2672BBC2EF700C073EE /* SecondOnboardingVC.swift in Sources */,
 				B209E6512BC95E930067D751 /* SignInViewController.swift in Sources */,
+				B26804B22BE4E63700DE74A4 /* PostTableCell.swift in Sources */,
 				B209E64F2BC95E850067D751 /* SignInPresenter.swift in Sources */,
 				B211C1E82BBB3C2900C073EE /* AppDelegate.swift in Sources */,
 				B29D0AE82BD680B100101029 /* DetailUserViewController.swift in Sources */,
@@ -799,8 +825,10 @@
 				B209E6332BC3FEBE0067D751 /* ProfileChangePresenter.swift in Sources */,
 				B29D0ADF2BD63AD000101029 /* SearchViewController.swift in Sources */,
 				B209E62E2BC3FDEC0067D751 /* SettingPresenter.swift in Sources */,
+				B26804B72BE655BA00DE74A4 /* HeaderTableCell.swift in Sources */,
 				B209E6272BC3FD5B0067D751 /* FavouritesPresenter.swift in Sources */,
 				B209E61F2BC3FC290067D751 /* ProfileViewController.swift in Sources */,
+				B26804B52BE6229600DE74A4 /* ExtensionTableVIew.swift in Sources */,
 				B29D0AEF2BD68CA100101029 /* DetailUserCollectionCell.swift in Sources */,
 				B211C26C2BBC404C00C073EE /* ThirdOnboardingViewController.swift in Sources */,
 				B29D0AE42BD6427100101029 /* SearchTableViewCell.swift in Sources */,
