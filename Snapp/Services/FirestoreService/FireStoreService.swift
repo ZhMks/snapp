@@ -99,8 +99,11 @@ final class FireStoreService: FireStoreServiceProtocol {
                     return
                 }
 
+                let dispatchGroup = DispatchGroup()
+
                 for document in snapshot.documents {
                     if let currentDate = document.data().values.first as? String {
+                        dispatchGroup.enter()
                         getEachPost(userid: sub, documentID: document.documentID) { result in
                             switch result {
                             case .success(let success):
@@ -110,10 +113,13 @@ final class FireStoreService: FireStoreServiceProtocol {
                             case .failure(let failure):
                                 completion(.failure(failure))
                             }
+                            dispatchGroup.leave()
                         }
                     }
                 }
-                completion(.success(posts))
+                dispatchGroup.notify(queue: .main) {
+                    completion(.success(posts)) // Call completion after all tasks in the dispatch group are completed
+                }
             }
         }
     }
@@ -218,7 +224,7 @@ final class FireStoreService: FireStoreServiceProtocol {
 
     func createPost(date: String, text: String, image: UIImage, for user: String, completion: @escaping (Result<EachPost, Error>) -> Void) {
         let postRef = Firestore.firestore().collection("Users").document(user).collection("posts")
-        let postStorageRef = Storage.storage().reference().child("users").child(user).child("posts").child(date)
+        let postStorageRef = Storage.storage().reference().child("users").child(user).child("posts").child(date).child(image.description)
         var fireStorePost = EachPost(text: "", image: "", likes: 0, views: 0)
 
         saveImageIntoStorage(urlLink: postStorageRef, photo: image) { [weak self] result in

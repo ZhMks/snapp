@@ -18,19 +18,20 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let windowScene = (scene as? UIWindowScene) else { return }
 
         let window = UIWindow(windowScene: windowScene)
-//
-//        let profileVC = ProfileViewController()
-//        let firebaseUser = FirebaseUser(name: "Yeji", surname: "Hwang", identifier: "YezyIzHere", job: "ITZY", subscribers: ["Sub1", "Sub2"], subscribtions: ["Subscibtion1", "Subscribtion2"], stories: ["Storie2", "Storie1"], image: "https://firebasestorage.googleapis.com:443/v0/b/snappproject-9ca98.appspot.com/o/users%2FYezyizhere%2Favatar?alt=media&token=c9353e2f-2d07-4e02-8ea6-3e66928c101e"
-//)
-//        let firestoreService = FireStoreService()
-//        let profilePresenter = ProfilePresenter(view: profileVC, mainUser: firebaseUser, firestoreService: firestoreService)
-//        profileVC.presenter = profilePresenter
 
-        let controller = FirstBoardingVC()
-        let presenter = Presenter(view: controller)
-        controller.presener = presenter
+    
+ let fireUser = FirebaseUser(name: "King", surname: "PunchMan", identifier: "KingsPuch", job: "Hero", subscribers: ["Sub1", "Sub2"], subscribtions: ["Sub3", "Sub4"], stories: ["Stories1", "Stories2"], image: "https://firebasestorage.googleapis.com:443/v0/b/snappproject-9ca98.appspot.com/o/users%2FuuptdvnyBrcXwovEv3U69uxMD7m1%2Favatar?alt=media&token=32020d11-35ff-4be8-b96f-009bccb28d4a")
+        let profileVC = ProfileViewController()
+        let firestoreService = FireStoreService()
+        let userID = "uuptdvnyBrcXwovEv3U69uxMD7m1"
+        let presenter = ProfilePresenter(view: profileVC, mainUser: fireUser, userID: userID, firestoreService: firestoreService)
+        profileVC.presenter = presenter
 
-        let navigationController = UINavigationController(rootViewController: controller)
+//        let controller = FirstBoardingVC()
+//        let presenter = Presenter(view: controller)
+//        controller.presener = presenter
+
+        let navigationController = UINavigationController(rootViewController: profileVC)
         window.rootViewController = navigationController
 
         window.makeKeyAndVisible()

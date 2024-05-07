@@ -15,7 +15,6 @@ class ProfileViewController: UIViewController {
         let avatarImageView = UIImageView()
         avatarImageView.clipsToBounds = true
         avatarImageView.translatesAutoresizingMaskIntoConstraints = false
-        avatarImageView.contentMode = .scaleAspectFit
         return avatarImageView
     }()
 
@@ -218,16 +217,10 @@ class ProfileViewController: UIViewController {
         return searchButton
     }()
 
-    private lazy var mainScrollView: UIScrollView = {
-        let mainScrollView = UIScrollView()
-        mainScrollView.translatesAutoresizingMaskIntoConstraints = false
-        mainScrollView.showsVerticalScrollIndicator = true
-        return mainScrollView
-    }()
-
     private lazy var mainContentView: UIView = {
         let contentView = UIView()
         contentView.translatesAutoresizingMaskIntoConstraints = false
+        contentView.backgroundColor = .systemRed
         return contentView
     }()
 
@@ -236,6 +229,7 @@ class ProfileViewController: UIViewController {
         postsTableView.translatesAutoresizingMaskIntoConstraints = false
         postsTableView.delegate = self
         postsTableView.dataSource = self
+        postsTableView.backgroundColor = .systemBlue
         return postsTableView
     }()
 
@@ -246,10 +240,8 @@ class ProfileViewController: UIViewController {
         view.backgroundColor = .systemBackground
         tuneNavItem()
         addSubviews()
-        tuneTableView()
         layout()
-        presenter.fetchPosts()
-        print("Posts in profile: \(presenter.posts.count)")
+        tuneTableView()
     }
 
     // MARK: -FUNCS
@@ -281,11 +273,23 @@ class ProfileViewController: UIViewController {
 // MARK: -OUTPUT PRESENTER
 extension ProfileViewController: ProfileViewProtocol {
 
+    func updateData(data: [MainPost]) {
+        DispatchQueue.main.async { [weak self] in
+            guard let self else { return }
+           
+        //    self.tuneTableView()
+        }
+    }
+    
+
     func updateAvatarImage(image: UIImage) {
         DispatchQueue.main.async { [weak self] in
             guard let self else { return }
             self.avatarImageView.image = image
-            avatarImageView.layer.cornerRadius = avatarImageView.frame.size.width / 2
+            self.avatarImageView.clipsToBounds = true
+            self.avatarImageView.layer.cornerRadius = self.avatarImageView.frame.size.width / 2
+         //   self.avatarImageView.contentMode = .scaleAspectFit
+     //       tuneTableView()
         }
     }
 
@@ -298,16 +302,6 @@ extension ProfileViewController: ProfileViewProtocol {
 // MARK: -TABLEVIEWDATASOURCE
 
 extension ProfileViewController: UITableViewDataSource {
-
-    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        let headerView = UIView.init(frame: CGRect(x: 0, y: 0, width: tableView.frame.size.width, height: 120))
-        guard let headerCell = tableView.dequeueReusableCell(withIdentifier: HeaderTableCell.identifier) as? HeaderTableCell else { return UIView() }
-        guard let image = self.presenter.image else { return UIView() }
-        headerCell.updateView(user: presenter.mainUser, image: image)
-            headerCell.frame = headerView.bounds
-            headerView.addSubview(headerCell)
-            return headerView
-    }
 
     func numberOfSections(in tableView: UITableView) -> Int {
         presenter.posts.count
@@ -354,177 +348,58 @@ extension ProfileViewController {
     }
 
     func addSubviews() {
-        view.addSubview(mainScrollView)
-        mainScrollView.addSubview(postsTableView)
+        view.addSubview(postsTableView)
+
         mainContentView.addSubview(avatarImageView)
         mainContentView.addSubview(nameAndSurnameLabel)
         mainContentView.addSubview(jobLabel)
-        mainContentView.addSubview(signalImage)
         mainContentView.addSubview(detailInfo)
-        mainContentView.addSubview(editButton)
-        mainContentView.addSubview(numberOfPosts)
-        mainContentView.addSubview(numberOfSubscriptions)
-        mainContentView.addSubview(numberOfSubscribers)
-        mainContentView.addSubview(separatorView)
-        mainContentView.addSubview(createPostView)
-        createPostView.addSubview(createPostButton)
-        createPostView.addSubview(createPostLabel)
-        mainContentView.addSubview(createStorieView)
-        createStorieView.addSubview(createStorieButton)
-        createStorieView.addSubview(createStorieLabel)
-        mainContentView.addSubview(addPhotoView)
-        addPhotoView.addSubview(addPhotoButton)
-        addPhotoView.addSubview(addPhotoLabel)
-        mainContentView.addSubview(photogalleryLabel)
-        mainContentView.addSubview(photogalleryButton)
-        mainContentView.addSubview(photoScrollView)
-        mainContentView.addSubview(tableViewTitle)
-        mainContentView.addSubview(searchButton)
     }
 
     func layout() {
         let safeArea = view.safeAreaLayoutGuide
 
         NSLayoutConstraint.activate([
-            mainScrollView.topAnchor.constraint(equalTo: safeArea.topAnchor),
-            mainScrollView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
-            mainScrollView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
-            mainScrollView.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor),
+            postsTableView.topAnchor.constraint(equalTo: safeArea.topAnchor),
+            postsTableView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
+            postsTableView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
+            postsTableView.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor),
+            postsTableView.widthAnchor.constraint(equalTo: safeArea.widthAnchor)
+        ])
 
-            postsTableView.topAnchor.constraint(equalTo: mainScrollView.topAnchor),
-            postsTableView.leadingAnchor.constraint(equalTo: mainScrollView.leadingAnchor),
-            postsTableView.trailingAnchor.constraint(equalTo: mainScrollView.trailingAnchor),
-            postsTableView.bottomAnchor.constraint(equalTo: mainScrollView.bottomAnchor),
-            postsTableView.widthAnchor.constraint(equalTo: mainScrollView.widthAnchor),
-            postsTableView.heightAnchor.constraint(equalTo: mainScrollView.heightAnchor),
+        NSLayoutConstraint.activate([
+            avatarImageView.topAnchor.constraint(equalTo: mainContentView.topAnchor, constant: 25),
+            avatarImageView.leadingAnchor.constraint(equalTo: mainContentView.leadingAnchor, constant: 24),
+            avatarImageView.heightAnchor.constraint(equalToConstant: 69),
+            avatarImageView.widthAnchor.constraint(equalToConstant: 69),
+            avatarImageView.bottomAnchor.constraint(equalTo: mainContentView.bottomAnchor, constant: -60),
 
-            avatarImageView.topAnchor.constraint(equalTo: mainContentView.topAnchor, constant: 14),
-            avatarImageView.leadingAnchor.constraint(equalTo: mainContentView.leadingAnchor, constant: 26),
-            avatarImageView.trailingAnchor.constraint(equalTo: mainContentView.trailingAnchor, constant: -290),
-            avatarImageView.bottomAnchor.constraint(equalTo: editButton.topAnchor),
 
-            nameAndSurnameLabel.topAnchor.constraint(equalTo: mainContentView.topAnchor, constant: 22),
-            nameAndSurnameLabel.leadingAnchor.constraint(equalTo: avatarImageView.trailingAnchor, constant: 10),
-            nameAndSurnameLabel.trailingAnchor.constraint(equalTo: mainContentView.trailingAnchor, constant: -83),
-            nameAndSurnameLabel.bottomAnchor.constraint(equalTo: mainContentView.bottomAnchor, constant: -660),
+            nameAndSurnameLabel.topAnchor.constraint(equalTo: mainContentView.topAnchor, constant: 20),
+            nameAndSurnameLabel.leadingAnchor.constraint(equalTo: avatarImageView.trailingAnchor, constant: 15),
+            nameAndSurnameLabel.trailingAnchor.constraint(equalTo: mainContentView.trailingAnchor, constant: -110),
+            nameAndSurnameLabel.bottomAnchor.constraint(equalTo: mainContentView.bottomAnchor, constant: -80),
 
-            jobLabel.topAnchor.constraint(equalTo: mainContentView.topAnchor, constant: 47),
             jobLabel.leadingAnchor.constraint(equalTo: avatarImageView.trailingAnchor, constant: 15),
-            jobLabel.trailingAnchor.constraint(equalTo: mainContentView.trailingAnchor, constant: -91),
-            jobLabel.bottomAnchor.constraint(equalTo: mainContentView.bottomAnchor, constant: -640),
+            jobLabel.topAnchor.constraint(equalTo: mainContentView.topAnchor, constant: 60),
+            jobLabel.trailingAnchor.constraint(equalTo: mainContentView.trailingAnchor, constant: -110),
+            jobLabel.bottomAnchor.constraint(equalTo: mainContentView.bottomAnchor, constant: -60),
 
-            signalImage.topAnchor.constraint(equalTo: mainContentView.topAnchor, constant: 83),
-            signalImage.leadingAnchor.constraint(equalTo: mainContentView.leadingAnchor, constant: 110),
-            signalImage.heightAnchor.constraint(equalToConstant: 20),
-            signalImage.widthAnchor.constraint(equalToConstant: 20),
-
-            detailInfo.topAnchor.constraint(equalTo: mainContentView.topAnchor, constant: 67),
-            detailInfo.leadingAnchor.constraint(equalTo: mainContentView.leadingAnchor, constant: 124),
-            detailInfo.trailingAnchor.constraint(equalTo: mainContentView.trailingAnchor, constant: -76),
-            detailInfo.bottomAnchor.constraint(equalTo: mainContentView.bottomAnchor, constant: -600),
-
-            editButton.topAnchor.constraint(equalTo: mainContentView.topAnchor, constant: 120),
-            editButton.leadingAnchor.constraint(equalTo: mainContentView.leadingAnchor, constant: 16),
-            editButton.trailingAnchor.constraint(equalTo: mainContentView.trailingAnchor, constant: -16),
-            editButton.bottomAnchor.constraint(equalTo: mainContentView.bottomAnchor, constant: -540),
-
-            numberOfPosts.topAnchor.constraint(equalTo: mainContentView.topAnchor, constant: 174),
-            numberOfPosts.leadingAnchor.constraint(equalTo: mainContentView.leadingAnchor, constant: 16),
-            numberOfPosts.trailingAnchor.constraint(equalTo: mainContentView.trailingAnchor, constant: -256),
-            numberOfPosts.bottomAnchor.constraint(equalTo: mainContentView.bottomAnchor, constant: -460),
-
-            numberOfSubscriptions.topAnchor.constraint(equalTo: mainContentView.topAnchor, constant: 174),
-            numberOfSubscriptions.leadingAnchor.constraint(equalTo: mainContentView.leadingAnchor, constant: 142),
-            numberOfSubscriptions.trailingAnchor.constraint(equalTo: mainContentView.trailingAnchor, constant: -146),
-            numberOfSubscriptions.bottomAnchor.constraint(equalTo: mainContentView.bottomAnchor, constant: -460),
-
-            numberOfSubscribers.topAnchor.constraint(equalTo: mainContentView.topAnchor, constant: 174),
-            numberOfSubscribers.leadingAnchor.constraint(equalTo: mainContentView.leadingAnchor, constant: 252),
-            numberOfSubscribers.trailingAnchor.constraint(equalTo: mainContentView.trailingAnchor, constant: -16),
-            numberOfSubscribers.bottomAnchor.constraint(equalTo: mainContentView.bottomAnchor, constant: -460),
-
-            separatorView.topAnchor.constraint(equalTo: mainContentView.topAnchor, constant: 260),
-            separatorView.leadingAnchor.constraint(equalTo: mainContentView.leadingAnchor, constant: 16),
-            separatorView.trailingAnchor.constraint(equalTo: mainContentView.trailingAnchor, constant: -16),
-            separatorView.bottomAnchor.constraint(equalTo: mainContentView.bottomAnchor, constant: -460),
-
-            createPostView.topAnchor.constraint(equalTo: mainContentView.topAnchor, constant: 270),
-            createPostView.leadingAnchor.constraint(equalTo: mainContentView.leadingAnchor, constant: 26),
-            createPostView.trailingAnchor.constraint(equalTo: mainContentView.trailingAnchor, constant: -298),
-            createPostView.bottomAnchor.constraint(equalTo: mainContentView.bottomAnchor, constant: -370),
-
-            createPostButton.topAnchor.constraint(equalTo: createPostView.topAnchor, constant: 20),
-            createPostButton.leadingAnchor.constraint(equalTo: createPostView.leadingAnchor, constant: 20),
-            createPostButton.trailingAnchor.constraint(equalTo: createPostView.trailingAnchor, constant: -20),
-            createPostButton.bottomAnchor.constraint(equalTo: createPostView.bottomAnchor, constant: -30),
-
-            createPostLabel.topAnchor.constraint(equalTo: createPostView.topAnchor, constant: 55),
-            createPostLabel.leadingAnchor.constraint(equalTo: createPostView.leadingAnchor),
-            createPostLabel.trailingAnchor.constraint(equalTo: createPostView.trailingAnchor),
-            createPostLabel.bottomAnchor.constraint(equalTo: createPostView.bottomAnchor),
-
-            createStorieView.topAnchor.constraint(equalTo: mainContentView.topAnchor, constant: 270),
-            createStorieView.leadingAnchor.constraint(equalTo: mainContentView.leadingAnchor, constant: 155),
-            createStorieView.trailingAnchor.constraint(equalTo: mainContentView.trailingAnchor, constant: -161),
-            createStorieView.bottomAnchor.constraint(equalTo: mainContentView.bottomAnchor, constant: -370),
-
-            createStorieButton.topAnchor.constraint(equalTo: createStorieView.topAnchor, constant: 15),
-            createStorieButton.leadingAnchor.constraint(equalTo: createStorieView.leadingAnchor, constant: 15),
-            createStorieButton.trailingAnchor.constraint(equalTo: createStorieView.trailingAnchor, constant: -15),
-            createStorieButton.bottomAnchor.constraint(equalTo: createStorieView.bottomAnchor, constant: -30),
-
-            createStorieLabel.topAnchor.constraint(equalTo: createStorieView.topAnchor, constant: 55),
-            createStorieLabel.leadingAnchor.constraint(equalTo: createStorieView.leadingAnchor),
-            createStorieLabel.trailingAnchor.constraint(equalTo: createStorieView.trailingAnchor),
-            createStorieLabel.bottomAnchor.constraint(equalTo: createStorieView.bottomAnchor),
-
-            addPhotoView.topAnchor.constraint(equalTo: mainContentView.topAnchor, constant: 270),
-            addPhotoView.leadingAnchor.constraint(equalTo: mainContentView.leadingAnchor, constant: 285),
-            addPhotoView.trailingAnchor.constraint(equalTo: mainContentView.trailingAnchor, constant: -40),
-            addPhotoView.bottomAnchor.constraint(equalTo: mainContentView.bottomAnchor, constant: -370),
-
-            addPhotoButton.topAnchor.constraint(equalTo: addPhotoView.topAnchor, constant: 20),
-            addPhotoButton.leadingAnchor.constraint(equalTo: addPhotoView.leadingAnchor, constant: 20),
-            addPhotoButton.trailingAnchor.constraint(equalTo: addPhotoView.trailingAnchor, constant: -20),
-            addPhotoButton.bottomAnchor.constraint(equalTo: addPhotoView.bottomAnchor, constant: -30),
-
-            addPhotoLabel.topAnchor.constraint(equalTo: addPhotoView.topAnchor, constant: 55),
-            addPhotoLabel.leadingAnchor.constraint(equalTo: addPhotoView.leadingAnchor),
-            addPhotoLabel.trailingAnchor.constraint(equalTo: addPhotoView.trailingAnchor),
-            addPhotoLabel.bottomAnchor.constraint(equalTo: addPhotoView.bottomAnchor),
-
-            photogalleryLabel.topAnchor.constraint(equalTo: mainContentView.topAnchor, constant: 360),
-            photogalleryLabel.leadingAnchor.constraint(equalTo: mainContentView.leadingAnchor, constant: 16),
-            photogalleryLabel.trailingAnchor.constraint(equalTo: mainContentView.trailingAnchor, constant: -216),
-            photogalleryLabel.bottomAnchor.constraint(equalTo: mainContentView.bottomAnchor, constant: -330),
-
-            photogalleryButton.topAnchor.constraint(equalTo: mainContentView.topAnchor, constant: 365),
-            photogalleryButton.leadingAnchor.constraint(equalTo: mainContentView.leadingAnchor, constant: 336),
-            photogalleryButton.trailingAnchor.constraint(equalTo: mainContentView.trailingAnchor, constant: -25),
-            photogalleryButton.bottomAnchor.constraint(equalTo: mainContentView.bottomAnchor, constant: -335),
-
-            photoScrollView.topAnchor.constraint(equalTo: mainContentView.topAnchor, constant: 390),
-            photoScrollView.leadingAnchor.constraint(equalTo: mainContentView.leadingAnchor, constant: 16),
-            photoScrollView.trailingAnchor.constraint(equalTo: mainContentView.trailingAnchor),
-            photoScrollView.bottomAnchor.constraint(equalTo: mainContentView.bottomAnchor, constant: -280),
-
-            tableViewTitle.topAnchor.constraint(equalTo: mainContentView.topAnchor, constant: 450),
-            tableViewTitle.leadingAnchor.constraint(equalTo: mainContentView.leadingAnchor, constant: 16),
-            tableViewTitle.trailingAnchor.constraint(equalTo: mainContentView.trailingAnchor, constant: -265),
-            tableViewTitle.bottomAnchor.constraint(equalTo: mainContentView.bottomAnchor, constant: -230),
-
-            searchButton.topAnchor.constraint(equalTo: mainContentView.topAnchor, constant: 460),
-            searchButton.leadingAnchor.constraint(equalTo: mainContentView.leadingAnchor, constant: 345),
-            searchButton.trailingAnchor.constraint(equalTo: mainContentView.trailingAnchor, constant: -25),
-            searchButton.bottomAnchor.constraint(equalTo: mainContentView.bottomAnchor, constant: -240),
+            detailInfo.topAnchor.constraint(equalTo: jobLabel.bottomAnchor, constant: 15),
+            detailInfo.leadingAnchor.constraint(equalTo: mainContentView.leadingAnchor, constant: 65),
+            detailInfo.trailingAnchor.constraint(equalTo: mainContentView.trailingAnchor, constant: -90),
+            detailInfo.bottomAnchor.constraint(equalTo: mainContentView.bottomAnchor, constant: -40)
         ])
     }
 
     func tuneTableView() {
+        postsTableView.register(PostTableCell.self, forCellReuseIdentifier: PostTableCell.identifier)
         postsTableView.rowHeight = UITableView.automaticDimension
         postsTableView.estimatedRowHeight = 44.0
-        postsTableView.setAndLayout(header: mainContentView)
+        postsTableView.tableHeaderView = mainContentView
         postsTableView.tableFooterView = UIView()
-        postsTableView.register(PostTableCell.self, forCellReuseIdentifier: PostTableCell.identifier)
+        postsTableView.setAndLayout(header: mainContentView)
+     //   postsTableView.separatorStyle = .none
+        self.postsTableView.reloadData()
     }
 }

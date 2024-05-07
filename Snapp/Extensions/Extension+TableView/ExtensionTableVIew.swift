@@ -11,12 +11,15 @@ import UIKit
 extension UITableView {
     func setAndLayout(header: UIView) {
         tableHeaderView = header
+
         header.translatesAutoresizingMaskIntoConstraints = false
 
         NSLayoutConstraint.activate([
             header.widthAnchor.constraint(equalTo: widthAnchor),
             header.leadingAnchor.constraint(equalTo: leadingAnchor),
             header.trailingAnchor.constraint(equalTo: trailingAnchor),
+            header.topAnchor.constraint(equalTo: topAnchor),
+            header.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -420)
         ])
 
         header.setNeedsLayout()

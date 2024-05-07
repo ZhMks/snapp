@@ -20,8 +20,9 @@ final class PostTableCell: UITableViewCell {
         return verticalView
     }()
 
-    private lazy var postTextView: UITextView = {
-        let postTextView = UITextView()
+    private lazy var postTextView: UILabel = {
+        let postTextView = UILabel()
+        postTextView.numberOfLines = 0
         postTextView.translatesAutoresizingMaskIntoConstraints = false
         return postTextView
     }()
@@ -29,7 +30,6 @@ final class PostTableCell: UITableViewCell {
     private lazy var postImage: UIImageView = {
         let postImage = UIImageView()
         postImage.translatesAutoresizingMaskIntoConstraints = false
-        postImage.layer.cornerRadius = 10
         return postImage
     }()
 
@@ -58,6 +58,8 @@ final class PostTableCell: UITableViewCell {
                 DispatchQueue.main.async {
                     guard let image = UIImage(data: success) else { return }
                     self.postImage.image = image
+                    self.postImage.clipsToBounds = true
+                    self.postImage.layer.cornerRadius = 30
                 }
             case .failure(let failure):
                 return
@@ -79,8 +81,8 @@ final class PostTableCell: UITableViewCell {
 
         NSLayoutConstraint.activate([
             verticalView.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: 16),
-            verticalView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 24),
-            verticalView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -351),
+            verticalView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 31),
+            verticalView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -361),
             verticalView.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor, constant: -76),
 
             postTextView.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: 10),
@@ -88,10 +90,10 @@ final class PostTableCell: UITableViewCell {
             postTextView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -15),
             postTextView.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor, constant: -198),
 
-            postImage.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: 152),
+            postImage.topAnchor.constraint(equalTo: postTextView.bottomAnchor, constant: 10),
             postImage.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 52),
-            postImage.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -23),
-            postImage.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor, constant: -58)
+            postImage.widthAnchor.constraint(equalToConstant: 300),
+            postImage.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor, constant: -10)
         ])
     }
 
