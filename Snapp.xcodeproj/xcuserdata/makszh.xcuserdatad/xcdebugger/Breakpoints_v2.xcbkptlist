@@ -3,4 +3,68 @@
    uuid = "6B03ED86-8579-4E5B-8EB3-AD77247CD6BA"
    type = "1"
    version = "2.0">
+   <Breakpoints>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "11DBA74F-7EA9-4A15-AF05-29928589A895"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Snapp/SearchModule/SearchScreeen/SearchViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "119"
+            endingLineNumber = "119"
+            landmarkName = "tableView(_:didSelectRowAt:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "7236893E-3C3F-4C60-B892-AC5FD79AF176"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Snapp/SearchModule/SearchScreeen/SearchPresenter.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "50"
+            endingLineNumber = "50"
+            landmarkName = "fetchPostsFor(user:completion:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "7236893E-3C3F-4C60-B892-AC5FD79AF176 - b81816e918debb7c"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "Snapp.SearchPresenter.fetchPostsFor(user: Swift.String, completion: (Swift.Result&lt;Swift.Array&lt;Snapp.MainPost&gt;, Swift.Error&gt;) -&gt; ()) -&gt; ()"
+                  moduleName = "Snapp"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/makszh/Desktop/Snapp/Snapp/SearchModule/SearchScreeen/SearchPresenter.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "50"
+                  endingLineNumber = "50">
+               </Location>
+               <Location
+                  uuid = "7236893E-3C3F-4C60-B892-AC5FD79AF176 - 4adf1399b51ea2c1"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (Swift.Result&lt;Swift.Array&lt;Snapp.MainPost&gt;, Snapp.PostErrors&gt;) -&gt; () in Snapp.SearchPresenter.fetchPostsFor(user: Swift.String, completion: (Swift.Result&lt;Swift.Array&lt;Snapp.MainPost&gt;, Swift.Error&gt;) -&gt; ()) -&gt; ()"
+                  moduleName = "Snapp"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/makszh/Desktop/Snapp/Snapp/SearchModule/SearchScreeen/SearchPresenter.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "50"
+                  endingLineNumber = "50">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+   </Breakpoints>
 </Bucket>

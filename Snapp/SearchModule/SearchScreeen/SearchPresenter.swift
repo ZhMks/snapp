@@ -46,13 +46,13 @@ final class SearchPresenter: SearchPresenterProtocol {
         }
     }
 
-    func fetchPostsFor(user: String) {
+    func fetchPostsFor(user: String, completion: @escaping (Result<[MainPost], Error>) -> Void) {
         firestoreService.getPosts(sub: user) { [weak self] result in
                 guard let self else { return }
                 switch result {
                 case .success(let success):
-                    print()
-                case .failure(let failure):
+                    completion(.success(success))
+                case .failure(_):
                     view?.showErrorAlert()
                 }
         }

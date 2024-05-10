@@ -19,11 +19,28 @@ enum ChangeStates {
     case surname
 }
 
+enum PostErrors: Error {
+    case empty
+    case errorInDecode
+    case getError
+
+    var description: String {
+        switch self {
+        case .getError:
+            "Ошибка сервера"
+        case .empty:
+            "Посты отсутстуют"
+        case .errorInDecode:
+            "Ошибка декодирования"
+        }
+    }
+}
+
 protocol FireStoreServiceProtocol {
     func getAllUsers(completion: @escaping (Result<[FirebaseUser], Error>) -> Void)
     func getUser(id: String, completion: @escaping (Result<FirebaseUser, AuthorisationErrors>) -> Void)
-    func getPosts(sub: String, completion: @escaping (Result<[MainPost], Error>) -> Void)
-    func getEachPost(userid: String, documentID: String, completion: @escaping (Result<[EachPost], Error>) ->Void)
+    func getPosts(sub: String, completion: @escaping (Result<[MainPost], PostErrors>) -> Void)
+    func getEachPost(userid: String, documentID: String, completion: @escaping (Result<[EachPost], PostErrors>) ->Void)
     func changeData(id: String, text: String, state: ChangeStates) async
     func createPost(date: String, text: String, image: UIImage, for user: String, completion: @escaping (Result<EachPost, Error>) -> Void)
     func saveImageIntoStorage(urlLink: StorageReference, photo: UIImage, completion: @escaping (Result <URL, Error>) -> Void)
@@ -75,13 +92,15 @@ final class FireStoreService: FireStoreServiceProtocol {
                         } catch {
                             completion(.failure(.operationNotAllowed))
                         }
+                    } else {
+                        completion(.failure(.invalidCredential))
                     }
                 }
             }
         }
     }
 
-    func getPosts(sub: String, completion: @escaping (Result<[MainPost], Error>) -> Void)  {
+    func getPosts(sub: String, completion: @escaping (Result<[MainPost], PostErrors>) -> Void)  {
 
         let refDB = Firestore.firestore().collection("Users").document(sub).collection("posts")
         var posts: [MainPost] = []
@@ -91,7 +110,7 @@ final class FireStoreService: FireStoreServiceProtocol {
 
             if let error = error {
                 print(error.localizedDescription)
-                completion(.failure(error))
+                completion(.failure(.getError))
             }
 
             if let snapshot = snapshot {
@@ -111,20 +130,22 @@ final class FireStoreService: FireStoreServiceProtocol {
                                 let mainPost = MainPost(date: currentDate, postsArray: success)
                                 posts.append(mainPost)
                             case .failure(let failure):
-                                completion(.failure(failure))
+                                completion(.failure(.errorInDecode))
                             }
                             dispatchGroup.leave()
                         }
+                    } else {
+                        completion(.failure(.empty))
                     }
                 }
                 dispatchGroup.notify(queue: .main) {
-                    completion(.success(posts)) // Call completion after all tasks in the dispatch group are completed
+                    completion(.success(posts)) 
                 }
             }
         }
     }
 
-    func getEachPost(userid: String, documentID: String, completion: @escaping (Result<[EachPost], Error>) ->Void) {
+    func getEachPost(userid: String, documentID: String, completion: @escaping (Result<[EachPost], PostErrors>) ->Void) {
         print(userid, documentID)
         let postRef = Firestore.firestore().collection("Users").document(userid).collection("posts").document(documentID).collection("eachPost")
         var postsArray: [EachPost] = []
@@ -132,7 +153,7 @@ final class FireStoreService: FireStoreServiceProtocol {
         postRef.getDocuments { snapshot, error in
 
             if let error = error {
-                completion(.failure(error))
+                completion(.failure(.getError))
             }
 
             if let snapshot = snapshot {
@@ -141,7 +162,7 @@ final class FireStoreService: FireStoreServiceProtocol {
                         let eachPostData = try document.data(as: EachPost.self)
                         postsArray.append(eachPostData)
                     } catch {
-                        completion(.failure(error))
+                        completion(.failure(.errorInDecode))
                     }
                 }
                 completion(.success(postsArray))
@@ -235,7 +256,9 @@ final class FireStoreService: FireStoreServiceProtocol {
                 fireStorePost.text = text
 
                 postRef.getDocuments { snapshot, error in
-                    if let error = error {}
+                    if let error = error {
+                        completion(.failure(error))
+                    }
 
                     if let snapshot = snapshot {
                         var documentRef : DocumentReference?

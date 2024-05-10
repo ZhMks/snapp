@@ -68,22 +68,23 @@ final class SearchTableViewCell: UITableViewCell {
         NSLayoutConstraint.activate([
             userImage.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: 10),
             userImage.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 10),
-            userImage.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -220),
-            userImage.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor, constant: -10),
+            userImage.heightAnchor.constraint(equalToConstant: 69),
+            userImage.widthAnchor.constraint(equalToConstant: 69),
+            userImage.bottomAnchor.constraint(equalToSystemSpacingBelow: safeArea.bottomAnchor, multiplier: -20),
 
             userName.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: 15),
             userName.leadingAnchor.constraint(equalTo: userImage.trailingAnchor, constant: 10),
-            userName.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -130),
+            userName.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -90),
             userName.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor, constant: -80),
 
             userSurname.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: 15),
             userSurname.leadingAnchor.constraint(equalTo: userName.trailingAnchor, constant: 10),
-            userSurname.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -100),
+            userSurname.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -50),
             userSurname.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor, constant: -80),
 
             userJob.topAnchor.constraint(equalTo: userName.bottomAnchor, constant: 15),
             userJob.leadingAnchor.constraint(equalTo: userImage.trailingAnchor, constant: 10),
-            userJob.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -50),
+            userJob.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -20),
             userJob.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor, constant: -60)
         ])
     }

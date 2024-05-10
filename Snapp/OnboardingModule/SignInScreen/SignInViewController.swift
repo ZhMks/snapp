@@ -54,11 +54,11 @@ class SignInViewController: UIViewController {
         presenter.checkCode(code: code) { [weak self] result in
             switch result {
             case .success(let user):
-                let fireUser = FirebaseUser(name: "King", surname: "PunchMan", identifier: "KingsPuch", job: "Hero", subscribers: ["Sub1", "Sub2"], subscribtions: ["Sub3", "Sub4"], stories: ["Stories1", "Stories2"], image: "https://firebasestorage.googleapis.com:443/v0/b/snappproject-9ca98.appspot.com/o/users%2FuuptdvnyBrcXwovEv3U69uxMD7m1%2Favatar?alt=media&token=32020d11-35ff-4be8-b96f-009bccb28d4a")
+//                let fireUser = FirebaseUser(name: "King", surname: "PunchMan", identifier: "KingsPuch", job: "Hero", subscribers: ["Sub1", "Sub2"], subscribtions: ["Sub3", "Sub4"], stories: ["Stories1", "Stories2"], image: "https://firebasestorage.googleapis.com:443/v0/b/snappproject-9ca98.appspot.com/o/users%2FuuptdvnyBrcXwovEv3U69uxMD7m1%2Favatar?alt=media&token=32020d11-35ff-4be8-b96f-009bccb28d4a")
                 let firestoreService = self?.presenter.firestoreService
                 let profileVC = ProfileViewController()
                 guard let userID = Auth.auth().currentUser?.uid else { return }
-                let presenter = ProfilePresenter(view: profileVC, mainUser: fireUser, userID: userID , firestoreService: firestoreService!)
+                let presenter = ProfilePresenter(view: profileVC, mainUser: user, userID: userID , firestoreService: firestoreService!)
                 profileVC.presenter = presenter
                 (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootViewController(profileVC, user: user)
             case .failure(let error):

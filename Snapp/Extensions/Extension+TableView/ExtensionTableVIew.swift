@@ -18,8 +18,7 @@ extension UITableView {
             header.widthAnchor.constraint(equalTo: widthAnchor),
             header.leadingAnchor.constraint(equalTo: leadingAnchor),
             header.trailingAnchor.constraint(equalTo: trailingAnchor),
-            header.topAnchor.constraint(equalTo: topAnchor),
-            header.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -420)
+            header.topAnchor.constraint(equalTo: topAnchor)
         ])
 
         header.setNeedsLayout()

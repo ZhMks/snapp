@@ -115,10 +115,20 @@ extension SearchViewController: UITableViewDataSource {
 extension SearchViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let user = presenter.usersArray[indexPath.row]
-        self.presenter.fetchPostsFor(user: user.identifier)
-        let detailUserController = DetailUserViewController()
-        let detailPresenter = DetailPresenter(view: detailUserController, user: user, eachPosts: presenter.posts)
-        detailUserController.presenter = detailPresenter
-        navigationController?.pushViewController(detailUserController, animated: true)
+        guard let documentID = user.documentID else { return }
+        print(user, documentID)
+        self.presenter.fetchPostsFor(user: documentID) { [weak self] result in
+            guard let self else { return }
+            switch result {
+            case .success(let success):
+                let detailUserController = DetailUserViewController()
+                guard let userID = user.documentID else { return }
+                let detailPresenter = DetailPresenter(view: detailUserController, user: user, eachPosts: success, userID: userID)
+                detailUserController.presenter = detailPresenter
+                navigationController?.pushViewController(detailUserController, animated: true)
+            case .failure(let failure):
+                print()
+            }
+        }
     }
 }
