@@ -6,12 +6,15 @@
 //
 
 import UIKit
+import FirebaseStorage
 
 
 protocol ProfileViewProtocol: AnyObject {
     func showErrorAler(error: String)
     func updateAvatarImage(image: UIImage)
     func updateData(data: [MainPost])
+    func updateStorie(stories: [UIImage]?)
+    func updateAlbum(photo: [UIImage]?)
 }
 
 protocol ProfilePresenterProtocol: AnyObject {
@@ -26,6 +29,8 @@ final class ProfilePresenter: ProfilePresenterProtocol {
     var posts: [MainPost] = []
     var image: UIImage?
     let userID: String
+    var userStories: [UIImage]?
+    var photoAlbum: [UIImage]?
 
     init(view: ProfileViewProtocol, mainUser: FirebaseUser, userID: String, firestoreService: FireStoreServiceProtocol) {
         self.view = view
@@ -34,39 +39,6 @@ final class ProfilePresenter: ProfilePresenterProtocol {
         self.userID = userID
         fetchImage()
         fetchPosts()
-    }
-
-    func createPost(text: String, image: UIImage, completion: @escaping (Result<[MainPost]?, Error>) -> Void) {
-        let date = Date()
-        let formatter = DateFormatter()
-        formatter.dateFormat = "dd-MM-yyyy"
-        let stringFromDate = formatter.string(from: date)
-
-        firestoreService.createPost(date: stringFromDate, text: text, image: image, for: userID) { [weak self] result in
-            guard let self else { return }
-            switch result {
-            case .success(let firestorePost):
-                let eachPost = EachPost(text: firestorePost.text,
-                                        image: firestorePost.image,
-                                        likes: firestorePost.likes,
-                                        views: firestorePost.views)
-                if posts.isEmpty {
-                    var mainPost = MainPost(date: stringFromDate, postsArray: [])
-                    mainPost.postsArray.append(eachPost)
-                    posts.append(mainPost)
-                    completion(.success(posts))
-                } else {
-                    for var post in posts {
-                        if post.date == stringFromDate {
-                            post.postsArray.append(eachPost)
-                            completion(.success(posts))
-                        }
-                    }
-                }
-            case .failure(let error):
-                view?.showErrorAler(error: error.localizedDescription)
-            }
-        }
     }
 
     func fetchImage()  {
@@ -95,6 +67,55 @@ final class ProfilePresenter: ProfilePresenterProtocol {
                 view?.updateData(data: self.posts)
             case .failure(let failure):
                 print()
+            }
+        }
+    }
+
+    func createStorie(image: UIImage) {
+        let date = Date()
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "dd-MM-yyyy"
+        let stringFromDate = dateFormatter.string(from: date)
+        let networkService = NetworkService()
+
+        let urlLink = Storage.storage().reference().child("user").child(userID).child("Stories").child(stringFromDate)
+        firestoreService.saveImageIntoStorage(urlLink: urlLink, photo: image) { [weak self] result in
+            switch result {
+            case .success(let success):
+                networkService.fetchImage(string: success.absoluteString) { [weak self] result in
+                    switch result {
+                    case .success(let success):
+                        guard let storieImage = UIImage(data: success) else { return }
+                        self?.userStories?.append(storieImage)
+                        self?.view?.updateStorie(stories: self?.userStories)
+                    case .failure(let failure):
+                        self?.view?.showErrorAler(error: failure.localizedDescription)
+                    }
+                }
+            case .failure(let failure):
+                self?.view?.showErrorAler(error: failure.localizedDescription)
+            }
+        }
+    }
+
+    func addPhotoToAlbum(image: UIImage) {
+        let networkService = NetworkService()
+        let urlLink = Storage.storage().reference().child("user").child(userID).child("PhotoAlbum")
+        firestoreService.saveImageIntoStorage(urlLink: urlLink, photo: image) { [weak self] result in
+            switch result {
+            case .success(let success):
+                networkService.fetchImage(string: success.absoluteString) { [weak self] result in
+                    switch result {
+                    case .success(let success):
+                        guard let albumImage = UIImage(data: success) else { return }
+                        self?.photoAlbum?.append(albumImage)
+                        self?.view?.updateAlbum(photo: self?.photoAlbum)
+                    case .failure(let failure):
+                        self?.view?.showErrorAler(error: failure.localizedDescription)
+                    }
+                }
+            case .failure(let failure):
+                self?.view?.showErrorAler(error: failure.localizedDescription)
             }
         }
     }

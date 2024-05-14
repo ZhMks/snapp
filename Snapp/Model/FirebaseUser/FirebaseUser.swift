@@ -28,7 +28,7 @@ struct MainPost: Codable {
 }
 struct EachPost: Codable {
     var text: String
-    var image: String
+    var image: String?
     var likes: Int
     var views: Int
 }

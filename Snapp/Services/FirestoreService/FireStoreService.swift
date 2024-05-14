@@ -42,9 +42,10 @@ protocol FireStoreServiceProtocol {
     func getPosts(sub: String, completion: @escaping (Result<[MainPost], PostErrors>) -> Void)
     func getEachPost(userid: String, documentID: String, completion: @escaping (Result<[EachPost], PostErrors>) ->Void)
     func changeData(id: String, text: String, state: ChangeStates) async
-    func createPost(date: String, text: String, image: UIImage, for user: String, completion: @escaping (Result<EachPost, Error>) -> Void)
+    func createPost(date: String, text: String, image: UIImage?, for user: String, completion: @escaping (Result<EachPost, Error>) -> Void)
     func saveImageIntoStorage(urlLink: StorageReference, photo: UIImage, completion: @escaping (Result <URL, Error>) -> Void)
     func createUser(user: FirebaseUser, id: String)
+    func saveSubscriber(mainUser: String, id: String)
 }
 
 
@@ -62,9 +63,11 @@ final class FireStoreService: FireStoreServiceProtocol {
                 do {
                     for document in snapshot.documents {
                         let currentUser = try document.data(as: FirebaseUser.self)
+                        print(currentUser.documentID)
                         usersArray.append(currentUser)
                     }
                 } catch {
+                    print(error.localizedDescription)
                     completion(.failure(error))
                 }
                 completion(.success(usersArray))
@@ -89,8 +92,19 @@ final class FireStoreService: FireStoreServiceProtocol {
                         do {
                             let currentUser = try document.data(as: FirebaseUser.self)
                             completion(.success(currentUser))
+                        } catch let DecodingError.dataCorrupted(context) {
+                            print(context)
+                        } catch let DecodingError.keyNotFound(key, context) {
+                            print("Key '\(key)' not found:", context.debugDescription)
+                            print("codingPath:", context.codingPath)
+                        } catch let DecodingError.valueNotFound(value, context) {
+                            print("Value '\(value)' not found:", context.debugDescription)
+                            print("codingPath:", context.codingPath)
+                        } catch let DecodingError.typeMismatch(type, context)  {
+                            print("Type '\(type)' mismatch:", context.debugDescription)
+                            print("codingPath:", context.codingPath)
                         } catch {
-                            completion(.failure(.operationNotAllowed))
+                            print("error: ", error)
                         }
                     } else {
                         completion(.failure(.invalidCredential))
@@ -106,7 +120,6 @@ final class FireStoreService: FireStoreServiceProtocol {
         var posts: [MainPost] = []
 
         refDB.getDocuments { [weak self] snapshot, error in
-            guard let self else { return }
 
             if let error = error {
                 print(error.localizedDescription)
@@ -123,7 +136,7 @@ final class FireStoreService: FireStoreServiceProtocol {
                 for document in snapshot.documents {
                     if let currentDate = document.data().values.first as? String {
                         dispatchGroup.enter()
-                        getEachPost(userid: sub, documentID: document.documentID) { result in
+                        self?.getEachPost(userid: sub, documentID: document.documentID) { result in
                             switch result {
                             case .success(let success):
                                 print("Success: \(success)")
@@ -243,46 +256,75 @@ final class FireStoreService: FireStoreServiceProtocol {
         }
     }
 
-    func createPost(date: String, text: String, image: UIImage, for user: String, completion: @escaping (Result<EachPost, Error>) -> Void) {
+    func createPost(date: String, text: String, image: UIImage?, for user: String, completion: @escaping (Result<EachPost, Error>) -> Void) {
         let postRef = Firestore.firestore().collection("Users").document(user).collection("posts")
-        let postStorageRef = Storage.storage().reference().child("users").child(user).child("posts").child(date).child(image.description)
         var fireStorePost = EachPost(text: "", image: "", likes: 0, views: 0)
 
-        saveImageIntoStorage(urlLink: postStorageRef, photo: image) { [weak self] result in
-            guard let self else { return }
-            switch result {
-            case .success(let url):
-                fireStorePost.image = url.absoluteString
-                fireStorePost.text = text
+        if let image = image {
+            let postStorageRef = Storage.storage().reference().child("users").child(user).child("posts").child(date).child(image.description)
+            saveImageIntoStorage(urlLink: postStorageRef, photo: image) { [weak self] result in
+                guard let self else { return }
+                switch result {
+                case .success(let url):
+                    fireStorePost.image = url.absoluteString
+                    fireStorePost.text = text
 
-                postRef.getDocuments { snapshot, error in
-                    if let error = error {
-                        completion(.failure(error))
-                    }
+                    postRef.getDocuments { snapshot, error in
+                        if let error = error {
+                            completion(.failure(error))
+                        }
 
-                    if let snapshot = snapshot {
-                        var documentRef : DocumentReference?
-                        if snapshot.documents.isEmpty {
-                            documentRef =  postRef.addDocument(data: [ "date" : date ])
-                        } else {
-                            for document in snapshot.documents {
-                                if document.data().values.contains(where: { $0 as? String == date }) {
-                                    documentRef = document.reference
+                        if let snapshot = snapshot {
+                            var documentRef : DocumentReference?
+                            if snapshot.documents.isEmpty {
+                                documentRef =  postRef.addDocument(data: [ "date" : date ])
+                            } else {
+                                for document in snapshot.documents {
+                                    if document.data().values.contains(where: { $0 as? String == date }) {
+                                        documentRef = document.reference
+                                    }
+                                }
+                                if documentRef == nil {
+                                    documentRef = postRef.addDocument(data: ["date" : date ])
                                 }
                             }
-                            if documentRef == nil {
-                                documentRef = postRef.addDocument(data: ["date" : date ])
+                            guard let documentRef = documentRef else { return }
+                            if self.createEachPost(docRef: documentRef, post: fireStorePost) {
+                                completion(.success(fireStorePost))
                             }
                         }
-                        guard let documentRef = documentRef else { return }
-                        if self.createEachPost(docRef: documentRef, post: fireStorePost) {
-                            completion(.success(fireStorePost))
+                    }
+                case .failure(let error):
+                    print(error.localizedDescription)
+                    completion(.failure(error))
+                }
+            }
+        } else {
+            fireStorePost.text = text
+            postRef.getDocuments { snapshot, error in
+                if let error = error {
+                    completion(.failure(error))
+                }
+
+                if let snapshot = snapshot {
+                    var documentRef : DocumentReference?
+                    if snapshot.documents.isEmpty {
+                        documentRef =  postRef.addDocument(data: [ "date" : date ])
+                    } else {
+                        for document in snapshot.documents {
+                            if document.data().values.contains(where: { $0 as? String == date }) {
+                                documentRef = document.reference
+                            }
+                        }
+                        if documentRef == nil {
+                            documentRef = postRef.addDocument(data: ["date" : date ])
                         }
                     }
+                    guard let documentRef = documentRef else { return }
+                    if self.createEachPost(docRef: documentRef, post: fireStorePost) {
+                        completion(.success(fireStorePost))
+                    }
                 }
-            case .failure(let error):
-                print(error.localizedDescription)
-                completion(.failure(error))
             }
         }
     }
@@ -305,22 +347,5 @@ final class FireStoreService: FireStoreServiceProtocol {
         docRef.updateData(["subscribers" : id])
     }
 
-    func saveUserStorie(user: FirebaseUser, image: UIImage, date: String, completion: @escaping (Result <URL, Error>) -> Void) {
-        print(user.identifier)
-        let docRef = Firestore.firestore().collection("Users").document(user.identifier)
-        let postRef = Storage.storage().reference().child("users").child(user.identifier).child("stories").child(date)
-
-        saveImageIntoStorage(urlLink: postRef, photo: image) { [weak self] result in
-            guard let self else { return }
-            switch result {
-            case .success(let url):
-                docRef.updateData(["stories" : url])
-                completion(.success(url))
-            case .failure(let failure):
-                print(failure.localizedDescription)
-                completion(.failure(failure))
-            }
-        }
-    }
 }
 

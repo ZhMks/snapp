@@ -20,12 +20,16 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let window = UIWindow(windowScene: windowScene)
 
     
-// let fireUser = FirebaseUser(name: "King", surname: "PunchMan", identifier: "KingsPuch", job: "Hero", subscribers: ["Sub1", "Sub2"], subscribtions: ["Sub3", "Sub4"], stories: ["Stories1", "Stories2"], image: "https://firebasestorage.googleapis.com:443/v0/b/snappproject-9ca98.appspot.com/o/users%2FuuptdvnyBrcXwovEv3U69uxMD7m1%2Favatar?alt=media&token=32020d11-35ff-4be8-b96f-009bccb28d4a")
-//        let profileVC = ProfileViewController()
+//        let fireUser = FirebaseUser(name: "King", surname: "PunchMan", identifier: "KingsPuch", job: "Hero", subscribers: ["Sub1", "Sub2"], subscribtions: ["Sub3", "Sub4"], stories: ["Stories1", "Stories2"], image: "https://firebasestorage.googleapis.com:443/v0/b/snappproject-9ca98.appspot.com/o/users%2FQu7irRWg3jN83xac8ZBTtwBy8EF2%2Favatar?alt=media&token=b01ca331-d32f-46fd-b603-cbc9591c5785")
 //        let firestoreService = FireStoreService()
 //        let userID = "uuptdvnyBrcXwovEv3U69uxMD7m1"
-//        let presenter = ProfilePresenter(view: profileVC, mainUser: fireUser, userID: userID, firestoreService: firestoreService)
-//        profileVC.presenter = presenter
+//        let image = UIImage(systemName: "checkmark")!
+//        let posts: [MainPost] = []
+//        let docID = "Qu7irRWg3jN83xac8ZBTtwBy8EF2"
+//
+//        let profileVC = ProfileViewController()
+//        let profilePresenter = ProfilePresenter(view: profileVC, mainUser: fireUser, userID: docID, firestoreService: firestoreService)
+//        profileVC.presenter = profilePresenter
 
         let controller = FirstBoardingVC()
         let presenter = Presenter(view: controller)

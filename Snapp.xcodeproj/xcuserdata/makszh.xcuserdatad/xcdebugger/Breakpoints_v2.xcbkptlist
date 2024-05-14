@@ -7,63 +7,111 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "11DBA74F-7EA9-4A15-AF05-29928589A895"
-            shouldBeEnabled = "Yes"
+            uuid = "7AEB442E-F6ED-4F74-A7CC-CEB3A791B196"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Snapp/SearchModule/SearchScreeen/SearchViewController.swift"
+            filePath = "Snapp/DetailUserModule/DetailUserScreen/DetailPresenter.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "119"
-            endingLineNumber = "119"
-            landmarkName = "tableView(_:didSelectRowAt:)"
+            startingLineNumber = "57"
+            endingLineNumber = "57"
+            landmarkName = "fetchPosts()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "7236893E-3C3F-4C60-B892-AC5FD79AF176"
+            uuid = "E661FD2C-E5F2-4ADA-A4D6-EB1EC2C4630B"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Snapp/SearchModule/SearchScreeen/SearchPresenter.swift"
+            filePath = "Snapp/Services/FirestoreService/FireStoreService.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "50"
-            endingLineNumber = "50"
-            landmarkName = "fetchPostsFor(user:completion:)"
+            startingLineNumber = "61"
+            endingLineNumber = "61"
+            landmarkName = "getAllUsers(completion:)"
             landmarkType = "7">
             <Locations>
                <Location
-                  uuid = "7236893E-3C3F-4C60-B892-AC5FD79AF176 - b81816e918debb7c"
+                  uuid = "E661FD2C-E5F2-4ADA-A4D6-EB1EC2C4630B - c2667073871a3928"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
-                  symbolName = "Snapp.SearchPresenter.fetchPostsFor(user: Swift.String, completion: (Swift.Result&lt;Swift.Array&lt;Snapp.MainPost&gt;, Swift.Error&gt;) -&gt; ()) -&gt; ()"
+                  symbolName = "closure #1 (Swift.Optional&lt;__C.FIRQuerySnapshot&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in Snapp.FireStoreService.getAllUsers(completion: (Swift.Result&lt;Swift.Array&lt;Snapp.FirebaseUser&gt;, Swift.Error&gt;) -&gt; ()) -&gt; ()"
                   moduleName = "Snapp"
                   usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/makszh/Desktop/Snapp/Snapp/SearchModule/SearchScreeen/SearchPresenter.swift"
+                  urlString = "file:///Users/makszh/Desktop/Snapp/Snapp/Services/FirestoreService/FireStoreService.swift"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "50"
-                  endingLineNumber = "50">
+                  startingLineNumber = "61"
+                  endingLineNumber = "61">
                </Location>
                <Location
-                  uuid = "7236893E-3C3F-4C60-B892-AC5FD79AF176 - 4adf1399b51ea2c1"
+                  uuid = "E661FD2C-E5F2-4ADA-A4D6-EB1EC2C4630B - c2667073871a3928"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
-                  symbolName = "closure #1 (Swift.Result&lt;Swift.Array&lt;Snapp.MainPost&gt;, Snapp.PostErrors&gt;) -&gt; () in Snapp.SearchPresenter.fetchPostsFor(user: Swift.String, completion: (Swift.Result&lt;Swift.Array&lt;Snapp.MainPost&gt;, Swift.Error&gt;) -&gt; ()) -&gt; ()"
+                  symbolName = "closure #1 (Swift.Optional&lt;__C.FIRQuerySnapshot&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in Snapp.FireStoreService.getAllUsers(completion: (Swift.Result&lt;Swift.Array&lt;Snapp.FirebaseUser&gt;, Swift.Error&gt;) -&gt; ()) -&gt; ()"
                   moduleName = "Snapp"
                   usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/makszh/Desktop/Snapp/Snapp/SearchModule/SearchScreeen/SearchPresenter.swift"
+                  urlString = "file:///Users/makszh/Desktop/Snapp/Snapp/Services/FirestoreService/FireStoreService.swift"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "50"
-                  endingLineNumber = "50">
+                  startingLineNumber = "61"
+                  endingLineNumber = "61">
                </Location>
             </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "247C51A6-3E95-4D82-AE65-9590569435C7"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Snapp/Services/FirestoreService/FireStoreService.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "70"
+            endingLineNumber = "70"
+            landmarkName = "getAllUsers(completion:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "683DA9EF-95EE-4C7C-93B7-F6039CD91E6A"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Snapp/Services/FirestoreService/FireStoreService.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "66"
+            endingLineNumber = "66"
+            landmarkName = "getAllUsers(completion:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "BCD651BC-76ED-4502-BF4E-0B32D21B0401"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Snapp/Services/FirestoreService/FireStoreService.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "90"
+            endingLineNumber = "90"
+            landmarkName = "getUser(id:completion:)"
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

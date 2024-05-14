@@ -41,30 +41,53 @@ class SearchViewController: UIViewController {
         view.backgroundColor = .systemBackground
         addSubviews()
         layout()
-        performUpdate()
     }
 
 
     //MARK: -FUNCS
-    func performUpdate() {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2) { [weak self] in
-            guard let self else { return }
-            allUsersTable.reloadData()
-        }
-    }
 }
 
 
 //MARK: -OUTPUTPRESENTER
 
 extension SearchViewController: SearchViewProtocol {
-    func showErrorAlert() {
-        let alert = UIAlertController(title: .localized(string: "Ошибка"),
-                                      message: .localized(string: "Не удалось загрузить пользователей"),
-                                      preferredStyle: .alert)
-        let action = UIAlertAction(title: .localized(string: "Отмена"), style: .cancel)
-        alert.addAction(action)
-        navigationController?.present(alert, animated: true)
+
+    func updateTableView() {
+        allUsersTable.reloadData()
+    }
+    
+    func goToNextVC(user: FirebaseUser, userID: String) {
+        let detailVC = DetailUserViewController()
+        let detailPresenter = DetailPresenter(view: detailVC, user: user, userID: userID, firestoreService: presenter.firestoreService)
+        detailVC.presenter = detailPresenter
+        navigationController?.pushViewController(detailVC, animated: true)
+    }
+
+    func showErrorAlert(error: String) {
+        switch error {
+        case  "Ошибка сервера":
+            let alert = UIAlertController(title: .localized(string: "Ошибка"),
+                                          message: .localized(string: "Не удалось загрузить пользователей"),
+                                          preferredStyle: .alert)
+            let action = UIAlertAction(title: .localized(string: "Отмена"), style: .cancel)
+            alert.addAction(action)
+            navigationController?.present(alert, animated: true)
+        case "Ошибка декодирования":
+            let alert = UIAlertController(title: .localized(string: "Ошибка"),
+                                          message: .localized(string: "Не удалось загрузить пользователей"),
+                                          preferredStyle: .alert)
+            let action = UIAlertAction(title: .localized(string: "Отмена"), style: .cancel)
+            alert.addAction(action)
+            navigationController?.present(alert, animated: true)
+        case "Посты отсутстуют":
+            let alert = UIAlertController(title: .localized(string: "Ошибка"),
+                                          message: .localized(string: "Не удалось загрузить пользователей"),
+                                          preferredStyle: .alert)
+            let action = UIAlertAction(title: .localized(string: "Отмена"), style: .cancel)
+            alert.addAction(action)
+            navigationController?.present(alert, animated: true)
+        default: return
+        }
     }
 }
 
@@ -116,19 +139,6 @@ extension SearchViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let user = presenter.usersArray[indexPath.row]
         guard let documentID = user.documentID else { return }
-        print(user, documentID)
-        self.presenter.fetchPostsFor(user: documentID) { [weak self] result in
-            guard let self else { return }
-            switch result {
-            case .success(let success):
-                let detailUserController = DetailUserViewController()
-                guard let userID = user.documentID else { return }
-                let detailPresenter = DetailPresenter(view: detailUserController, user: user, eachPosts: success, userID: userID)
-                detailUserController.presenter = detailPresenter
-                navigationController?.pushViewController(detailUserController, animated: true)
-            case .failure(let failure):
-                print()
-            }
-        }
+        presenter.showNextVC(user: user, userID: documentID)
     }
 }

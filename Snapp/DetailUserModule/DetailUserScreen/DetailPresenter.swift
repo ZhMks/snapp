@@ -6,7 +6,7 @@
 //
 
 import UIKit
-
+import FirebaseAuth
 
 protocol DetailViewProtocol: AnyObject {
     func updateData(data: [MainPost])
@@ -17,24 +17,24 @@ protocol DetailViewProtocol: AnyObject {
 }
 
 protocol DetailPresenterProtocol: AnyObject {
-    init(view: DetailViewProtocol, user: FirebaseUser, eachPosts: [MainPost], userID: String)
+    init(view: DetailViewProtocol, user: FirebaseUser, userID: String, firestoreService: FireStoreServiceProtocol)
 }
 
 final class DetailPresenter: DetailPresenterProtocol {
 
     weak var view: DetailViewProtocol?
+    let firestoreService: FireStoreServiceProtocol
     var user: FirebaseUser
-    var posts: [MainPost]
+    var posts: [MainPost] = []
     var image: UIImage?
     let userID: String
 
-    init(view: DetailViewProtocol, user: FirebaseUser, eachPosts: [MainPost], userID: String) {
+    init(view: DetailViewProtocol, user: FirebaseUser, userID: String, firestoreService: FireStoreServiceProtocol) {
         self.view = view
         self.user = user
-        self.posts = eachPosts
         self.userID = userID
+        self.firestoreService = firestoreService
         fetchImage()
-        fetchPosts()
     }
 
     func fetchImage()  {
@@ -54,14 +54,13 @@ final class DetailPresenter: DetailPresenterProtocol {
     }
 
     func fetchPosts() {
-        let firestoreService = FireStoreService()
         firestoreService.getPosts(sub: userID) { [weak self] result in
             guard let self else { return }
             switch result {
             case .success(let success):
-                self.posts = success
-                print(self.posts)
-                view?.updateData(data: self.posts)
+                posts = success
+                print(posts)
+                view?.updateData(data: posts)
             case .failure(let failure):
                 switch failure.description {
                 case  "Ошибка сервера":
@@ -75,5 +74,12 @@ final class DetailPresenter: DetailPresenterProtocol {
                 }
             }
         }
+    }
+
+    func addSubscriber() {
+        print(userID)
+        guard  let currentUser = Auth.auth().currentUser?.uid else { return }
+        print(currentUser)
+        firestoreService.saveSubscriber(mainUser: currentUser, id: userID)
     }
 }

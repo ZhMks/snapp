@@ -66,15 +66,6 @@ final class FeedViewController: UIViewController {
 
     // MARK: -FUNCS
 
-
-    @objc func createStorie() {
-       
-    }
-
-    @objc func createSub() {
-
-    }
-
     func tuneTableView() {
         feedTableView.register(PostTableCell.self, forCellReuseIdentifier: PostTableCell.identifier)
         feedTableView.rowHeight = UITableView.automaticDimension
@@ -138,15 +129,14 @@ extension FeedViewController: UICollectionViewDelegateFlowLayout {
 extension FeedViewController: UICollectionViewDataSource {
 
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-//        guard let number = presenter.posts?.count else { return 0 }
-//        return number
-        6
+        guard let number = presenter.posts?.count else { return 0 }
+        return number
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: FeedCollectionViewCell.identifier, for: indexPath) as? FeedCollectionViewCell else { return UICollectionViewCell() }
         cell.backgroundColor = .blue
-      //  guard let data = presenter.posts?[indexPath.section] else { return  UICollectionViewCell() }
+        guard let data = presenter.posts?[indexPath.section] else { return  UICollectionViewCell() }
         return cell
     }
 }
@@ -159,8 +149,7 @@ extension FeedViewController: UITableViewDelegate {
 // MARK: -TABLEVIEWDATASOURCE
 extension FeedViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        //presenter.user.subscribers
-        4
+        presenter.user.subscribers.count
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {

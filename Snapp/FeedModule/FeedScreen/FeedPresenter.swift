@@ -22,7 +22,7 @@ final class FeedPresenter: FeedPresenterProtocol {
 
     weak var view: FeedViewProtocol?
     var stories: [UIImage]?
-    var userStorie: UIImage?
+    var userStories: [UIImage]?
     var user: FirebaseUser
     var posts: [[MainPost]]?
     let firestoreService: FireStoreServiceProtocol?
@@ -35,15 +35,32 @@ final class FeedPresenter: FeedPresenterProtocol {
 
     func fetchPosts(user: FirebaseUser) {
         for subscriber in user.subscribers {
-            firestoreService?.getPosts(sub: subscriber, completion: { [weak self] result in
-                guard let self else { return }
-                switch result {
-                case .success(let mainPost):
-                    self.posts?.append(mainPost)
-                case .failure(let failure):
-                    print()
+                firestoreService?.getPosts(sub: subscriber, completion: { [weak self] result in
+                    guard let self else { return }
+                    switch result {
+                    case .success(let mainPost):
+                        self.posts?.append(mainPost)
+                    case .failure(let failure):
+                        print()
+                    }
+                })
+        }
+    }
+
+    func fetchUserStorie() {
+        let networkService = NetworkService()
+        if !user.stories.isEmpty {
+            user.stories.forEach { storie in
+                networkService.fetchImage(string: storie) { [weak self] result in
+                    switch result {
+                    case .success(let success):
+                        guard let storieImage = UIImage(data: success) else { return }
+                        self?.userStories?.append(storieImage)
+                    case .failure(let failure):
+                        print(failure)
+                    }
                 }
-            })
+            }
         }
     }
 }

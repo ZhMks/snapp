@@ -239,6 +239,11 @@ class ProfileViewController: UIViewController {
 
 
     // MARK: -LIFECYCLE
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        NotificationCenter.default.addObserver(self, selector: #selector(fetchPostsIfNeeded), name: Notification.Name("newPost"), object: nil)
+    }
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
@@ -248,23 +253,21 @@ class ProfileViewController: UIViewController {
         tuneTableView()
     }
 
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        NotificationCenter.default.removeObserver(self)
+    }
+
     // MARK: -FUNCS
     @objc func createPostButtonTapped() {
-        let text = "TestPostText"
-        let image = UIImage(named: "postimage")
-        presenter.createPost(text: text, image: image!) { [weak self] result in
-            guard let self else { return }
-            switch result {
-            case .success(let postMainModel):
-                print(postMainModel!.forEach({ print($0.date) }))
-                DispatchQueue.main.async {
-                    self.postsTableView.reloadData()
-                }
-            case .failure(let failure):
-                print(failure.localizedDescription)
-            }
-        }
+        let createPostVC = CreatePostViewController()
+        guard let userImage = presenter.image else { return }
+        let createPostPresenter = CreatePostPresenter(view: createPostVC, mainUser: presenter.mainUser, userID: presenter.userID, firestoreService: presenter.firestoreService, image: userImage, posts: presenter.posts)
+        createPostVC.presenter = createPostPresenter
+        createPostVC.modalPresentationStyle = .formSheet
+        navigationController?.present(createPostVC, animated: true)
     }
+
     @objc func showSettingsVC() {
         //        let settingsVC = SettingsViewController()
         //        let settingsPresenter = SettingPresenter(view: settingsVC, user: presenter.firebaseUser, firestoreService: presenter.firestoreService)
@@ -272,10 +275,22 @@ class ProfileViewController: UIViewController {
         //        navigationController?.present(settingsVC, animated: true)
     }
 
+    @objc func fetchPostsIfNeeded() {
+        presenter.fetchPosts()
+    }
 }
 
 // MARK: -OUTPUT PRESENTER
 extension ProfileViewController: ProfileViewProtocol {
+
+    func updateStorie(stories: [UIImage]?) {
+        print()
+    }
+    
+    func updateAlbum(photo: [UIImage]?) {
+        print()
+    }
+    
 
     func updateData(data: [MainPost]) {
         DispatchQueue.main.async { [weak self] in

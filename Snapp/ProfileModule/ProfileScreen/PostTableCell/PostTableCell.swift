@@ -182,21 +182,22 @@ final class PostTableCell: UITableViewCell {
         commentsLabel.text = "\(post.views)"
         dateLabel.text = date
         let networkService = NetworkService()
-        networkService.fetchImage(string: post.image) { [weak self] result in
-            guard let self else { return }
-            switch result {
-            case .success(let success):
-                DispatchQueue.main.async {
-                    guard let image = UIImage(data: success) else { return }
-                    self.postImage.image = image
-                    self.postImage.clipsToBounds = true
-                    self.postImage.layer.cornerRadius = 30
+        if let postImage = post.image {
+            networkService.fetchImage(string: postImage) { [weak self] result in
+                guard let self else { return }
+                switch result {
+                case .success(let success):
+                    DispatchQueue.main.async {
+                        guard let image = UIImage(data: success) else { return }
+                        self.postImage.image = image
+                        self.postImage.clipsToBounds = true
+                        self.postImage.layer.cornerRadius = 30
+                    }
+                case .failure(let failure):
+                    return
                 }
-            case .failure(let failure):
-                return
             }
         }
-
         networkService.fetchImage(string: user.image) { [weak self] result in
             guard let self else { return }
             switch result {

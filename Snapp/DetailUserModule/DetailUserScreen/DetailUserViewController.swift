@@ -63,6 +63,7 @@ class DetailUserViewController: UIViewController {
         subscribeButton.setTitle(.localized(string: "Подписаться"), for: .normal)
         subscribeButton.backgroundColor = ColorCreator.shared.createButtonColor()
         subscribeButton.layer.cornerRadius = 10.0
+        subscribeButton.addTarget(self, action: #selector(addToSubscribers), for: .touchUpInside)
         return subscribeButton
     }()
 
@@ -179,6 +180,12 @@ class DetailUserViewController: UIViewController {
 
 
     // MARK: -LIFECYCLE
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        presenter.fetchPosts()
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
@@ -194,6 +201,10 @@ class DetailUserViewController: UIViewController {
         //        let settingsPresenter = SettingPresenter(view: settingsVC, user: presenter.firebaseUser, firestoreService: presenter.firestoreService)
         //        settingsVC.presenter = settingsPresenter
         //        navigationController?.present(settingsVC, animated: true)
+    }
+
+    @objc func addToSubscribers() {
+        presenter.addSubscriber()
     }
 
 }
@@ -233,13 +244,13 @@ extension DetailUserViewController: UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        presenter.posts[section].postsArray.count
+       presenter.posts[section].postsArray.count
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: PostTableCell.identifier, for: indexPath) as? PostTableCell else { return UITableViewCell() }
-        let data = presenter.posts[indexPath.section].postsArray[indexPath.row]
-        let date = presenter.posts[indexPath.section].date
+         let data = presenter.posts[indexPath.section].postsArray[indexPath.row]
+         let date = presenter.posts[indexPath.section].date 
         cell.updateView(post: data, user: presenter.user, date: date)
         return cell
     }
