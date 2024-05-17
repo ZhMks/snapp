@@ -64,11 +64,13 @@ final class PostTableCell: UITableViewCell {
     }()
 
     private lazy var postTextLabel: UILabel = {
-        let postTextView = UILabel()
-        postTextView.numberOfLines = 0
-        postTextView.translatesAutoresizingMaskIntoConstraints = false
-        postTextView.contentMode = .scaleAspectFit
-        return postTextView
+        let postTextLabel = UILabel()
+        postTextLabel.numberOfLines = 0
+        postTextLabel.translatesAutoresizingMaskIntoConstraints = false
+        postTextLabel.setContentCompressionResistancePriority(.required, for: .vertical)
+        postTextLabel.textAlignment = .left
+        postTextLabel.sizeToFit()
+        return postTextLabel
     }()
 
     private lazy var postImage: UIImageView = {
@@ -193,7 +195,7 @@ final class PostTableCell: UITableViewCell {
                         self.postImage.clipsToBounds = true
                         self.postImage.layer.cornerRadius = 30
                     }
-                case .failure(let failure):
+                case .failure(_):
                     return
                 }
             }
@@ -208,7 +210,7 @@ final class PostTableCell: UITableViewCell {
                     self.avatarImageView.clipsToBounds = true
                     self.avatarImageView.layer.cornerRadius = self.avatarImageView.frame.width / 2
                 }
-            case .failure(let failure):
+            case .failure(_):
                 return
             }
         }
@@ -269,7 +271,7 @@ final class PostTableCell: UITableViewCell {
             mainPostView.topAnchor.constraint(equalTo: headerView.bottomAnchor, constant: 5),
             mainPostView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
             mainPostView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
-            mainPostView.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor, constant: -50),
+            mainPostView.heightAnchor.constraint(greaterThanOrEqualToConstant: 380),
 
             verticalView.topAnchor.constraint(equalTo: mainPostView.topAnchor, constant: 5),
             verticalView.leadingAnchor.constraint(equalTo: mainPostView.leadingAnchor, constant: 31),
@@ -279,17 +281,17 @@ final class PostTableCell: UITableViewCell {
             postTextLabel.topAnchor.constraint(equalTo: mainPostView.topAnchor, constant:  5),
             postTextLabel.leadingAnchor.constraint(equalTo: mainPostView.leadingAnchor, constant: 52),
             postTextLabel.trailingAnchor.constraint(equalTo: mainPostView.trailingAnchor, constant: -15),
-            postTextLabel.heightAnchor.constraint(equalToConstant: 100),
+            postTextLabel.heightAnchor.constraint(greaterThanOrEqualToConstant: 100),
 
             postImage.topAnchor.constraint(equalTo: postTextLabel.bottomAnchor, constant: 5),
             postImage.leadingAnchor.constraint(equalTo: mainPostView.leadingAnchor, constant: 52),
             postImage.widthAnchor.constraint(equalToConstant: 300),
-            postImage.bottomAnchor.constraint(equalTo: mainPostView.bottomAnchor, constant: -50),
+            postImage.heightAnchor.constraint(greaterThanOrEqualToConstant: 125),
 
             separatorView.topAnchor.constraint(equalTo: postImage.bottomAnchor, constant: 15),
             separatorView.leadingAnchor.constraint(equalTo: mainPostView.leadingAnchor),
             separatorView.trailingAnchor.constraint(equalTo: mainPostView.trailingAnchor),
-            separatorView.bottomAnchor.constraint(equalTo: mainPostView.bottomAnchor, constant: -34),
+            separatorView.heightAnchor.constraint(equalToConstant: 1),
 
             likesButton.topAnchor.constraint(equalTo: separatorView.bottomAnchor, constant: 10),
             likesButton.leadingAnchor.constraint(equalTo: mainPostView.leadingAnchor, constant: 52),
@@ -319,7 +321,6 @@ final class PostTableCell: UITableViewCell {
             footerView.topAnchor.constraint(equalTo: mainPostView.bottomAnchor),
             footerView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
             footerView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
-            footerView.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor),
 
             leftSeparatorView.topAnchor.constraint(equalTo: footerView.topAnchor, constant: 24),
             leftSeparatorView.leadingAnchor.constraint(equalTo: footerView.leadingAnchor, constant: 18),

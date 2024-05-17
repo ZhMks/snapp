@@ -20,8 +20,32 @@ final class FeedCollectionViewCell: UICollectionViewCell {
         return storieImage
     }()
 
-    func updateCell(image: Data?) {
-        guard let image = image else { return }
-        self.storieImage.image = UIImage(data: image)
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        addSubviews()
+        layout()
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    func addSubviews() {
+        contentView.addSubview(storieImage)
+    }
+
+    func layout() {
+        let safeArea = contentView.safeAreaLayoutGuide
+
+        NSLayoutConstraint.activate([
+            storieImage.topAnchor.constraint(equalTo: safeArea.topAnchor),
+            storieImage.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
+            storieImage.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
+            storieImage.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor)
+        ])
+    }
+
+    func updateCell(image: UIImage) {
+        self.storieImage.image = image
     }
 }

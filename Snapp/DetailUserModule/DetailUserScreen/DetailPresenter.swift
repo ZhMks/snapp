@@ -9,7 +9,7 @@ import UIKit
 import FirebaseAuth
 
 protocol DetailViewProtocol: AnyObject {
-    func updateData(data: [MainPost])
+    func updateData(data: [EachPost])
 
     func updateAvatarImage(image: UIImage)
 
@@ -25,7 +25,7 @@ final class DetailPresenter: DetailPresenterProtocol {
     weak var view: DetailViewProtocol?
     let firestoreService: FireStoreServiceProtocol
     var user: FirebaseUser
-    var posts: [MainPost] = []
+    var posts: [EachPost] = []
     var image: UIImage?
     let userID: String
 
@@ -68,7 +68,7 @@ final class DetailPresenter: DetailPresenterProtocol {
                 case "Ошибка декодирования":
                     return
                 case "Посты отсутстуют":
-                    let data: [MainPost] = []
+                    let data: [EachPost] = []
                     view?.updateData(data: data)
                 default: return
                 }

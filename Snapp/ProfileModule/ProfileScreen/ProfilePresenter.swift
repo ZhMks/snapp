@@ -12,9 +12,10 @@ import FirebaseStorage
 protocol ProfileViewProtocol: AnyObject {
     func showErrorAler(error: String)
     func updateAvatarImage(image: UIImage)
-    func updateData(data: [MainPost])
+    func updateData(data: [EachPost])
     func updateStorie(stories: [UIImage]?)
     func updateAlbum(photo: [UIImage]?)
+    func updateSubsribers()
 }
 
 protocol ProfilePresenterProtocol: AnyObject {
@@ -26,11 +27,11 @@ final class ProfilePresenter: ProfilePresenterProtocol {
     weak var view: ProfileViewProtocol?
     var mainUser: FirebaseUser
     var firestoreService: FireStoreServiceProtocol
-    var posts: [MainPost] = []
+    var posts: [EachPost] = []
     var image: UIImage?
     let userID: String
     var userStories: [UIImage]?
-    var photoAlbum: [UIImage]?
+    var photoAlbum: [UIImage]? = []
 
     init(view: ProfileViewProtocol, mainUser: FirebaseUser, userID: String, firestoreService: FireStoreServiceProtocol) {
         self.view = view
@@ -39,6 +40,7 @@ final class ProfilePresenter: ProfilePresenterProtocol {
         self.userID = userID
         fetchImage()
         fetchPosts()
+        fetchPhotoAlbum()
     }
 
     func fetchImage()  {
@@ -65,8 +67,8 @@ final class ProfilePresenter: ProfilePresenterProtocol {
                 self.posts = success
                 print(self.posts)
                 view?.updateData(data: self.posts)
-            case .failure(let failure):
-                print()
+            case .failure(_):
+                print("Cant fetch posts")
             }
         }
     }
@@ -78,7 +80,7 @@ final class ProfilePresenter: ProfilePresenterProtocol {
         let stringFromDate = dateFormatter.string(from: date)
         let networkService = NetworkService()
 
-        let urlLink = Storage.storage().reference().child("user").child(userID).child("Stories").child(stringFromDate)
+        let urlLink = Storage.storage().reference().child("users").child(userID).child("Stories").child(stringFromDate)
         firestoreService.saveImageIntoStorage(urlLink: urlLink, photo: image) { [weak self] result in
             switch result {
             case .success(let success):
@@ -100,11 +102,13 @@ final class ProfilePresenter: ProfilePresenterProtocol {
 
     func addPhotoToAlbum(image: UIImage) {
         let networkService = NetworkService()
-        let urlLink = Storage.storage().reference().child("user").child(userID).child("PhotoAlbum")
+        let urlLink = Storage.storage().reference().child("users").child(userID).child("PhotoAlbum").child(image.description)
         firestoreService.saveImageIntoStorage(urlLink: urlLink, photo: image) { [weak self] result in
+            guard let self else { return }
             switch result {
-            case .success(let success):
-                networkService.fetchImage(string: success.absoluteString) { [weak self] result in
+            case .success(let url):
+                firestoreService.saveImageIntoPhotoAlbum(image: url.absoluteString, user: userID)
+                networkService.fetchImage(string: url.absoluteString) { [weak self] result in
                     switch result {
                     case .success(let success):
                         guard let albumImage = UIImage(data: success) else { return }
@@ -114,6 +118,41 @@ final class ProfilePresenter: ProfilePresenterProtocol {
                         self?.view?.showErrorAler(error: failure.localizedDescription)
                     }
                 }
+            case .failure(let failure):
+                self.view?.showErrorAler(error: failure.localizedDescription)
+            }
+        }
+    }
+
+    func fetchPhotoAlbum() {
+        self.photoAlbum = []
+        let networkService = NetworkService()
+        let dispatchGroup = DispatchGroup()
+        for link in mainUser.photoAlbum {
+            dispatchGroup.enter()
+            networkService.fetchImage(string: link) { [weak self] result in
+                switch result {
+                case .success(let data):
+                    guard let image = UIImage(data: data) else { return }
+                    self?.photoAlbum?.append(image)
+                case .failure(let failure):
+                    self?.view?.showErrorAler(error: failure.localizedDescription)
+                }
+                dispatchGroup.leave()
+            }
+        }
+        dispatchGroup.notify(queue: .main) { [weak self] in
+            guard let photoAlbum = self?.photoAlbum else { return }
+            self?.view?.updateAlbum(photo: self?.photoAlbum)
+        }
+    }
+
+    func fetchSubsribers() {
+        firestoreService.getUser(id: userID) { [weak self] result in
+            switch result {
+            case .success(let success):
+                self?.mainUser = success
+                self?.view?.updateSubsribers()
             case .failure(let failure):
                 self?.view?.showErrorAler(error: failure.localizedDescription)
             }

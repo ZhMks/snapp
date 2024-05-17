@@ -13,8 +13,8 @@ protocol CreatePostViewProtocol: AnyObject {
 }
 
 protocol CreatePostPresenterProtocol: AnyObject {
-    init(view: CreatePostViewProtocol?, mainUser: FirebaseUser, userID: String, firestoreService: FireStoreServiceProtocol, image: UIImage, posts: [MainPost])
-    func createPost(text: String, image: UIImage?, completion: @escaping (Result<[MainPost]?, Error>) -> Void)
+    init(view: CreatePostViewProtocol?, mainUser: FirebaseUser, userID: String, firestoreService: FireStoreServiceProtocol, image: UIImage, posts: [EachPost])
+    func createPost(text: String, image: UIImage?, completion: @escaping (Result<[EachPost]?, Error>) -> Void)
 }
 
 final class CreatePostPresenter: CreatePostPresenterProtocol {
@@ -24,10 +24,10 @@ final class CreatePostPresenter: CreatePostPresenterProtocol {
     let userID: String
     let firestoreService: FireStoreServiceProtocol
     let image: UIImage
-    var posts: [MainPost]
+    var posts: [EachPost]
 
 
-    init(view: CreatePostViewProtocol?, mainUser: FirebaseUser, userID: String, firestoreService: any FireStoreServiceProtocol, image: UIImage, posts: [MainPost]) {
+    init(view: CreatePostViewProtocol?, mainUser: FirebaseUser, userID: String, firestoreService: any FireStoreServiceProtocol, image: UIImage, posts: [EachPost]) {
         self.mainUser = mainUser
         self.view = view
         self.userID = userID
@@ -36,7 +36,7 @@ final class CreatePostPresenter: CreatePostPresenterProtocol {
         self.posts = posts
     }
 
-    func createPost(text: String, image: UIImage?, completion: @escaping (Result<[MainPost]?, Error>) -> Void) {
+    func createPost(text: String, image: UIImage?, completion: @escaping (Result<[EachPost]?, Error>) -> Void) {
         let date = Date()
         let formatter = DateFormatter()
         formatter.dateFormat = "dd-MM-yyyy"
@@ -49,20 +49,10 @@ final class CreatePostPresenter: CreatePostPresenterProtocol {
                 let eachPost = EachPost(text: firestorePost.text,
                                         image: firestorePost.image,
                                         likes: firestorePost.likes,
-                                        views: firestorePost.views)
-                if posts.isEmpty {
-                    var mainPost = MainPost(date: stringFromDate, postsArray: [])
-                    mainPost.postsArray.append(eachPost)
-                    posts.append(mainPost)
-                    completion(.success(posts))
-                } else {
-                    for var post in posts {
-                        if post.date == stringFromDate {
-                            post.postsArray.append(eachPost)
-                            completion(.success(posts))
-                        }
-                    }
-                }
+                                        views: firestorePost.views,
+                                        date: firestorePost.date)
+                posts.append(eachPost)
+                completion(.success(posts))
             case .failure(let error):
                 view?.showErrorAlert(error: error.localizedDescription)
             }

@@ -56,6 +56,11 @@ final class FeedViewController: UIViewController {
 
     // MARK: -LIFECYCLE
 
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        presenter.getUsers()
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
@@ -75,11 +80,18 @@ final class FeedViewController: UIViewController {
         self.feedTableView.reloadData()
     }
 
+    func tuneNavItem() {
+        self.navigationItem.title = .localized(string: "Главная")
+    }
 
 }
 
 // MARK: -OUTPUT PRESENTER
 extension FeedViewController: FeedViewProtocol {
+    func updateViewTable() {
+        self.feedTableView.reloadData()
+    }
+    
     func showEmptyScreen() {
         print("SHOWFEEDEMPTYSCREEN")
     }
@@ -129,14 +141,15 @@ extension FeedViewController: UICollectionViewDelegateFlowLayout {
 extension FeedViewController: UICollectionViewDataSource {
 
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        guard let number = presenter.posts?.count else { return 0 }
+        guard let number = presenter.userStories?.count else { return 0 }
         return number
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: FeedCollectionViewCell.identifier, for: indexPath) as? FeedCollectionViewCell else { return UICollectionViewCell() }
         cell.backgroundColor = .blue
-        guard let data = presenter.posts?[indexPath.section] else { return  UICollectionViewCell() }
+        guard let data = presenter.userStories?[indexPath.row] else { return  UICollectionViewCell() }
+        cell.updateCell(image: data)
         return cell
     }
 }
@@ -144,19 +157,33 @@ extension FeedViewController: UICollectionViewDataSource {
 // MARK: -TABLEVIEWDELEGATE
 extension FeedViewController: UITableViewDelegate {
 
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+//        let detailPostVC = DetailPostViewController()
+//        guard let data = presenter.posts?[indexPath.row] else { return }
+//        guard let user = presenter.subscribers?[indexPath.row] else { return }
+//        guard let image = presenter.mainUser.image else { return }
+//        let detailPostPresenter = DetailPostPresenter(view: detailPostVC, user: user, post: data, image: image)
+//        detailPostVC.presenter = detailPostPresenter
+//        self.navigationController?.pushViewController(detailPostVC, animated: true)
+    }
+
 }
 
 // MARK: -TABLEVIEWDATASOURCE
 extension FeedViewController: UITableViewDataSource {
+
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        presenter.user.subscribers.count
+        guard let number = presenter.posts?.count else { return 0 }
+        print("Number of Rows: \(number)")
+        return number
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: PostTableCell.identifier, for: indexPath) as? PostTableCell else { return UITableViewCell() }
-        guard let data = presenter.posts?[indexPath.section][indexPath.row].postsArray[indexPath.row] else { return UITableViewCell() }
-        guard let date = presenter.posts?[indexPath.section][indexPath.row].date else { return UITableViewCell() }
-        cell.backgroundColor = .systemYellow
+        guard let eachPost = presenter.posts?[indexPath.row] else { return UITableViewCell() }
+        guard let date = presenter.posts?[indexPath.row].date else { return UITableViewCell() }
+        guard let user = presenter.subscribers?[indexPath.section] else { return UITableViewCell() }
+        cell.updateView(post: eachPost, user: user, date: date)
         return cell
     }
 

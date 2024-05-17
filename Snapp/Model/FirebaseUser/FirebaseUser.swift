@@ -20,15 +20,13 @@ struct FirebaseUser: Codable {
     var subscribtions: [String]
     var stories: [String]
     var image: String
+    var photoAlbum: [String]
 }
 
-struct MainPost: Codable {
-    var date: String
-    var postsArray: [EachPost]
-}
 struct EachPost: Codable {
     var text: String
     var image: String?
     var likes: Int
     var views: Int
+    var date: String
 }

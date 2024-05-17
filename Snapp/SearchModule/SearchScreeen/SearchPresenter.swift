@@ -39,9 +39,15 @@ final class SearchPresenter: SearchPresenterProtocol {
             switch result {
             case .success(let firebaseUserArray):
                 dispatchGroup.enter()
-                for user in firebaseUserArray {
-                    if user.documentID! != currentUser?.uid {
-                        usersArray.append(user)
+                for firebaseUser in firebaseUserArray {
+                    if usersArray.isEmpty {
+                        if firebaseUser.documentID! != (currentUser?.uid)! {
+                            usersArray.append(firebaseUser)
+                        }
+                    } else if usersArray.contains(where: { $0.documentID == firebaseUser.documentID! }) {
+                        return
+                    } else {
+                        usersArray.append(firebaseUser)
                     }
                 }
                 dispatchGroup.leave()

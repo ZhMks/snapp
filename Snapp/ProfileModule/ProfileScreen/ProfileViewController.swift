@@ -67,7 +67,7 @@ class ProfileViewController: UIViewController {
     private lazy var numberOfPosts: UILabel = {
         let numberOfPosts = UILabel()
         numberOfPosts.font = UIFont(name: "Inter-Medium", size: 14)
-        numberOfPosts.text = "1400\nПубликаций"
+        numberOfPosts.text = "\(presenter.posts.count)\nПубликаций"
         numberOfPosts.textAlignment = .center
         numberOfPosts.numberOfLines = 0
         numberOfPosts.translatesAutoresizingMaskIntoConstraints = false
@@ -78,7 +78,7 @@ class ProfileViewController: UIViewController {
     private lazy var numberOfSubscriptions: UILabel = {
         let numberOfSubscriptions = UILabel()
         numberOfSubscriptions.font = UIFont(name: "Inter-Medium", size: 14)
-        numberOfSubscriptions.text = "258\nПодписок"
+        numberOfSubscriptions.text = "\(presenter.mainUser.subscribtions.count)\nПодписок"
         numberOfSubscriptions.textAlignment = .center
         numberOfSubscriptions.numberOfLines = 0
         numberOfSubscriptions.translatesAutoresizingMaskIntoConstraints = false
@@ -88,7 +88,7 @@ class ProfileViewController: UIViewController {
     private lazy var numberOfSubscribers: UILabel = {
         let numberOfSubscribers = UILabel()
         numberOfSubscribers.font = UIFont(name: "Inter-Medium", size: 14)
-        numberOfSubscribers.text = "650\nПодписчиков"
+        numberOfSubscribers.text = "\(presenter.mainUser.subscribers.count)\nПодписчиков"
         numberOfSubscribers.textAlignment = .center
         numberOfSubscribers.numberOfLines = 0
         numberOfSubscribers.translatesAutoresizingMaskIntoConstraints = false
@@ -138,6 +138,7 @@ class ProfileViewController: UIViewController {
         createStorieButton.setBackgroundImage(UIImage(systemName: "camera"), for: .normal)
         createStorieButton.translatesAutoresizingMaskIntoConstraints = false
         createStorieButton.tintColor = ColorCreator.shared.createButtonColor()
+        createStorieButton.addTarget(self, action: #selector(createStorieButtonTapped), for: .touchUpInside)
         return createStorieButton
     }()
 
@@ -151,28 +152,29 @@ class ProfileViewController: UIViewController {
         return createStorieLabel
     }()
 
-    private lazy var addPhotoView: UIView = {
-        let addPhotoView = UIView()
-        addPhotoView.translatesAutoresizingMaskIntoConstraints = false
-        return addPhotoView
+    private lazy var addImageView: UIView = {
+        let addImageView = UIView()
+        addImageView.translatesAutoresizingMaskIntoConstraints = false
+        return addImageView
     }()
 
-    private lazy var addPhotoButton: UIButton = {
-        let addPhotoButton = UIButton(type: .system)
-        addPhotoButton.setBackgroundImage(UIImage(systemName: "photo"), for: .normal)
-        addPhotoButton.translatesAutoresizingMaskIntoConstraints = false
-        addPhotoButton.tintColor = ColorCreator.shared.createButtonColor()
-        return addPhotoButton
+    private lazy var addImageButton: UIButton = {
+        let addImageButton = UIButton(type: .system)
+        addImageButton.setBackgroundImage(UIImage(systemName: "photo"), for: .normal)
+        addImageButton.translatesAutoresizingMaskIntoConstraints = false
+        addImageButton.tintColor = ColorCreator.shared.createButtonColor()
+        addImageButton.addTarget(self, action: #selector(addImageButtonTapped), for: .touchUpInside)
+        return addImageButton
     }()
 
-    private lazy var addPhotoLabel: UILabel = {
-        let addPhotoLabel = UILabel()
-        addPhotoLabel.text = .localized(string: "Фото")
-        addPhotoLabel.textColor = ColorCreator.shared.createTextColor()
-        addPhotoLabel.font = UIFont(name: "Inter-Light", size: 14)
-        addPhotoLabel.translatesAutoresizingMaskIntoConstraints = false
-        addPhotoLabel.textAlignment = .center
-        return addPhotoLabel
+    private lazy var addImageLabel: UILabel = {
+        let addImageLabel = UILabel()
+        addImageLabel.text = .localized(string: "Фото")
+        addImageLabel.textColor = ColorCreator.shared.createTextColor()
+        addImageLabel.font = UIFont(name: "Inter-Light", size: 14)
+        addImageLabel.translatesAutoresizingMaskIntoConstraints = false
+        addImageLabel.textAlignment = .center
+        return addImageLabel
     }()
 
     private lazy var photogalleryLabel: UILabel = {
@@ -194,9 +196,14 @@ class ProfileViewController: UIViewController {
 
     private lazy var photoCollectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
-        let photoScrollView = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        photoScrollView.translatesAutoresizingMaskIntoConstraints = false
-        return photoScrollView
+        let photoCollectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        photoCollectionView.translatesAutoresizingMaskIntoConstraints = false
+        photoCollectionView.register(ProfileCollectionViewCell.self, forCellWithReuseIdentifier: ProfileCollectionViewCell.identifier)
+        photoCollectionView.dataSource = self
+        photoCollectionView.delegate = self
+        layout.scrollDirection = .horizontal
+        layout.minimumInteritemSpacing = 5
+        return photoCollectionView
     }()
 
     private lazy var viewForTableTitle: UIView = {
@@ -243,7 +250,9 @@ class ProfileViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         NotificationCenter.default.addObserver(self, selector: #selector(fetchPostsIfNeeded), name: Notification.Name("newPost"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(fetchPostsIfNeeded), name: Notification.Name("subscriberAdded"), object: nil)
     }
+
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
@@ -278,23 +287,48 @@ class ProfileViewController: UIViewController {
     @objc func fetchPostsIfNeeded() {
         presenter.fetchPosts()
     }
+
+    @objc func createStorieButtonTapped() {
+
+    }
+
+    @objc func subscriberAdded() {
+        presenter.fetchSubsribers()
+    }
+
+    @objc func addImageButtonTapped() {
+        let imagePicker = UIImagePickerController()
+        imagePicker.sourceType = .photoLibrary
+        imagePicker.delegate = self
+        self.present(imagePicker, animated: true)
+    }
 }
 
 // MARK: -OUTPUT PRESENTER
 extension ProfileViewController: ProfileViewProtocol {
+
+    func updateSubsribers() {
+        numberOfSubscriptions.text = .localized(string: "\(presenter.mainUser.subscribtions)"+"\nПодписок")
+    }
+    
 
     func updateStorie(stories: [UIImage]?) {
         print()
     }
     
     func updateAlbum(photo: [UIImage]?) {
-        print()
+        DispatchQueue.main.async { [weak self] in
+            guard let self else { return }
+            photogalleryLabel.text = .localized(string: "Фотографии" + "  \(presenter.mainUser.stories.count)")
+            photoCollectionView.reloadData()
+        }
     }
     
 
-    func updateData(data: [MainPost]) {
+    func updateData(data: [EachPost]) {
         DispatchQueue.main.async { [weak self] in
             guard let self else { return }
+            numberOfPosts.text = .localized(string: "\(presenter.posts.count)"+"\nПостов")
             self.tuneTableView()
         }
     }
@@ -310,7 +344,7 @@ extension ProfileViewController: ProfileViewProtocol {
     }
 
     func showErrorAler(error: String) {
-        print("ThisISERRORALERTINPROFILE")
+        print("\(error)")
     }
 }
 
@@ -319,18 +353,14 @@ extension ProfileViewController: ProfileViewProtocol {
 
 extension ProfileViewController: UITableViewDataSource {
 
-    func numberOfSections(in tableView: UITableView) -> Int {
-        presenter.posts.count
-    }
-
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        presenter.posts[section].postsArray.count
+      return  presenter.posts.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: PostTableCell.identifier, for: indexPath) as? PostTableCell else { return UITableViewCell() }
-        let data = presenter.posts[indexPath.section].postsArray[indexPath.row]
-        let date = presenter.posts[indexPath.section].date
+        let data = presenter.posts[indexPath.row]
+        let date = presenter.posts[indexPath.row].date
         cell.updateView(post: data, user: presenter.mainUser, date: date)
         return cell
     }
@@ -343,6 +373,56 @@ extension ProfileViewController: UITableViewDataSource {
 
 extension ProfileViewController: UITableViewDelegate {
 
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let data = presenter.posts[indexPath.row]
+        let detailPostVC = DetailPostViewController()
+        guard let image = presenter.image  else { return }
+        let detailPostPresenter = DetailPostPresenter(view: detailPostVC, user: presenter.mainUser, post: data, image: image)
+        detailPostVC.presenter = detailPostPresenter
+        self.navigationController?.pushViewController(detailPostVC, animated: true)
+    }
+
+}
+
+// MARK: -COLLECTIONVIEWDATASOURCE
+extension ProfileViewController: UICollectionViewDataSource {
+
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        CGSize(width: 72, height: 68)
+    }
+
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        guard let number = presenter.photoAlbum?.count else { return 0 }
+        return number
+    }
+
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ProfileCollectionViewCell.identifier, for: indexPath) as? ProfileCollectionViewCell else { return UICollectionViewCell() }
+        guard let data = presenter.photoAlbum?[indexPath.row] else { return UICollectionViewCell() }
+        cell.updateView(image: data)
+        return cell
+    }
+    
+
+}
+
+// MARK: -COLLECTIONVIEWDELEGATE
+extension ProfileViewController: UICollectionViewDelegateFlowLayout {
+
+}
+
+// MARK: -IMAGEPICKERDELEGATE
+extension ProfileViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+
+        guard let image = info[.originalImage] as? UIImage else { return }
+
+        presenter.addPhotoToAlbum(image: image)
+
+        NotificationCenter.default.post(name: Notification.Name("imageIsSelected"), object: nil)
+        self.dismiss(animated: true)
+    }
 }
 
 // MARK: -LAYOUT
@@ -383,9 +463,9 @@ extension ProfileViewController {
         mainContentView.addSubview(createStorieView)
         createStorieView.addSubview(createStorieButton)
         createStorieView.addSubview(createStorieLabel)
-        mainContentView.addSubview(addPhotoView)
-        addPhotoView.addSubview(addPhotoButton)
-        addPhotoView.addSubview(addPhotoLabel)
+        mainContentView.addSubview(addImageView)
+        addImageView.addSubview(addImageButton)
+        addImageView.addSubview(addImageLabel)
         mainContentView.addSubview(photogalleryLabel)
         mainContentView.addSubview(photogalleryButton)
         mainContentView.addSubview(photoCollectionView)
@@ -489,27 +569,27 @@ extension ProfileViewController {
             createStorieLabel.trailingAnchor.constraint(equalTo: createStorieView.trailingAnchor),
             createStorieLabel.bottomAnchor.constraint(equalTo: createStorieView.bottomAnchor),
 
-            addPhotoView.topAnchor.constraint(equalTo: separatorView.bottomAnchor, constant: 5),
-            addPhotoView.leadingAnchor.constraint(equalTo: mainContentView.leadingAnchor, constant: 273),
-            addPhotoView.trailingAnchor.constraint(equalTo: mainContentView.trailingAnchor, constant: -50),
-            addPhotoView.bottomAnchor.constraint(equalTo: mainContentView.bottomAnchor, constant: -150),
+            addImageView.topAnchor.constraint(equalTo: separatorView.bottomAnchor, constant: 5),
+            addImageView.leadingAnchor.constraint(equalTo: mainContentView.leadingAnchor, constant: 273),
+            addImageView.trailingAnchor.constraint(equalTo: mainContentView.trailingAnchor, constant: -50),
+            addImageView.bottomAnchor.constraint(equalTo: mainContentView.bottomAnchor, constant: -150),
 
-            addPhotoButton.topAnchor.constraint(equalTo: addPhotoView.topAnchor, constant: 25),
-            addPhotoButton.leadingAnchor.constraint(equalTo: addPhotoView.leadingAnchor, constant: 20),
-            addPhotoButton.trailingAnchor.constraint(equalTo: addPhotoView.trailingAnchor, constant: -20),
-            addPhotoButton.bottomAnchor.constraint(equalTo: addPhotoView.bottomAnchor, constant: -25),
+            addImageButton.topAnchor.constraint(equalTo: addImageView.topAnchor, constant: 25),
+            addImageButton.leadingAnchor.constraint(equalTo: addImageView.leadingAnchor, constant: 20),
+            addImageButton.trailingAnchor.constraint(equalTo: addImageView.trailingAnchor, constant: -20),
+            addImageButton.bottomAnchor.constraint(equalTo: addImageView.bottomAnchor, constant: -25),
 
-            addPhotoLabel.topAnchor.constraint(equalTo: addPhotoButton.bottomAnchor, constant: 4),
-            addPhotoLabel.leadingAnchor.constraint(equalTo: addPhotoView.leadingAnchor),
-            addPhotoLabel.trailingAnchor.constraint(equalTo: addPhotoView.trailingAnchor),
-            addPhotoLabel.bottomAnchor.constraint(equalTo: addPhotoView.bottomAnchor),
+            addImageLabel.topAnchor.constraint(equalTo: addImageButton.bottomAnchor, constant: 4),
+            addImageLabel.leadingAnchor.constraint(equalTo: addImageView.leadingAnchor),
+            addImageLabel.trailingAnchor.constraint(equalTo: addImageView.trailingAnchor),
+            addImageLabel.bottomAnchor.constraint(equalTo: addImageView.bottomAnchor),
 
             photogalleryLabel.topAnchor.constraint(equalTo: createPostView.bottomAnchor, constant: 22),
             photogalleryLabel.leadingAnchor.constraint(equalTo: mainContentView.leadingAnchor, constant: 16),
             photogalleryLabel.trailingAnchor.constraint(equalTo: mainContentView.trailingAnchor, constant: -216),
             photogalleryLabel.bottomAnchor.constraint(equalTo: mainContentView.bottomAnchor, constant: -100),
 
-            photogalleryButton.topAnchor.constraint(equalTo: addPhotoView.bottomAnchor, constant: 25),
+            photogalleryButton.topAnchor.constraint(equalTo: addImageView.bottomAnchor, constant: 25),
             photogalleryButton.leadingAnchor.constraint(equalTo: mainContentView.leadingAnchor, constant: 345),
             photogalleryButton.trailingAnchor.constraint(equalTo: mainContentView.trailingAnchor, constant: -20),
             photogalleryButton.bottomAnchor.constraint(equalTo: mainContentView.bottomAnchor, constant: -100),
@@ -519,10 +599,10 @@ extension ProfileViewController {
             photoCollectionView.trailingAnchor.constraint(equalTo: mainContentView.trailingAnchor),
             photoCollectionView.bottomAnchor.constraint(equalTo: mainContentView.bottomAnchor, constant: -25),
 
-            viewForTableTitle.topAnchor.constraint(equalTo: photoCollectionView.bottomAnchor),
+            viewForTableTitle.topAnchor.constraint(equalTo: photoCollectionView.bottomAnchor, constant: 10),
             viewForTableTitle.leadingAnchor.constraint(equalTo: mainContentView.leadingAnchor),
             viewForTableTitle.trailingAnchor.constraint(equalTo: mainContentView.trailingAnchor),
-            viewForTableTitle.bottomAnchor.constraint(equalTo: mainContentView.bottomAnchor),
+            viewForTableTitle.heightAnchor.constraint(greaterThanOrEqualToConstant: 40),
 
             tableViewTitle.topAnchor.constraint(equalTo: viewForTableTitle.topAnchor, constant: 5),
             tableViewTitle.leadingAnchor.constraint(equalTo: viewForTableTitle.leadingAnchor, constant: 16),

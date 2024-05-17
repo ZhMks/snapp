@@ -13,6 +13,13 @@ class DetailUserViewController: UIViewController {
 
     var presenter: DetailPresenter!
 
+    private lazy var topSeparatorView: UIView = {
+        let topSeparatorView = UIView()
+        topSeparatorView.translatesAutoresizingMaskIntoConstraints = false
+        topSeparatorView.backgroundColor = .systemGray2
+        return topSeparatorView
+    }()
+
     private lazy var avatarImageView: UIImageView = {
         let avatarImageView = UIImageView()
         avatarImageView.clipsToBounds = true
@@ -72,7 +79,7 @@ class DetailUserViewController: UIViewController {
         sendMessageButton.translatesAutoresizingMaskIntoConstraints = false
         sendMessageButton.titleLabel?.font = UIFont(name: "Inter-Medium", size: 16)
         sendMessageButton.setTitleColor(.white, for: .normal)
-        sendMessageButton.setTitle(.localized(string: "Подписаться"), for: .normal)
+        sendMessageButton.setTitle(.localized(string: "Сообщение"), for: .normal)
         sendMessageButton.backgroundColor = ColorCreator.shared.createButtonColor()
         sendMessageButton.layer.cornerRadius = 10.0
         return sendMessageButton
@@ -205,6 +212,7 @@ class DetailUserViewController: UIViewController {
 
     @objc func addToSubscribers() {
         presenter.addSubscriber()
+        NotificationCenter.default.post(name: Notification.Name("subscriberAdded"), object: nil)
     }
 
 }
@@ -212,7 +220,7 @@ class DetailUserViewController: UIViewController {
 // MARK: -OUTPUT PRESENTER
 extension DetailUserViewController: DetailViewProtocol {
 
-    func updateData(data: [MainPost]) {
+    func updateData(data: [EachPost]) {
         DispatchQueue.main.async { [weak self] in
             guard let self else { return }
             self.tuneTableView()
@@ -239,18 +247,14 @@ extension DetailUserViewController: DetailViewProtocol {
 
 extension DetailUserViewController: UITableViewDataSource {
 
-    func numberOfSections(in tableView: UITableView) -> Int {
-        presenter.posts.count
-    }
-
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-       presenter.posts[section].postsArray.count
+       presenter.posts.count
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: PostTableCell.identifier, for: indexPath) as? PostTableCell else { return UITableViewCell() }
-         let data = presenter.posts[indexPath.section].postsArray[indexPath.row]
-         let date = presenter.posts[indexPath.section].date 
+         let data = presenter.posts[indexPath.row]
+         let date = presenter.posts[indexPath.row].date 
         cell.updateView(post: data, user: presenter.user, date: date)
         return cell
     }
@@ -287,6 +291,7 @@ extension DetailUserViewController {
     func addSubviews() {
         view.addSubview(postsTableView)
 
+        mainContentView.addSubview(topSeparatorView)
         mainContentView.addSubview(avatarImageView)
         mainContentView.addSubview(nameAndSurnameLabel)
         mainContentView.addSubview(jobLabel)
@@ -319,11 +324,16 @@ extension DetailUserViewController {
         ])
 
         NSLayoutConstraint.activate([
-            avatarImageView.topAnchor.constraint(equalTo: mainContentView.topAnchor, constant: 25),
+
+            topSeparatorView.topAnchor.constraint(equalTo: mainContentView.topAnchor),
+            topSeparatorView.leadingAnchor.constraint(equalTo: mainContentView.leadingAnchor),
+            topSeparatorView.trailingAnchor.constraint(equalTo: mainContentView.trailingAnchor),
+            topSeparatorView.heightAnchor.constraint(greaterThanOrEqualToConstant: 1),
+
+            avatarImageView.topAnchor.constraint(equalTo: topSeparatorView.bottomAnchor, constant: 15),
             avatarImageView.leadingAnchor.constraint(equalTo: mainContentView.leadingAnchor, constant: 24),
             avatarImageView.heightAnchor.constraint(equalToConstant: 69),
             avatarImageView.widthAnchor.constraint(equalToConstant: 69),
-            avatarImageView.bottomAnchor.constraint(equalTo: mainContentView.bottomAnchor, constant: -420),
 
             nameAndSurnameLabel.topAnchor.constraint(equalTo: mainContentView.topAnchor, constant: 20),
             nameAndSurnameLabel.leadingAnchor.constraint(equalTo: avatarImageView.trailingAnchor, constant: 15),
@@ -342,7 +352,6 @@ extension DetailUserViewController {
 
             signalImage.topAnchor.constraint(equalTo: jobLabel.bottomAnchor, constant: 5),
             signalImage.leadingAnchor.constraint(equalTo: mainContentView.leadingAnchor, constant: 96),
-            signalImage.bottomAnchor.constraint(equalTo: mainContentView.bottomAnchor, constant: -380),
             signalImage.heightAnchor.constraint(equalToConstant: 20),
             signalImage.widthAnchor.constraint(equalToConstant: 20),
 
@@ -379,7 +388,7 @@ extension DetailUserViewController {
             photogalleryLabel.topAnchor.constraint(equalTo: separatorView.bottomAnchor, constant: 22),
             photogalleryLabel.leadingAnchor.constraint(equalTo: mainContentView.leadingAnchor, constant: 16),
             photogalleryLabel.trailingAnchor.constraint(equalTo: mainContentView.trailingAnchor, constant: -216),
-            photogalleryLabel.bottomAnchor.constraint(equalTo: mainContentView.bottomAnchor, constant: -100),
+            photogalleryLabel.bottomAnchor.constraint(equalTo: mainContentView.bottomAnchor, constant: -210),
 
             photogalleryButton.topAnchor.constraint(equalTo: separatorView.bottomAnchor, constant: 25),
             photogalleryButton.leadingAnchor.constraint(equalTo: mainContentView.leadingAnchor, constant: 345),
@@ -389,7 +398,7 @@ extension DetailUserViewController {
             photoCollectionView.topAnchor.constraint(equalTo: photogalleryLabel.bottomAnchor, constant: 12),
             photoCollectionView.leadingAnchor.constraint(equalTo: mainContentView.leadingAnchor, constant: 16),
             photoCollectionView.trailingAnchor.constraint(equalTo: mainContentView.trailingAnchor),
-            photoCollectionView.bottomAnchor.constraint(equalTo: mainContentView.bottomAnchor, constant: -25),
+            photoCollectionView.bottomAnchor.constraint(equalTo: mainContentView.bottomAnchor, constant: -60),
 
             viewForTableTitle.topAnchor.constraint(equalTo: photoCollectionView.bottomAnchor),
             viewForTableTitle.leadingAnchor.constraint(equalTo: mainContentView.leadingAnchor),
