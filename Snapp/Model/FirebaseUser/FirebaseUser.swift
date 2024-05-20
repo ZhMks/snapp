@@ -10,6 +10,14 @@ import FirebaseAuth
 import UIKit
 import FirebaseFirestore
 
+
+protocol CommentOrAnswer: Codable, Hashable {
+    var text: String { get set }
+    var commentor: String { get set }
+    var date: String { get set }
+    var likes: Int { get set }
+}
+
 struct FirebaseUser: Codable {
     @DocumentID var documentID: String?
     var name: String
@@ -24,9 +32,27 @@ struct FirebaseUser: Codable {
 }
 
 struct EachPost: Codable {
+    @DocumentID var documentID: String?
     var text: String
     var image: String?
     var likes: Int
-    var views: Int
+    var commentaries: Int
     var date: String
+}
+
+struct Comment: CommentOrAnswer {
+    @DocumentID var documentID: String?
+    var text: String
+    var commentor: String
+    var date: String
+    var likes: Int
+}
+
+
+struct Answer: CommentOrAnswer {
+    @DocumentID var documentID: String?
+    var text: String
+    var commentor: String
+    var date: String
+    var likes: Int
 }

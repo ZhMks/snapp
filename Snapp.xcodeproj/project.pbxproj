@@ -82,6 +82,12 @@
 		B26804B52BE6229600DE74A4 /* ExtensionTableVIew.swift in Sources */ = {isa = PBXBuildFile; fileRef = B26804B42BE6229600DE74A4 /* ExtensionTableVIew.swift */; };
 		B26804C42BEE148600DE74A4 /* CreatePostPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B26804C32BEE148600DE74A4 /* CreatePostPresenter.swift */; };
 		B26804C62BEE149300DE74A4 /* CreatePostViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B26804C52BEE149300DE74A4 /* CreatePostViewController.swift */; };
+		B27E1C692BF8A24800E1DEF9 /* CommentViewPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B27E1C682BF8A24800E1DEF9 /* CommentViewPresenter.swift */; };
+		B27E1C6B2BF8A25A00E1DEF9 /* CommentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B27E1C6A2BF8A25A00E1DEF9 /* CommentViewController.swift */; };
+		B27E1C6E2BFB4D3A00E1DEF9 /* MenuForPostView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B27E1C6D2BFB4D3A00E1DEF9 /* MenuForPostView.swift */; };
+		B27E1C702BFB4D4400E1DEF9 /* MenuForPostPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B27E1C6F2BFB4D4400E1DEF9 /* MenuForPostPresenter.swift */; };
+		B27E1C732BFB940A00E1DEF9 /* PhotoalbumPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B27E1C722BFB940900E1DEF9 /* PhotoalbumPresenter.swift */; };
+		B27E1C752BFB942000E1DEF9 /* PhotoalbumViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B27E1C742BFB942000E1DEF9 /* PhotoalbumViewController.swift */; };
 		B29D0AD72BCEB17B00101029 /* NetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B29D0AD62BCEB17B00101029 /* NetworkService.swift */; };
 		B29D0ADF2BD63AD000101029 /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B29D0ADE2BD63AD000101029 /* SearchViewController.swift */; };
 		B29D0AE12BD63AE200101029 /* SearchPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B29D0AE02BD63AE200101029 /* SearchPresenter.swift */; };
@@ -165,6 +171,12 @@
 		B26804B42BE6229600DE74A4 /* ExtensionTableVIew.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionTableVIew.swift; sourceTree = "<group>"; };
 		B26804C32BEE148600DE74A4 /* CreatePostPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreatePostPresenter.swift; sourceTree = "<group>"; };
 		B26804C52BEE149300DE74A4 /* CreatePostViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreatePostViewController.swift; sourceTree = "<group>"; };
+		B27E1C682BF8A24800E1DEF9 /* CommentViewPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentViewPresenter.swift; sourceTree = "<group>"; };
+		B27E1C6A2BF8A25A00E1DEF9 /* CommentViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentViewController.swift; sourceTree = "<group>"; };
+		B27E1C6D2BFB4D3A00E1DEF9 /* MenuForPostView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuForPostView.swift; sourceTree = "<group>"; };
+		B27E1C6F2BFB4D4400E1DEF9 /* MenuForPostPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuForPostPresenter.swift; sourceTree = "<group>"; };
+		B27E1C722BFB940900E1DEF9 /* PhotoalbumPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoalbumPresenter.swift; sourceTree = "<group>"; };
+		B27E1C742BFB942000E1DEF9 /* PhotoalbumViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoalbumViewController.swift; sourceTree = "<group>"; };
 		B29D0AD62BCEB17B00101029 /* NetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkService.swift; sourceTree = "<group>"; };
 		B29D0ADE2BD63AD000101029 /* SearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewController.swift; sourceTree = "<group>"; };
 		B29D0AE02BD63AE200101029 /* SearchPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchPresenter.swift; sourceTree = "<group>"; };
@@ -278,6 +290,7 @@
 		B209E61C2BC3FC0D0067D751 /* ProfileModule */ = {
 			isa = PBXGroup;
 			children = (
+				B27E1C712BFB93EF00E1DEF9 /* PhotoalbumScreen */,
 				B26804C22BEE147700DE74A4 /* CreatePostScreen */,
 				B209E61D2BC3FC180067D751 /* ProfileScreen */,
 			);
@@ -287,6 +300,7 @@
 		B209E61D2BC3FC180067D751 /* ProfileScreen */ = {
 			isa = PBXGroup;
 			children = (
+				B27E1C6C2BFB4D1D00E1DEF9 /* MenuForPost */,
 				B2E51C6F2BF387FB00DE6102 /* DetailPostScreen */,
 				B26804B02BE4E62500DE74A4 /* PostTableCell */,
 				B209E61E2BC3FC280067D751 /* ProfileViewController.swift */,
@@ -572,6 +586,33 @@
 			path = CreatePostScreen;
 			sourceTree = "<group>";
 		};
+		B27E1C672BF8A23800E1DEF9 /* CommentsScreen */ = {
+			isa = PBXGroup;
+			children = (
+				B27E1C682BF8A24800E1DEF9 /* CommentViewPresenter.swift */,
+				B27E1C6A2BF8A25A00E1DEF9 /* CommentViewController.swift */,
+			);
+			path = CommentsScreen;
+			sourceTree = "<group>";
+		};
+		B27E1C6C2BFB4D1D00E1DEF9 /* MenuForPost */ = {
+			isa = PBXGroup;
+			children = (
+				B27E1C6D2BFB4D3A00E1DEF9 /* MenuForPostView.swift */,
+				B27E1C6F2BFB4D4400E1DEF9 /* MenuForPostPresenter.swift */,
+			);
+			path = MenuForPost;
+			sourceTree = "<group>";
+		};
+		B27E1C712BFB93EF00E1DEF9 /* PhotoalbumScreen */ = {
+			isa = PBXGroup;
+			children = (
+				B27E1C722BFB940900E1DEF9 /* PhotoalbumPresenter.swift */,
+				B27E1C742BFB942000E1DEF9 /* PhotoalbumViewController.swift */,
+			);
+			path = PhotoalbumScreen;
+			sourceTree = "<group>";
+		};
 		B29D0AD52BCEB16C00101029 /* NetworkService */ = {
 			isa = PBXGroup;
 			children = (
@@ -626,6 +667,7 @@
 		B2E51C6F2BF387FB00DE6102 /* DetailPostScreen */ = {
 			isa = PBXGroup;
 			children = (
+				B27E1C672BF8A23800E1DEF9 /* CommentsScreen */,
 				B2E51C742BF38CB400DE6102 /* CommentsCell */,
 				B2E51C702BF3880E00DE6102 /* DetailPostViewController.swift */,
 				B2E51C722BF3881900DE6102 /* DetailPostPresenter.swift */,
@@ -819,7 +861,9 @@
 				B29D0AE12BD63AE200101029 /* SearchPresenter.swift in Sources */,
 				B29D0AD72BCEB17B00101029 /* NetworkService.swift in Sources */,
 				B211C2672BBC2EF700C073EE /* SecondOnboardingVC.swift in Sources */,
+				B27E1C752BFB942000E1DEF9 /* PhotoalbumViewController.swift in Sources */,
 				B209E6512BC95E930067D751 /* SignInViewController.swift in Sources */,
+				B27E1C702BFB4D4400E1DEF9 /* MenuForPostPresenter.swift in Sources */,
 				B26804B22BE4E63700DE74A4 /* PostTableCell.swift in Sources */,
 				B209E64F2BC95E850067D751 /* SignInPresenter.swift in Sources */,
 				B211C1E82BBB3C2900C073EE /* AppDelegate.swift in Sources */,
@@ -831,12 +875,15 @@
 				B211C1EA2BBB3C2900C073EE /* SceneDelegate.swift in Sources */,
 				B209E6142BBFD6DA0067D751 /* FireStoreService.swift in Sources */,
 				B209E62B2BC3FDDB0067D751 /* SettingsViewController.swift in Sources */,
+				B27E1C6B2BF8A25A00E1DEF9 /* CommentViewController.swift in Sources */,
+				B27E1C732BFB940A00E1DEF9 /* PhotoalbumPresenter.swift in Sources */,
 				B211C2692BBC2F0200C073EE /* SecondOnboardingPresenter.swift in Sources */,
 				B211C2832BBD48EA00C073EE /* FireBaseAuthService.swift in Sources */,
 				B211C2802BBD3B2F00C073EE /* Extension+UIColor.swift in Sources */,
 				B209E6192BC138790067D751 /* FeedPresenter.swift in Sources */,
 				B211C27D2BBD321C00C073EE /* Validator.swift in Sources */,
 				B209E6252BC3FD450067D751 /* FavouritesViewController.swift in Sources */,
+				B27E1C692BF8A24800E1DEF9 /* CommentViewPresenter.swift in Sources */,
 				B26804C62BEE149300DE74A4 /* CreatePostViewController.swift in Sources */,
 				B2E51C782BF4BF8B00DE6102 /* CollectionviewCell.swift in Sources */,
 				B211C2712BBC4C1700C073EE /* StringFormatter.swift in Sources */,
@@ -849,6 +896,7 @@
 				B211C2762BBC6A1D00C073EE /* LoginScreenPresenter.swift in Sources */,
 				B211C2742BBC6A1000C073EE /* LoginScreenViewController.swift in Sources */,
 				B209E6332BC3FEBE0067D751 /* ProfileChangePresenter.swift in Sources */,
+				B27E1C6E2BFB4D3A00E1DEF9 /* MenuForPostView.swift in Sources */,
 				B29D0ADF2BD63AD000101029 /* SearchViewController.swift in Sources */,
 				B209E62E2BC3FDEC0067D751 /* SettingPresenter.swift in Sources */,
 				B209E6272BC3FD5B0067D751 /* FavouritesPresenter.swift in Sources */,

@@ -16,6 +16,7 @@ protocol ProfileViewProtocol: AnyObject {
     func updateStorie(stories: [UIImage]?)
     func updateAlbum(photo: [UIImage]?)
     func updateSubsribers()
+    func showPostMenu()
 }
 
 protocol ProfilePresenterProtocol: AnyObject {
@@ -157,5 +158,9 @@ final class ProfilePresenter: ProfilePresenterProtocol {
                 self?.view?.showErrorAler(error: failure.localizedDescription)
             }
         }
+    }
+
+    func showPostMenu() {
+        view?.showPostMenu()
     }
 }

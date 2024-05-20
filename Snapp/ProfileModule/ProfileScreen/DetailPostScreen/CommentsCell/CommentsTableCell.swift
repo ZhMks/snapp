@@ -13,6 +13,10 @@ final class CommentsTableCell: UITableViewCell {
 
     static let identifier = "CommentsTableCell"
 
+    var buttonTappedHandler: (()->Void)?
+
+    let networkService = NetworkService()
+
     private lazy var avatarImageView: UIImageView = {
         let avatarImageView = UIImageView()
         avatarImageView.translatesAutoresizingMaskIntoConstraints = false
@@ -65,6 +69,7 @@ final class CommentsTableCell: UITableViewCell {
         answerButton.translatesAutoresizingMaskIntoConstraints = false
         answerButton.setTitle(.localized(string: "Ответить"), for: .normal)
         answerButton.setTitleColor(ColorCreator.shared.createTextColor(), for: .normal)
+        answerButton.addTarget(self, action: #selector(answerButtonTapped(_:)), for: .touchUpInside)
         return answerButton
     }()
 
@@ -84,9 +89,69 @@ final class CommentsTableCell: UITableViewCell {
 
     // MARK: -FUNCS
 
-    func updateView(user: FirebaseUser, comment: String) {
-        identifierLabel.text = user.identifier
-        commentLabel.text = comment
+    func updateView(comment: Comment, firestoreService: FireStoreServiceProtocol) {
+
+        commentLabel.text = comment.text
+        dateLabel.text = comment.date
+        likesLabel.text = "\(comment.likes)"
+
+        firestoreService.getUser(id: comment.commentor) { [weak self] result in
+            guard let self else { return }
+            switch result {
+            case .success(let user):
+                identifierLabel.text = user.identifier
+                networkService.fetchImage(string: user.image) { [weak self] result in
+                    guard let self else { return }
+                    switch result {
+                    case .success(let success):
+                        guard let image = UIImage(data: success) else { return }
+                        DispatchQueue.main.async {
+                            self.avatarImageView.image = image
+                            self.avatarImageView.clipsToBounds = true
+                            self.avatarImageView.layer.cornerRadius = self.avatarImageView.frame.size.width / 2
+                        }
+                    case .failure(let failure):
+                        print(failure.localizedDescription)
+                    }
+                }
+            case .failure(let failure):
+                print(failure.localizedDescription)
+            }
+        }
+    }
+
+    func updateAnswers(answer: Answer, user: FirebaseUser, date: String, firestoreService: FireStoreServiceProtocol) {
+        commentLabel.text = answer.text
+        dateLabel.text = answer.date
+        likesLabel.text = "\(answer.likes)"
+
+        firestoreService.getUser(id: answer.commentor) { [weak self] result in
+            guard let self else { return }
+            switch result {
+            case .success(let user):
+                identifierLabel.text = user.identifier
+                networkService.fetchImage(string: user.image) { [weak self] result in
+                    guard let self else { return }
+                    switch result {
+                    case .success(let success):
+                        guard let image = UIImage(data: success) else { return }
+                        DispatchQueue.main.async {
+                            self.avatarImageView.image = image
+                            self.avatarImageView.clipsToBounds = true
+                            self.avatarImageView.layer.cornerRadius = self.avatarImageView.frame.size.width / 2
+                        }
+                    case .failure(let failure):
+                        print(failure.localizedDescription)
+                    }
+                }
+            case .failure(let failure):
+                print(failure.localizedDescription)
+            }
+        }
+    }
+
+    @objc func answerButtonTapped(_ sender: UIButton) {
+        buttonTappedHandler?()
     }
 
     // MARK: -LAYOUT
@@ -106,17 +171,17 @@ final class CommentsTableCell: UITableViewCell {
 
         NSLayoutConstraint.activate([
             avatarImageView.topAnchor.constraint(equalTo: safeArea.topAnchor),
-            avatarImageView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
+            avatarImageView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 38),
             avatarImageView.heightAnchor.constraint(equalToConstant: 15),
             avatarImageView.widthAnchor.constraint(equalToConstant: 15),
 
             identifierLabel.topAnchor.constraint(equalTo: safeArea.topAnchor),
             identifierLabel.leadingAnchor.constraint(equalTo: avatarImageView.trailingAnchor, constant: 7),
-            identifierLabel.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: 180),
+            identifierLabel.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -180),
             identifierLabel.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor, constant: -33),
 
             likesButton.topAnchor.constraint(equalTo: safeArea.topAnchor),
-            likesButton.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: 27),
+            likesButton.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -17),
             likesButton.heightAnchor.constraint(equalToConstant: 15),
             likesButton.widthAnchor.constraint(equalToConstant: 15),
 
@@ -126,17 +191,17 @@ final class CommentsTableCell: UITableViewCell {
             likesLabel.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor, constant: -33),
 
             commentLabel.topAnchor.constraint(equalTo: identifierLabel.bottomAnchor, constant: 3),
-            commentLabel.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 22),
-            commentLabel.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -150),
+            commentLabel.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 60),
+            commentLabel.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -80),
             commentLabel.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor, constant: -15),
 
             dateLabel.topAnchor.constraint(equalTo: commentLabel.bottomAnchor),
-            dateLabel.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 22),
-            dateLabel.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -230),
+            dateLabel.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 60),
+            dateLabel.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -80),
             dateLabel.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor),
 
             answerButton.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: 33),
-            answerButton.leadingAnchor.constraint(equalTo: dateLabel.trailingAnchor, constant: 200),
+            answerButton.leadingAnchor.constraint(equalTo: dateLabel.trailingAnchor, constant: 90),
             answerButton.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
             answerButton.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor)
         ])

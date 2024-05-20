@@ -44,9 +44,6 @@ class CreatePostViewController: UIViewController {
         creaPostTextView.textColor = ColorCreator.shared.createTextColor()
         creaPostTextView.textAlignment = .left
         creaPostTextView.delegate = self
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(textViewDidTap))
-        tapGesture.numberOfTapsRequired = 1
-   //     creaPostTextView.addGestureRecognizer(tapGesture)
         return creaPostTextView
     }()
 
@@ -138,12 +135,6 @@ class CreatePostViewController: UIViewController {
             createPostImageView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -15),
             createPostImageView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -15)
         ])
-    }
-
-    @objc func textViewDidTap() {
-        if createPostTextView.isFirstResponder {
-            createPostTextView.resignFirstResponder()
-        }
     }
 
     @objc func removePlaceholder() {

@@ -11,6 +11,8 @@ class ProfileViewController: UIViewController {
     // MARK: -PROPERTIES
     var presenter: ProfilePresenter!
 
+    let menuForPostView = MenuForPostView()
+
     private lazy var avatarImageView: UIImageView = {
         let avatarImageView = UIImageView()
         avatarImageView.clipsToBounds = true
@@ -180,7 +182,7 @@ class ProfileViewController: UIViewController {
     private lazy var photogalleryLabel: UILabel = {
         let photogalleryLabel = UILabel()
         photogalleryLabel.translatesAutoresizingMaskIntoConstraints = false
-        photogalleryLabel.text = .localized(string: "Фотографии" + "  \(presenter.mainUser.stories.count)")
+        photogalleryLabel.text = .localized(string: "Фотографии" + "  \(presenter.mainUser.photoAlbum.count)")
         photogalleryLabel.font = UIFont(name: "Inter-Medium", size: 16)
         photogalleryLabel.textColor = ColorCreator.shared.createTextColor()
         return photogalleryLabel
@@ -258,8 +260,9 @@ class ProfileViewController: UIViewController {
         view.backgroundColor = .systemBackground
         tuneNavItem()
         addSubviews()
-        layout()
         tuneTableView()
+        layout()
+        addTapGestures()
     }
 
     override func viewWillDisappear(_ animated: Bool) {
@@ -278,10 +281,11 @@ class ProfileViewController: UIViewController {
     }
 
     @objc func showSettingsVC() {
-        //        let settingsVC = SettingsViewController()
-        //        let settingsPresenter = SettingPresenter(view: settingsVC, user: presenter.firebaseUser, firestoreService: presenter.firestoreService)
-        //        settingsVC.presenter = settingsPresenter
-        //        navigationController?.present(settingsVC, animated: true)
+        let settingsVC = SettingsViewController()
+        let settingsPresenter = SettingPresenter(view: settingsVC, user: presenter.mainUser, firestoreService: presenter.firestoreService)
+        settingsVC.presenter = settingsPresenter
+        settingsVC.modalPresentationStyle = .pageSheet
+        navigationController?.present(settingsVC, animated: true)
     }
 
     @objc func fetchPostsIfNeeded() {
@@ -302,20 +306,34 @@ class ProfileViewController: UIViewController {
         imagePicker.delegate = self
         self.present(imagePicker, animated: true)
     }
+
+    func addTapGestures() {
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(tapOnViewHandler))
+        view.addGestureRecognizer(tapGesture)
+    }
+
+    @objc func tapOnViewHandler() {
+        menuForPostView.removeFromSuperview()
+    }
 }
 
 // MARK: -OUTPUT PRESENTER
 extension ProfileViewController: ProfileViewProtocol {
 
+    func showPostMenu() {
+        print()
+    }
+
+
     func updateSubsribers() {
         numberOfSubscriptions.text = .localized(string: "\(presenter.mainUser.subscribtions)"+"\nПодписок")
     }
-    
+
 
     func updateStorie(stories: [UIImage]?) {
         print()
     }
-    
+
     func updateAlbum(photo: [UIImage]?) {
         DispatchQueue.main.async { [weak self] in
             guard let self else { return }
@@ -323,7 +341,7 @@ extension ProfileViewController: ProfileViewProtocol {
             photoCollectionView.reloadData()
         }
     }
-    
+
 
     func updateData(data: [EachPost]) {
         DispatchQueue.main.async { [weak self] in
@@ -332,7 +350,7 @@ extension ProfileViewController: ProfileViewProtocol {
             self.tuneTableView()
         }
     }
-    
+
 
     func updateAvatarImage(image: UIImage) {
         DispatchQueue.main.async { [weak self] in
@@ -354,17 +372,21 @@ extension ProfileViewController: ProfileViewProtocol {
 extension ProfileViewController: UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-      return  presenter.posts.count
+        return  presenter.posts.count
     }
-    
+
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: PostTableCell.identifier, for: indexPath) as? PostTableCell else { return UITableViewCell() }
         let data = presenter.posts[indexPath.row]
         let date = presenter.posts[indexPath.row].date
+        cell.buttonTappedHandler = { [weak self] in
+            guard let self else { return }
+            self.presenter.showPostMenu()
+        }
         cell.updateView(post: data, user: presenter.mainUser, date: date)
         return cell
     }
-    
+
 
 }
 
@@ -373,11 +395,16 @@ extension ProfileViewController: UITableViewDataSource {
 
 extension ProfileViewController: UITableViewDelegate {
 
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let uiVIew = UIView(frame: CGRect(x: 0, y: 0, width: postsTableView.frame.size.width, height: 10))
+        return uiVIew
+    }
+
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let data = presenter.posts[indexPath.row]
         let detailPostVC = DetailPostViewController()
         guard let image = presenter.image  else { return }
-        let detailPostPresenter = DetailPostPresenter(view: detailPostVC, user: presenter.mainUser, post: data, image: image)
+        let detailPostPresenter = DetailPostPresenter(view: detailPostVC, user: presenter.mainUser, post: data, image: image, firestoreService: presenter.firestoreService)
         detailPostVC.presenter = detailPostPresenter
         self.navigationController?.pushViewController(detailPostVC, animated: true)
     }
@@ -402,7 +429,7 @@ extension ProfileViewController: UICollectionViewDataSource {
         cell.updateView(image: data)
         return cell
     }
-    
+
 
 }
 
@@ -427,6 +454,7 @@ extension ProfileViewController: UIImagePickerControllerDelegate, UINavigationCo
 
 // MARK: -LAYOUT
 extension ProfileViewController {
+
     func tuneNavItem() {
         let settingsButton = UIBarButtonItem(image: UIImage(systemName: "line.3.horizontal"),
                                              style: .plain,
@@ -520,18 +548,15 @@ extension ProfileViewController {
             editButton.bottomAnchor.constraint(equalTo: mainContentView.bottomAnchor, constant: -314),
 
             numberOfPosts.topAnchor.constraint(equalTo: editButton.bottomAnchor, constant: 20),
-            numberOfPosts.leadingAnchor.constraint(equalTo: mainContentView.leadingAnchor, constant: 5),
-            numberOfPosts.trailingAnchor.constraint(equalTo: mainContentView.trailingAnchor, constant: -240),
+            numberOfPosts.centerXAnchor.constraint(equalTo: createPostView.centerXAnchor),
             numberOfPosts.bottomAnchor.constraint(equalTo: mainContentView.bottomAnchor, constant: -254),
 
             numberOfSubscriptions.topAnchor.constraint(equalTo: editButton.bottomAnchor, constant: 20),
-            numberOfSubscriptions.leadingAnchor.constraint(equalTo: numberOfPosts.trailingAnchor, constant: 10),
-            numberOfSubscriptions.trailingAnchor.constraint(equalTo: mainContentView.trailingAnchor, constant: -140),
+            numberOfSubscriptions.centerXAnchor.constraint(equalTo: createStorieView.centerXAnchor),
             numberOfSubscriptions.bottomAnchor.constraint(equalTo: mainContentView.bottomAnchor, constant: -254),
 
             numberOfSubscribers.topAnchor.constraint(equalTo: editButton.bottomAnchor, constant: 20),
-            numberOfSubscribers.leadingAnchor.constraint(equalTo: numberOfSubscriptions.trailingAnchor, constant: 20),
-            numberOfSubscribers.trailingAnchor.constraint(equalTo: mainContentView.trailingAnchor, constant: -10),
+            numberOfSubscribers.centerXAnchor.constraint(equalTo: addImageView.centerXAnchor),
             numberOfSubscribers.bottomAnchor.constraint(equalTo: mainContentView.bottomAnchor, constant: -254),
 
             separatorView.topAnchor.constraint(equalTo: numberOfPosts.bottomAnchor, constant: 4),

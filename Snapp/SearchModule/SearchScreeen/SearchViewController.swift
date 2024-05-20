@@ -31,16 +31,12 @@ class SearchViewController: UIViewController {
 
     //MARK: -LIFECYCLE
 
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        presenter.getAllUsers()
-    }
-
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
         addSubviews()
         layout()
+        presenter.getAllUsers()
     }
 
 

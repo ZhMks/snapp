@@ -49,7 +49,7 @@ final class CreatePostPresenter: CreatePostPresenterProtocol {
                 let eachPost = EachPost(text: firestorePost.text,
                                         image: firestorePost.image,
                                         likes: firestorePost.likes,
-                                        views: firestorePost.views,
+                                        commentaries: firestorePost.commentaries,
                                         date: firestorePost.date)
                 posts.append(eachPost)
                 completion(.success(posts))

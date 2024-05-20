@@ -56,17 +56,13 @@ final class FeedViewController: UIViewController {
 
     // MARK: -LIFECYCLE
 
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        presenter.getUsers()
-    }
-
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
         addSubviews()
         tuneTableView()
         layout()
+        presenter.fetchPosts()
     }
 
     // MARK: -FUNCS
@@ -172,18 +168,23 @@ extension FeedViewController: UITableViewDelegate {
 // MARK: -TABLEVIEWDATASOURCE
 extension FeedViewController: UITableViewDataSource {
 
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func numberOfSections(in tableView: UITableView) -> Int {
         guard let number = presenter.posts?.count else { return 0 }
+        print("Number of sections: \(number)")
+        return number
+    }
+
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        guard let number = presenter.posts?[section].count else { return 0 }
         print("Number of Rows: \(number)")
         return number
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: PostTableCell.identifier, for: indexPath) as? PostTableCell else { return UITableViewCell() }
-        guard let eachPost = presenter.posts?[indexPath.row] else { return UITableViewCell() }
-        guard let date = presenter.posts?[indexPath.row].date else { return UITableViewCell() }
-        guard let user = presenter.subscribers?[indexPath.section] else { return UITableViewCell() }
-        cell.updateView(post: eachPost, user: user, date: date)
+        guard let eachPost = presenter.posts?[indexPath.section][indexPath.row] else { return UITableViewCell() }
+        let user = FirebaseUser(name: "yest", surname: "test", identifier: "TestMe", job: "Test", subscribers: [], subscribtions: [], stories: [], image: "https://firebasestorage.googleapis.com:443/v0/b/snappproject-9ca98.appspot.com/o/users%2F7vclK5316wWx7l67O3YrLNDmLFv2%2Favatar?alt=media&token=c7239d7e-ace3-4a38-9017-777092908a99", photoAlbum: [])
+        cell.updateView(post: eachPost, user: user, date: eachPost.date)
         return cell
     }
 

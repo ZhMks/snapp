@@ -88,7 +88,7 @@ class DetailUserViewController: UIViewController {
     private lazy var numberOfPosts: UILabel = {
         let numberOfPosts = UILabel()
         numberOfPosts.font = UIFont(name: "Inter-Medium", size: 14)
-        numberOfPosts.text = "1400\nПубликаций"
+        numberOfPosts.text = "\(presenter.posts.count)\nПубликаций"
         numberOfPosts.textAlignment = .center
         numberOfPosts.numberOfLines = 0
         numberOfPosts.translatesAutoresizingMaskIntoConstraints = false
@@ -99,7 +99,7 @@ class DetailUserViewController: UIViewController {
     private lazy var numberOfSubscriptions: UILabel = {
         let numberOfSubscriptions = UILabel()
         numberOfSubscriptions.font = UIFont(name: "Inter-Medium", size: 14)
-        numberOfSubscriptions.text = "258\nПодписок"
+        numberOfSubscriptions.text = "\(presenter.user.subscribtions.count)\nПодписок"
         numberOfSubscriptions.textAlignment = .center
         numberOfSubscriptions.numberOfLines = 0
         numberOfSubscriptions.translatesAutoresizingMaskIntoConstraints = false
@@ -109,7 +109,7 @@ class DetailUserViewController: UIViewController {
     private lazy var numberOfSubscribers: UILabel = {
         let numberOfSubscribers = UILabel()
         numberOfSubscribers.font = UIFont(name: "Inter-Medium", size: 14)
-        numberOfSubscribers.text = "650\nПодписчиков"
+        numberOfSubscribers.text = "\(presenter.user.subscribers.count)\nПодписчиков"
         numberOfSubscribers.textAlignment = .center
         numberOfSubscribers.numberOfLines = 0
         numberOfSubscribers.translatesAutoresizingMaskIntoConstraints = false
@@ -183,6 +183,13 @@ class DetailUserViewController: UIViewController {
         postsTableView.delegate = self
         postsTableView.dataSource = self
         return postsTableView
+    }()
+
+    private lazy var middleSeparatorView: UIView = {
+        let separatorView = UIView()
+        separatorView.translatesAutoresizingMaskIntoConstraints = false
+        separatorView.backgroundColor = .systemGray2
+        return separatorView
     }()
 
 
@@ -267,6 +274,15 @@ extension DetailUserViewController: UITableViewDataSource {
 
 extension DetailUserViewController: UITableViewDelegate {
 
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let data = presenter.posts[indexPath.row]
+        let detailPostVC = DetailPostViewController()
+        guard let image = presenter.image  else { return }
+        let detailPostPresenter = DetailPostPresenter(view: detailPostVC, user: presenter.user, post: data, image: image, firestoreService: presenter.firestoreService)
+        detailPostVC.presenter = detailPostPresenter
+        self.navigationController?.pushViewController(detailPostVC, animated: true)
+    }
+
 }
 
 // MARK: -LAYOUT
@@ -292,6 +308,7 @@ extension DetailUserViewController {
         view.addSubview(postsTableView)
 
         mainContentView.addSubview(topSeparatorView)
+        mainContentView.addSubview(middleSeparatorView)
         mainContentView.addSubview(avatarImageView)
         mainContentView.addSubview(nameAndSurnameLabel)
         mainContentView.addSubview(jobLabel)
@@ -326,8 +343,8 @@ extension DetailUserViewController {
         NSLayoutConstraint.activate([
 
             topSeparatorView.topAnchor.constraint(equalTo: mainContentView.topAnchor),
-            topSeparatorView.leadingAnchor.constraint(equalTo: mainContentView.leadingAnchor),
-            topSeparatorView.trailingAnchor.constraint(equalTo: mainContentView.trailingAnchor),
+            topSeparatorView.leadingAnchor.constraint(equalTo: mainContentView.leadingAnchor, constant: 16),
+            topSeparatorView.trailingAnchor.constraint(equalTo: mainContentView.trailingAnchor, constant: -16),
             topSeparatorView.heightAnchor.constraint(greaterThanOrEqualToConstant: 1),
 
             avatarImageView.topAnchor.constraint(equalTo: topSeparatorView.bottomAnchor, constant: 15),
@@ -365,7 +382,12 @@ extension DetailUserViewController {
             sendMessageButton.trailingAnchor.constraint(equalTo: mainContentView.trailingAnchor, constant: -16),
             sendMessageButton.bottomAnchor.constraint(equalTo: mainContentView.bottomAnchor, constant: -330),
 
-            numberOfPosts.topAnchor.constraint(equalTo: subscribeButton.bottomAnchor, constant: 20),
+            middleSeparatorView.topAnchor.constraint(equalTo: sendMessageButton.bottomAnchor, constant: 15),
+            middleSeparatorView.leadingAnchor.constraint(equalTo: mainContentView.leadingAnchor, constant: 16),
+            middleSeparatorView.trailingAnchor.constraint(equalTo: mainContentView.trailingAnchor, constant: -16),
+            middleSeparatorView.heightAnchor.constraint(equalToConstant: 1),
+
+            numberOfPosts.topAnchor.constraint(equalTo: middleSeparatorView.bottomAnchor, constant: 5),
             numberOfPosts.leadingAnchor.constraint(equalTo: mainContentView.leadingAnchor, constant: 5),
             numberOfPosts.trailingAnchor.constraint(equalTo: mainContentView.trailingAnchor, constant: -240),
             numberOfPosts.bottomAnchor.constraint(equalTo: mainContentView.bottomAnchor, constant: -254),
@@ -400,10 +422,10 @@ extension DetailUserViewController {
             photoCollectionView.trailingAnchor.constraint(equalTo: mainContentView.trailingAnchor),
             photoCollectionView.bottomAnchor.constraint(equalTo: mainContentView.bottomAnchor, constant: -60),
 
-            viewForTableTitle.topAnchor.constraint(equalTo: photoCollectionView.bottomAnchor),
+            viewForTableTitle.topAnchor.constraint(equalTo: photoCollectionView.bottomAnchor, constant: 10),
             viewForTableTitle.leadingAnchor.constraint(equalTo: mainContentView.leadingAnchor),
             viewForTableTitle.trailingAnchor.constraint(equalTo: mainContentView.trailingAnchor),
-            viewForTableTitle.bottomAnchor.constraint(equalTo: mainContentView.bottomAnchor),
+            viewForTableTitle.heightAnchor.constraint(greaterThanOrEqualToConstant: 40),
 
             tableViewTitle.topAnchor.constraint(equalTo: viewForTableTitle.topAnchor, constant: 5),
             tableViewTitle.leadingAnchor.constraint(equalTo: viewForTableTitle.leadingAnchor, constant: 16),

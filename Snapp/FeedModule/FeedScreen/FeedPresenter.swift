@@ -25,38 +25,13 @@ final class FeedPresenter: FeedPresenterProtocol {
     var stories: UIImage?
     var userStories: [UIImage]?
     var mainUser: FirebaseUser
-    var posts: [EachPost]?
-    var subscribers: [FirebaseUser]?
+    var posts: [[EachPost]]?
     let firestoreService: FireStoreServiceProtocol?
 
     init(view: FeedViewProtocol, user: FirebaseUser, firestoreService: FireStoreServiceProtocol) {
         self.view = view
         self.mainUser = user
         self.firestoreService = firestoreService
-    }
-
-    func fetchPosts() {
-        guard let subscribers = subscribers else { return }
-        let dispatchGroup = DispatchGroup()
-        dispatchGroup.enter()
-        for subscriber in subscribers {
-            print("SubscriberID: \(subscriber.documentID!)")
-            firestoreService?.getPosts(sub: subscriber.documentID!, completion: { [weak self] result in
-                guard let self else { return }
-                switch result {
-                case .success(let mainPost):
-                    self.posts = []
-                    print("MainPost in presenter: \(mainPost)")
-                    self.posts = mainPost
-                case .failure(_):
-                    print()
-                }
-                dispatchGroup.leave()
-            })
-        }
-        dispatchGroup.notify(queue: .main) { [weak self] in
-            self?.view?.updateViewTable()
-        }
     }
 
     func fetchUserStorie() {
@@ -76,27 +51,26 @@ final class FeedPresenter: FeedPresenterProtocol {
         }
     }
 
-    func getUsers() {
+    func fetchPosts() {
         let dispatchGroup = DispatchGroup()
-        firestoreService?.getAllUsers(completion: { [weak self] result in
-            guard let self else { return }
-            self.subscribers = []
-            switch result {
-            case .success(let usersArray):
-                for user in usersArray {
-                    dispatchGroup.enter()
-                    if self.mainUser.subscribers.contains(user.documentID!) {
-                        print("Self Subscribers: \(subscribers)")
-                        self.subscribers?.append(user)
-                    }
+        posts = []
+        for sub in mainUser.subscribtions {
+            dispatchGroup.enter()
+            firestoreService?.getPosts(sub: sub, completion: { [weak self] result in
+                guard let self else { return }
+                switch result {
+                case .success(let postArray):
+                    posts?.append(postArray)
+                    print(postArray)
+                case .failure(let failure):
+                    view?.showEmptyScreen()
                 }
                 dispatchGroup.leave()
-            case .failure(_):
-                self.view?.showEmptyScreen()
-            }
-            dispatchGroup.notify(queue: .main) {
-                self.fetchPosts()
-            }
-        })
+            })
+        }
+        dispatchGroup.notify(queue: .main) { [weak self] in
+            guard let self else { return }
+            view?.updateViewTable()
+        }
     }
 }

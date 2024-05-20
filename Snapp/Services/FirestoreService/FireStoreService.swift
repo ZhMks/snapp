@@ -46,6 +46,10 @@ protocol FireStoreServiceProtocol {
     func createUser(user: FirebaseUser, id: String)
     func saveSubscriber(mainUser: String, id: String)
     func saveImageIntoPhotoAlbum(image: String, user: String)
+    func addComment(mainUser: String, text: String, documentID: String, commentor: String, completion: @escaping (Result<Comment, Error>) -> Void)
+    func getComments(post: String, user: String, completion: @escaping (Result<[Comment], Error>) -> Void)
+    func addAnswerToComment(postID: String, user: String, commentID: String, answer: Answer, completion: @escaping (Result<Answer, Error>) -> Void)
+    func getAnswers(post: String, comment: String, user: String, completion: @escaping (Result<[Answer], Error>) -> Void)
 }
 
 
@@ -227,7 +231,7 @@ final class FireStoreService: FireStoreServiceProtocol {
 
     func createPost(date: String, text: String, image: UIImage?, for user: String, completion: @escaping (Result<EachPost, Error>) -> Void) {
         let postRef = Firestore.firestore().collection("Users").document(user).collection("posts")
-        var fireStorePost = EachPost(text: "", image: "", likes: 0, views: 0, date: date)
+        var fireStorePost = EachPost(text: "", image: "", likes: 0, commentaries: 0, date: date)
 
         if let image = image {
             let postStorageRef = Storage.storage().reference().child("users").child(user).child("posts").child(date).child(image.description)
@@ -269,6 +273,119 @@ final class FireStoreService: FireStoreServiceProtocol {
     func saveImageIntoPhotoAlbum(image: String, user: String) {
         let docRef = Firestore.firestore().collection("Users").document(user)
         docRef.updateData(["photoAlbum" : FieldValue.arrayUnion([image])])
+    }
+
+    func addComment(mainUser: String, text: String, documentID: String, commentor: String, completion: @escaping (Result<Comment, Error>) -> Void) {
+        let date = Date()
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "dd-MM-yyyy"
+        let stringFromDate = dateFormatter.string(from: date)
+        let likes = 0
+        let docReft = Firestore.firestore().collection("Users").document(mainUser).collection("posts").document(documentID).collection("comments")
+        let comment = Comment(text: text, commentor: commentor, date: stringFromDate, likes: likes)
+        do {
+            try docReft.addDocument(from: comment)
+            completion(.success(comment))
+        } catch {
+            print(error.localizedDescription)
+            completion(.failure(error))
+        }
+    }
+
+    func getComments(post: String, user: String, completion: @escaping (Result<[Comment], Error>) -> Void) {
+        let docReft = Firestore.firestore().collection("Users").document(user).collection("posts").document(post).collection("comments")
+        var commentsArray: [Comment] = []
+        docReft.getDocuments { snapshot, error in
+            if let error = error {
+                completion(.failure(error))
+            }
+
+            if let snapshot = snapshot {
+                for document in snapshot.documents {
+                    do {
+                        let comment = try document.data(as: Comment.self)
+                        commentsArray.append(comment)
+                    } catch let DecodingError.dataCorrupted(context) {
+                        print(context)
+                    } catch let DecodingError.keyNotFound(key, context) {
+                        print("Key '\(key)' not found:", context.debugDescription)
+                        print("codingPath:", context.codingPath)
+                    } catch let DecodingError.valueNotFound(value, context) {
+                        print("Value '\(value)' not found:", context.debugDescription)
+                        print("codingPath:", context.codingPath)
+                    } catch let DecodingError.typeMismatch(type, context)  {
+                        print("Type '\(type)' mismatch:", context.debugDescription)
+                        print("codingPath:", context.codingPath)
+                    } catch {
+                        print("error: ", error)
+                        completion(.failure(error))
+                    }
+                }
+                completion(.success(commentsArray))
+            }
+        }
+    }
+
+    func addAnswerToComment(postID: String, user: String, commentID: String, answer: Answer, completion: @escaping (Result<Answer, Error>) -> Void) {
+        let docReft = Firestore.firestore().collection("Users").document(user).collection("posts").document(postID).collection("comments").document(commentID).collection("answers")
+        do {
+            try docReft.addDocument(from: answer)
+            completion(.success(answer))
+        } catch let DecodingError.dataCorrupted(context) {
+            print(context)
+        } catch let DecodingError.keyNotFound(key, context) {
+            print("Key '\(key)' not found:", context.debugDescription)
+            print("codingPath:", context.codingPath)
+        } catch let DecodingError.valueNotFound(value, context) {
+            print("Value '\(value)' not found:", context.debugDescription)
+            print("codingPath:", context.codingPath)
+        } catch let DecodingError.typeMismatch(type, context)  {
+            print("Type '\(type)' mismatch:", context.debugDescription)
+            print("codingPath:", context.codingPath)
+        } catch {
+            print("error: ", error)
+            completion(.failure(error))
+        }
+    }
+
+    func getAnswers(post: String, comment: String, user: String, completion: @escaping (Result<[Answer], Error>) -> Void) {
+        let docReft = Firestore.firestore().collection("Users").document(user).collection("posts").document(post).collection("comments").document(comment).collection("answers")
+        var answers: [Answer] = []
+
+        docReft.getDocuments { snapshot, error in
+            if let error = error {
+                completion(.failure(error))
+            }
+
+            if let snapshot = snapshot {
+                if !snapshot.documents.isEmpty {
+                    for document in snapshot.documents {
+                        do {
+                            let answer = try document.data(as: Answer.self)
+                            answers.append(answer)
+                        }
+                        catch let DecodingError.dataCorrupted(context) {
+                            print(context)
+                        } catch let DecodingError.keyNotFound(key, context) {
+                            print("Key '\(key)' not found:", context.debugDescription)
+                            print("codingPath:", context.codingPath)
+                        } catch let DecodingError.valueNotFound(value, context) {
+                            print("Value '\(value)' not found:", context.debugDescription)
+                            print("codingPath:", context.codingPath)
+                        } catch let DecodingError.typeMismatch(type, context)  {
+                            print("Type '\(type)' mismatch:", context.debugDescription)
+                            print("codingPath:", context.codingPath)
+                        } catch {
+                            print("error: ", error)
+                            completion(.failure(error))
+                        }
+                    }
+                    completion(.success(answers))
+                } else {
+                    return
+                }
+            }
+        }
     }
 }
 
