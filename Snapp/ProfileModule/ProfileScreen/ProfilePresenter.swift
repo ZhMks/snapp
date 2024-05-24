@@ -16,7 +16,6 @@ protocol ProfileViewProtocol: AnyObject {
     func updateStorie(stories: [UIImage]?)
     func updateAlbum(photo: [UIImage]?)
     func updateSubsribers()
-    func showPostMenu()
 }
 
 protocol ProfilePresenterProtocol: AnyObject {
@@ -59,20 +58,7 @@ final class ProfilePresenter: ProfilePresenterProtocol {
         }
     }
 
-    func updateUserData() {
-        guard let id = mainUser.documentID else { return }
-        firestoreService.getUser(id: id) { [weak self] result in
-            guard let self else { return }
-            switch result {
-            case .success(let success):
-                self.mainUser = success
-            case .failure(let failure):
-                return
-            }
-        }
-    }
-
-    func addSnapshotListener() {
+    func addListenerForPost() {
         guard let id = mainUser.documentID else { return }
         firestoreService.addSnapshotListenerToPosts(for: id) { [weak self] result in
             guard let self else { return }
@@ -81,6 +67,20 @@ final class ProfilePresenter: ProfilePresenterProtocol {
                 self.posts = []
                 self.posts = success
                 view?.updateData(data: self.posts)
+            case .failure(let failure):
+                view?.showErrorAler(error: failure.localizedDescription)
+            }
+        }
+    }
+
+    func addListenerForUser() {
+        guard let id = mainUser.documentID else { return }
+        firestoreService.addSnapshotListenerToUser(for: id) { [weak self] result in
+            guard let self else { return }
+            switch result {
+            case .success(let success):
+                self.mainUser = success
+                self.view?.updateSubsribers()
             case .failure(let failure):
                 view?.showErrorAler(error: failure.localizedDescription)
             }
@@ -123,7 +123,6 @@ final class ProfilePresenter: ProfilePresenterProtocol {
             switch result {
             case .success(let url):
                 firestoreService.saveImageIntoPhotoAlbum(image: url.absoluteString, user: userID)
-                self.updateUserData()
                 networkService.fetchImage(string: url.absoluteString) { [weak self] result in
                     switch result {
                     case .success(let success):
@@ -159,7 +158,7 @@ final class ProfilePresenter: ProfilePresenterProtocol {
         }
         dispatchGroup.notify(queue: .main) { [weak self] in
             guard let photoAlbum = self?.photoAlbum else { return }
-            self?.view?.updateAlbum(photo: self?.photoAlbum)
+            self?.view?.updateAlbum(photo: photoAlbum)
         }
     }
 
@@ -175,7 +174,11 @@ final class ProfilePresenter: ProfilePresenterProtocol {
         }
     }
 
-    func showPostMenu() {
-        view?.showPostMenu()
+    func removePostListener() {
+        firestoreService.removeListenerForPosts()
+    }
+
+    func removeUserListener() {
+        firestoreService.removeListenerForUser()
     }
 }

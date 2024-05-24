@@ -255,6 +255,8 @@ class ProfileViewController: UIViewController {
         super.viewWillAppear(animated)
 
         NotificationCenter.default.addObserver(self, selector: #selector(subscriberAdded), name: Notification.Name("subscriberAdded"), object: nil)
+        presenter.addListenerForPost()
+        presenter.addListenerForUser()
     }
 
     override func viewDidLoad() {
@@ -265,12 +267,13 @@ class ProfileViewController: UIViewController {
         tuneTableView()
         layout()
         addTapGestures()
-        presenter.addSnapshotListener()
     }
 
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         NotificationCenter.default.removeObserver(self)
+        presenter.removePostListener()
+        presenter.removeUserListener()
     }
 
     // MARK: -FUNCS
@@ -347,15 +350,9 @@ class ProfileViewController: UIViewController {
 // MARK: -OUTPUT PRESENTER
 extension ProfileViewController: ProfileViewProtocol {
 
-    func showPostMenu() {
-      print()
-    }
-
-
     func updateSubsribers() {
-        numberOfSubscriptions.text = .localized(string: "\(presenter.mainUser.subscribtions)"+"\nПодписок")
+        numberOfSubscriptions.text = .localized(string: "\(presenter.mainUser.subscribtions.count)"+"\nПодписок")
     }
-
 
     func updateStorie(stories: [UIImage]?) {
         print()

@@ -14,6 +14,8 @@ protocol DetailViewProtocol: AnyObject {
     func updateAvatarImage(image: UIImage)
 
     func showErrorAler(error: String) 
+
+    func updateAlbum(image: [UIImage])
 }
 
 protocol DetailPresenterProtocol: AnyObject {
@@ -28,6 +30,7 @@ final class DetailPresenter: DetailPresenterProtocol {
     var posts: [EachPost] = []
     var image: UIImage?
     let userID: String
+    var photoAlbum: [UIImage]?
 
     init(view: DetailViewProtocol, user: FirebaseUser, userID: String, firestoreService: FireStoreServiceProtocol) {
         self.view = view
@@ -35,6 +38,7 @@ final class DetailPresenter: DetailPresenterProtocol {
         self.userID = userID
         self.firestoreService = firestoreService
         fetchImage()
+        fetchPhotoAlbum()
     }
 
     func fetchImage()  {
@@ -81,5 +85,28 @@ final class DetailPresenter: DetailPresenterProtocol {
         guard  let currentUser = Auth.auth().currentUser?.uid else { return }
         print(currentUser)
         firestoreService.saveSubscriber(mainUser: currentUser, id: userID)
+    }
+
+    func fetchPhotoAlbum() {
+        self.photoAlbum = []
+        let networkService = NetworkService()
+        let dispatchGroup = DispatchGroup()
+        for link in user.photoAlbum {
+            dispatchGroup.enter()
+            networkService.fetchImage(string: link) { [weak self] result in
+                switch result {
+                case .success(let data):
+                    guard let image = UIImage(data: data) else { return }
+                    self?.photoAlbum?.append(image)
+                case .failure(let failure):
+                    self?.view?.showErrorAler(error: failure.localizedDescription)
+                }
+                dispatchGroup.leave()
+            }
+        }
+        dispatchGroup.notify(queue: .main) { [weak self] in
+            guard let photoAlbum = self?.photoAlbum else { return }
+            self?.view?.updateAlbum(image: photoAlbum)
+        }
     }
 }

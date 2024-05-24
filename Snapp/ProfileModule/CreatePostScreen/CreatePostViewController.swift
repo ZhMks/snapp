@@ -19,7 +19,7 @@ class CreatePostViewController: UIViewController {
         userAvatarImage.translatesAutoresizingMaskIntoConstraints = false
         userAvatarImage.clipsToBounds = true
         userAvatarImage.image = self.presenter.image
-        userAvatarImage.layer.cornerRadius = userAvatarImage.bounds.width / 2
+        userAvatarImage.layer.cornerRadius = 10
         return userAvatarImage
     }()
 

@@ -51,6 +51,24 @@ final class FeedPresenter: FeedPresenterProtocol {
         }
     }
 
+    func addUserListener() {
+        guard let userID = mainUser.documentID else { return }
+        firestoreService.addSnapshotListenerToUser(for: userID) { [weak self] result in
+            guard let self else { return }
+            switch result {
+            case .success(let success):
+                self.mainUser = success
+                self.fetchPosts()
+            case .failure(_):
+                self.view?.showEmptyScreen()
+            }
+        }
+    }
+
+    func removeListener() {
+        firestoreService.removeListenerForUser()
+    }
+
     func fetchPosts() {
         let dispatchGroup = DispatchGroup()
         posts = [:]

@@ -137,5 +137,6 @@ extension SearchViewController: UITableViewDelegate {
         let user = presenter.usersArray[indexPath.row]
         guard let documentID = user.documentID else { return }
         presenter.showNextVC(user: user, userID: documentID)
+        tableView.deselectRow(at: indexPath, animated: true)
     }
 }

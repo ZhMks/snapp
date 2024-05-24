@@ -59,6 +59,7 @@ class MenuForPostView: UIView {
         cancellSubscribtionButton.titleLabel?.font = UIFont(name: "Inter-Light", size: 14)
         cancellSubscribtionButton.setTitleColor(ColorCreator.shared.createTextColor(), for: .normal)
         cancellSubscribtionButton.contentHorizontalAlignment = .left
+        cancellSubscribtionButton.addTarget(self, action: #selector(removeSubscribtion), for: .touchUpInside)
         return cancellSubscribtionButton
     }()
 
@@ -135,6 +136,8 @@ class MenuForPostView: UIView {
         layer.shadowOpacity = 1.0
         layer.shadowRadius = 3.0
         layer.shadowColor = UIColor.systemGray6.cgColor
+        layer.borderColor = ColorCreator.shared.createButtonColor().cgColor
+        layer.borderWidth = 1.0
         addGesture()
     }
     
@@ -169,6 +172,10 @@ class MenuForPostView: UIView {
 
     @objc func deleteDoc() {
         presenter.deletePost()
+    }
+
+    @objc func removeSubscribtion() {
+        presenter.removeSubscribtion()
     }
 
     @objc func swipeGesture() {
@@ -206,27 +213,27 @@ extension MenuForPostView: MenuForPostViewProtocol {
             addToBookmarkButton.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -184),
             addToBookmarkButton.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor, constant: -210),
 
-            enableNotificationButton.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: 88),
+            enableNotificationButton.topAnchor.constraint(equalTo: addToBookmarkButton.bottomAnchor, constant: 18),
             enableNotificationButton.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 28),
             enableNotificationButton.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -180),
             enableNotificationButton.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor, constant: -172),
 
-            saveLinkToPostButton.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: 126),
+            saveLinkToPostButton.topAnchor.constraint(equalTo: enableNotificationButton.bottomAnchor, constant: 18),
             saveLinkToPostButton.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 28),
             saveLinkToPostButton.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -201),
             saveLinkToPostButton.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor, constant: -134),
 
-            shareButton.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: 164),
+            shareButton.topAnchor.constraint(equalTo: saveLinkToPostButton.bottomAnchor, constant: 18),
             shareButton.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 28),
             shareButton.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -239),
             shareButton.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor, constant: -96),
 
-            cancellSubscribtionButton.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: 202),
+            cancellSubscribtionButton.topAnchor.constraint(equalTo: shareButton.bottomAnchor, constant: 18),
             cancellSubscribtionButton.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 28),
             cancellSubscribtionButton.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -208),
             cancellSubscribtionButton.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor, constant: -58),
 
-            reportButton.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: 240),
+            reportButton.topAnchor.constraint(equalTo: cancellSubscribtionButton.bottomAnchor, constant: 18),
             reportButton.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 28),
             reportButton.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -245),
             reportButton.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor, constant: -20)

@@ -58,7 +58,7 @@ final class FeedViewController: UIViewController {
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        NotificationCenter.default.addObserver(self, selector: #selector(fetchPostsIfNeeded), name: Notification.Name("newPost"), object: nil)
+        presenter.addUserListener()
     }
 
     override func viewDidLoad() {
@@ -68,6 +68,11 @@ final class FeedViewController: UIViewController {
         tuneTableView()
         layout()
         presenter.fetchPosts()
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        presenter.removeListener()
     }
 
     // MARK: -FUNCS
@@ -83,10 +88,6 @@ final class FeedViewController: UIViewController {
 
     func tuneNavItem() {
         self.navigationItem.title = .localized(string: "Главная")
-    }
-
-    @objc func fetchPostsIfNeeded() {
-        presenter.fetchPosts()
     }
 
     func user(forSection: Int) -> FirebaseUser? {

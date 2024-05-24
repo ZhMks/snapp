@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import FirebaseAuth
 
 enum MenuState {
     case feedMenu
@@ -70,6 +71,7 @@ final class MenuForPostPresenter: MenuForPostPresenterProtocol {
             guard let self else { return }
             switch result {
             case .success(let success):
+                print(success.image)
                 view?.addToArchiveSuccess()
             case .failure(let failure):
                 view?.showError(descr: failure.localizedDescription)
@@ -89,10 +91,11 @@ final class MenuForPostPresenter: MenuForPostPresenterProtocol {
 
     func deletePost() {
         guard let user = user.documentID else { return }
-        firestoreService.deleteDocument(post: post, user: user) { [weak self] result in
+        guard let postID = post.documentID else { return }
+        firestoreService.deleteDocument(docID: postID, user: user) { [weak self] result in
             guard let self else { return }
             switch result {
-            case .success(let success):
+            case .success(_):
                 view?.postIsDeleted()
             case .failure(let failure):
                 view?.showError(descr: failure.localizedDescription)
@@ -107,6 +110,12 @@ final class MenuForPostPresenter: MenuForPostPresenterProtocol {
         case .postMenu:
             view?.updateViewForPost()
         }
+    }
+
+    func removeSubscribtion() {
+        guard let mainUser = Auth.auth().currentUser?.uid else { return }
+        guard let userID = user.documentID else { return }
+        firestoreService.removeSubscribtion(sub: userID, for: mainUser)
     }
 
 }

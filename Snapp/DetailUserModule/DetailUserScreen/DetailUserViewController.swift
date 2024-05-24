@@ -142,8 +142,13 @@ class DetailUserViewController: UIViewController {
 
     private lazy var photoCollectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .horizontal
+        layout.minimumInteritemSpacing = 10
         let photoScrollView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         photoScrollView.translatesAutoresizingMaskIntoConstraints = false
+        photoScrollView.delegate = self
+        photoScrollView.dataSource = self
+        photoScrollView.register(ProfileCollectionViewCell.self, forCellWithReuseIdentifier: ProfileCollectionViewCell.identifier)
         return photoScrollView
     }()
 
@@ -231,6 +236,13 @@ class DetailUserViewController: UIViewController {
 // MARK: -OUTPUT PRESENTER
 extension DetailUserViewController: DetailViewProtocol {
 
+    func updateAlbum(image: [UIImage]) {
+        DispatchQueue.main.async { [weak self] in
+            self?.photoCollectionView.reloadData()
+        }
+    }
+    
+
     func updateData(data: [EachPost]) {
         DispatchQueue.main.async { [weak self] in
             guard let self else { return }
@@ -287,6 +299,30 @@ extension DetailUserViewController: UITableViewDelegate {
         self.navigationController?.pushViewController(detailPostVC, animated: true)
     }
 
+}
+
+// MARK: -UICOLLECTIONVIEWDATASOURCE
+extension DetailUserViewController: UICollectionViewDataSource {
+
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        guard let number = presenter.photoAlbum?.count else { return 0 }
+        return number
+    }
+
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ProfileCollectionViewCell.identifier, for: indexPath) as? ProfileCollectionViewCell else { return UICollectionViewCell() }
+        guard let data = presenter.photoAlbum?[indexPath.row] else { return UICollectionViewCell() }
+        cell.updateView(image: data)
+        return cell
+    }
+
+}
+
+// MARK: -UICOLLECTIONVIEWDELEGATE
+extension DetailUserViewController: UICollectionViewDelegateFlowLayout {
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        CGSize(width: 72, height: 68)
+    }
 }
 
 // MARK: -LAYOUT
@@ -431,7 +467,7 @@ extension DetailUserViewController {
             photoCollectionView.topAnchor.constraint(equalTo: photogalleryLabel.bottomAnchor, constant: 12),
             photoCollectionView.leadingAnchor.constraint(equalTo: mainContentView.leadingAnchor, constant: 16),
             photoCollectionView.trailingAnchor.constraint(equalTo: mainContentView.trailingAnchor),
-            photoCollectionView.bottomAnchor.constraint(equalTo: mainContentView.bottomAnchor, constant: -60),
+            photoCollectionView.heightAnchor.constraint(greaterThanOrEqualToConstant: 110),
 
             viewForTableTitle.topAnchor.constraint(equalTo: photoCollectionView.bottomAnchor, constant: 10),
             viewForTableTitle.leadingAnchor.constraint(equalTo: mainContentView.leadingAnchor),

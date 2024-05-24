@@ -38,7 +38,7 @@ final class SearchTableViewCell: UITableViewCell {
     // MARK: -LIFECYCLE
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        super.init(style: .subtitle, reuseIdentifier: reuseIdentifier)
+        super.init(style: .default, reuseIdentifier: reuseIdentifier)
         addViews()
         layout()
     }
@@ -96,7 +96,7 @@ final class SearchTableViewCell: UITableViewCell {
                 }
             }
         }
-        userNameAndSurname.text = name + surname
+        userNameAndSurname.text = "\(name)" + " \(surname)"
         userJob.text = job
     }
 

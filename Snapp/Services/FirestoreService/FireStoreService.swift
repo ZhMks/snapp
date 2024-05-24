@@ -54,18 +54,60 @@ protocol FireStoreServiceProtocol {
     func getDocLink(for id: String, user: String) -> String
     func disableCommentaries(id: String, user: String)
     func addDocToArchives(post: EachPost, user: String, completion: @escaping (Result<EachPost, Error>) -> Void)
-    func deleteDocument(post: EachPost, user: String, completion: @escaping (Result<EachPost, Error>) -> Void)
     func addSnapshotListenerToPosts(for user: String, completion: @escaping (Result<[EachPost], Error>) -> Void)
+    func addSnapshotListenerToUser(for user: String, completion: @escaping (Result<FirebaseUser, Error>) -> Void)
+    func removeListenerForPosts()
+    func removeListenerForUser()
+    func deleteDocument(docID: String, user: String, completion: @escaping (Result<Bool, Error>) -> Void)
+    func removeSubscribtion(sub: String, for user: String)
 }
 
 
 final class FireStoreService: FireStoreServiceProtocol {
 
+    var postListner: ListenerRegistration?
+
+    var userListner: ListenerRegistration?
+
+    func addSnapshotListenerToUser(for user: String, completion: @escaping (Result<FirebaseUser, Error>) -> Void) {
+        let ref = Firestore.firestore().collection("Users").document(user)
+        self.userListner = ref.addSnapshotListener({ snapshot, error in
+            if let error = error {
+                completion(.failure(error))
+            }
+
+            if let snapshot = snapshot {
+                do {
+                    let user = try snapshot.data(as: FirebaseUser.self)
+                    completion(.success(user))
+                } catch let DecodingError.dataCorrupted(context) {
+                    print(context)
+                } catch let DecodingError.keyNotFound(key, context) {
+                    print("Key '\(key)' not found:", context.debugDescription)
+                    print("codingPath:", context.codingPath)
+                } catch let DecodingError.valueNotFound(value, context) {
+                    print("Value '\(value)' not found:", context.debugDescription)
+                    print("codingPath:", context.codingPath)
+                } catch let DecodingError.typeMismatch(type, context)  {
+                    print("Type '\(type)' mismatch:", context.debugDescription)
+                    print("codingPath:", context.codingPath)
+                } catch {
+                    print("error: ", error)
+                    completion(.failure(error))
+                }
+            }
+        })
+    }
+
+    func removeListenerForUser() {
+        self.userListner?.remove()
+    }
+
     func addSnapshotListenerToPosts(for user: String, completion: @escaping (Result<[EachPost], Error>) -> Void) {
         let ref =  Firestore.firestore().collection("Users").document(user).collection("posts")
         var updatedArray: [EachPost] = []
         let dispatchGroup = DispatchGroup()
-        ref.addSnapshotListener { snapshot, error in
+        self.postListner = ref.addSnapshotListener { snapshot, error in
             if let error = error {
                 completion(.failure(error))
             }
@@ -80,7 +122,6 @@ final class FireStoreService: FireStoreServiceProtocol {
                         dispatchGroup.enter()
                         do {
                             let post = try  document.data(as: EachPost.self)
-                            print("POST IN FIRESTORE: \(post)")
                             updatedArray.append(post)
                         } catch {
                             completion(.failure(error))
@@ -94,6 +135,10 @@ final class FireStoreService: FireStoreServiceProtocol {
                 }
             }
         }
+    }
+
+    func removeListenerForPosts() {
+        postListner?.remove()
     }
 
 
@@ -453,40 +498,73 @@ final class FireStoreService: FireStoreServiceProtocol {
 
     func getDocLink(for id: String, user: String) -> String {
     let docRef = Firestore.firestore().collection("Users").document(user).collection("posts").document(id)
-    return docRef.firestore.description
+        return docRef.path.description
     }
 
     func addDocToArchives(post: EachPost, user: String, completion: @escaping (Result<EachPost, Error>) -> Void) {
-        if let documentID = post.documentID {
-            let docRef = Firestore.firestore().collection("Users").document(user).collection("posts").document(documentID)
-            let archiveRef = Firestore.firestore().collection("Users").document(user).collection("Archive")
-            do {
-                try archiveRef.addDocument(from: post)
-                docRef.delete { error in
-                    if let error = error {
+        guard let documentID = post.documentID else {
+            return
+        }
+        let archiveRef = Firestore.firestore().collection("Users").document(user).collection("Archive")
+        let dispatchGroup = DispatchGroup()
+        var newPost = post
+
+        if let image = post.image {
+            let networkService = NetworkService()
+            networkService.fetchImage(string: image) { [weak self] result in
+                guard let self else { return }
+                switch result {
+                case .success(let success):
+                    dispatchGroup.enter()
+                    guard let image = UIImage(data: success) else { return }
+                    let storagRef = Storage.storage().reference().child("users").child(user).child("archive").child(post.date)
+                    saveImageIntoStorage(urlLink: storagRef, photo: image) { [weak self] result in
+                        guard self != nil else { return }
+                        switch result {
+                        case .success(let success):
+                            newPost.image = success.absoluteString
+                            self?.deleteDocument(docID: documentID, user: user) { [weak self] result in
+                                guard  self != nil else { return }
+                                switch result {
+                                case .success(_):
+                                    dispatchGroup.leave()
+                                case .failure(let failure):
+                                    completion(.failure(failure))
+                                }
+                            }
+                        case .failure(let failure):
+                            completion(.failure(failure))
+                        }
+                    }
+                case .failure(let failure):
+                    completion(.failure(failure))
+                }
+                dispatchGroup.notify(queue: .main) {
+                    do {
+                        try archiveRef.addDocument(from: newPost)
+                        completion(.success(newPost))
+                    } catch {
                         completion(.failure(error))
                     }
-                    completion(.success(post))
                 }
-            } catch {
+            }
+        }
+    }
+
+    func deleteDocument(docID: String, user: String, completion: @escaping (Result<Bool, Error>) -> Void) {
+        let docRef = Firestore.firestore().collection("Users").document(user).collection("posts").document(docID)
+        docRef.delete { error in
+            if let error = error {
                 completion(.failure(error))
             }
+            completion(.success(true))
         }
     }
 
-    func deleteDocument(post: EachPost, user: String, completion: @escaping (Result<EachPost, Error>) -> Void) {
-
-        if let documentID = post.documentID {
-
-            let docRef = Firestore.firestore().collection("Users").document(user).collection("posts").document(documentID)
-
-            docRef.delete { error in
-                if let error = error {
-                    completion(.failure(error))
-                }
-                completion(.success(post))
-            }
-        }
+    func removeSubscribtion(sub: String, for user: String) {
+        let docRef = Firestore.firestore().collection("Users").document(user)
+        docRef.updateData(["subscribtions" : FieldValue.arrayRemove([sub])])
     }
+
 }
 

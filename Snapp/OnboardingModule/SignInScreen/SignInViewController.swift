@@ -44,7 +44,7 @@ class SignInViewController: UIViewController {
 // MARK: -LIFECYCLE
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = ColorCreator.shared.createBackgroundColorWithAlpah(alpha: 0.7)
+        view.backgroundColor = ColorCreator.shared.createBackgroundColorWithAlpah(alpha: 0.75)
         addSubviews()
         layout()
     }
@@ -90,12 +90,11 @@ extension SignInViewController {
         let safeArea = view.safeAreaLayoutGuide
 
         NSLayoutConstraint.activate([
-            acceptCodeTextField.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: 260),
-            acceptCodeTextField.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 70),
-            acceptCodeTextField.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -150),
-            acceptCodeTextField.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor, constant: -369),
+            acceptCodeTextField.centerXAnchor.constraint(equalTo: safeArea.centerXAnchor),
+            acceptCodeTextField.centerYAnchor.constraint(equalTo: safeArea.centerYAnchor),
+            acceptCodeTextField.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor, constant: -320),
 
-            verifyCodeButton.topAnchor.constraint(equalTo: acceptCodeTextField.bottomAnchor, constant: 86),
+            verifyCodeButton.topAnchor.constraint(equalTo: acceptCodeTextField.bottomAnchor, constant: 56),
             verifyCodeButton.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 58),
             verifyCodeButton.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -56),
             verifyCodeButton.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor, constant: -236)
