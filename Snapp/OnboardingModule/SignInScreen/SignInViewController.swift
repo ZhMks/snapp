@@ -19,6 +19,7 @@ class SignInViewController: UIViewController {
         acceptCodeTextField.layer.cornerRadius = 10.0
         acceptCodeTextField.layer.borderColor = ColorCreator.shared.createButtonColor().cgColor
         acceptCodeTextField.layer.borderWidth = 1.0
+        acceptCodeTextField.textAlignment = .center
         acceptCodeTextField.keyboardType = .numberPad
         let centeredParagraphStyle = NSMutableParagraphStyle()
         centeredParagraphStyle.alignment = .center
@@ -43,7 +44,7 @@ class SignInViewController: UIViewController {
 // MARK: -LIFECYCLE
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = ColorCreator.shared.createBackgroundColorWithAlpah(alpha: 0.5)
+        view.backgroundColor = ColorCreator.shared.createBackgroundColorWithAlpah(alpha: 0.7)
         addSubviews()
         layout()
     }
@@ -54,7 +55,6 @@ class SignInViewController: UIViewController {
         presenter.checkCode(code: code) { [weak self] result in
             switch result {
             case .success(let user):
-//                let fireUser = FirebaseUser(name: "King", surname: "PunchMan", identifier: "KingsPuch", job: "Hero", subscribers: ["Sub1", "Sub2"], subscribtions: ["Sub3", "Sub4"], stories: ["Stories1", "Stories2"], image: "https://firebasestorage.googleapis.com:443/v0/b/snappproject-9ca98.appspot.com/o/users%2FuuptdvnyBrcXwovEv3U69uxMD7m1%2Favatar?alt=media&token=32020d11-35ff-4be8-b96f-009bccb28d4a")
                 let firestoreService = self?.presenter.firestoreService
                 let profileVC = ProfileViewController()
                 guard let userID = Auth.auth().currentUser?.uid else { return }
@@ -91,8 +91,8 @@ extension SignInViewController {
 
         NSLayoutConstraint.activate([
             acceptCodeTextField.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: 260),
-            acceptCodeTextField.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 66),
-            acceptCodeTextField.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -36),
+            acceptCodeTextField.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 70),
+            acceptCodeTextField.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -150),
             acceptCodeTextField.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor, constant: -369),
 
             verifyCodeButton.topAnchor.constraint(equalTo: acceptCodeTextField.bottomAnchor, constant: 86),

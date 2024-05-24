@@ -38,6 +38,8 @@ final class SearchPresenter: SearchPresenterProtocol {
             switch result {
             case .success(let firebaseUserArray):
                 for firebaseUser in firebaseUserArray {
+                    print("User from Internet: \(firebaseUser.documentID)")
+                    print("Current user: \(currentUser?.uid)")
                     if usersArray.isEmpty {
                         if firebaseUser.documentID! != (currentUser?.uid)! {
                             usersArray.append(firebaseUser)

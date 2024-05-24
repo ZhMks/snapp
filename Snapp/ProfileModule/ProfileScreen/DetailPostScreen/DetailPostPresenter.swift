@@ -10,9 +10,10 @@ import FirebaseAuth
 
 protocol DetailPostViewProtocol: AnyObject {
     func updateImageView(image: UIImage)
-    func showError()
+    func showError(descr: String)
     func updateCommentsTableView()
-    func showCommentVC(with: String, commentID: String?)
+    func showCommentVC(with: String, commentID: String?, state: CommentState)
+    func updateCommentsNumber()
 }
 
 protocol DetailPostPresenterProtocol: AnyObject {
@@ -23,7 +24,7 @@ final class DetailPostPresenter: DetailPostPresenterProtocol {
 
     weak var view: DetailPostViewProtocol?
     let user: FirebaseUser
-    let post: EachPost
+    var post: EachPost
     let image: UIImage
     var comments: [Comment : [Answer]?]?
     let firestoreService: FireStoreServiceProtocol
@@ -44,7 +45,6 @@ final class DetailPostPresenter: DetailPostPresenterProtocol {
                 guard let self else { return }
                 switch result {
                 case .success(let success):
-                    print("success")
                     guard let image = UIImage(data: success) else { return }
                     self.view?.updateImageView(image: image)
                 case .failure(let failure):
@@ -55,6 +55,7 @@ final class DetailPostPresenter: DetailPostPresenterProtocol {
     }
 
     func fetchComments() {
+        updateData()
         comments = [:]
         guard let post = post.documentID else { return }
         guard let user = user.documentID else { return }
@@ -62,7 +63,6 @@ final class DetailPostPresenter: DetailPostPresenterProtocol {
             guard let self else { return }
             switch result {
             case .success(let commentaries):
-                print(commentaries)
                 for comment in commentaries {
                     comments?.updateValue(nil, forKey: comment)
                     guard let documentID = comment.documentID else { return }
@@ -70,24 +70,42 @@ final class DetailPostPresenter: DetailPostPresenterProtocol {
                         guard let self else { return }
                         switch result {
                         case .success(let answers):
-                            print(answers)
                             comments?.updateValue(answers, forKey: comment)
                         case .failure(let failure):
-                            view?.showError()
+                            view?.showError(descr: failure.localizedDescription)
                         }
                     }
                 }
             case .failure(let failure):
-                view?.showError()
+                view?.showError(descr: failure.localizedDescription)
             }
-            DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-                self.view?.updateCommentsTableView()
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2) { [weak self] in
+                guard let self else { return }
+                view?.updateCommentsTableView()
             }
         }
     }
 
-    func showCommetVC(with user: String, commentID: String?) {
-        view?.showCommentVC(with: user, commentID: commentID)
+    func updateData() {
+        guard let user = user.documentID else { return }
+        firestoreService.getPosts(sub: user) { [weak self] result in
+            guard let self else { return }
+            switch result {
+            case .success(let success):
+                for eachpost in success {
+                    if eachpost.documentID! == post.documentID! {
+                        self.post = eachpost
+                        view?.updateCommentsNumber()
+                    }
+                }
+            case .failure(let failure):
+                view?.showError(descr: failure.localizedDescription)
+            }
+        }
+    }
+
+    func showCommetVC(with user: String, commentID: String?, state: CommentState) {
+        view?.showCommentVC(with: user, commentID: commentID, state: state)
     }
 
 }

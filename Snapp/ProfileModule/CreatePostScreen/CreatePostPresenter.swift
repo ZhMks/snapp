@@ -38,9 +38,9 @@ final class CreatePostPresenter: CreatePostPresenterProtocol {
 
     func createPost(text: String, image: UIImage?, completion: @escaping (Result<[EachPost]?, Error>) -> Void) {
         let date = Date()
-        let formatter = DateFormatter()
-        formatter.dateFormat = "dd-MM-yyyy"
-        let stringFromDate = formatter.string(from: date)
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "dd MMM"
+        let stringFromDate = dateFormatter.string(from: date)
 
         firestoreService.createPost(date: stringFromDate, text: text, image: image, for: userID) { [weak self] result in
             guard let self else { return }
@@ -50,7 +50,7 @@ final class CreatePostPresenter: CreatePostPresenterProtocol {
                                         image: firestorePost.image,
                                         likes: firestorePost.likes,
                                         commentaries: firestorePost.commentaries,
-                                        date: firestorePost.date)
+                                        date: firestorePost.date, isCommentariesEnabled: true)
                 posts.append(eachPost)
                 completion(.success(posts))
             case .failure(let error):

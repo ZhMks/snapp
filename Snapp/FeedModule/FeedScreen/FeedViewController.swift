@@ -56,6 +56,11 @@ final class FeedViewController: UIViewController {
 
     // MARK: -LIFECYCLE
 
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        NotificationCenter.default.addObserver(self, selector: #selector(fetchPostsIfNeeded), name: Notification.Name("newPost"), object: nil)
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
@@ -78,6 +83,17 @@ final class FeedViewController: UIViewController {
 
     func tuneNavItem() {
         self.navigationItem.title = .localized(string: "Главная")
+    }
+
+    @objc func fetchPostsIfNeeded() {
+        presenter.fetchPosts()
+    }
+
+    func user(forSection: Int) -> FirebaseUser? {
+        guard let user = presenter.posts?.keys else {
+            return nil
+        }
+        return Array(user)[forSection]
     }
 
 }
@@ -143,7 +159,6 @@ extension FeedViewController: UICollectionViewDataSource {
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: FeedCollectionViewCell.identifier, for: indexPath) as? FeedCollectionViewCell else { return UICollectionViewCell() }
-        cell.backgroundColor = .blue
         guard let data = presenter.userStories?[indexPath.row] else { return  UICollectionViewCell() }
         cell.updateCell(image: data)
         return cell
@@ -154,13 +169,27 @@ extension FeedViewController: UICollectionViewDataSource {
 extension FeedViewController: UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-//        let detailPostVC = DetailPostViewController()
-//        guard let data = presenter.posts?[indexPath.row] else { return }
-//        guard let user = presenter.subscribers?[indexPath.row] else { return }
-//        guard let image = presenter.mainUser.image else { return }
-//        let detailPostPresenter = DetailPostPresenter(view: detailPostVC, user: user, post: data, image: image)
-//        detailPostVC.presenter = detailPostPresenter
-//        self.navigationController?.pushViewController(detailPostVC, animated: true)
+        let detailPostVC = DetailPostViewController()
+        guard let user = user(forSection: indexPath.section) else { return }
+        guard let answer = presenter.posts?[user]?[indexPath.row] else { return }
+        if let image = user.image {
+            let networkService = NetworkService()
+            networkService.fetchImage(string: image) { [weak self] result in
+                guard let self else { return }
+                switch result {
+                case .success(let success):
+                    DispatchQueue.main.async { [weak self] in
+                        guard let self else { return }
+                        guard let avatarImage = UIImage(data: success) else { return }
+                            let detailPostPresenter = DetailPostPresenter(view: detailPostVC, user: user, post: answer, image: avatarImage, firestoreService: self.presenter.firestoreService)
+                            detailPostVC.presenter = detailPostPresenter
+                            self.navigationController?.pushViewController(detailPostVC, animated: true)
+                    }
+                case .failure(let failure):
+                    return
+                }
+            }
+        }
     }
 
 }
@@ -170,21 +199,22 @@ extension FeedViewController: UITableViewDataSource {
 
     func numberOfSections(in tableView: UITableView) -> Int {
         guard let number = presenter.posts?.count else { return 0 }
-        print("Number of sections: \(number)")
         return number
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        guard let number = presenter.posts?[section].count else { return 0 }
-        print("Number of Rows: \(number)")
+        guard let user = user(forSection: section) else { return 0 }
+        guard let number = presenter.posts?[user]?.count else { return 0 }
         return number
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: PostTableCell.identifier, for: indexPath) as? PostTableCell else { return UITableViewCell() }
-        guard let eachPost = presenter.posts?[indexPath.section][indexPath.row] else { return UITableViewCell() }
-        let user = FirebaseUser(name: "yest", surname: "test", identifier: "TestMe", job: "Test", subscribers: [], subscribtions: [], stories: [], image: "https://firebasestorage.googleapis.com:443/v0/b/snappproject-9ca98.appspot.com/o/users%2F7vclK5316wWx7l67O3YrLNDmLFv2%2Favatar?alt=media&token=c7239d7e-ace3-4a38-9017-777092908a99", photoAlbum: [])
-        cell.updateView(post: eachPost, user: user, date: eachPost.date)
+        guard let user = user(forSection: indexPath.section) else { return UITableViewCell() }
+        if let data = presenter.posts?[user]?[indexPath.row] {
+            cell.updateView(post: data, user: user, date: data.date, firestoreService: presenter.firestoreService)
+            cell.state = .feedCell
+        }
         return cell
     }
 

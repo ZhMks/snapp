@@ -63,6 +63,9 @@ class PhotoalbumViewController: UIViewController {
         let flowLayout = UICollectionViewFlowLayout()
         let photoCollectionView = UICollectionView(frame: .zero, collectionViewLayout: flowLayout)
         photoCollectionView.translatesAutoresizingMaskIntoConstraints = false
+        photoCollectionView.dataSource = self
+        photoCollectionView.delegate = self
+        photoCollectionView.register(ProfileCollectionViewCell.self, forCellWithReuseIdentifier: ProfileCollectionViewCell.identifier)
         return photoCollectionView
     }()
 
@@ -72,6 +75,8 @@ class PhotoalbumViewController: UIViewController {
         super.viewDidLoad()
         addSubviews()
         layout()
+        tuneNavItem()
+        view.backgroundColor = .systemBackground
     }
 
     // MARK: -FUNCS
@@ -84,11 +89,18 @@ class PhotoalbumViewController: UIViewController {
         settingsButton.tintColor = .systemOrange
         self.navigationItem.rightBarButtonItem = settingsButton
 
-        let textView = UIView(frame: CGRect(x: 0, y: 0, width: 80, height: 30))
-        let title = UILabel(frame: CGRect(x: 0, y: 0, width: 80, height: 30))
+        let leftArrowButton = UIButton(type: .system)
+        leftArrowButton.setImage(UIImage(systemName: "arrow.left"), for: .normal)
+        leftArrowButton.tintColor = .systemOrange
+        leftArrowButton.frame = CGRect(x: 0, y: 0, width: 30, height: 30)
+        leftArrowButton.addTarget(self, action: #selector(dismissController), for: .touchUpInside)
+
+        let textView = UIView(frame: CGRect(x: 0, y: 0, width: 350, height: 30))
+        let title = UILabel(frame: CGRect(x: 40, y: 0, width: 250, height: 30))
         title.text = .localized(string: "Фотографии")
         title.font = UIFont(name: "Inter-Medium", size: 14)
         textView.addSubview(title)
+        textView.addSubview(leftArrowButton)
         let leftButton = UIBarButtonItem(customView: textView)
         self.navigationItem.leftBarButtonItem = leftButton
     }
@@ -96,14 +108,50 @@ class PhotoalbumViewController: UIViewController {
     @objc func addImageToAlbum() {
 
     }
+
+    @objc func dismissController() {
+        self.navigationController?.popViewController(animated: true)
+    }
 }
 
 
     // MARK: -PRESENTEROUTPUT
 extension PhotoalbumViewController: PhotoalbumViewProtocol {
-
+    func showError(error: String) {
+        print(error)
+    }
+    
+    func updateCollectionView() {
+        photoCollectionView.reloadData()
+    }
 }
 
+
+//MARK: -UICOLLECTIONVIEWDATASOURCE
+extension PhotoalbumViewController: UICollectionViewDataSource {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        presenter.photoAlbum.count
+    }
+
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ProfileCollectionViewCell.identifier, for: indexPath) as? ProfileCollectionViewCell else { return UICollectionViewCell() }
+        let image = presenter.photoAlbum[indexPath.row]
+        cell.updateView(image: image)
+        return cell
+    }
+}
+
+//MARK: -UICOLLECTIONVIEWDELEGATE
+
+extension PhotoalbumViewController: UICollectionViewDelegateFlowLayout {
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        CGSize(width: 108, height: 80)
+    }
+
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
+        UIEdgeInsets(top: 0, left: 4, bottom: 0, right: 4)
+    }
+}
 
 // MARK: -LAYOUT
 
@@ -145,16 +193,16 @@ extension PhotoalbumViewController {
             bottomSeparatorView.topAnchor.constraint(equalTo: albumCollectionView.bottomAnchor, constant: 15),
             bottomSeparatorView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 26),
             bottomSeparatorView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -26),
-            bottomSeparatorView.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor, constant: -529),
+            bottomSeparatorView.heightAnchor.constraint(equalToConstant: 1),
 
             photoCollectionViewTitle.topAnchor.constraint(equalTo: bottomSeparatorView.bottomAnchor, constant: 15),
             photoCollectionViewTitle.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 28),
-            photoCollectionViewTitle.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -280),
+            photoCollectionViewTitle.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -150),
             photoCollectionViewTitle.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor, constant: -495),
 
             photoCollectionView.topAnchor.constraint(equalTo: photoCollectionViewTitle.bottomAnchor, constant: 15),
             photoCollectionView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 28),
-            photoCollectionView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -280),
+            photoCollectionView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -80),
             photoCollectionView.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor)
         ])
     }

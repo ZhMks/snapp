@@ -63,6 +63,7 @@ class ProfileViewController: UIViewController {
         editButton.setTitle(.localized(string: "Редактировать"), for: .normal)
         editButton.backgroundColor = .systemOrange
         editButton.layer.cornerRadius = 10.0
+        editButton.addTarget(self, action: #selector(editProfileButtonTapped), for: .touchUpInside)
         return editButton
     }()
 
@@ -193,6 +194,7 @@ class ProfileViewController: UIViewController {
         photogalleryButton.translatesAutoresizingMaskIntoConstraints = false
         photogalleryButton.setBackgroundImage(UIImage(systemName: "chevron.right"), for: .normal)
         photogalleryButton.tintColor = ColorCreator.shared.createButtonColor()
+        photogalleryButton.addTarget(self, action: #selector(goToPhotoalbumScreen), for: .touchUpInside)
         return photogalleryButton
     }()
 
@@ -204,7 +206,7 @@ class ProfileViewController: UIViewController {
         photoCollectionView.dataSource = self
         photoCollectionView.delegate = self
         layout.scrollDirection = .horizontal
-        layout.minimumInteritemSpacing = 5
+        layout.minimumInteritemSpacing = 10
         return photoCollectionView
     }()
 
@@ -251,8 +253,8 @@ class ProfileViewController: UIViewController {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        NotificationCenter.default.addObserver(self, selector: #selector(fetchPostsIfNeeded), name: Notification.Name("newPost"), object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(fetchPostsIfNeeded), name: Notification.Name("subscriberAdded"), object: nil)
+
+        NotificationCenter.default.addObserver(self, selector: #selector(subscriberAdded), name: Notification.Name("subscriberAdded"), object: nil)
     }
 
     override func viewDidLoad() {
@@ -263,6 +265,7 @@ class ProfileViewController: UIViewController {
         tuneTableView()
         layout()
         addTapGestures()
+        presenter.addSnapshotListener()
     }
 
     override func viewWillDisappear(_ animated: Bool) {
@@ -284,12 +287,14 @@ class ProfileViewController: UIViewController {
         let settingsVC = SettingsViewController()
         let settingsPresenter = SettingPresenter(view: settingsVC, user: presenter.mainUser, firestoreService: presenter.firestoreService)
         settingsVC.presenter = settingsPresenter
-        settingsVC.modalPresentationStyle = .pageSheet
+        settingsVC.modalPresentationStyle = .overCurrentContext
+        let transition = CATransition()
+        transition.duration = 0.5
+        transition.type = CATransitionType.moveIn
+        transition.subtype = CATransitionSubtype.fromRight
+        transition.timingFunction = CAMediaTimingFunction(name:CAMediaTimingFunctionName.easeIn)
+        view.window!.layer.add(transition, forKey: kCATransition)
         navigationController?.present(settingsVC, animated: true)
-    }
-
-    @objc func fetchPostsIfNeeded() {
-        presenter.fetchPosts()
     }
 
     @objc func createStorieButtonTapped() {
@@ -299,6 +304,7 @@ class ProfileViewController: UIViewController {
     @objc func subscriberAdded() {
         presenter.fetchSubsribers()
     }
+
 
     @objc func addImageButtonTapped() {
         let imagePicker = UIImagePickerController()
@@ -315,13 +321,34 @@ class ProfileViewController: UIViewController {
     @objc func tapOnViewHandler() {
         menuForPostView.removeFromSuperview()
     }
+
+    @objc func goToPhotoalbumScreen() {
+        let photoAlbumVC = PhotoalbumViewController()
+        let photoAlbumPresenter = PhotoalbumPresenter(view: photoAlbumVC, user: presenter.mainUser, firestoreService: presenter.firestoreService)
+        photoAlbumVC.presenter = photoAlbumPresenter
+        navigationController?.pushViewController(photoAlbumVC, animated: true)
+    }
+
+    @objc func editProfileButtonTapped() {
+        let profileChangeController = ProfileChangeViewController()
+        let profileChangePresenter = ProfileChangePresenter(view: profileChangeController, user: presenter.mainUser, firestoreService: presenter.firestoreService)
+        profileChangeController.presenter = profileChangePresenter
+        profileChangeController.modalPresentationStyle = .overCurrentContext
+        let transition = CATransition()
+        transition.duration = 0.5
+        transition.type = CATransitionType.moveIn
+        transition.subtype = CATransitionSubtype.fromRight
+        transition.timingFunction = CAMediaTimingFunction(name:CAMediaTimingFunctionName.easeInEaseOut)
+        view.window!.layer.add(transition, forKey: kCATransition)
+        navigationController?.present(profileChangeController, animated: true)
+    }
 }
 
 // MARK: -OUTPUT PRESENTER
 extension ProfileViewController: ProfileViewProtocol {
 
     func showPostMenu() {
-        print()
+      print()
     }
 
 
@@ -337,7 +364,7 @@ extension ProfileViewController: ProfileViewProtocol {
     func updateAlbum(photo: [UIImage]?) {
         DispatchQueue.main.async { [weak self] in
             guard let self else { return }
-            photogalleryLabel.text = .localized(string: "Фотографии" + "  \(presenter.mainUser.stories.count)")
+            photogalleryLabel.text = .localized(string: "Фотографии" + "  \(presenter.mainUser.photoAlbum.count)")
             photoCollectionView.reloadData()
         }
     }
@@ -348,6 +375,7 @@ extension ProfileViewController: ProfileViewProtocol {
             guard let self else { return }
             numberOfPosts.text = .localized(string: "\(presenter.posts.count)"+"\nПостов")
             self.tuneTableView()
+            postsTableView.reloadData()
         }
     }
 
@@ -379,11 +407,8 @@ extension ProfileViewController: UITableViewDataSource {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: PostTableCell.identifier, for: indexPath) as? PostTableCell else { return UITableViewCell() }
         let data = presenter.posts[indexPath.row]
         let date = presenter.posts[indexPath.row].date
-        cell.buttonTappedHandler = { [weak self] in
-            guard let self else { return }
-            self.presenter.showPostMenu()
-        }
-        cell.updateView(post: data, user: presenter.mainUser, date: date)
+        cell.updateView(post: data, user: presenter.mainUser, date: date, firestoreService: presenter.firestoreService)
+        cell.state = .profileCell
         return cell
     }
 
@@ -406,6 +431,7 @@ extension ProfileViewController: UITableViewDelegate {
         guard let image = presenter.image  else { return }
         let detailPostPresenter = DetailPostPresenter(view: detailPostVC, user: presenter.mainUser, post: data, image: image, firestoreService: presenter.firestoreService)
         detailPostVC.presenter = detailPostPresenter
+        tableView.deselectRow(at: indexPath, animated: true)
         self.navigationController?.pushViewController(detailPostVC, animated: true)
     }
 
@@ -413,10 +439,6 @@ extension ProfileViewController: UITableViewDelegate {
 
 // MARK: -COLLECTIONVIEWDATASOURCE
 extension ProfileViewController: UICollectionViewDataSource {
-
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        CGSize(width: 72, height: 68)
-    }
 
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         guard let number = presenter.photoAlbum?.count else { return 0 }
@@ -435,7 +457,9 @@ extension ProfileViewController: UICollectionViewDataSource {
 
 // MARK: -COLLECTIONVIEWDELEGATE
 extension ProfileViewController: UICollectionViewDelegateFlowLayout {
-
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        CGSize(width: 72, height: 68)
+    }
 }
 
 // MARK: -IMAGEPICKERDELEGATE
@@ -463,8 +487,8 @@ extension ProfileViewController {
         settingsButton.tintColor = .systemOrange
         self.navigationItem.rightBarButtonItem = settingsButton
 
-        let textView = UIView(frame: CGRect(x: 0, y: 0, width: 80, height: 30))
-        let title = UILabel(frame: CGRect(x: 0, y: 0, width: 80, height: 30))
+        let textView = UIView(frame: CGRect(x: 0, y: 0, width: 240, height: 30))
+        let title = UILabel(frame: CGRect(x: 0, y: 0, width: 150, height: 30))
         title.text = presenter.mainUser.identifier
         title.font = UIFont(name: "Inter-Medium", size: 14)
         textView.addSubview(title)
@@ -531,16 +555,15 @@ extension ProfileViewController {
             jobLabel.trailingAnchor.constraint(equalTo: mainContentView.trailingAnchor, constant: -110),
             jobLabel.bottomAnchor.constraint(equalTo: mainContentView.bottomAnchor, constant: -410),
 
-            detailInfo.topAnchor.constraint(equalTo: jobLabel.bottomAnchor, constant: 5),
+            detailInfo.centerYAnchor.constraint(equalTo:signalImage.centerYAnchor),
             detailInfo.leadingAnchor.constraint(equalTo: mainContentView.leadingAnchor, constant: 124),
             detailInfo.trailingAnchor.constraint(equalTo: mainContentView.trailingAnchor, constant: -90),
             detailInfo.bottomAnchor.constraint(equalTo: mainContentView.bottomAnchor, constant: -380),
 
-            signalImage.topAnchor.constraint(equalTo: jobLabel.bottomAnchor, constant: 5),
+            signalImage.centerYAnchor.constraint(equalTo: detailInfo.centerYAnchor),
             signalImage.leadingAnchor.constraint(equalTo: mainContentView.leadingAnchor, constant: 96),
-            signalImage.bottomAnchor.constraint(equalTo: mainContentView.bottomAnchor, constant: -380),
+            signalImage.trailingAnchor.constraint(equalTo: mainContentView.trailingAnchor, constant: -280),
             signalImage.heightAnchor.constraint(equalToConstant: 20),
-            signalImage.widthAnchor.constraint(equalToConstant: 20),
 
             editButton.topAnchor.constraint(equalTo: signalImage.bottomAnchor, constant: 10),
             editButton.leadingAnchor.constraint(equalTo: mainContentView.leadingAnchor, constant: 16),
@@ -564,7 +587,7 @@ extension ProfileViewController {
             separatorView.trailingAnchor.constraint(equalTo: mainContentView.trailingAnchor, constant: -16),
             separatorView.bottomAnchor.constraint(equalTo: mainContentView.bottomAnchor, constant: -249),
 
-            createPostView.topAnchor.constraint(equalTo: separatorView.bottomAnchor, constant: 5),
+            createPostView.topAnchor.constraint(equalTo: mainContentView.topAnchor, constant: 262),
             createPostView.leadingAnchor.constraint(equalTo: mainContentView.leadingAnchor, constant: 33),
             createPostView.trailingAnchor.constraint(equalTo: mainContentView.trailingAnchor, constant: -290),
             createPostView.bottomAnchor.constraint(equalTo: mainContentView.bottomAnchor, constant: -150),
@@ -579,7 +602,7 @@ extension ProfileViewController {
             createPostLabel.trailingAnchor.constraint(equalTo: createPostView.trailingAnchor),
             createPostLabel.bottomAnchor.constraint(equalTo: createPostView.bottomAnchor),
 
-            createStorieView.topAnchor.constraint(equalTo: separatorView.bottomAnchor, constant: 5),
+            createStorieView.topAnchor.constraint(equalTo: mainContentView.topAnchor, constant: 262),
             createStorieView.leadingAnchor.constraint(equalTo: mainContentView.leadingAnchor, constant: 145),
             createStorieView.trailingAnchor.constraint(equalTo: mainContentView.trailingAnchor, constant: -160),
             createStorieView.bottomAnchor.constraint(equalTo: mainContentView.bottomAnchor, constant: -150),
@@ -594,7 +617,7 @@ extension ProfileViewController {
             createStorieLabel.trailingAnchor.constraint(equalTo: createStorieView.trailingAnchor),
             createStorieLabel.bottomAnchor.constraint(equalTo: createStorieView.bottomAnchor),
 
-            addImageView.topAnchor.constraint(equalTo: separatorView.bottomAnchor, constant: 5),
+            addImageView.topAnchor.constraint(equalTo: mainContentView.topAnchor, constant: 262),
             addImageView.leadingAnchor.constraint(equalTo: mainContentView.leadingAnchor, constant: 273),
             addImageView.trailingAnchor.constraint(equalTo: mainContentView.trailingAnchor, constant: -50),
             addImageView.bottomAnchor.constraint(equalTo: mainContentView.bottomAnchor, constant: -150),
@@ -604,7 +627,7 @@ extension ProfileViewController {
             addImageButton.trailingAnchor.constraint(equalTo: addImageView.trailingAnchor, constant: -20),
             addImageButton.bottomAnchor.constraint(equalTo: addImageView.bottomAnchor, constant: -25),
 
-            addImageLabel.topAnchor.constraint(equalTo: addImageButton.bottomAnchor, constant: 4),
+            addImageLabel.topAnchor.constraint(equalTo: addImageButton.bottomAnchor, constant: 5),
             addImageLabel.leadingAnchor.constraint(equalTo: addImageView.leadingAnchor),
             addImageLabel.trailingAnchor.constraint(equalTo: addImageView.trailingAnchor),
             addImageLabel.bottomAnchor.constraint(equalTo: addImageView.bottomAnchor),
@@ -634,10 +657,9 @@ extension ProfileViewController {
             tableViewTitle.trailingAnchor.constraint(equalTo: viewForTableTitle.trailingAnchor, constant: -265),
             tableViewTitle.bottomAnchor.constraint(equalTo: viewForTableTitle.bottomAnchor, constant: -5),
 
-            searchButton.topAnchor.constraint(equalTo: viewForTableTitle.topAnchor, constant: 5),
+            searchButton.centerYAnchor.constraint(equalTo: tableViewTitle.centerYAnchor),
             searchButton.leadingAnchor.constraint(equalTo: viewForTableTitle.leadingAnchor, constant: 360),
             searchButton.trailingAnchor.constraint(equalTo: viewForTableTitle.trailingAnchor, constant: -8),
-            searchButton.bottomAnchor.constraint(equalTo: viewForTableTitle.bottomAnchor, constant: -5)
         ])
 
         signalImage.layer.cornerRadius = signalImage.frame.size.width / 2
@@ -651,7 +673,6 @@ extension ProfileViewController {
         postsTableView.tableFooterView = UIView()
         postsTableView.setAndLayout(header: mainContentView)
         postsTableView.separatorStyle = .none
-        self.postsTableView.reloadData()
     }
 
 }

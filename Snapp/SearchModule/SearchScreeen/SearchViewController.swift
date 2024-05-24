@@ -123,7 +123,8 @@ extension SearchViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: SearchTableViewCell.identifier, for: indexPath) as? SearchTableViewCell else { return UITableViewCell() }
         guard let dataSource = presenter?.usersArray[indexPath.row] else { return UITableViewCell() }
-        cell.updateCell(image: dataSource.image, name: dataSource.name, surname: dataSource.surname, job: dataSource.job)
+        guard let avatarImage = dataSource.image else { return UITableViewCell() }
+        cell.updateCell(image: avatarImage, name: dataSource.name, surname: dataSource.surname, job: dataSource.job)
         return cell
     }
 

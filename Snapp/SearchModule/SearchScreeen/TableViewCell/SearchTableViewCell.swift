@@ -20,18 +20,11 @@ final class SearchTableViewCell: UITableViewCell {
         return userImage
     }()
 
-    private lazy var userName: UILabel = {
+    private lazy var userNameAndSurname: UILabel = {
         let userName = UILabel()
         userName.translatesAutoresizingMaskIntoConstraints = false
         userName.font = UIFont(name: "Inter-Light", size: 12)
         return userName
-    }()
-
-    private lazy var userSurname: UILabel = {
-        let userSurname = UILabel()
-        userSurname.translatesAutoresizingMaskIntoConstraints = false
-        userSurname.font = UIFont(name: "Inter-Light", size: 12)
-        return userSurname
     }()
 
     private lazy var userJob: UILabel = {
@@ -58,8 +51,7 @@ final class SearchTableViewCell: UITableViewCell {
 
     func addViews() {
         contentView.addSubview(userImage)
-        contentView.addSubview(userName)
-        contentView.addSubview(userSurname)
+        contentView.addSubview(userNameAndSurname)
         contentView.addSubview(userJob)
     }
 
@@ -71,17 +63,12 @@ final class SearchTableViewCell: UITableViewCell {
             userImage.heightAnchor.constraint(equalToConstant: 69),
             userImage.widthAnchor.constraint(equalToConstant: 69),
 
-            userName.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: 15),
-            userName.leadingAnchor.constraint(equalTo: userImage.trailingAnchor, constant: 10),
-            userName.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -50),
-            userName.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor, constant: -60),
+            userNameAndSurname.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: 15),
+            userNameAndSurname.leadingAnchor.constraint(equalTo: userImage.trailingAnchor, constant: 10),
+            userNameAndSurname.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -50),
+            userNameAndSurname.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor, constant: -60),
 
-            userSurname.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: 15),
-            userSurname.leadingAnchor.constraint(equalTo: userName.trailingAnchor, constant: 10),
-            userSurname.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -10),
-            userSurname.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor, constant: -60),
-
-            userJob.topAnchor.constraint(equalTo: userName.bottomAnchor, constant: 15),
+            userJob.topAnchor.constraint(equalTo: userNameAndSurname.bottomAnchor, constant: 15),
             userJob.leadingAnchor.constraint(equalTo: userImage.trailingAnchor, constant: 10),
             userJob.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -20),
             userJob.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor, constant: -30)
@@ -109,8 +96,7 @@ final class SearchTableViewCell: UITableViewCell {
                 }
             }
         }
-        userName.text = name
-        userSurname.text = surname
+        userNameAndSurname.text = name + surname
         userJob.text = job
     }
 

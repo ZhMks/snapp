@@ -50,10 +50,51 @@ protocol FireStoreServiceProtocol {
     func getComments(post: String, user: String, completion: @escaping (Result<[Comment], Error>) -> Void)
     func addAnswerToComment(postID: String, user: String, commentID: String, answer: Answer, completion: @escaping (Result<Answer, Error>) -> Void)
     func getAnswers(post: String, comment: String, user: String, completion: @escaping (Result<[Answer], Error>) -> Void)
+    func saveIntoFavourites(post: EachPost, for user: String, completion: @escaping (Result<EachPost, Error>) -> Void)
+    func getDocLink(for id: String, user: String) -> String
+    func disableCommentaries(id: String, user: String)
+    func addDocToArchives(post: EachPost, user: String, completion: @escaping (Result<EachPost, Error>) -> Void)
+    func deleteDocument(post: EachPost, user: String, completion: @escaping (Result<EachPost, Error>) -> Void)
+    func addSnapshotListenerToPosts(for user: String, completion: @escaping (Result<[EachPost], Error>) -> Void)
 }
 
 
 final class FireStoreService: FireStoreServiceProtocol {
+
+    func addSnapshotListenerToPosts(for user: String, completion: @escaping (Result<[EachPost], Error>) -> Void) {
+        let ref =  Firestore.firestore().collection("Users").document(user).collection("posts")
+        var updatedArray: [EachPost] = []
+        let dispatchGroup = DispatchGroup()
+        ref.addSnapshotListener { snapshot, error in
+            if let error = error {
+                completion(.failure(error))
+            }
+
+            if let snapshot = snapshot {
+                if snapshot.documents.isEmpty {
+                    updatedArray = []
+                    completion(.success(updatedArray))
+                } else {
+                    updatedArray = []
+                    for document in snapshot.documents {
+                        dispatchGroup.enter()
+                        do {
+                            let post = try  document.data(as: EachPost.self)
+                            print("POST IN FIRESTORE: \(post)")
+                            updatedArray.append(post)
+                        } catch {
+                            completion(.failure(error))
+                        }
+                        dispatchGroup.leave()
+                    }
+                    dispatchGroup.notify(queue: .main) {
+                        print(updatedArray)
+                        completion(.success(updatedArray))
+                    }
+                }
+            }
+        }
+    }
 
 
     func getAllUsers(completion: @escaping (Result<[FirebaseUser], Error>) -> Void) {
@@ -123,7 +164,6 @@ final class FireStoreService: FireStoreServiceProtocol {
     }
 
     func getPosts(sub: String, completion: @escaping (Result<[EachPost], PostErrors>) -> Void)  {
-        print(sub)
 
         let refDB = Firestore.firestore().collection("Users").document(sub).collection("posts")
         var posts: [EachPost] = []
@@ -231,7 +271,7 @@ final class FireStoreService: FireStoreServiceProtocol {
 
     func createPost(date: String, text: String, image: UIImage?, for user: String, completion: @escaping (Result<EachPost, Error>) -> Void) {
         let postRef = Firestore.firestore().collection("Users").document(user).collection("posts")
-        var fireStorePost = EachPost(text: "", image: "", likes: 0, commentaries: 0, date: date)
+        var fireStorePost = EachPost(text: "", image: "", likes: 0, commentaries: 0, date: date, isCommentariesEnabled: true)
 
         if let image = image {
             let postStorageRef = Storage.storage().reference().child("users").child(user).child("posts").child(date).child(image.description)
@@ -278,14 +318,19 @@ final class FireStoreService: FireStoreServiceProtocol {
     func addComment(mainUser: String, text: String, documentID: String, commentor: String, completion: @escaping (Result<Comment, Error>) -> Void) {
         let date = Date()
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "dd-MM-yyyy"
+        dateFormatter.dateFormat = "dd MMM"
         let stringFromDate = dateFormatter.string(from: date)
+
+
         let likes = 0
-        let docReft = Firestore.firestore().collection("Users").document(mainUser).collection("posts").document(documentID).collection("comments")
+        let commentRef = Firestore.firestore().collection("Users").document(mainUser).collection("posts").document(documentID).collection("comments")
+        let docRef = Firestore.firestore().collection("Users").document(mainUser).collection("posts").document(documentID)
+
         let comment = Comment(text: text, commentor: commentor, date: stringFromDate, likes: likes)
         do {
-            try docReft.addDocument(from: comment)
+            try commentRef.addDocument(from: comment)
             completion(.success(comment))
+            docRef.updateData(["commentaries": FieldValue.increment(Int64(1))])
         } catch {
             print(error.localizedDescription)
             completion(.failure(error))
@@ -295,6 +340,7 @@ final class FireStoreService: FireStoreServiceProtocol {
     func getComments(post: String, user: String, completion: @escaping (Result<[Comment], Error>) -> Void) {
         let docReft = Firestore.firestore().collection("Users").document(user).collection("posts").document(post).collection("comments")
         var commentsArray: [Comment] = []
+
         docReft.getDocuments { snapshot, error in
             if let error = error {
                 completion(.failure(error))
@@ -321,8 +367,8 @@ final class FireStoreService: FireStoreServiceProtocol {
                         completion(.failure(error))
                     }
                 }
-                completion(.success(commentsArray))
             }
+                completion(.success(commentsArray))
         }
     }
 
@@ -353,6 +399,7 @@ final class FireStoreService: FireStoreServiceProtocol {
         var answers: [Answer] = []
 
         docReft.getDocuments { snapshot, error in
+            
             if let error = error {
                 completion(.failure(error))
             }
@@ -362,6 +409,7 @@ final class FireStoreService: FireStoreServiceProtocol {
                     for document in snapshot.documents {
                         do {
                             let answer = try document.data(as: Answer.self)
+                            print(answer)
                             answers.append(answer)
                         }
                         catch let DecodingError.dataCorrupted(context) {
@@ -381,9 +429,62 @@ final class FireStoreService: FireStoreServiceProtocol {
                         }
                     }
                     completion(.success(answers))
-                } else {
-                    return
                 }
+            }
+        }
+    }
+
+    func saveIntoFavourites(post: EachPost, for user: String, completion: @escaping (Result<EachPost, Error>) -> Void) {
+        let docRef = Firestore.firestore().collection("Users").document(user).collection("Favourites")
+
+        do {
+           try docRef.addDocument(from: post)
+            completion(.success(post))
+        } catch {
+            print(error.localizedDescription)
+            completion(.failure(error))
+        }
+    }
+
+    func disableCommentaries(id: String, user: String) {
+        let docRef = Firestore.firestore().collection("Users").document(user).collection("posts").document(id)
+        docRef.updateData(["isCommentariesEnabled" : false])
+    }
+
+    func getDocLink(for id: String, user: String) -> String {
+    let docRef = Firestore.firestore().collection("Users").document(user).collection("posts").document(id)
+    return docRef.firestore.description
+    }
+
+    func addDocToArchives(post: EachPost, user: String, completion: @escaping (Result<EachPost, Error>) -> Void) {
+        if let documentID = post.documentID {
+            let docRef = Firestore.firestore().collection("Users").document(user).collection("posts").document(documentID)
+            let archiveRef = Firestore.firestore().collection("Users").document(user).collection("Archive")
+            do {
+                try archiveRef.addDocument(from: post)
+                docRef.delete { error in
+                    if let error = error {
+                        completion(.failure(error))
+                    }
+                    completion(.success(post))
+                }
+            } catch {
+                completion(.failure(error))
+            }
+        }
+    }
+
+    func deleteDocument(post: EachPost, user: String, completion: @escaping (Result<EachPost, Error>) -> Void) {
+
+        if let documentID = post.documentID {
+
+            let docRef = Firestore.firestore().collection("Users").document(user).collection("posts").document(documentID)
+
+            docRef.delete { error in
+                if let error = error {
+                    completion(.failure(error))
+                }
+                completion(.success(post))
             }
         }
     }

@@ -10,7 +10,6 @@ import UIKit
 protocol ProfileChangeViewProtocol: AnyObject {}
 
 protocol ProfileChangePresenterProtocol: AnyObject {
-    var firestoreService: FireStoreServiceProtocol? { get set }
     init(view: ProfileChangeViewProtocol?, user: FirebaseUser, firestoreService: FireStoreServiceProtocol)
     func changeName()
     func changeSurname()
@@ -28,7 +27,7 @@ final class ProfileChangePresenter: ProfileChangePresenterProtocol {
 
    weak var view: ProfileChangeViewProtocol?
     var user: FirebaseUser
-    var firestoreService: FireStoreServiceProtocol?
+    var firestoreService: FireStoreServiceProtocol
 
     init(view: ProfileChangeViewProtocol?, user: FirebaseUser, firestoreService: FireStoreServiceProtocol) {
         self.view = view

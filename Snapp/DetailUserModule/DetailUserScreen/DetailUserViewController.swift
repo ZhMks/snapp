@@ -222,6 +222,10 @@ class DetailUserViewController: UIViewController {
         NotificationCenter.default.post(name: Notification.Name("subscriberAdded"), object: nil)
     }
 
+    @objc func dismissViewController() {
+        navigationController?.popViewController(animated: true)
+    }
+
 }
 
 // MARK: -OUTPUT PRESENTER
@@ -262,7 +266,7 @@ extension DetailUserViewController: UITableViewDataSource {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: PostTableCell.identifier, for: indexPath) as? PostTableCell else { return UITableViewCell() }
          let data = presenter.posts[indexPath.row]
          let date = presenter.posts[indexPath.row].date 
-        cell.updateView(post: data, user: presenter.user, date: date)
+        cell.updateView(post: data, user: presenter.user, date: date, firestoreService: presenter.firestoreService)
         return cell
     }
 
@@ -288,18 +292,25 @@ extension DetailUserViewController: UITableViewDelegate {
 // MARK: -LAYOUT
 extension DetailUserViewController {
     func tuneNavItem() {
-        let settingsButton = UIBarButtonItem(image: UIImage(systemName: "line.3.horizontal"),
+        let settingsButton = UIBarButtonItem(image: UIImage(systemName: "plus"),
                                              style: .plain,
                                              target: self,
                                              action: #selector(showSettingsVC))
         settingsButton.tintColor = .systemOrange
         self.navigationItem.rightBarButtonItem = settingsButton
 
-        let textView = UIView(frame: CGRect(x: 0, y: 0, width: 80, height: 30))
-        let title = UILabel(frame: CGRect(x: 0, y: 0, width: 80, height: 30))
-        title.text = presenter.user.identifier
+        let leftArrowButton = UIButton(type: .system)
+        leftArrowButton.setImage(UIImage(systemName: "arrow.left"), for: .normal)
+        leftArrowButton.tintColor = .systemOrange
+        leftArrowButton.frame = CGRect(x: 0, y: 0, width: 30, height: 30)
+        leftArrowButton.addTarget(self, action: #selector(dismissViewController), for: .touchUpInside)
+
+        let textView = UIView(frame: CGRect(x: 0, y: 0, width: 350, height: 30))
+        let title = UILabel(frame: CGRect(x: 40, y: 0, width: 250, height: 30))
+        title.text = .localized(string: "\(presenter.user.name)" + " \(presenter.user.surname)")
         title.font = UIFont(name: "Inter-Medium", size: 14)
         textView.addSubview(title)
+        textView.addSubview(leftArrowButton)
         let leftButton = UIBarButtonItem(customView: textView)
         self.navigationItem.leftBarButtonItem = leftButton
     }
@@ -432,7 +443,7 @@ extension DetailUserViewController {
             tableViewTitle.trailingAnchor.constraint(equalTo: viewForTableTitle.trailingAnchor, constant: -265),
             tableViewTitle.bottomAnchor.constraint(equalTo: viewForTableTitle.bottomAnchor, constant: -5),
 
-            searchButton.topAnchor.constraint(equalTo: viewForTableTitle.topAnchor, constant: 5),
+            searchButton.centerYAnchor.constraint(equalTo: tableViewTitle.centerYAnchor),
             searchButton.leadingAnchor.constraint(equalTo: viewForTableTitle.leadingAnchor, constant: 360),
             searchButton.trailingAnchor.constraint(equalTo: viewForTableTitle.trailingAnchor, constant: -8),
             searchButton.bottomAnchor.constraint(equalTo: viewForTableTitle.bottomAnchor, constant: -5)

@@ -124,7 +124,7 @@ class DetailPostViewController: UIViewController {
         tableViewTitle.translatesAutoresizingMaskIntoConstraints = false
         tableViewTitle.font = UIFont(name: "Inter-Light", size: 14)
         tableViewTitle.textColor = .systemGray4
-        tableViewTitle.text = .localized(string: "\(presenter.post.commentaries)")
+        tableViewTitle.text = .localized(string: "Комментарии \(presenter.post.commentaries)")
         tableViewTitle.sizeToFit()
         tableViewTitle.numberOfLines = 0
         return tableViewTitle
@@ -239,11 +239,12 @@ class DetailPostViewController: UIViewController {
 
     @objc func addCommentTapped() {
         let commentView = CommentViewController()
-         guard let documentID = presenter.post.documentID else { return }
-         guard let commentor = Auth.auth().currentUser?.uid else { return }
-         let commentPresenter = CommentViewPresenter(view: commentView, image: presenter.image, user: commentor, documentID: documentID, commentor: commentor, firestoreService: presenter.firestoreService)
+        guard let documentID = presenter.post.documentID else { return }
+        guard let commentor = Auth.auth().currentUser?.uid else { return }
+        guard let user = presenter.user.documentID else { return }
+        let commentPresenter = CommentViewPresenter(view: commentView, image: presenter.image, user: user, documentID: documentID, commentor: commentor, firestoreService: presenter.firestoreService, state: .comment)
          commentView.presenter = commentPresenter
-         commentView.modalPresentationStyle = .formSheet
+         commentView.modalPresentationStyle = .overCurrentContext
          present(commentView, animated: true)
     }
 
@@ -260,21 +261,30 @@ class DetailPostViewController: UIViewController {
 // MARK: -OUTPUTPRESENTER
 extension DetailPostViewController: DetailPostViewProtocol {
 
+    func showError(descr: String) {
+        print(descr)
+    }
+    
 
-    func showCommentVC(with: String, commentID: String?) {
-        let commentView = CommentViewController()
+    func updateCommentsNumber() {
+        commentsLabel.text = "\(presenter.post.commentaries)"
+        tableViewTitle.text = .localized(string: "\(presenter.post.commentaries) Комментариев")
+    }
+    
+    func showCommentVC(with: String, commentID: String?, state: CommentState) {
+         let commentView = CommentViewController()
          guard let documentID = presenter.post.documentID else { return }
          guard let commentor = Auth.auth().currentUser?.uid else { return }
-        let commentPresenter = CommentViewPresenter(view: commentView, image: presenter.image, user: with, documentID: documentID, commentor: commentor, firestoreService: presenter.firestoreService)
+         let commentPresenter = CommentViewPresenter(view: commentView, image: presenter.image, user: with, documentID: documentID, commentor: commentor, firestoreService: presenter.firestoreService, state: state)
          commentView.presenter = commentPresenter
          commentPresenter.commentID = commentID
-         commentView.modalPresentationStyle = .formSheet
+         commentView.modalPresentationStyle = .overCurrentContext
          present(commentView, animated: true)
     }
 
-    
-    
     func updateCommentsTableView() {
+        commentsLabel.text = "\(presenter.post.commentaries)"
+        tableViewTitle.text = .localized(string: "\(presenter.post.commentaries) Комментариев")
         commentsTableView.reloadData()
     }
     
@@ -288,6 +298,7 @@ extension DetailPostViewController: DetailPostViewProtocol {
             postImageView.image = image
             postImageView.clipsToBounds = true
             postImageView.layer.cornerRadius = 10
+            postImageView.contentMode = .scaleAspectFill
         }
     }
 
@@ -307,7 +318,7 @@ extension DetailPostViewController: UITableViewDataSource {
         guard let commentInSection = comments(forSection: section) else { return UITableViewCell() }
         cell.updateView(comment: commentInSection, firestoreService: presenter.firestoreService)
         cell.buttonTappedHandler = { [weak self] in
-            self?.presenter.showCommetVC(with: commentInSection.commentor, commentID: commentInSection.documentID)
+            self?.presenter.showCommetVC(with: commentInSection.commentor, commentID: commentInSection.documentID, state: .answer)
         }
         return cell
     }
@@ -330,17 +341,9 @@ extension DetailPostViewController: UITableViewDataSource {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: CommentsTableCell.identifier, for: indexPath) as? CommentsTableCell else { return UITableViewCell()  }
         
         guard let comment = comments(forSection: indexPath.section) else { return UITableViewCell() }
-        cell.buttonTappedHandler = { [weak self] in
-            print("SMT")
-            self?.presenter.showCommetVC(with: comment.commentor, commentID: comment.documentID)
-        }
         if let answers = presenter.comments?[comment] {
             guard let answer = answers?[indexPath.row] else { return UITableViewCell() }
             let commentor = answer.commentor
-            cell.buttonTappedHandler = { [weak self] in
-                print("SMT")
-                self?.presenter.showCommetVC(with: commentor, commentID: comment.documentID)
-            }
             presenter.firestoreService.getUser(id: commentor) { [weak self] result in
                 guard let self else { return }
                 switch result {
@@ -349,8 +352,7 @@ extension DetailPostViewController: UITableViewDataSource {
                     cell.updateAnswers(answer: answer, user: user, date: answer.date, firestoreService: presenter.firestoreService)
                     guard let commentor = user.documentID else { return }
                     cell.buttonTappedHandler = { [weak self] in
-                        print("SMT")
-                        self?.presenter.showCommetVC(with: commentor, commentID: comment.documentID)
+                        self?.presenter.showCommetVC(with: commentor, commentID: comment.documentID, state: .answer)
                     }
                 case .failure(let failure):
                     print(failure.localizedDescription)
@@ -359,10 +361,7 @@ extension DetailPostViewController: UITableViewDataSource {
         }
         return cell
     }
-
-
 }
-
 
 //MARK: -TABLEVIEWDELEGATE
 extension DetailPostViewController: UITableViewDelegate {
@@ -455,8 +454,8 @@ extension DetailPostViewController {
 
             likeButton.topAnchor.constraint(equalTo: postTextLabel.bottomAnchor, constant: 16),
             likeButton.leadingAnchor.constraint(equalTo: detailPostView.leadingAnchor, constant: 17),
-            likeButton.heightAnchor.constraint(equalToConstant: 22),
-            likeButton.widthAnchor.constraint(equalToConstant: 22),
+            likeButton.trailingAnchor.constraint(equalTo: detailPostView.trailingAnchor, constant: -340),
+            likeButton.bottomAnchor.constraint(equalTo: separatorView.topAnchor, constant: -5),
 
             likesLabel.topAnchor.constraint(equalTo: postTextLabel.bottomAnchor, constant: 16),
             likesLabel.leadingAnchor.constraint(equalTo: likeButton.trailingAnchor, constant: 5),
@@ -465,8 +464,7 @@ extension DetailPostViewController {
 
             commentsButton.topAnchor.constraint(equalTo: postTextLabel.bottomAnchor, constant: 16),
             commentsButton.leadingAnchor.constraint(equalTo: likesLabel.trailingAnchor, constant: 24),
-            commentsButton.heightAnchor.constraint(equalToConstant: 22),
-            commentsButton.widthAnchor.constraint(equalToConstant: 22),
+            commentsButton.trailingAnchor.constraint(equalTo: detailPostView.trailingAnchor, constant: -264),
             commentsButton.bottomAnchor.constraint(equalTo: separatorView.topAnchor, constant: -5),
 
             commentsLabel.topAnchor.constraint(equalTo: postTextLabel.bottomAnchor, constant: 16),
@@ -476,8 +474,7 @@ extension DetailPostViewController {
 
             bookmarkButton.topAnchor.constraint(equalTo: postTextLabel.bottomAnchor, constant: 16),
             bookmarkButton.leadingAnchor.constraint(equalTo: commentsLabel.trailingAnchor, constant: 183),
-            bookmarkButton.heightAnchor.constraint(equalToConstant: 22),
-            bookmarkButton.widthAnchor.constraint(equalToConstant: 22),
+            bookmarkButton.trailingAnchor.constraint(equalTo: detailPostView.trailingAnchor, constant: -30),
             bookmarkButton.bottomAnchor.constraint(equalTo: separatorView.topAnchor, constant: -5),
 
             separatorView.topAnchor.constraint(equalTo: bookmarkButton.bottomAnchor, constant: 17),

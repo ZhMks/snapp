@@ -38,7 +38,7 @@ final class DetailPresenter: DetailPresenterProtocol {
     }
 
     func fetchImage()  {
-        let urlLink = user.image
+        guard let urlLink = user.image else { return }
         let networkService = NetworkService()
         networkService.fetchImage(string: urlLink) { [weak self] result in
             guard let self else { return }

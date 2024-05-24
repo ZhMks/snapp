@@ -25,8 +25,8 @@ final class FeedPresenter: FeedPresenterProtocol {
     var stories: UIImage?
     var userStories: [UIImage]?
     var mainUser: FirebaseUser
-    var posts: [[EachPost]]?
-    let firestoreService: FireStoreServiceProtocol?
+    var posts: [FirebaseUser : [EachPost]]?
+    let firestoreService: FireStoreServiceProtocol
 
     init(view: FeedViewProtocol, user: FirebaseUser, firestoreService: FireStoreServiceProtocol) {
         self.view = view
@@ -53,19 +53,26 @@ final class FeedPresenter: FeedPresenterProtocol {
 
     func fetchPosts() {
         let dispatchGroup = DispatchGroup()
-        posts = []
+        posts = [:]
         for sub in mainUser.subscribtions {
             dispatchGroup.enter()
-            firestoreService?.getPosts(sub: sub, completion: { [weak self] result in
+            firestoreService.getUser(id: sub, completion: { [weak self] result in
                 guard let self else { return }
                 switch result {
-                case .success(let postArray):
-                    posts?.append(postArray)
-                    print(postArray)
+                case .success(let success):
+                    firestoreService.getPosts(sub: sub, completion: { [weak self] result in
+                        guard let self else { return }
+                        switch result {
+                        case .success(let postArray):
+                            posts?.updateValue(postArray, forKey: success)
+                        case .failure(let failure):
+                            view?.showEmptyScreen()
+                        }
+                        dispatchGroup.leave()
+                    })
                 case .failure(let failure):
                     view?.showEmptyScreen()
                 }
-                dispatchGroup.leave()
             })
         }
         dispatchGroup.notify(queue: .main) { [weak self] in

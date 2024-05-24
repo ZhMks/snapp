@@ -40,12 +40,11 @@ final class ProfilePresenter: ProfilePresenterProtocol {
         self.firestoreService = firestoreService
         self.userID = userID
         fetchImage()
-        fetchPosts()
         fetchPhotoAlbum()
     }
 
     func fetchImage()  {
-        let urlLink = mainUser.image
+        guard let urlLink = mainUser.image else { return }
         let networkService = NetworkService()
         networkService.fetchImage(string: urlLink) { [weak self] result in
             guard let self else { return }
@@ -60,16 +59,30 @@ final class ProfilePresenter: ProfilePresenterProtocol {
         }
     }
 
-    func fetchPosts() {
-        firestoreService.getPosts(sub: userID) { [weak self] result in
+    func updateUserData() {
+        guard let id = mainUser.documentID else { return }
+        firestoreService.getUser(id: id) { [weak self] result in
             guard let self else { return }
             switch result {
             case .success(let success):
+                self.mainUser = success
+            case .failure(let failure):
+                return
+            }
+        }
+    }
+
+    func addSnapshotListener() {
+        guard let id = mainUser.documentID else { return }
+        firestoreService.addSnapshotListenerToPosts(for: id) { [weak self] result in
+            guard let self else { return }
+            switch result {
+            case .success(let success):
+                self.posts = []
                 self.posts = success
-                print(self.posts)
                 view?.updateData(data: self.posts)
-            case .failure(_):
-                print("Cant fetch posts")
+            case .failure(let failure):
+                view?.showErrorAler(error: failure.localizedDescription)
             }
         }
     }
@@ -77,8 +90,9 @@ final class ProfilePresenter: ProfilePresenterProtocol {
     func createStorie(image: UIImage) {
         let date = Date()
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "dd-MM-yyyy"
+        dateFormatter.dateFormat = "dd MMM"
         let stringFromDate = dateFormatter.string(from: date)
+        
         let networkService = NetworkService()
 
         let urlLink = Storage.storage().reference().child("users").child(userID).child("Stories").child(stringFromDate)
@@ -109,6 +123,7 @@ final class ProfilePresenter: ProfilePresenterProtocol {
             switch result {
             case .success(let url):
                 firestoreService.saveImageIntoPhotoAlbum(image: url.absoluteString, user: userID)
+                self.updateUserData()
                 networkService.fetchImage(string: url.absoluteString) { [weak self] result in
                     switch result {
                     case .success(let success):

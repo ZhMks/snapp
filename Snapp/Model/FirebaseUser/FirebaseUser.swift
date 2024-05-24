@@ -18,7 +18,7 @@ protocol CommentOrAnswer: Codable, Hashable {
     var likes: Int { get set }
 }
 
-struct FirebaseUser: Codable {
+struct FirebaseUser: Codable, Hashable {
     @DocumentID var documentID: String?
     var name: String
     var surname: String
@@ -27,7 +27,7 @@ struct FirebaseUser: Codable {
     var subscribers: [String]
     var subscribtions: [String]
     var stories: [String]
-    var image: String
+    var image: String?
     var photoAlbum: [String]
 }
 
@@ -38,6 +38,7 @@ struct EachPost: Codable {
     var likes: Int
     var commentaries: Int
     var date: String
+    var isCommentariesEnabled: Bool
 }
 
 struct Comment: CommentOrAnswer {
@@ -47,7 +48,6 @@ struct Comment: CommentOrAnswer {
     var date: String
     var likes: Int
 }
-
 
 struct Answer: CommentOrAnswer {
     @DocumentID var documentID: String?

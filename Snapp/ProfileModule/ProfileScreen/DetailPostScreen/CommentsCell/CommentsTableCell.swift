@@ -53,6 +53,7 @@ final class CommentsTableCell: UITableViewCell {
         commentLabel.translatesAutoresizingMaskIntoConstraints = false
         commentLabel.font = UIFont(name: "Inter-Light", size: 12)
         commentLabel.textColor = .systemGray4
+        commentLabel.numberOfLines = 0
         return commentLabel
     }()
 
@@ -100,7 +101,8 @@ final class CommentsTableCell: UITableViewCell {
             switch result {
             case .success(let user):
                 identifierLabel.text = user.identifier
-                networkService.fetchImage(string: user.image) { [weak self] result in
+                guard let avatarImage = user.image else { return }
+                networkService.fetchImage(string: avatarImage) { [weak self] result in
                     guard let self else { return }
                     switch result {
                     case .success(let success):
@@ -130,7 +132,8 @@ final class CommentsTableCell: UITableViewCell {
             switch result {
             case .success(let user):
                 identifierLabel.text = user.identifier
-                networkService.fetchImage(string: user.image) { [weak self] result in
+                guard let avatarImage = user.image else { return }
+                networkService.fetchImage(string: avatarImage) { [weak self] result in
                     guard let self else { return }
                     switch result {
                     case .success(let success):
@@ -175,17 +178,16 @@ final class CommentsTableCell: UITableViewCell {
             avatarImageView.heightAnchor.constraint(equalToConstant: 15),
             avatarImageView.widthAnchor.constraint(equalToConstant: 15),
 
-            identifierLabel.topAnchor.constraint(equalTo: safeArea.topAnchor),
+            identifierLabel.centerYAnchor.constraint(equalTo: avatarImageView.centerYAnchor),
             identifierLabel.leadingAnchor.constraint(equalTo: avatarImageView.trailingAnchor, constant: 7),
             identifierLabel.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -180),
-            identifierLabel.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor, constant: -33),
 
-            likesButton.topAnchor.constraint(equalTo: safeArea.topAnchor),
-            likesButton.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -17),
+            likesButton.centerYAnchor.constraint(equalTo: avatarImageView.centerYAnchor),
+            likesButton.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -30),
             likesButton.heightAnchor.constraint(equalToConstant: 15),
             likesButton.widthAnchor.constraint(equalToConstant: 15),
 
-            likesLabel.topAnchor.constraint(equalTo: safeArea.topAnchor),
+            likesLabel.centerYAnchor.constraint(equalTo: likesButton.centerYAnchor),
             likesLabel.leadingAnchor.constraint(equalTo: likesButton.trailingAnchor, constant: 5),
             likesLabel.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -5),
             likesLabel.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor, constant: -33),
@@ -193,15 +195,14 @@ final class CommentsTableCell: UITableViewCell {
             commentLabel.topAnchor.constraint(equalTo: identifierLabel.bottomAnchor, constant: 3),
             commentLabel.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 60),
             commentLabel.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -80),
-            commentLabel.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor, constant: -15),
 
             dateLabel.topAnchor.constraint(equalTo: commentLabel.bottomAnchor),
             dateLabel.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 60),
-            dateLabel.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -80),
+            dateLabel.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -130),
             dateLabel.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor),
 
             answerButton.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: 33),
-            answerButton.leadingAnchor.constraint(equalTo: dateLabel.trailingAnchor, constant: 90),
+            answerButton.leadingAnchor.constraint(equalTo: dateLabel.trailingAnchor, constant: 50),
             answerButton.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
             answerButton.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor)
         ])

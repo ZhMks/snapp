@@ -68,12 +68,14 @@ class CommentViewController: UIViewController {
     }
 
     @objc func sendButtonTapped() {
-        if presenter.user == presenter.commentor {
-            presenter.addComment(text: commentTextField.text)
-        } else {
-            presenter.addAnswer(text: commentTextField.text)
+        switch presenter.state {
+        case .answer:
+            presenter.addAnswer(text: commentTextField.text!)
+            dismiss(animated: true)
+        case .comment:
+            presenter.addComment(text: commentTextField.text!)
+            dismiss(animated: true)
         }
-        dismiss(animated: true)
     }
     func updateImage () {
         avatarImageView.image = presenter.image

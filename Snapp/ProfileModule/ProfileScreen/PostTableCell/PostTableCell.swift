@@ -7,13 +7,25 @@
 
 import UIKit
 
+enum PostTableState {
+    case feedCell
+    case profileCell
+}
 
 final class PostTableCell: UITableViewCell {
 
     //MARK: -PROPERTIES
     static let identifier = "PostTableCell"
 
+    let menuForPostVC = MenuForPostView()
+
+    var state: PostTableState?
+
     var buttonTappedHandler: (()->Void)?
+
+    var user: FirebaseUser?
+    var post: EachPost?
+    var firestoreService: FireStoreServiceProtocol?
 
     private lazy var headerView: UIView = {
         let headerView = UIView()
@@ -177,9 +189,10 @@ final class PostTableCell: UITableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: .default, reuseIdentifier: reuseIdentifier)
         addSubviews()
-        layout()
         backgroundColor = .systemBackground
         contentView.backgroundColor = .systemBackground
+        addTapGesture()
+        layout()
     }
     
     required init?(coder: NSCoder) {
@@ -188,7 +201,58 @@ final class PostTableCell: UITableViewCell {
 
     // MARK: -FUNCS
 
-    func updateView(post: EachPost, user: FirebaseUser, date: String) {
+    func checkCellState() {
+        switch self.state {
+        case .feedCell:
+            menuForPostVC.isHidden = false
+            guard let user = user else { return }
+            guard let firestoreService = firestoreService else { return }
+            if let post = post {
+                let menuForPostPresenter = MenuForPostPresenter(view: menuForPostVC, user: user, firestoreService: firestoreService, post: post, viewState: .feedMenu)
+                menuForPostVC.presenter = menuForPostPresenter
+                menuForPostVC.translatesAutoresizingMaskIntoConstraints = false
+
+                contentView.addSubview(menuForPostVC)
+
+                let safeArea = contentView.safeAreaLayoutGuide
+
+                NSLayoutConstraint.activate([
+                    menuForPostVC.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: 120),
+                    menuForPostVC.centerXAnchor.constraint(equalTo: safeArea.centerXAnchor),
+                    menuForPostVC.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
+                    menuForPostVC.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
+                    menuForPostVC.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor),
+                ])
+            }
+        case .profileCell:
+            menuForPostVC.isHidden = false
+            guard let user = user else { return }
+            guard let firestoreService = firestoreService else { return }
+            if let post = post {
+                let menuForPostPresenter = MenuForPostPresenter(view: menuForPostVC, user: user, firestoreService: firestoreService, post: post, viewState: .postMenu)
+                menuForPostVC.presenter = menuForPostPresenter
+                menuForPostVC.translatesAutoresizingMaskIntoConstraints = false
+
+                contentView.addSubview(menuForPostVC)
+
+                let safeArea = contentView.safeAreaLayoutGuide
+
+                NSLayoutConstraint.activate([
+                    menuForPostVC.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: 18),
+                    menuForPostVC.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 57),
+                    menuForPostVC.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -19),
+                    menuForPostVC.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor, constant: -170)
+                ])
+            }
+        default: return
+        }
+    }
+
+    func updateView(post: EachPost, user: FirebaseUser, date: String, firestoreService: FireStoreServiceProtocol) {
+        self.post = post
+        self.user = user
+        self.firestoreService = firestoreService
+        menuForPostVC.isHidden = true
         postTextLabel.text = post.text
         nameAndSurnameLabel.text = "\(user.name)" + "\(user.surname)"
         jobLabel.text = "\(user.job)"
@@ -206,13 +270,15 @@ final class PostTableCell: UITableViewCell {
                         self.postImage.image = image
                         self.postImage.clipsToBounds = true
                         self.postImage.layer.cornerRadius = 30
+                        self.postImage.contentMode = .scaleAspectFill
                     }
                 case .failure(_):
                     return
                 }
             }
         }
-        networkService.fetchImage(string: user.image) { [weak self] result in
+        guard let avatarImage = user.image else { return }
+        networkService.fetchImage(string: avatarImage) { [weak self] result in
             guard let self else { return }
             switch result {
             case .success(let success):
@@ -229,9 +295,19 @@ final class PostTableCell: UITableViewCell {
     }
 
     @objc func menuButtonTapped() {
-buttonTappedHandler?()
+
+        checkCellState()
+
     }
 
+    func addTapGesture() {
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(removeMenu))
+        contentView.addGestureRecognizer(tapGesture)
+    }
+
+    @objc func removeMenu() {
+        menuForPostVC.removeFromSuperview()
+    }
 
 
     // MARK: -LAYOUT
@@ -294,7 +370,7 @@ buttonTappedHandler?()
             mainPostView.topAnchor.constraint(equalTo: headerView.bottomAnchor, constant: 5),
             mainPostView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
             mainPostView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
-            mainPostView.heightAnchor.constraint(greaterThanOrEqualToConstant: 308),
+            mainPostView.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor, constant: -60),
 
             verticalView.topAnchor.constraint(equalTo: mainPostView.topAnchor, constant: 5),
             verticalView.leadingAnchor.constraint(equalTo: mainPostView.leadingAnchor, constant: 31),
@@ -341,7 +417,7 @@ buttonTappedHandler?()
             bookmarkButton.heightAnchor.constraint(equalToConstant: 20),
             bookmarkButton.widthAnchor.constraint(equalToConstant: 20),
 
-            footerView.topAnchor.constraint(equalTo: mainPostView.bottomAnchor, constant: 5),
+            footerView.topAnchor.constraint(equalTo: mainPostView.bottomAnchor),
             footerView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
             footerView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
             footerView.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor),
@@ -357,8 +433,7 @@ buttonTappedHandler?()
             ellipseView.bottomAnchor.constraint(equalTo: footerView.bottomAnchor, constant: -10),
 
             dateLabel.topAnchor.constraint(equalTo: ellipseView.topAnchor, constant: 3),
-            dateLabel.leadingAnchor.constraint(equalTo: ellipseView.leadingAnchor, constant: 15),
-            dateLabel.trailingAnchor.constraint(equalTo: ellipseView.trailingAnchor, constant: -15),
+            dateLabel.centerXAnchor.constraint(equalTo: ellipseView.centerXAnchor),
             dateLabel.bottomAnchor.constraint(equalTo: ellipseView.bottomAnchor, constant: -3),
 
             rightSeparatorView.centerYAnchor.constraint(equalTo: dateLabel.centerYAnchor),

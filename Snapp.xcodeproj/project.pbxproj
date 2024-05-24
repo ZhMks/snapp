@@ -88,6 +88,8 @@
 		B27E1C702BFB4D4400E1DEF9 /* MenuForPostPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B27E1C6F2BFB4D4400E1DEF9 /* MenuForPostPresenter.swift */; };
 		B27E1C732BFB940A00E1DEF9 /* PhotoalbumPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B27E1C722BFB940900E1DEF9 /* PhotoalbumPresenter.swift */; };
 		B27E1C752BFB942000E1DEF9 /* PhotoalbumViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B27E1C742BFB942000E1DEF9 /* PhotoalbumViewController.swift */; };
+		B297FB542BFCBDDA00A8C463 /* DataChangeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B297FB532BFCBDDA00A8C463 /* DataChangeViewController.swift */; };
+		B297FB562BFCBDE500A8C463 /* DataChangePresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B297FB552BFCBDE500A8C463 /* DataChangePresenter.swift */; };
 		B29D0AD72BCEB17B00101029 /* NetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B29D0AD62BCEB17B00101029 /* NetworkService.swift */; };
 		B29D0ADF2BD63AD000101029 /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B29D0ADE2BD63AD000101029 /* SearchViewController.swift */; };
 		B29D0AE12BD63AE200101029 /* SearchPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B29D0AE02BD63AE200101029 /* SearchPresenter.swift */; };
@@ -177,6 +179,8 @@
 		B27E1C6F2BFB4D4400E1DEF9 /* MenuForPostPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuForPostPresenter.swift; sourceTree = "<group>"; };
 		B27E1C722BFB940900E1DEF9 /* PhotoalbumPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoalbumPresenter.swift; sourceTree = "<group>"; };
 		B27E1C742BFB942000E1DEF9 /* PhotoalbumViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoalbumViewController.swift; sourceTree = "<group>"; };
+		B297FB532BFCBDDA00A8C463 /* DataChangeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataChangeViewController.swift; sourceTree = "<group>"; };
+		B297FB552BFCBDE500A8C463 /* DataChangePresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataChangePresenter.swift; sourceTree = "<group>"; };
 		B29D0AD62BCEB17B00101029 /* NetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkService.swift; sourceTree = "<group>"; };
 		B29D0ADE2BD63AD000101029 /* SearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewController.swift; sourceTree = "<group>"; };
 		B29D0AE02BD63AE200101029 /* SearchPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchPresenter.swift; sourceTree = "<group>"; };
@@ -330,6 +334,7 @@
 		B209E6282BC3FDBE0067D751 /* SettingModule */ = {
 			isa = PBXGroup;
 			children = (
+				B297FB522BFCBDC500A8C463 /* DataChangeScreen */,
 				B209E62F2BC3FEA10067D751 /* ProfileChangeScreen */,
 				B209E6292BC3FDCB0067D751 /* SettingsScreen */,
 			);
@@ -613,6 +618,15 @@
 			path = PhotoalbumScreen;
 			sourceTree = "<group>";
 		};
+		B297FB522BFCBDC500A8C463 /* DataChangeScreen */ = {
+			isa = PBXGroup;
+			children = (
+				B297FB532BFCBDDA00A8C463 /* DataChangeViewController.swift */,
+				B297FB552BFCBDE500A8C463 /* DataChangePresenter.swift */,
+			);
+			path = DataChangeScreen;
+			sourceTree = "<group>";
+		};
 		B29D0AD52BCEB16C00101029 /* NetworkService */ = {
 			isa = PBXGroup;
 			children = (
@@ -852,6 +866,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B297FB562BFCBDE500A8C463 /* DataChangePresenter.swift in Sources */,
 				B209E6212BC3FC320067D751 /* ProfilePresenter.swift in Sources */,
 				B211C1F22BBB3C2900C073EE /* Snapp.xcdatamodeld in Sources */,
 				B211C2642BBC17B900C073EE /* Extension+String.swift in Sources */,
@@ -894,6 +909,7 @@
 				B211C26E2BBC405A00C073EE /* ThirdOnboardingPresenter.swift in Sources */,
 				B211C21E2BBBEACA00C073EE /* OnBoardingPresenter.swift in Sources */,
 				B211C2762BBC6A1D00C073EE /* LoginScreenPresenter.swift in Sources */,
+				B297FB542BFCBDDA00A8C463 /* DataChangeViewController.swift in Sources */,
 				B211C2742BBC6A1000C073EE /* LoginScreenViewController.swift in Sources */,
 				B209E6332BC3FEBE0067D751 /* ProfileChangePresenter.swift in Sources */,
 				B27E1C6E2BFB4D3A00E1DEF9 /* MenuForPostView.swift in Sources */,
