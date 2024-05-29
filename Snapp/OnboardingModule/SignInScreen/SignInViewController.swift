@@ -47,6 +47,7 @@ class SignInViewController: UIViewController {
         view.backgroundColor = ColorCreator.shared.createBackgroundColorWithAlpah(alpha: 0.75)
         addSubviews()
         layout()
+        createGesture()
     }
 
 //MARK: -FUNCS
@@ -65,6 +66,16 @@ class SignInViewController: UIViewController {
                 print(error.localizedDescription)
             }
         }
+    }
+
+    @objc func tapGestureAction() {
+        view.endEditing(true)
+        view.becomeFirstResponder()
+    }
+
+    private func createGesture() {
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(tapGestureAction))
+        view.addGestureRecognizer(tapGesture)
     }
 }
 

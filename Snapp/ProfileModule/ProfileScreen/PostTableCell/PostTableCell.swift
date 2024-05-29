@@ -365,7 +365,7 @@ final class PostTableCell: UITableViewCell {
 
             menuButton.topAnchor.constraint(equalTo: headerView.topAnchor, constant: 38),
             menuButton.leadingAnchor.constraint(equalTo: headerView.leadingAnchor, constant: 350),
-            menuButton.trailingAnchor.constraint(equalTo: headerView.trailingAnchor, constant: -30),
+            menuButton.widthAnchor.constraint(equalToConstant: 12),
             menuButton.bottomAnchor.constraint(equalTo: headerView.bottomAnchor, constant: -23),
 
             mainPostView.topAnchor.constraint(equalTo: headerView.bottomAnchor, constant: 5),
@@ -375,7 +375,7 @@ final class PostTableCell: UITableViewCell {
 
             verticalView.topAnchor.constraint(equalTo: mainPostView.topAnchor, constant: 5),
             verticalView.leadingAnchor.constraint(equalTo: mainPostView.leadingAnchor, constant: 31),
-            verticalView.trailingAnchor.constraint(equalTo: mainPostView.trailingAnchor, constant: -361),
+            verticalView.widthAnchor.constraint(equalToConstant: 1),
             verticalView.bottomAnchor.constraint(equalTo: postImage.bottomAnchor, constant: -16),
 
             postTextLabel.topAnchor.constraint(equalTo: mainPostView.topAnchor, constant:  5),

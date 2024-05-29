@@ -22,6 +22,7 @@ protocol ProfileViewProtocol: AnyObject {
     func updateAlbum(photo: [UIImage]?)
     func updateSubsribers()
     func updateSubscriptions()
+    func updateTextData(user: FirebaseUser)
 }
 
 protocol ProfilePresenterProtocol: AnyObject {
@@ -89,6 +90,7 @@ final class ProfilePresenter: ProfilePresenterProtocol {
                 self.view?.updateSubsribers()
                 self.view?.updateSubscriptions()
                 self.view?.updateStorie(stories: self.userStories)
+                self.view?.updateTextData(user: self.mainUser)
             case .failure(let failure):
                 view?.showErrorAler(error: failure.localizedDescription)
             }

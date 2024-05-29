@@ -12,6 +12,7 @@ class ProfileViewController: UIViewController {
     var presenter: ProfilePresenter!
 
     let menuForPostView = MenuForPostView()
+    var titleLabel = UILabel(frame: CGRect(x: 0, y: 0, width: 150, height: 30))
 
     private lazy var avatarImageView: UIImageView = {
         let avatarImageView = UIImageView()
@@ -352,6 +353,13 @@ class ProfileViewController: UIViewController {
 // MARK: -OUTPUT PRESENTER
 extension ProfileViewController: ProfileViewProtocol {
 
+    func updateTextData(user: FirebaseUser) {
+        jobLabel.text = user.job
+        nameAndSurnameLabel.text = "\(user.name)" + " \(user.surname)"
+        titleLabel.text = user.identifier
+    }
+    
+
     func updateSubscriptions() {
         numberOfSubscriptions.text = .localizePlurals(key: "Subscriptions", number: presenter.mainUser.subscribtions.count)
     }
@@ -363,8 +371,10 @@ extension ProfileViewController: ProfileViewProtocol {
 
     func updateStorie(stories: [UIImage]?) {
         guard let stories = stories else { return }
-
-
+        if !stories.isEmpty {
+            avatarImageView.layer.borderColor = UIColor.red.cgColor
+            avatarImageView.layer.borderWidth = 1.0
+        }
     }
 
     func updateAlbum(photo: [UIImage]?) {
@@ -487,6 +497,10 @@ extension ProfileViewController: UIImagePickerControllerDelegate, UINavigationCo
         NotificationCenter.default.post(name: Notification.Name("imageIsSelected"), object: nil)
         self.dismiss(animated: true)
     }
+
+    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+            dismiss(animated: true, completion: nil)
+        }
 }
 
 // MARK: -LAYOUT
@@ -501,10 +515,9 @@ extension ProfileViewController {
         self.navigationItem.rightBarButtonItem = settingsButton
 
         let textView = UIView(frame: CGRect(x: 0, y: 0, width: 240, height: 30))
-        let title = UILabel(frame: CGRect(x: 0, y: 0, width: 150, height: 30))
-        title.text = presenter.mainUser.identifier
-        title.font = UIFont(name: "Inter-Medium", size: 14)
-        textView.addSubview(title)
+        titleLabel.text = presenter.mainUser.identifier
+        titleLabel.font = UIFont(name: "Inter-Medium", size: 14)
+        textView.addSubview(titleLabel)
         let leftButton = UIBarButtonItem(customView: textView)
         self.navigationItem.leftBarButtonItem = leftButton
     }
@@ -575,7 +588,7 @@ extension ProfileViewController {
 
             signalImage.centerYAnchor.constraint(equalTo: detailInfo.centerYAnchor),
             signalImage.leadingAnchor.constraint(equalTo: mainContentView.leadingAnchor, constant: 96),
-            signalImage.trailingAnchor.constraint(equalTo: mainContentView.trailingAnchor, constant: -280),
+            signalImage.widthAnchor.constraint(equalToConstant: 20),
             signalImage.heightAnchor.constraint(equalToConstant: 20),
 
             editButton.topAnchor.constraint(equalTo: signalImage.bottomAnchor, constant: 10),
@@ -650,10 +663,10 @@ extension ProfileViewController {
             photogalleryLabel.trailingAnchor.constraint(equalTo: mainContentView.trailingAnchor, constant: -216),
             photogalleryLabel.bottomAnchor.constraint(equalTo: mainContentView.bottomAnchor, constant: -100),
 
-            photogalleryButton.topAnchor.constraint(equalTo: addImageView.bottomAnchor, constant: 25),
-            photogalleryButton.leadingAnchor.constraint(equalTo: mainContentView.leadingAnchor, constant: 345),
-            photogalleryButton.trailingAnchor.constraint(equalTo: mainContentView.trailingAnchor, constant: -20),
-            photogalleryButton.bottomAnchor.constraint(equalTo: mainContentView.bottomAnchor, constant: -100),
+            photogalleryButton.centerYAnchor.constraint(equalTo: photogalleryLabel.centerYAnchor),
+            photogalleryButton.leadingAnchor.constraint(equalTo: photogalleryLabel.trailingAnchor, constant: 170),
+            photogalleryButton.widthAnchor.constraint(equalToConstant: 24),
+            photogalleryButton.heightAnchor.constraint(equalToConstant: 24),
 
             photoCollectionView.topAnchor.constraint(equalTo: photogalleryLabel.bottomAnchor, constant: 12),
             photoCollectionView.leadingAnchor.constraint(equalTo: mainContentView.leadingAnchor, constant: 16),

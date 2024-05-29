@@ -40,7 +40,7 @@ protocol FireStoreServiceProtocol {
     func getAllUsers(completion: @escaping (Result<[FirebaseUser], Error>) -> Void)
     func getUser(id: String, completion: @escaping (Result<FirebaseUser, AuthorisationErrors>) -> Void)
     func getPosts(sub: String, completion: @escaping (Result<[EachPost], PostErrors>) -> Void)
-    func changeData(id: String, text: String, state: ChangeStates) async
+    func changeData(id: String, text: String, state: ChangeStates) 
     func createPost(date: String, text: String, image: UIImage?, for user: String, completion: @escaping (Result<EachPost, Error>) -> Void)
     func saveImageIntoStorage(urlLink: StorageReference, photo: UIImage, completion: @escaping (Result <URL, Error>) -> Void)
     func createUser(user: FirebaseUser, id: String)
@@ -278,47 +278,23 @@ final class FireStoreService: FireStoreServiceProtocol {
         }
     }
 
-    func changeData(id: String, text: String, state: ChangeStates) async {
+    func changeData(id: String, text: String, state: ChangeStates) {
 
         let ref = Firestore.firestore().collection("Users").document(id)
 
         switch state {
         case .name:
-            do {
-                try await ref.updateData(["name" : text])
-            } catch {
-                print("error in updating \(error.localizedDescription)")
-            }
+            ref.updateData(["name" : text])
         case .job:
-            do {
-                try await ref.updateData(["job" : text])
-            } catch {
-                print("error in updating \(error.localizedDescription)")
-            }
+            ref.updateData(["job" : text])
         case .city:
-            do {
-                try await ref.updateData(["city" : text])
-            } catch {
-                print("error in updating \(error.localizedDescription)")
-            }
+            ref.updateData(["city" : text])
         case .interests:
-            do {
-                try await ref.updateData(["interests" : text])
-            } catch {
-                print("error in updating \(error.localizedDescription)")
-            }
+            ref.updateData(["interests" : text])
         case .contacts:
-            do {
-                try await ref.updateData(["contacts" : text])
-            } catch {
-                print("error in updating \(error.localizedDescription)")
-            }
+            ref.updateData(["contacts" : text])
         case .surname:
-            do {
-                try await ref.updateData(["surname" : text])
-            } catch {
-                print("error in updating \(error.localizedDescription)")
-            }
+            ref.updateData(["surname" : text])
         }
     }
 

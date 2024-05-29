@@ -65,23 +65,23 @@ final class DataChangePresenter: DataChangePresenterProtocol {
         }
     }
 
-    func changeCity(text: String) async {
+    func changeCity(text: String)  {
         guard let id = user.documentID else { return }
-        await firestoreService.changeData(id: id, text: text, state: .city)
+         firestoreService.changeData(id: id, text: text, state: .city)
     }
 
-    func changeName(text: String) async {
+    func changeName(text: String)  {
         guard let id = user.documentID else { return }
-        await firestoreService.changeData(id: id, text: text, state: .name)
+         firestoreService.changeData(id: id, text: text, state: .name)
     }
 
-    func changeSurnamet(text: String) async {
+    func changeSurnamet(text: String)  {
         guard let id = user.documentID else { return }
-        await firestoreService.changeData(id: id, text: text, state: .surname)
+         firestoreService.changeData(id: id, text: text, state: .surname)
     }
 
-    func changeDateOfBirth(text: String) async {
+    func changeDateOfBirth(text: String)  {
         guard let id = user.documentID else { return }
-        await firestoreService.changeData(id: id, text: text, state: .job)
+         firestoreService.changeData(id: id, text: text, state: .job)
     }
 }

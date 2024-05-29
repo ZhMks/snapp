@@ -1112,9 +1112,9 @@
 				DEVELOPMENT_TEAM = Y6VX64W3KZ;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Snapp/Info.plist;
+				INFOPLIST_KEY_NSCameraUsageDescription = "Разрешите приложению доступ к камере.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1143,9 +1143,9 @@
 				DEVELOPMENT_TEAM = Y6VX64W3KZ;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Snapp/Info.plist;
+				INFOPLIST_KEY_NSCameraUsageDescription = "Разрешите приложению доступ к камере.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",

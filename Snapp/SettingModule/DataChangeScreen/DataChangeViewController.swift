@@ -106,6 +106,7 @@ class DataChangeViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
         tuneNavItem()
+        createGesture()
     }
 
     //MARK: -FUNCS
@@ -124,8 +125,8 @@ class DataChangeViewController: UIViewController {
         leftArrowButton.frame = CGRect(x: 0, y: 0, width: 30, height: 30)
         leftArrowButton.addTarget(self, action: #selector(cancelButtonTapped), for: .touchUpInside)
 
-        let textView = UIView(frame: CGRect(x: 0, y: 0, width: 350, height: 30))
-        let title = UILabel(frame: CGRect(x: 40, y: 0, width: 250, height: 30))
+        let textView = UIView(frame: CGRect(x: 0, y: 0, width: 180, height: 30))
+        let title = UILabel(frame: CGRect(x: 40, y: 0, width: 80, height: 30))
         title.text = .localized(string: "Основная информация")
         title.font = UIFont(name: "Inter-Medium", size: 14)
         textView.addSubview(title)
@@ -134,25 +135,41 @@ class DataChangeViewController: UIViewController {
         self.navigationItem.leftBarButtonItem = leftButton
     }
 
-    @objc func acceptButtonTapped() async {
-        if firstTextField.text!.isEmpty && secondTextField.text!.isEmpty && fourthTextField.text!.isEmpty && fifthTextField.text!.isEmpty {
-         dismiss(animated: true)
-        } else if firstTextField.text!.isEmpty && secondTextField.text!.isEmpty && fourthTextField.text!.isEmpty {
-            await presenter.changeCity(text: fifthTextField.text!)
+    @objc func acceptButtonTapped()  {
+        
+        let textFieldsToUpdate: [UITextField: (String)  -> Void] = [
+            firstTextField: {  self.presenter.changeName(text: $0) },
+            secondTextField: {  self.presenter.changeSurnamet(text: $0) },
+            fourthTextField: {  self.presenter.changeSurnamet(text: $0) },
+            fifthTextField: {  self.presenter.changeCity(text: $0) }
+            ]
+
+            let nonEmptyFields = textFieldsToUpdate.filter { !$0.key.text!.isEmpty }
+
+            guard !nonEmptyFields.isEmpty else {
+                dismiss(animated: true)
+                return
+            }
+
+            for (textField, updateMethod) in nonEmptyFields {
+                 updateMethod(textField.text!)
+            }
+
             dismiss(animated: true)
-        } else if firstTextField.text!.isEmpty && secondTextField.text!.isEmpty {
-            await presenter.changeSurnamet(text: fourthTextField.text!)
-            dismiss(animated: true)
-        } else if firstTextField.text!.isEmpty {
-            await presenter.changeSurnamet(text: secondTextField.text!)
-            dismiss(animated: true)
-        } else {
-            await presenter.changeName(text: firstTextField.text!)
-        }
     }
 
     @objc func cancelButtonTapped() {
         dismiss(animated: true)
+    }
+
+    @objc func tapGestureAction() {
+        view.endEditing(true)
+        view.becomeFirstResponder()
+    }
+
+    private func createGesture() {
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(tapGestureAction))
+        view.addGestureRecognizer(tapGesture)
     }
 }
 
@@ -224,12 +241,12 @@ extension DataChangeViewController {
             secondTextField.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -16),
             secondTextField.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor, constant: -509),
 
-            thirdLabel.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: 179),
+            thirdLabel.topAnchor.constraint(equalTo: secondTextField.bottomAnchor, constant: 15),
             thirdLabel.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 24),
             thirdLabel.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -298),
             thirdLabel.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor, constant: -517),
 
-            fourthLabel.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: 287),
+            fourthLabel.topAnchor.constraint(equalTo: thirdLabel.bottomAnchor, constant: 30),
             fourthLabel.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 24),
             fourthLabel.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -298),
             fourthLabel.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor, constant: -408),

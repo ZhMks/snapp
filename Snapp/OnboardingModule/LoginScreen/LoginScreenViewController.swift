@@ -71,6 +71,7 @@ class LoginScreenViewController: UIViewController {
         addSubviews()
         layout()
         tuneNavItem()
+        createGesture()
     }
 
     @objc func pushThirdController() {
@@ -94,6 +95,16 @@ class LoginScreenViewController: UIViewController {
                 }
             }
         }
+    }
+
+    @objc func tapGestureAction() {
+        view.endEditing(true)
+        view.becomeFirstResponder()
+    }
+
+    private func createGesture() {
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(tapGestureAction))
+        view.addGestureRecognizer(tapGesture)
     }
 }
 

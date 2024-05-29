@@ -156,8 +156,10 @@ class MenuForPostView: UIView {
     }
 
     @objc func getDocLink() {
-      let link =  presenter.copyPostLink()
-     print(link)
+         let link =  presenter.copyPostLink()
+         print(link)
+        let pasteBoard = UIPasteboard.general
+        pasteBoard.string = link
     }
 
     @objc func addToArchives() {

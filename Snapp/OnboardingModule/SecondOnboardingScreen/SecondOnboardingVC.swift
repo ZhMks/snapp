@@ -138,6 +138,7 @@ final class SecondOnboardingVC: UIViewController {
 
     @objc func tapGestureAction() {
         view.endEditing(true)
+        view.becomeFirstResponder()
     }
 
 }
