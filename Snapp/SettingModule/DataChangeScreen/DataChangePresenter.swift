@@ -67,7 +67,7 @@ final class DataChangePresenter: DataChangePresenterProtocol {
 
     func changeCity(text: String)  {
         guard let id = user.documentID else { return }
-         firestoreService.changeData(id: id, text: text, state: .city)
+         firestoreService.changeData(id: id, text: text, state: .identifier)
     }
 
     func changeName(text: String)  {

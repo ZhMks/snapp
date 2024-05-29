@@ -456,8 +456,8 @@ extension ProfileViewController: UITableViewDelegate {
         guard let image = presenter.image  else { return }
         let detailPostPresenter = DetailPostPresenter(view: detailPostVC, user: presenter.mainUser, post: data, image: image, firestoreService: presenter.firestoreService)
         detailPostVC.presenter = detailPostPresenter
-        tableView.deselectRow(at: indexPath, animated: true)
         self.navigationController?.pushViewController(detailPostVC, animated: true)
+        tableView.deselectRow(at: indexPath, animated: true)
     }
 
 }

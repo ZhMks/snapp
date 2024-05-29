@@ -11,6 +11,7 @@ import FirebaseStorage
 protocol FeedViewProtocol: AnyObject {
     func showEmptyScreen()
     func updateViewTable()
+    func updateStorieView()
 }
 
 protocol FeedPresenterProtocol: AnyObject {
@@ -43,6 +44,7 @@ final class FeedPresenter: FeedPresenterProtocol {
                     case .success(let success):
                         guard let storieImage = UIImage(data: success) else { return }
                         self?.userStories?.append(storieImage)
+                        self?.view?.updateStorieView()
                     case .failure(let failure):
                         print(failure)
                     }
@@ -59,6 +61,7 @@ final class FeedPresenter: FeedPresenterProtocol {
             case .success(let success):
                 self.mainUser = success
                 self.fetchPosts()
+                self.fetchUserStorie()
             case .failure(_):
                 self.view?.showEmptyScreen()
             }

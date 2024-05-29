@@ -39,7 +39,7 @@ class PhotoalbumViewController: UIViewController {
         let showAllAlbumsButton = UIButton(type: .system)
         showAllAlbumsButton.translatesAutoresizingMaskIntoConstraints = false
         showAllAlbumsButton.setTitle(.localized(string: "Показать все"), for: .normal)
-        showAllAlbumsButton.setTitleColor(ColorCreator.shared.createTextColor(), for: .normal)
+        showAllAlbumsButton.setTitleColor(.systemOrange, for: .normal)
         return showAllAlbumsButton
     }()
 

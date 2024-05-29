@@ -59,6 +59,36 @@ class DataChangeViewController: UIViewController {
         return thirdLabel
     }()
 
+    private lazy var maleButton: UIButton = {
+        let maleButton = UIButton(type: .system)
+        maleButton.translatesAutoresizingMaskIntoConstraints = false
+        maleButton.clipsToBounds = true
+        return maleButton
+    }()
+
+    private lazy var maleLabel: UILabel = {
+        let maleLabel = UILabel()
+        maleLabel.translatesAutoresizingMaskIntoConstraints = false
+        maleLabel.text = .localized(string: "мужчина")
+        maleLabel.font = UIFont(name: "Inter-Light", size: 12)
+        return maleLabel
+    }()
+
+    private lazy var femaleButton: UIButton = {
+        let femaleButton = UIButton(type: .system)
+        femaleButton.translatesAutoresizingMaskIntoConstraints = false
+        femaleButton.clipsToBounds = true
+        return femaleButton
+    }()
+
+    private lazy var femaleLabel: UILabel = {
+        let femaleLabel = UILabel()
+        femaleLabel.translatesAutoresizingMaskIntoConstraints = false
+        femaleLabel.text = .localized(string: "женщина")
+        femaleLabel.font = UIFont(name: "Inter-Light", size: 12)
+        return femaleLabel
+    }()
+
     private lazy var fourthLabel: UILabel = {
         let fourthLabel = UILabel()
         fourthLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -125,8 +155,8 @@ class DataChangeViewController: UIViewController {
         leftArrowButton.frame = CGRect(x: 0, y: 0, width: 30, height: 30)
         leftArrowButton.addTarget(self, action: #selector(cancelButtonTapped), for: .touchUpInside)
 
-        let textView = UIView(frame: CGRect(x: 0, y: 0, width: 180, height: 30))
-        let title = UILabel(frame: CGRect(x: 40, y: 0, width: 80, height: 30))
+        let textView = UIView(frame: CGRect(x: 0, y: 0, width: 250, height: 30))
+        let title = UILabel(frame: CGRect(x: 40, y: 0, width: 120, height: 30))
         title.text = .localized(string: "Основная информация")
         title.font = UIFont(name: "Inter-Medium", size: 14)
         textView.addSubview(title)
@@ -171,6 +201,18 @@ class DataChangeViewController: UIViewController {
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(tapGestureAction))
         view.addGestureRecognizer(tapGesture)
     }
+
+    func updateButtonView() {
+        femaleButton.layer.cornerRadius = 20
+        femaleButton.clipsToBounds = true
+        femaleButton.layer.borderWidth = 1.0
+        femaleButton.layer.borderColor = ColorCreator.shared.createButtonColor().cgColor
+
+        maleButton.layer.cornerRadius = 20
+        maleButton.clipsToBounds = true
+        maleButton.layer.borderWidth = 1.0
+        maleButton.layer.borderColor = ColorCreator.shared.createButtonColor().cgColor
+    }
 }
 
 
@@ -180,6 +222,7 @@ extension DataChangeViewController: DataChangeViewProtocol {
     func layoutForInformationView() {
         addSubviews()
         layout()
+        updateButtonView()
     }
     
     func layoutForContactsView() {
@@ -211,6 +254,10 @@ extension DataChangeViewController {
         view.addSubview(secondLabel)
         view.addSubview(secondTextField)
         view.addSubview(thirdLabel)
+        view.addSubview(maleLabel)
+        view.addSubview(maleButton)
+        view.addSubview(femaleLabel)
+        view.addSubview(femaleButton)
         view.addSubview(fourthLabel)
         view.addSubview(fourthTextField)
         view.addSubview(fifthLabel)
@@ -224,7 +271,7 @@ extension DataChangeViewController {
             firstLabel.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: 29),
             firstLabel.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 24),
             firstLabel.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -300),
-            firstLabel.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor, constant: -620),
+            firstLabel.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor, constant: -640),
 
             firstTextField.topAnchor.constraint(equalTo: firstLabel.bottomAnchor, constant: 6),
             firstTextField.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 24),
@@ -246,9 +293,29 @@ extension DataChangeViewController {
             thirdLabel.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -298),
             thirdLabel.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor, constant: -517),
 
-            fourthLabel.topAnchor.constraint(equalTo: thirdLabel.bottomAnchor, constant: 30),
+            maleButton.topAnchor.constraint(equalTo: thirdLabel.bottomAnchor, constant: 15),
+            maleButton.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 24),
+            maleButton.heightAnchor.constraint(equalToConstant: 16),
+            maleButton.widthAnchor.constraint(equalToConstant: 16),
+
+            maleLabel.centerYAnchor.constraint(equalTo: maleButton.centerYAnchor),
+            maleLabel.leadingAnchor.constraint(equalTo: maleButton.trailingAnchor, constant: 14),
+            maleLabel.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -180),
+            maleLabel.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor, constant: -450),
+
+            femaleButton.topAnchor.constraint(equalTo: maleButton.bottomAnchor, constant: 16),
+            femaleButton.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 24),
+            femaleButton.heightAnchor.constraint(equalToConstant: 16),
+            femaleButton.widthAnchor.constraint(equalToConstant: 16),
+
+            femaleLabel.centerYAnchor.constraint(equalTo: femaleButton.centerYAnchor),
+            femaleLabel.leadingAnchor.constraint(equalTo: femaleButton.trailingAnchor, constant: 14),
+            femaleLabel.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -180),
+            femaleLabel.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor, constant: -420),
+
+            fourthLabel.topAnchor.constraint(equalTo: femaleButton.bottomAnchor, constant: 15),
             fourthLabel.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 24),
-            fourthLabel.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -298),
+            fourthLabel.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -218),
             fourthLabel.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor, constant: -408),
 
             fourthTextField.topAnchor.constraint(equalTo: fourthLabel.bottomAnchor, constant: 6),
@@ -258,7 +325,7 @@ extension DataChangeViewController {
 
             fifthLabel.topAnchor.constraint(equalTo: fourthTextField.bottomAnchor, constant: 15),
             fifthLabel.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 24),
-            fifthLabel.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -298),
+            fifthLabel.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -218),
             fifthLabel.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor, constant: -332),
 
             fifthTextField.topAnchor.constraint(equalTo: fifthLabel.bottomAnchor, constant: 6),

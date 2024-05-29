@@ -282,6 +282,7 @@ class DetailPostViewController: UIViewController {
 
 // MARK: -OUTPUTPRESENTER
 extension DetailPostViewController: DetailPostViewProtocol {
+    
     func updateCommentsState() {
         if !presenter.post.isCommentariesEnabled {
             guard let docID = presenter.user.documentID else { return }

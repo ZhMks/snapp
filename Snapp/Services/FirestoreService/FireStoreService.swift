@@ -13,7 +13,7 @@ import FirebaseFirestoreSwift
 enum ChangeStates {
     case name
     case job
-    case city
+    case identifier
     case interests
     case contacts
     case surname
@@ -287,8 +287,8 @@ final class FireStoreService: FireStoreServiceProtocol {
             ref.updateData(["name" : text])
         case .job:
             ref.updateData(["job" : text])
-        case .city:
-            ref.updateData(["city" : text])
+        case .identifier:
+            ref.updateData(["identifier" : text])
         case .interests:
             ref.updateData(["interests" : text])
         case .contacts:
@@ -304,7 +304,7 @@ final class FireStoreService: FireStoreServiceProtocol {
         let dispatchGroup = DispatchGroup()
         ref.getDocuments { snapshot, error in
             if let error = error {
-
+return
             }
 
             let dispatchGroup = DispatchGroup()

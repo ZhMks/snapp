@@ -59,6 +59,7 @@ final class FeedViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         presenter.addUserListener()
+        presenter.fetchUserStorie()
     }
 
     override func viewDidLoad() {
@@ -101,6 +102,11 @@ final class FeedViewController: UIViewController {
 
 // MARK: -OUTPUT PRESENTER
 extension FeedViewController: FeedViewProtocol {
+
+    func updateStorieView() {
+        self.storiesCollection.reloadData()
+    }
+    
     func updateViewTable() {
         self.feedTableView.reloadData()
     }
