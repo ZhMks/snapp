@@ -40,7 +40,7 @@ protocol FireStoreServiceProtocol {
     func getAllUsers(completion: @escaping (Result<[FirebaseUser], Error>) -> Void)
     func getUser(id: String, completion: @escaping (Result<FirebaseUser, AuthorisationErrors>) -> Void)
     func getPosts(sub: String, completion: @escaping (Result<[EachPost], PostErrors>) -> Void)
-    func changeData(id: String, text: String, state: ChangeStates) 
+    func changeData(id: String, text: String, state: ChangeStates)
     func createPost(date: String, text: String, image: UIImage?, for user: String, completion: @escaping (Result<EachPost, Error>) -> Void)
     func saveImageIntoStorage(urlLink: StorageReference, photo: UIImage, completion: @escaping (Result <URL, Error>) -> Void)
     func createUser(user: FirebaseUser, id: String)
@@ -249,9 +249,9 @@ final class FireStoreService: FireStoreServiceProtocol {
 
         let refDB = Firestore.firestore().collection("Users").document(sub).collection("posts")
         var posts: [EachPost] = []
-        
+
         refDB.getDocuments { snapshot, error in
-            
+
             if let error = error {
                 print(error.localizedDescription)
                 completion(.failure(.getError))
@@ -304,7 +304,7 @@ final class FireStoreService: FireStoreServiceProtocol {
         let dispatchGroup = DispatchGroup()
         ref.getDocuments { snapshot, error in
             if let error = error {
-return
+                return
             }
 
             let dispatchGroup = DispatchGroup()
@@ -468,7 +468,7 @@ return
                     }
                 }
             }
-                completion(.success(commentsArray))
+            completion(.success(commentsArray))
         }
     }
 
@@ -499,7 +499,7 @@ return
         var answers: [Answer] = []
 
         docReft.getDocuments { snapshot, error in
-            
+
             if let error = error {
                 completion(.failure(error))
             }
@@ -538,7 +538,7 @@ return
         let docRef = Firestore.firestore().collection("Users").document(user).collection("Favourites")
 
         do {
-           try docRef.addDocument(from: post)
+            try docRef.addDocument(from: post)
             completion(.success(post))
         } catch {
             print(error.localizedDescription)
@@ -552,7 +552,7 @@ return
     }
 
     func getDocLink(for id: String, user: String) -> String {
-    let docRef = Firestore.firestore().collection("Users").document(user).collection("posts").document(id)
+        let docRef = Firestore.firestore().collection("Users").document(user).collection("posts").document(id)
         return docRef.path.description
     }
 

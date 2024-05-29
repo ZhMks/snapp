@@ -268,12 +268,12 @@ extension DataChangeViewController {
         let safeArea = view.safeAreaLayoutGuide
 
         NSLayoutConstraint.activate([
-            firstLabel.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: 29),
+            firstLabel.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: 15),
             firstLabel.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 24),
             firstLabel.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -300),
             firstLabel.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor, constant: -640),
 
-            firstTextField.topAnchor.constraint(equalTo: firstLabel.bottomAnchor, constant: 6),
+            firstTextField.topAnchor.constraint(equalTo: firstLabel.bottomAnchor, constant: 10),
             firstTextField.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 24),
             firstTextField.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -16),
             firstTextField.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor, constant: -580),
