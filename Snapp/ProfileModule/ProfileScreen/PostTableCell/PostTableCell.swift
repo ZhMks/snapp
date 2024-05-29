@@ -211,6 +211,7 @@ final class PostTableCell: UITableViewCell {
             guard let firestoreService = firestoreService else { return }
             if let post = post {
                 let menuForPostPresenter = MenuForPostPresenter(view: menuForPostVC, user: user, firestoreService: firestoreService, post: post, viewState: .feedMenu)
+                menuForPostPresenter.delegate = self
                 menuForPostVC.presenter = menuForPostPresenter
                 menuForPostVC.translatesAutoresizingMaskIntoConstraints = false
                 contentView.addSubview(menuForPostVC)
@@ -231,6 +232,7 @@ final class PostTableCell: UITableViewCell {
             guard let firestoreService = firestoreService else { return }
             if let post = post {
                 let menuForPostPresenter = MenuForPostPresenter(view: menuForPostVC, user: user, firestoreService: firestoreService, post: post, viewState: .postMenu)
+                menuForPostPresenter.delegate = self
                 menuForPostVC.presenter = menuForPostPresenter
                 menuForPostVC.translatesAutoresizingMaskIntoConstraints = false
 
@@ -445,4 +447,11 @@ final class PostTableCell: UITableViewCell {
         ])
     }
 
+}
+
+extension PostTableCell: MenuForPostDelegate {
+
+    func pinPost(post: EachPost) {
+        buttonTappedHandler?()
+    }
 }

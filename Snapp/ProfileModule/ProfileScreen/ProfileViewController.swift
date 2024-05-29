@@ -425,6 +425,13 @@ extension ProfileViewController: UITableViewDataSource {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: PostTableCell.identifier, for: indexPath) as? PostTableCell else { return UITableViewCell() }
         let data = presenter.posts[indexPath.row]
         let date = presenter.posts[indexPath.row].date
+        cell.buttonTappedHandler = { [weak self] in
+            guard let self else { return }
+                guard let index = presenter.posts.firstIndex(where: { $0.documentID == data.documentID }) else { return }
+                presenter.posts.remove(at: index)
+                presenter.posts.insert(data, at: 0)
+                postsTableView.reloadData()
+        }
         cell.updateView(post: data, user: presenter.mainUser, date: date, firestoreService: presenter.firestoreService)
         cell.state = .profileCell
         return cell
@@ -704,12 +711,3 @@ extension ProfileViewController {
 
 }
 
-extension ProfileViewController: MenuForPostDelegate {
-    
-    func pinPost(post: EachPost) {
-        guard let index = presenter.posts.firstIndex(where: { $0.documentID == post.documentID }) else { return }
-        presenter.posts.remove(at: index)
-        presenter.posts.insert(post, at: 0)
-        postsTableView.reloadData()
-    }
-}

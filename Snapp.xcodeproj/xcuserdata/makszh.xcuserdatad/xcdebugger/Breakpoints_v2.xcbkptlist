@@ -19,61 +19,45 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "8E21275E-A6E9-45D9-A733-D724D3CCED05"
+            uuid = "C3CB123B-7032-417A-9FC4-CB74CD4093C4"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Snapp/ProfileModule/ProfileScreen/ProfileViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "712"
-            endingLineNumber = "712"
-            landmarkName = "pinPost(post:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "F1850C81-C989-412C-89F2-FE81ECA7D3F1"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Snapp/ProfileModule/ProfileScreen/ProfileViewController.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "710"
-            endingLineNumber = "710"
-            landmarkName = "pinPost(post:)"
+            startingLineNumber = "428"
+            endingLineNumber = "428"
+            landmarkName = "tableView(_:cellForRowAt:)"
             landmarkType = "7">
             <Locations>
                <Location
-                  uuid = "F1850C81-C989-412C-89F2-FE81ECA7D3F1 - d01428e33d8485e1"
+                  uuid = "C3CB123B-7032-417A-9FC4-CB74CD4093C4 - 3609a3e680e9526c"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
-                  symbolName = "Snapp.ProfileViewController.pinPost(post: Snapp.EachPost) -&gt; ()"
+                  symbolName = "Snapp.ProfileViewController.tableView(_: __C.UITableView, cellForRowAt: Foundation.IndexPath) -&gt; __C.UITableViewCell"
                   moduleName = "Snapp"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/makszh/Desktop/Snapp/Snapp/ProfileModule/ProfileScreen/ProfileViewController.swift"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "710"
-                  endingLineNumber = "710">
+                  startingLineNumber = "428"
+                  endingLineNumber = "428">
                </Location>
                <Location
-                  uuid = "F1850C81-C989-412C-89F2-FE81ECA7D3F1 - 5f2ad1ec1d13fb18"
+                  uuid = "C3CB123B-7032-417A-9FC4-CB74CD4093C4 - 8f339cce4ce95725"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
-                  symbolName = "closure #1 (Snapp.EachPost) -&gt; Swift.Bool in Snapp.ProfileViewController.pinPost(post: Snapp.EachPost) -&gt; ()"
+                  symbolName = "closure #1 () -&gt; () in Snapp.ProfileViewController.tableView(_: __C.UITableView, cellForRowAt: Foundation.IndexPath) -&gt; __C.UITableViewCell"
                   moduleName = "Snapp"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/makszh/Desktop/Snapp/Snapp/ProfileModule/ProfileScreen/ProfileViewController.swift"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "710"
-                  endingLineNumber = "710">
+                  startingLineNumber = "428"
+                  endingLineNumber = "428">
                </Location>
             </Locations>
          </BreakpointContent>
