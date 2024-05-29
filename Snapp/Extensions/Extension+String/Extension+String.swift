@@ -13,5 +13,8 @@ extension String {
         NSLocalizedString(string, comment: "")
     }
 
-    
+    static func localizePlurals(key: String, number: Int) -> String {
+        let localizedString = NSLocalizedString(key, tableName: "PostCell", comment: "")
+        return String(format: localizedString, number)
+    }
 }

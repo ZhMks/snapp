@@ -37,19 +37,17 @@ final class SearchPresenter: SearchPresenterProtocol {
             guard let self else { return }
             switch result {
             case .success(let firebaseUserArray):
+                var userIDSet = Set(usersArray.map({ $0.documentID }))
+
                 for firebaseUser in firebaseUserArray {
-                    print("User from Internet: \(firebaseUser.documentID)")
-                    print("Current user: \(currentUser?.uid)")
-                    if usersArray.isEmpty {
-                        if firebaseUser.documentID! != (currentUser?.uid)! {
-                            usersArray.append(firebaseUser)
-                        }
-                    } else if usersArray.contains(where: { $0.documentID == (firebaseUser.documentID)! }) {
-                        break
-                    } else {
+                    guard let documentID = firebaseUser.documentID, documentID != currentUser?.uid else { continue }
+
+                    if !userIDSet.contains(documentID) {
                         usersArray.append(firebaseUser)
+                        userIDSet.insert(documentID)
                     }
                 }
+                self.view?.updateTableView()
             case .failure(let failure):
                 view?.showErrorAlert(error: failure.localizedDescription)
             }

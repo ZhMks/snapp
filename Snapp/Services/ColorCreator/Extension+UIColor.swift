@@ -43,4 +43,10 @@ class ColorCreator {
                                         darkMode: UIColor(red: 0/255, green: 0/255, blue: 0/255, alpha: alpha))
         return color
     }
+
+    func createPostBackgroundColor() -> UIColor {
+        let color = UIColor.createColor(lightMode: UIColor(red: 245/255, green: 243/255, blue: 238/255, alpha: 1),
+                                        darkMode: UIColor(red: 245/255, green: 243/255, blue: 238/255, alpha: 1))
+        return color
+    }
 }

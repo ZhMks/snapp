@@ -13,7 +13,7 @@ protocol DetailViewProtocol: AnyObject {
 
     func updateAvatarImage(image: UIImage)
 
-    func showErrorAler(error: String) 
+    func showErrorAler(error: String)
 
     func updateAlbum(image: [UIImage])
 }
@@ -108,5 +108,37 @@ final class DetailPresenter: DetailPresenterProtocol {
             guard let photoAlbum = self?.photoAlbum else { return }
             self?.view?.updateAlbum(image: photoAlbum)
         }
+    }
+
+    func addObserverForuser() {
+        firestoreService.addSnapshotListenerToUser(for: userID) { [weak self] result in
+            guard let self else { return }
+            switch result {
+            case .success(let user):
+                self.user = user
+            case .failure(let failure):
+                return
+            }
+        }
+    }
+
+    func removeObserverForUser() {
+        firestoreService.removeListenerForUser()
+    }
+
+    func addObserverForPost() {
+        firestoreService.addSnapshotListenerToPosts(for: userID) { [weak self] result in
+            guard let self else { return }
+            switch result {
+            case .success(let success):
+                self.posts = success
+            case .failure(let failure):
+                return
+            }
+        }
+    }
+
+    func removeObserverForPosts() {
+        firestoreService.removeListenerForPosts()
     }
 }

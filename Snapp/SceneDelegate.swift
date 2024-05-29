@@ -88,22 +88,22 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let favouritesPresenter = FavouritesPresenter(view: favouritesVC, user: user)
         favouritesVC.presenter = favouritesPresenter
         let favouriteNavVC = UINavigationController(rootViewController: favouritesVC)
-        favouriteNavVC.tabBarItem = UITabBarItem(title: "Сохраненные", image: UIImage(systemName: "heart"), tag: 3)
+        favouriteNavVC.tabBarItem = UITabBarItem(title: .localized(string: "Сохраненные"), image: UIImage(systemName: "heart"), tag: 3)
 
         let feedVC = FeedViewController()
         let feedPresenter = FeedPresenter(view: feedVC, user: user, firestoreService: fireStoreService)
         feedVC.presenter = feedPresenter
         let feedNavVc = UINavigationController(rootViewController: feedVC)
-        feedNavVc.tabBarItem = UITabBarItem(title: "Главная", image: UIImage(systemName: "house"), tag: 0)
+        feedNavVc.tabBarItem = UITabBarItem(title: .localized(string: "Главная"), image: UIImage(systemName: "house"), tag: 0)
 
         let profileNavVC = UINavigationController(rootViewController: vc)
-        profileNavVC.tabBarItem = UITabBarItem(title: "Профиль", image: UIImage(systemName: "person.crop.circle"), tag: 1)
+        profileNavVC.tabBarItem = UITabBarItem(title: .localized(string: "Профиль"), image: UIImage(systemName: "person.crop.circle"), tag: 1)
 
         let searchVC = SearchViewController()
         let searchPresenter = SearchPresenter(view: searchVC, firestoreService: fireStoreService)
         searchVC.presenter = searchPresenter
         let searchNavVC = UINavigationController(rootViewController: searchVC)
-        searchNavVC.tabBarItem = UITabBarItem(title: "Поиск", image: UIImage(systemName: "magnifyingglass"), tag: 2)
+        searchNavVC.tabBarItem = UITabBarItem(title: .localized(string: "Поиск"), image: UIImage(systemName: "magnifyingglass"), tag: 2)
 
         let tabBarController = UITabBarController()
 

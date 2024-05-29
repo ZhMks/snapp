@@ -9,6 +9,11 @@ import UIKit
 import FirebaseStorage
 
 
+enum ImageState {
+    case storieImage
+    case photoImage
+}
+
 protocol ProfileViewProtocol: AnyObject {
     func showErrorAler(error: String)
     func updateAvatarImage(image: UIImage)
@@ -16,6 +21,7 @@ protocol ProfileViewProtocol: AnyObject {
     func updateStorie(stories: [UIImage]?)
     func updateAlbum(photo: [UIImage]?)
     func updateSubsribers()
+    func updateSubscriptions()
 }
 
 protocol ProfilePresenterProtocol: AnyObject {
@@ -81,6 +87,8 @@ final class ProfilePresenter: ProfilePresenterProtocol {
             case .success(let success):
                 self.mainUser = success
                 self.view?.updateSubsribers()
+                self.view?.updateSubscriptions()
+                self.view?.updateStorie(stories: self.userStories)
             case .failure(let failure):
                 view?.showErrorAler(error: failure.localizedDescription)
             }
@@ -95,7 +103,7 @@ final class ProfilePresenter: ProfilePresenterProtocol {
         
         let networkService = NetworkService()
 
-        let urlLink = Storage.storage().reference().child("users").child(userID).child("Stories").child(stringFromDate)
+        let urlLink = Storage.storage().reference().child("users").child(userID).child("Stories").child(stringFromDate).child(image.description)
         firestoreService.saveImageIntoStorage(urlLink: urlLink, photo: image) { [weak self] result in
             switch result {
             case .success(let success):
@@ -104,7 +112,6 @@ final class ProfilePresenter: ProfilePresenterProtocol {
                     case .success(let success):
                         guard let storieImage = UIImage(data: success) else { return }
                         self?.userStories?.append(storieImage)
-                        self?.view?.updateStorie(stories: self?.userStories)
                     case .failure(let failure):
                         self?.view?.showErrorAler(error: failure.localizedDescription)
                     }
@@ -115,26 +122,31 @@ final class ProfilePresenter: ProfilePresenterProtocol {
         }
     }
 
-    func addPhotoToAlbum(image: UIImage) {
-        let networkService = NetworkService()
-        let urlLink = Storage.storage().reference().child("users").child(userID).child("PhotoAlbum").child(image.description)
-        firestoreService.saveImageIntoStorage(urlLink: urlLink, photo: image) { [weak self] result in
-            guard let self else { return }
-            switch result {
-            case .success(let url):
-                firestoreService.saveImageIntoPhotoAlbum(image: url.absoluteString, user: userID)
-                networkService.fetchImage(string: url.absoluteString) { [weak self] result in
-                    switch result {
-                    case .success(let success):
-                        guard let albumImage = UIImage(data: success) else { return }
-                        self?.photoAlbum?.append(albumImage)
-                        self?.view?.updateAlbum(photo: self?.photoAlbum)
-                    case .failure(let failure):
-                        self?.view?.showErrorAler(error: failure.localizedDescription)
+    func addPhotoToAlbum(image: UIImage, state: ImageState) {
+        switch state {
+        case .storieImage:
+            createStorie(image: image)
+        case .photoImage:
+            let networkService = NetworkService()
+            let urlLink = Storage.storage().reference().child("users").child(userID).child("PhotoAlbum").child(image.description)
+            firestoreService.saveImageIntoStorage(urlLink: urlLink, photo: image) { [weak self] result in
+                guard let self else { return }
+                switch result {
+                case .success(let url):
+                    firestoreService.saveImageIntoPhotoAlbum(image: url.absoluteString, user: userID)
+                    networkService.fetchImage(string: url.absoluteString) { [weak self] result in
+                        switch result {
+                        case .success(let success):
+                            guard let albumImage = UIImage(data: success) else { return }
+                            self?.photoAlbum?.append(albumImage)
+                            self?.view?.updateAlbum(photo: self?.photoAlbum)
+                        case .failure(let failure):
+                            self?.view?.showErrorAler(error: failure.localizedDescription)
+                        }
                     }
+                case .failure(let failure):
+                    self.view?.showErrorAler(error: failure.localizedDescription)
                 }
-            case .failure(let failure):
-                self.view?.showErrorAler(error: failure.localizedDescription)
             }
         }
     }

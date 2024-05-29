@@ -65,7 +65,7 @@ final class CommentViewPresenter: CommentPresenterProtocol {
         firestoreService.addAnswerToComment(postID: documentID, user: user, commentID: commentID, answer: answer) { [weak self] result in
             guard let self else { return }
             switch result {
-            case .success(let success):
+            case .success(_):
                 NotificationCenter.default.post(name: Notification.Name("answerAdded"), object: nil)
             case .failure(let failure):
                 view?.showError(error: failure.localizedDescription)

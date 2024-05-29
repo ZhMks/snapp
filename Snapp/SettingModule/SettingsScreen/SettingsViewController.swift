@@ -15,7 +15,7 @@ class SettingsViewController: UIViewController {
     private lazy var mainView: UIView = {
         let mainView = UIView()
         mainView.translatesAutoresizingMaskIntoConstraints = false
-        mainView.backgroundColor = .systemGray6
+        mainView.backgroundColor = ColorCreator.shared.createPostBackgroundColor()
         return mainView
     }()
 

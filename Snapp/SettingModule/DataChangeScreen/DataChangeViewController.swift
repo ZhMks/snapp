@@ -27,7 +27,7 @@ class DataChangeViewController: UIViewController {
         firstTextField.placeholder = .localized(string: "Имя")
         firstTextField.textColor = ColorCreator.shared.createTextColor()
         firstTextField.layer.cornerRadius = 8
-        firstTextField.backgroundColor = .systemGray6
+        firstTextField.backgroundColor = ColorCreator.shared.createPostBackgroundColor()
         return firstTextField
     }()
 
@@ -46,7 +46,7 @@ class DataChangeViewController: UIViewController {
         secondTextField.placeholder = .localized(string: "Имя")
         secondTextField.textColor = ColorCreator.shared.createTextColor()
         secondTextField.layer.cornerRadius = 8
-        secondTextField.backgroundColor = .systemGray6
+        secondTextField.backgroundColor = ColorCreator.shared.createPostBackgroundColor()
         return secondTextField
     }()
 
@@ -74,7 +74,7 @@ class DataChangeViewController: UIViewController {
         fourthTextField.placeholder = .localized(string: "Дата рождения")
         fourthTextField.textColor = ColorCreator.shared.createTextColor()
         fourthTextField.layer.cornerRadius = 8
-        fourthTextField.backgroundColor = .systemGray6
+        fourthTextField.backgroundColor = ColorCreator.shared.createPostBackgroundColor()
         return fourthTextField
     }()
 
@@ -93,7 +93,7 @@ class DataChangeViewController: UIViewController {
         fifthTextField.placeholder = .localized(string: "Город")
         fifthTextField.textColor = ColorCreator.shared.createTextColor()
         fifthTextField.layer.cornerRadius = 8
-        fifthTextField.backgroundColor = .systemGray6
+        fifthTextField.backgroundColor = ColorCreator.shared.createPostBackgroundColor()
         return fifthTextField
     }()
 

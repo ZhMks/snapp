@@ -162,7 +162,7 @@ class DetailUserViewController: UIViewController {
     private lazy var tableViewTitle: UILabel = {
         let tableViewTitle = UILabel()
         tableViewTitle.translatesAutoresizingMaskIntoConstraints = false
-        tableViewTitle.text = .localized(string: "Мои записи")
+        tableViewTitle.text = .localized(string: "Записи \(presenter.user.name)")
         tableViewTitle.font = UIFont(name: "Inter-Medium", size: 16)
         tableViewTitle.textColor = .systemOrange
         return tableViewTitle
@@ -204,27 +204,32 @@ class DetailUserViewController: UIViewController {
         super.viewWillAppear(animated)
         presenter.fetchPosts()
     }
-    
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        presenter.addObserverForuser()
+        presenter.addObserverForPost()
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
+        tuneTableView()
         tuneNavItem()
         addSubviews()
         layout()
-        tuneTableView()
+    }
+
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        presenter.removeObserverForUser()
+        presenter.removeObserverForPosts()
     }
 
     // MARK: -FUNCS
-    @objc func showSettingsVC() {
-        //        let settingsVC = SettingsViewController()
-        //        let settingsPresenter = SettingPresenter(view: settingsVC, user: presenter.firebaseUser, firestoreService: presenter.firestoreService)
-        //        settingsVC.presenter = settingsPresenter
-        //        navigationController?.present(settingsVC, animated: true)
-    }
 
     @objc func addToSubscribers() {
         presenter.addSubscriber()
-        NotificationCenter.default.post(name: Notification.Name("subscriberAdded"), object: nil)
     }
 
     @objc func dismissViewController() {
@@ -241,7 +246,7 @@ extension DetailUserViewController: DetailViewProtocol {
             self?.photoCollectionView.reloadData()
         }
     }
-    
+
 
     func updateData(data: [EachPost]) {
         DispatchQueue.main.async { [weak self] in
@@ -271,13 +276,13 @@ extension DetailUserViewController: DetailViewProtocol {
 extension DetailUserViewController: UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-       presenter.posts.count
+        presenter.posts.count
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: PostTableCell.identifier, for: indexPath) as? PostTableCell else { return UITableViewCell() }
-         let data = presenter.posts[indexPath.row]
-         let date = presenter.posts[indexPath.row].date 
+        let data = presenter.posts[indexPath.row]
+        let date = presenter.posts[indexPath.row].date
         cell.updateView(post: data, user: presenter.user, date: date, firestoreService: presenter.firestoreService)
         return cell
     }
@@ -294,9 +299,15 @@ extension DetailUserViewController: UITableViewDelegate {
         let data = presenter.posts[indexPath.row]
         let detailPostVC = DetailPostViewController()
         guard let image = presenter.image  else { return }
-        let detailPostPresenter = DetailPostPresenter(view: detailPostVC, user: presenter.user, post: data, image: image, firestoreService: presenter.firestoreService)
-        detailPostVC.presenter = detailPostPresenter
-        self.navigationController?.pushViewController(detailPostVC, animated: true)
+        if data.image!.isEmpty {
+            let detailPostPresenter = DetailPostPresenter(view: detailPostVC, user: presenter.user, post: data, image: image, firestoreService: presenter.firestoreService)
+            detailPostVC.presenter = detailPostPresenter
+            self.navigationController?.pushViewController(detailPostVC, animated: true)
+        } else {
+            let detailPostPresenter = DetailPostPresenter(view: detailPostVC, user: presenter.user, post: data, image: image, firestoreService: presenter.firestoreService)
+            detailPostVC.presenter = detailPostPresenter
+            self.navigationController?.pushViewController(detailPostVC, animated: true)
+        }
     }
 
 }
@@ -328,12 +339,6 @@ extension DetailUserViewController: UICollectionViewDelegateFlowLayout {
 // MARK: -LAYOUT
 extension DetailUserViewController {
     func tuneNavItem() {
-        let settingsButton = UIBarButtonItem(image: UIImage(systemName: "plus"),
-                                             style: .plain,
-                                             target: self,
-                                             action: #selector(showSettingsVC))
-        settingsButton.tintColor = .systemOrange
-        self.navigationItem.rightBarButtonItem = settingsButton
 
         let leftArrowButton = UIButton(type: .system)
         leftArrowButton.setImage(UIImage(systemName: "arrow.left"), for: .normal)

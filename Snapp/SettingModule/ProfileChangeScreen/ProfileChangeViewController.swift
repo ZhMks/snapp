@@ -16,7 +16,7 @@ class ProfileChangeViewController: UIViewController {
     private lazy var mainContentView: UIView = {
         let mainContentView = UIView()
         mainContentView.translatesAutoresizingMaskIntoConstraints = false
-        mainContentView.backgroundColor = .systemGray6
+        mainContentView.backgroundColor = ColorCreator.shared.createPostBackgroundColor()
         return mainContentView
     }()
 

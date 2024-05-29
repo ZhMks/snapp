@@ -12,6 +12,7 @@ class DetailPostViewController: UIViewController {
 
     // MARK: -PROPERTIES
     var presenter: DetailPostPresenter!
+    let menuForPost = MenuForPostView()
 
     private lazy var detailPostView: UIView = {
         let detailPostView = UIView()
@@ -141,7 +142,7 @@ class DetailPostViewController: UIViewController {
     private lazy var addCommentView: UIView = {
         let addCommentView = UIView()
         addCommentView.translatesAutoresizingMaskIntoConstraints = false
-        addCommentView.backgroundColor = .systemGray5
+        addCommentView.backgroundColor = ColorCreator.shared.createPostBackgroundColor()
         let tapgesture = UITapGestureRecognizer(target: self, action: #selector(addCommentTapped))
         tapgesture.numberOfTapsRequired = 1
         addCommentView.addGestureRecognizer(tapgesture)
@@ -169,8 +170,7 @@ class DetailPostViewController: UIViewController {
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        NotificationCenter.default.addObserver(self, selector: #selector(commentAdded), name: Notification.Name("commentAdded"), object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(commentAdded), name: Notification.Name("answerAdded"), object: nil)
+        presenter.addlistener()
     }
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -181,13 +181,20 @@ class DetailPostViewController: UIViewController {
         view.backgroundColor = .systemBackground
         updateAvatarImage()
         presenter.fetchComments()
+        addTapGesture()
     }
 
     override func viewDidDisappear(_ animated: Bool) {
-        NotificationCenter.default.removeObserver(self)
+        presenter.removeListener()
     }
 
     // MARK: -FUNCS
+
+    func addTapGesture() {
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissView))
+        tapGesture.numberOfTapsRequired = 1
+        view.addGestureRecognizer(tapGesture)
+    }
 
     func tuneNavItem() {
         let settingsButton = UIBarButtonItem(image: UIImage(named: "menu"),
@@ -216,7 +223,23 @@ class DetailPostViewController: UIViewController {
     }
 
     @objc func showSettingsVC() {
+        menuForPost.isHidden = false
+        let menuForPostPresenter = MenuForPostPresenter(view: menuForPost, user: presenter.user, firestoreService: presenter.firestoreService, post: presenter.post, viewState: .feedMenu)
+        menuForPost.presenter = menuForPostPresenter
+        menuForPost.layer.cornerRadius = 15
 
+        menuForPost.translatesAutoresizingMaskIntoConstraints = false
+
+        view.addSubview(menuForPost)
+
+        let safeArea = view.safeAreaLayoutGuide
+
+        NSLayoutConstraint.activate([
+            menuForPost.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: 430),
+            menuForPost.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
+            menuForPost.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
+            menuForPost.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor)
+        ])
     }
 
     @objc func dismissViewController() {
@@ -248,12 +271,8 @@ class DetailPostViewController: UIViewController {
          present(commentView, animated: true)
     }
 
-    @objc func commentAdded() {
-        presenter.fetchComments()
-    }
-
-    @objc func answerAdded() {
-        presenter.fetchComments()
+    @objc func dismissView() {
+        menuForPost.removeFromSuperview()
     }
 }
 
@@ -287,11 +306,7 @@ extension DetailPostViewController: DetailPostViewProtocol {
         tableViewTitle.text = .localized(string: "\(presenter.post.commentaries) Комментариев")
         commentsTableView.reloadData()
     }
-    
-    func showError() {
-        print()
-    }
-    
+
     func updateImageView(image: UIImage) {
         DispatchQueue.main.async { [weak self] in
             guard let self else { return }
@@ -371,7 +386,9 @@ extension DetailPostViewController: UITableViewDelegate {
 // MARK: -LAYOUT
 
 extension DetailPostViewController {
+
     func addSubviews() {
+        menuForPost.isHidden = true
         view.addSubview(commentsTableView)
         detailPostView.addSubview(topSeparatorView)
         detailPostView.addSubview(avatarImageView)
@@ -445,7 +462,7 @@ extension DetailPostViewController {
             postImageView.topAnchor.constraint(equalTo: jobLabel.bottomAnchor, constant: 12),
             postImageView.leadingAnchor.constraint(equalTo: detailPostView.leadingAnchor, constant: 16),
             postImageView.trailingAnchor.constraint(equalTo: detailPostView.trailingAnchor, constant: -16),
-            postImageView.bottomAnchor.constraint(equalTo: detailPostView.bottomAnchor, constant: -424),
+            postImageView.heightAnchor.constraint(lessThanOrEqualToConstant: 212),
 
             postTextLabel.topAnchor.constraint(equalTo: postImageView.bottomAnchor, constant: 5),
             postTextLabel.leadingAnchor.constraint(equalTo: detailPostView.leadingAnchor, constant: 16),
@@ -454,7 +471,7 @@ extension DetailPostViewController {
 
             likeButton.topAnchor.constraint(equalTo: postTextLabel.bottomAnchor, constant: 16),
             likeButton.leadingAnchor.constraint(equalTo: detailPostView.leadingAnchor, constant: 17),
-            likeButton.trailingAnchor.constraint(equalTo: detailPostView.trailingAnchor, constant: -340),
+            likeButton.trailingAnchor.constraint(equalTo: detailPostView.trailingAnchor, constant: -350),
             likeButton.bottomAnchor.constraint(equalTo: separatorView.topAnchor, constant: -5),
 
             likesLabel.topAnchor.constraint(equalTo: postTextLabel.bottomAnchor, constant: 16),

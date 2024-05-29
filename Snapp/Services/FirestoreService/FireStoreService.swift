@@ -60,6 +60,8 @@ protocol FireStoreServiceProtocol {
     func removeListenerForUser()
     func deleteDocument(docID: String, user: String, completion: @escaping (Result<Bool, Error>) -> Void)
     func removeSubscribtion(sub: String, for user: String)
+    func addSnapshotListenerToCurrentPost(docID: String, userID: String, completion: @escaping (Result<EachPost, Error>) -> Void)
+    func removeListenerForCurrentPost()
 }
 
 
@@ -68,6 +70,8 @@ final class FireStoreService: FireStoreServiceProtocol {
     var postListner: ListenerRegistration?
 
     var userListner: ListenerRegistration?
+
+    var currentPostListner: ListenerRegistration?
 
     func addSnapshotListenerToUser(for user: String, completion: @escaping (Result<FirebaseUser, Error>) -> Void) {
         let ref = Firestore.firestore().collection("Users").document(user)
@@ -141,6 +145,39 @@ final class FireStoreService: FireStoreServiceProtocol {
         postListner?.remove()
     }
 
+    func addSnapshotListenerToCurrentPost(docID: String, userID: String, completion: @escaping (Result<EachPost, Error>) -> Void) {
+        let ref =  Firestore.firestore().collection("Users").document(userID).collection("posts").document(docID)
+        self.currentPostListner = ref.addSnapshotListener { docSnapshot, error in
+            if let error = error {
+                completion(.failure(error))
+            }
+
+            if let docSnapshot = docSnapshot {
+                do {
+                    let doc = try docSnapshot.data(as: EachPost.self)
+                    completion(.success(doc))
+                } catch let DecodingError.dataCorrupted(context) {
+                    print(context)
+                } catch let DecodingError.keyNotFound(key, context) {
+                    print("Key '\(key)' not found:", context.debugDescription)
+                    print("codingPath:", context.codingPath)
+                } catch let DecodingError.valueNotFound(value, context) {
+                    print("Value '\(value)' not found:", context.debugDescription)
+                    print("codingPath:", context.codingPath)
+                } catch let DecodingError.typeMismatch(type, context)  {
+                    print("Type '\(type)' mismatch:", context.debugDescription)
+                    print("codingPath:", context.codingPath)
+                } catch {
+                    print("error: ", error)
+                    completion(.failure(error))
+                }
+            }
+        }
+    }
+
+    func removeListenerForCurrentPost() {
+        self.currentPostListner?.remove()
+    }
 
     func getAllUsers(completion: @escaping (Result<[FirebaseUser], Error>) -> Void) {
         let dbReference = Firestore.firestore().collection("Users")
@@ -321,7 +358,7 @@ final class FireStoreService: FireStoreServiceProtocol {
         if let image = image {
             let postStorageRef = Storage.storage().reference().child("users").child(user).child("posts").child(date).child(image.description)
             saveImageIntoStorage(urlLink: postStorageRef, photo: image) { [weak self] result in
-                guard let self else { return }
+                guard self != nil else { return }
                 switch result {
                 case .success(let url):
                     fireStorePost.image = url.absoluteString

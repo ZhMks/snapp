@@ -11,13 +11,6 @@ class SearchViewController: UIViewController {
 
 
     // MARK: -PROPERTIES
-    private lazy var searchField: UITextField = {
-        let searchField = UITextField()
-        searchField.translatesAutoresizingMaskIntoConstraints = false
-        searchField.borderStyle = .roundedRect
-        return searchField
-    }()
-
     private lazy var allUsersTable: UITableView = {
         let allUsersTable = UITableView(frame: .zero, style: .insetGrouped)
         allUsersTable.translatesAutoresizingMaskIntoConstraints = false
@@ -51,7 +44,7 @@ extension SearchViewController: SearchViewProtocol {
     func updateTableView() {
         allUsersTable.reloadData()
     }
-    
+
     func goToNextVC(user: FirebaseUser, userID: String) {
         let detailVC = DetailUserViewController()
         let detailPresenter = DetailPresenter(view: detailVC, user: user, userID: userID, firestoreService: presenter.firestoreService)
@@ -93,7 +86,6 @@ extension SearchViewController: SearchViewProtocol {
 extension SearchViewController {
 
     private func addSubviews() {
-        view.addSubview(searchField)
         view.addSubview(allUsersTable)
     }
 
@@ -101,12 +93,7 @@ extension SearchViewController {
         let safeArea = view.safeAreaLayoutGuide
 
         NSLayoutConstraint.activate([
-            searchField.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: 20),
-            searchField.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 80),
-            searchField.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -80),
-            searchField.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor, constant: -580),
-
-            allUsersTable.topAnchor.constraint(equalTo: searchField.bottomAnchor, constant: 15),
+            allUsersTable.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: 15),
             allUsersTable.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 25),
             allUsersTable.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -20),
             allUsersTable.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor, constant: -15)
@@ -140,3 +127,4 @@ extension SearchViewController: UITableViewDelegate {
         tableView.deselectRow(at: indexPath, animated: true)
     }
 }
+

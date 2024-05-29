@@ -14,11 +14,7 @@ enum MenuState {
 }
 
 protocol MenuForPostViewProtocol: AnyObject {
-    func successfullySaved()
     func showError(descr error: String)
-    func disableComments()
-    func addToArchiveSuccess()
-    func postIsDeleted()
     func updateViewForFeed()
     func updateViewForPost()
 }
@@ -33,7 +29,7 @@ final class MenuForPostPresenter: MenuForPostPresenterProtocol {
     let user: FirebaseUser
     let firestoreService: FireStoreServiceProtocol
     let post: EachPost
-    let viewState: MenuState
+    var viewState: MenuState
 
     init(view: MenuForPostViewProtocol, user: FirebaseUser, firestoreService: FireStoreServiceProtocol, post: EachPost, viewState: MenuState) {
         self.view = view
@@ -49,8 +45,8 @@ final class MenuForPostPresenter: MenuForPostPresenterProtocol {
         firestoreService.saveIntoFavourites(post: post, for: user) { [weak self] result in
             guard let self else { return }
             switch result {
-            case .success(let success):
-                view?.successfullySaved()
+            case .success(_):
+                return
             case .failure(let failure):
                 view?.showError(descr: failure.localizedDescription)
             }
@@ -61,7 +57,6 @@ final class MenuForPostPresenter: MenuForPostPresenterProtocol {
         guard let user = user.documentID else { return }
         if let documentID = post.documentID {
             firestoreService.disableCommentaries(id: documentID, user: user)
-            view?.disableComments()
         }
     }
 
@@ -70,9 +65,8 @@ final class MenuForPostPresenter: MenuForPostPresenterProtocol {
         firestoreService.addDocToArchives(post: post, user: user) { [weak self] result in
             guard let self else { return }
             switch result {
-            case .success(let success):
-                print(success.image)
-                view?.addToArchiveSuccess()
+            case .success(_):
+                return
             case .failure(let failure):
                 view?.showError(descr: failure.localizedDescription)
             }
@@ -96,7 +90,7 @@ final class MenuForPostPresenter: MenuForPostPresenterProtocol {
             guard let self else { return }
             switch result {
             case .success(_):
-                view?.postIsDeleted()
+                return
             case .failure(let failure):
                 view?.showError(descr: failure.localizedDescription)
             }

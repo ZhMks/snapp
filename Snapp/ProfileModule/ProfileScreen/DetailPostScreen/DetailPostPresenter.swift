@@ -28,6 +28,7 @@ final class DetailPostPresenter: DetailPostPresenterProtocol {
     let image: UIImage
     var comments: [Comment : [Answer]?]?
     let firestoreService: FireStoreServiceProtocol
+    var state: MenuState?
 
     init(view: DetailPostViewProtocol, user: FirebaseUser, post: EachPost, image: UIImage, firestoreService: FireStoreServiceProtocol) {
         self.view = view
@@ -106,6 +107,24 @@ final class DetailPostPresenter: DetailPostPresenterProtocol {
 
     func showCommetVC(with user: String, commentID: String?, state: CommentState) {
         view?.showCommentVC(with: user, commentID: commentID, state: state)
+    }
+
+    func addlistener() {
+        guard let docID = post.documentID else { return }
+        guard let userID = user.documentID else { return }
+        firestoreService.addSnapshotListenerToCurrentPost(docID: docID, userID: userID) { [weak self] result in
+            guard let self else { return }
+            switch result {
+            case .success(let currentPost):
+                view?.updateCommentsTableView()
+            case .failure(let failure):
+                view?.showError(descr: failure.localizedDescription)
+            }
+        }
+    }
+
+    func removeListener() {
+        firestoreService.removeListenerForCurrentPost()
     }
 
 }

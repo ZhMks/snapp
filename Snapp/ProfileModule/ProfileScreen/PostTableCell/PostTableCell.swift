@@ -27,6 +27,7 @@ final class PostTableCell: UITableViewCell {
     var post: EachPost?
     var firestoreService: FireStoreServiceProtocol?
 
+
     private lazy var headerView: UIView = {
         let headerView = UIView()
         headerView.translatesAutoresizingMaskIntoConstraints = false
@@ -189,10 +190,11 @@ final class PostTableCell: UITableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: .default, reuseIdentifier: reuseIdentifier)
         addSubviews()
-        backgroundColor = .systemBackground
-        contentView.backgroundColor = .systemBackground
+        backgroundColor = ColorCreator.shared.createPostBackgroundColor()
+        contentView.backgroundColor = ColorCreator.shared.createPostBackgroundColor()
         addTapGesture()
         layout()
+        checkCellState()
     }
     
     required init?(coder: NSCoder) {
@@ -211,7 +213,6 @@ final class PostTableCell: UITableViewCell {
                 let menuForPostPresenter = MenuForPostPresenter(view: menuForPostVC, user: user, firestoreService: firestoreService, post: post, viewState: .feedMenu)
                 menuForPostVC.presenter = menuForPostPresenter
                 menuForPostVC.translatesAutoresizingMaskIntoConstraints = false
-
                 contentView.addSubview(menuForPostVC)
 
                 let safeArea = contentView.safeAreaLayoutGuide

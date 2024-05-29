@@ -174,7 +174,7 @@ final class CommentsTableCell: UITableViewCell {
 
         NSLayoutConstraint.activate([
             avatarImageView.topAnchor.constraint(equalTo: safeArea.topAnchor),
-            avatarImageView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 38),
+            avatarImageView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
             avatarImageView.heightAnchor.constraint(equalToConstant: 15),
             avatarImageView.widthAnchor.constraint(equalToConstant: 15),
 
@@ -193,7 +193,7 @@ final class CommentsTableCell: UITableViewCell {
             likesLabel.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor, constant: -33),
 
             commentLabel.topAnchor.constraint(equalTo: identifierLabel.bottomAnchor, constant: 3),
-            commentLabel.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 60),
+            commentLabel.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 10),
             commentLabel.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -80),
 
             dateLabel.topAnchor.constraint(equalTo: commentLabel.bottomAnchor),

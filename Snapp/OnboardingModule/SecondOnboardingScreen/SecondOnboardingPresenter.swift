@@ -44,7 +44,7 @@ final class SecondOnboardingPresenter: SecondOnboardingPresenterProtocol {
 
         authService.signUpUser(phone: phone, completion: { [weak self] result in
             switch result {
-            case .success(let success):
+            case .success(_):
                 completions(true)
             case .failure(let failure):
                 self?.view?.showAuthorisationAlert(error: failure.localizedDescription)

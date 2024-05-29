@@ -83,12 +83,12 @@ final class FeedPresenter: FeedPresenterProtocol {
                         switch result {
                         case .success(let postArray):
                             posts?.updateValue(postArray, forKey: success)
-                        case .failure(let failure):
+                        case .failure(_):
                             view?.showEmptyScreen()
                         }
                         dispatchGroup.leave()
                     })
-                case .failure(let failure):
+                case .failure(_):
                     view?.showEmptyScreen()
                 }
             })

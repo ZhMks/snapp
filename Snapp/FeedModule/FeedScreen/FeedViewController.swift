@@ -104,7 +104,7 @@ extension FeedViewController: FeedViewProtocol {
     func updateViewTable() {
         self.feedTableView.reloadData()
     }
-    
+
     func showEmptyScreen() {
         print("SHOWFEEDEMPTYSCREEN")
     }
@@ -172,7 +172,7 @@ extension FeedViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let detailPostVC = DetailPostViewController()
         guard let user = user(forSection: indexPath.section) else { return }
-        guard let answer = presenter.posts?[user]?[indexPath.row] else { return }
+        guard let post = presenter.posts?[user]?[indexPath.row] else { return }
         if let image = user.image {
             let networkService = NetworkService()
             networkService.fetchImage(string: image) { [weak self] result in
@@ -181,12 +181,14 @@ extension FeedViewController: UITableViewDelegate {
                 case .success(let success):
                     DispatchQueue.main.async { [weak self] in
                         guard let self else { return }
-                        guard let avatarImage = UIImage(data: success) else { return }
-                            let detailPostPresenter = DetailPostPresenter(view: detailPostVC, user: user, post: answer, image: avatarImage, firestoreService: self.presenter.firestoreService)
-                            detailPostVC.presenter = detailPostPresenter
-                            self.navigationController?.pushViewController(detailPostVC, animated: true)
+                        if let avatarImage = UIImage(data: success) {
+                                let detailPostPresenter = DetailPostPresenter(view: detailPostVC, user: user, post: post, image: avatarImage, firestoreService: presenter.firestoreService)
+                                    detailPostVC.presenter = detailPostPresenter
+                                    detailPostPresenter.state = .feedMenu
+                                    self.navigationController?.pushViewController(detailPostVC, animated: true)
+                        }
                     }
-                case .failure(let failure):
+                case .failure(_):
                     return
                 }
             }

@@ -130,17 +130,11 @@ class MenuForPostView: UIView {
 
     override init(frame: CGRect) {
         super.init(frame: frame)
-        backgroundColor = .systemGray6
+        backgroundColor = ColorCreator.shared.createPostBackgroundColor()
         layer.cornerRadius = 10
-        layer.shadowOffset = CGSize(width: 2.0, height: 2.0)
-        layer.shadowOpacity = 1.0
-        layer.shadowRadius = 3.0
-        layer.shadowColor = UIColor.systemGray6.cgColor
-        layer.borderColor = ColorCreator.shared.createButtonColor().cgColor
-        layer.borderWidth = 1.0
         addGesture()
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -189,6 +183,7 @@ class MenuForPostView: UIView {
 //MARK: -OUTPUTPRESENTER
 
 extension MenuForPostView: MenuForPostViewProtocol {
+    
 
     func updateViewForFeed() {
         layer.cornerRadius = 10
@@ -240,34 +235,15 @@ extension MenuForPostView: MenuForPostViewProtocol {
         ])
 
     }
-    
+
     func updateViewForPost() {
         addSubviews()
         layout()
     }
-    
-    func disableComments() {
-        NotificationCenter.default.post(name: Notification.Name("commentsDisabled"), object: nil)
-    }
-    
-    func addToArchiveSuccess() {
-        NotificationCenter.default.post(name: Notification.Name("savedToArchives"), object: nil)
-    }
-    
-    func postIsDeleted() {
-        NotificationCenter.default.post(name: Notification.Name("postDeleted"), object: nil)
-    }
-    
-    func successfullySaved() {
-        NotificationCenter.default.post(name: Notification.Name("savedToFavourites"), object: nil)
-    }
-    
+
     func showError(descr error: String) {
         print(error)
     }
-    
-
-
 
 }
 

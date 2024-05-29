@@ -78,6 +78,7 @@
 		B211C2832BBD48EA00C073EE /* FireBaseAuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B211C2822BBD48EA00C073EE /* FireBaseAuthService.swift */; };
 		B211C2872BBD494200C073EE /* FirebaseUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = B211C2862BBD494200C073EE /* FirebaseUser.swift */; };
 		B211C2892BBD558000C073EE /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = B211C2882BBD558000C073EE /* GoogleService-Info.plist */; };
+		B25104552C0708FB0006D006 /* PostCell.stringsdict in Resources */ = {isa = PBXBuildFile; fileRef = B25104532C0708FB0006D006 /* PostCell.stringsdict */; };
 		B26804B22BE4E63700DE74A4 /* PostTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B26804B12BE4E63700DE74A4 /* PostTableCell.swift */; };
 		B26804B52BE6229600DE74A4 /* ExtensionTableVIew.swift in Sources */ = {isa = PBXBuildFile; fileRef = B26804B42BE6229600DE74A4 /* ExtensionTableVIew.swift */; };
 		B26804C42BEE148600DE74A4 /* CreatePostPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B26804C32BEE148600DE74A4 /* CreatePostPresenter.swift */; };
@@ -169,6 +170,7 @@
 		B211C2822BBD48EA00C073EE /* FireBaseAuthService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FireBaseAuthService.swift; sourceTree = "<group>"; };
 		B211C2862BBD494200C073EE /* FirebaseUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseUser.swift; sourceTree = "<group>"; };
 		B211C2882BBD558000C073EE /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		B25104542C0708FB0006D006 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.stringsdict; name = en; path = en.lproj/PostCell.stringsdict; sourceTree = "<group>"; };
 		B26804B12BE4E63700DE74A4 /* PostTableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostTableCell.swift; sourceTree = "<group>"; };
 		B26804B42BE6229600DE74A4 /* ExtensionTableVIew.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionTableVIew.swift; sourceTree = "<group>"; };
 		B26804C32BEE148600DE74A4 /* CreatePostPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreatePostPresenter.swift; sourceTree = "<group>"; };
@@ -388,6 +390,7 @@
 		B211C1DB2BBB3C2900C073EE = {
 			isa = PBXGroup;
 			children = (
+				B25104532C0708FB0006D006 /* PostCell.stringsdict */,
 				B211C2882BBD558000C073EE /* GoogleService-Info.plist */,
 				B211C25E2BBC178F00C073EE /* Localizable.xcstrings */,
 				B211C1E62BBB3C2900C073EE /* Snapp */,
@@ -840,6 +843,7 @@
 				B209E60B2BBEBCE50067D751 /* Inter-Black.ttf in Resources */,
 				B209E6112BBEBD100067D751 /* Inter-Medium.ttf in Resources */,
 				B211C25F2BBC178F00C073EE /* Localizable.xcstrings in Resources */,
+				B25104552C0708FB0006D006 /* PostCell.stringsdict in Resources */,
 				B211C1F72BBB3C2A00C073EE /* Base in Resources */,
 				B209E60F2BBEBD050067D751 /* Inter-Light.ttf in Resources */,
 			);
@@ -964,6 +968,14 @@
 				B211C2602BBC179F00C073EE /* ru */,
 			);
 			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+		B25104532C0708FB0006D006 /* PostCell.stringsdict */ = {
+			isa = PBXVariantGroup;
+			children = (
+				B25104542C0708FB0006D006 /* en */,
+			);
+			name = PostCell.stringsdict;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */

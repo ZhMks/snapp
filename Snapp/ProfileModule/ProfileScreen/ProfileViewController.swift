@@ -213,7 +213,7 @@ class ProfileViewController: UIViewController {
     private lazy var viewForTableTitle: UIView = {
         let viewForTableTitle = UIView()
         viewForTableTitle.translatesAutoresizingMaskIntoConstraints = false
-        viewForTableTitle.backgroundColor = .systemGray5
+        viewForTableTitle.backgroundColor = ColorCreator.shared.createPostBackgroundColor()
         return viewForTableTitle
     }()
 
@@ -253,8 +253,6 @@ class ProfileViewController: UIViewController {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-
-        NotificationCenter.default.addObserver(self, selector: #selector(subscriberAdded), name: Notification.Name("subscriberAdded"), object: nil)
         presenter.addListenerForPost()
         presenter.addListenerForUser()
     }
@@ -301,7 +299,11 @@ class ProfileViewController: UIViewController {
     }
 
     @objc func createStorieButtonTapped() {
-
+        let imagePicker = UIImagePickerController()
+        if UIImagePickerController.isSourceTypeAvailable(.camera) {
+            imagePicker.sourceType = .camera
+            present(imagePicker, animated: true, completion: nil)
+        }
     }
 
     @objc func subscriberAdded() {
@@ -350,18 +352,26 @@ class ProfileViewController: UIViewController {
 // MARK: -OUTPUT PRESENTER
 extension ProfileViewController: ProfileViewProtocol {
 
+    func updateSubscriptions() {
+        numberOfSubscriptions.text = .localizePlurals(key: "Subscriptions", number: presenter.mainUser.subscribtions.count)
+    }
+
+
     func updateSubsribers() {
-        numberOfSubscriptions.text = .localized(string: "\(presenter.mainUser.subscribtions.count)"+"\nПодписок")
+        numberOfSubscriptions.text = .localizePlurals(key: "Subsciptions", number: presenter.mainUser.subscribers.count)
     }
 
     func updateStorie(stories: [UIImage]?) {
-        print()
+        guard let stories = stories else { return }
+
+
     }
 
     func updateAlbum(photo: [UIImage]?) {
         DispatchQueue.main.async { [weak self] in
             guard let self else { return }
-            photogalleryLabel.text = .localized(string: "Фотографии" + "  \(presenter.mainUser.photoAlbum.count)")
+            guard let number = presenter.photoAlbum?.count else { return }
+            photogalleryLabel.text = .localizePlurals(key: "Photo", number: number)
             photoCollectionView.reloadData()
         }
     }
@@ -370,7 +380,7 @@ extension ProfileViewController: ProfileViewProtocol {
     func updateData(data: [EachPost]) {
         DispatchQueue.main.async { [weak self] in
             guard let self else { return }
-            numberOfPosts.text = .localized(string: "\(presenter.posts.count)"+"\nПостов")
+            numberOfPosts.text = .localizePlurals(key: "Posts", number: presenter.posts.count)
             self.tuneTableView()
             postsTableView.reloadData()
         }
@@ -466,7 +476,13 @@ extension ProfileViewController: UIImagePickerControllerDelegate, UINavigationCo
 
         guard let image = info[.originalImage] as? UIImage else { return }
 
-        presenter.addPhotoToAlbum(image: image)
+        switch picker.sourceType {
+        case .camera:
+            presenter.addPhotoToAlbum(image: image, state: .storieImage)
+        case .photoLibrary:
+            presenter.addPhotoToAlbum(image: image, state: .photoImage)
+        default: return
+        }
 
         NotificationCenter.default.post(name: Notification.Name("imageIsSelected"), object: nil)
         self.dismiss(animated: true)
