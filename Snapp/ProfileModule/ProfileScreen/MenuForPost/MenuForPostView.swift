@@ -80,6 +80,7 @@ class MenuForPostView: UIView {
         pinPostButton.titleLabel?.font = UIFont(name: "Inter-Light", size: 14)
         pinPostButton.setTitleColor(ColorCreator.shared.createTextColor(), for: .normal)
         pinPostButton.contentHorizontalAlignment = .left
+        pinPostButton.addTarget(self, action: #selector(pinButtonTapped), for: .touchUpInside)
         return pinPostButton
     }()
 
@@ -172,6 +173,10 @@ class MenuForPostView: UIView {
 
     @objc func removeSubscribtion() {
         presenter.removeSubscribtion()
+    }
+
+    @objc func pinButtonTapped() {
+        presenter.pinPost(post: presenter.post)
     }
 
     @objc func swipeGesture() {

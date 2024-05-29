@@ -23,6 +23,10 @@ protocol MenuForPostPresenterProtocol: AnyObject {
     init(view: MenuForPostViewProtocol, user: FirebaseUser, firestoreService: FireStoreServiceProtocol, post: EachPost, viewState: MenuState)
 }
 
+protocol MenuForPostDelegate: AnyObject {
+    func pinPost(post: EachPost)
+}
+
 
 final class MenuForPostPresenter: MenuForPostPresenterProtocol {
     weak var view: MenuForPostViewProtocol?
@@ -30,6 +34,7 @@ final class MenuForPostPresenter: MenuForPostPresenterProtocol {
     let firestoreService: FireStoreServiceProtocol
     let post: EachPost
     var viewState: MenuState
+    weak var delegate: MenuForPostDelegate?
 
     init(view: MenuForPostViewProtocol, user: FirebaseUser, firestoreService: FireStoreServiceProtocol, post: EachPost, viewState: MenuState) {
         self.view = view
@@ -71,6 +76,10 @@ final class MenuForPostPresenter: MenuForPostPresenterProtocol {
                 view?.showError(descr: failure.localizedDescription)
             }
         }
+    }
+
+    func pinPost(post: EachPost) {
+        delegate?.pinPost(post: self.post)
     }
 
     func copyPostLink() -> String {

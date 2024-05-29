@@ -76,7 +76,7 @@ final class PostTableCell: UITableViewCell {
     private lazy var mainPostView: UIView = {
         let mainPostView = UIView()
         mainPostView.translatesAutoresizingMaskIntoConstraints = false
-        mainPostView.backgroundColor = .systemGray6
+        mainPostView.backgroundColor = ColorCreator.shared.createPostBackgroundColor()
         return mainPostView
     }()
 

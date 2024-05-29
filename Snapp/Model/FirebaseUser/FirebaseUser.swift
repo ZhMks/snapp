@@ -29,6 +29,7 @@ struct FirebaseUser: Codable, Hashable {
     var stories: [String]
     var image: String?
     var photoAlbum: [String]
+    var sex: Bool
 }
 
 struct EachPost: Codable {

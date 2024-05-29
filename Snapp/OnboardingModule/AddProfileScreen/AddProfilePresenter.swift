@@ -46,7 +46,8 @@ final class AddProfilePresenter: AddProfilePresenterProtocol {
                                         subscribtions: [],
                                         stories: [],
                                         image: "",
-                                        photoAlbum: [])
+                                        photoAlbum: [],
+        sex: false)
         firestoreService?.saveImageIntoStorage(urlLink: ref, photo: image) { [weak self] result in
             guard let self else { return }
             switch result {

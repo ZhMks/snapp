@@ -7,6 +7,7 @@
 
 import UIKit
 
+
 final class CommentsTableCell: UITableViewCell {
 
     // MARK: -PROPERTIES
@@ -172,39 +173,39 @@ final class CommentsTableCell: UITableViewCell {
     func layout() {
         let safeArea = contentView.safeAreaLayoutGuide
 
-        NSLayoutConstraint.activate([
-            avatarImageView.topAnchor.constraint(equalTo: safeArea.topAnchor),
-            avatarImageView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
-            avatarImageView.heightAnchor.constraint(equalToConstant: 15),
-            avatarImageView.widthAnchor.constraint(equalToConstant: 15),
+            NSLayoutConstraint.activate([
+                avatarImageView.topAnchor.constraint(equalTo: safeArea.topAnchor),
+                avatarImageView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
+                avatarImageView.heightAnchor.constraint(equalToConstant: 15),
+                avatarImageView.widthAnchor.constraint(equalToConstant: 15),
 
-            identifierLabel.centerYAnchor.constraint(equalTo: avatarImageView.centerYAnchor),
-            identifierLabel.leadingAnchor.constraint(equalTo: avatarImageView.trailingAnchor, constant: 7),
-            identifierLabel.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -180),
+                identifierLabel.centerYAnchor.constraint(equalTo: avatarImageView.centerYAnchor),
+                identifierLabel.leadingAnchor.constraint(equalTo: avatarImageView.trailingAnchor, constant: 7),
+                identifierLabel.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -180),
 
-            likesButton.centerYAnchor.constraint(equalTo: avatarImageView.centerYAnchor),
-            likesButton.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -30),
-            likesButton.heightAnchor.constraint(equalToConstant: 15),
-            likesButton.widthAnchor.constraint(equalToConstant: 15),
+                likesButton.centerYAnchor.constraint(equalTo: avatarImageView.centerYAnchor),
+                likesButton.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -30),
+                likesButton.heightAnchor.constraint(equalToConstant: 15),
+                likesButton.widthAnchor.constraint(equalToConstant: 15),
 
-            likesLabel.centerYAnchor.constraint(equalTo: likesButton.centerYAnchor),
-            likesLabel.leadingAnchor.constraint(equalTo: likesButton.trailingAnchor, constant: 5),
-            likesLabel.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -5),
-            likesLabel.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor, constant: -33),
+                likesLabel.centerYAnchor.constraint(equalTo: likesButton.centerYAnchor),
+                likesLabel.leadingAnchor.constraint(equalTo: likesButton.trailingAnchor, constant: 5),
+                likesLabel.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -5),
+                likesLabel.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor, constant: -33),
 
-            commentLabel.topAnchor.constraint(equalTo: identifierLabel.bottomAnchor, constant: 3),
-            commentLabel.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 10),
-            commentLabel.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -80),
+                commentLabel.topAnchor.constraint(equalTo: identifierLabel.bottomAnchor, constant: 3),
+                commentLabel.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 10),
+                commentLabel.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -80),
 
-            dateLabel.topAnchor.constraint(equalTo: commentLabel.bottomAnchor),
-            dateLabel.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 60),
-            dateLabel.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -130),
-            dateLabel.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor),
+                dateLabel.topAnchor.constraint(equalTo: commentLabel.bottomAnchor),
+                dateLabel.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 10),
+                dateLabel.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -130),
+                dateLabel.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor),
 
-            answerButton.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: 33),
-            answerButton.leadingAnchor.constraint(equalTo: dateLabel.trailingAnchor, constant: 50),
-            answerButton.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
-            answerButton.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor)
-        ])
+                answerButton.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: 33),
+                answerButton.leadingAnchor.constraint(equalTo: dateLabel.trailingAnchor, constant: 50),
+                answerButton.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
+                answerButton.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor)
+            ])
     }
 }

@@ -702,3 +702,12 @@ extension ProfileViewController {
     }
 
 }
+
+extension ProfileViewController: MenuForPostDelegate {
+
+    func pinPost(post: EachPost) {
+        guard let index = presenter.posts.firstIndex(where: { $0.documentID == post.documentID }) else { return }
+        presenter.posts.remove(at: index)
+        presenter.posts.insert(post, at: 0)
+    }
+}
