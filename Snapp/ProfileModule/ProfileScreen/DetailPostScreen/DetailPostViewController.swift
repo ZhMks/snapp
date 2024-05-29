@@ -182,6 +182,7 @@ class DetailPostViewController: UIViewController {
         updateAvatarImage()
         presenter.fetchComments()
         addTapGesture()
+        presenter.updateComments()
     }
 
     override func viewDidDisappear(_ animated: Bool) {
@@ -274,11 +275,23 @@ class DetailPostViewController: UIViewController {
     @objc func dismissView() {
         menuForPost.removeFromSuperview()
     }
+
+    
 }
 
 
 // MARK: -OUTPUTPRESENTER
 extension DetailPostViewController: DetailPostViewProtocol {
+    func updateCommentsState() {
+        if !presenter.post.isCommentariesEnabled {
+            guard let docID = presenter.user.documentID else { return }
+            if docID != Auth.auth().currentUser?.uid {
+                addCommentView.backgroundColor = .clear
+                addCommentView.isHidden = true
+            }
+        }
+    }
+    
 
     func showError(descr: String) {
         print(descr)

@@ -85,7 +85,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         }
 
         let favouritesVC = FavouritesViewController()
-        let favouritesPresenter = FavouritesPresenter(view: favouritesVC, user: user)
+        let favouritesPresenter = FavouritesPresenter(view: favouritesVC, user: user, firestoreService: fireStoreService)
         favouritesVC.presenter = favouritesPresenter
         let favouriteNavVC = UINavigationController(rootViewController: favouritesVC)
         favouriteNavVC.tabBarItem = UITabBarItem(title: .localized(string: "Сохраненные"), image: UIImage(systemName: "heart"), tag: 3)

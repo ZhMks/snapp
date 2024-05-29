@@ -63,7 +63,7 @@ class DataChangeViewController: UIViewController {
         let fourthLabel = UILabel()
         fourthLabel.translatesAutoresizingMaskIntoConstraints = false
         fourthLabel.font = UIFont(name: "Inter-Medium", size: 12)
-        fourthLabel.text = .localized(string: "Дата")
+        fourthLabel.text = .localized(string: "Дата рождения")
         fourthLabel.textColor = ColorCreator.shared.createTextColor()
         return fourthLabel
     }()
@@ -82,7 +82,7 @@ class DataChangeViewController: UIViewController {
         let fifthLabel = UILabel()
         fifthLabel.translatesAutoresizingMaskIntoConstraints = false
         fifthLabel.font = UIFont(name: "Inter-Medium", size: 12)
-        fifthLabel.text = .localized(string: "Родной город")
+        fifthLabel.text = .localized(string: "Идентификатор")
         fifthLabel.textColor = ColorCreator.shared.createTextColor()
         return fifthLabel
     }()
@@ -90,7 +90,7 @@ class DataChangeViewController: UIViewController {
     private lazy var fifthTextField: UITextField = {
         let fifthTextField = UITextField()
         fifthTextField.translatesAutoresizingMaskIntoConstraints = false
-        fifthTextField.placeholder = .localized(string: "Город")
+        fifthTextField.placeholder = .localized(string: "Идентификатор")
         fifthTextField.textColor = ColorCreator.shared.createTextColor()
         fifthTextField.layer.cornerRadius = 8
         fifthTextField.backgroundColor = ColorCreator.shared.createPostBackgroundColor()

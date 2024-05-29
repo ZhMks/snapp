@@ -188,23 +188,6 @@
         }
       }
     },
-    "Город" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "City"
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Город"
-          }
-        }
-      }
-    },
     "Далее" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -337,6 +320,23 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Зарегестрироваться"
+          }
+        }
+      }
+    },
+    "Идентификатор" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Identifier"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Идентификатор"
           }
         }
       }
@@ -858,23 +858,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Редактировать"
-          }
-        }
-      }
-    },
-    "Родной город" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Main City"
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Родной город"
           }
         }
       }

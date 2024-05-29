@@ -26,8 +26,8 @@
             filePath = "Snapp/ProfileModule/ProfileScreen/ProfileViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "711"
-            endingLineNumber = "711"
+            startingLineNumber = "712"
+            endingLineNumber = "712"
             landmarkName = "pinPost(post:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -42,13 +42,13 @@
             filePath = "Snapp/ProfileModule/ProfileScreen/ProfileViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "709"
-            endingLineNumber = "709"
+            startingLineNumber = "710"
+            endingLineNumber = "710"
             landmarkName = "pinPost(post:)"
             landmarkType = "7">
             <Locations>
                <Location
-                  uuid = "F1850C81-C989-412C-89F2-FE81ECA7D3F1 - d01428e33d84858e"
+                  uuid = "F1850C81-C989-412C-89F2-FE81ECA7D3F1 - d01428e33d8485e1"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
@@ -58,11 +58,11 @@
                   urlString = "file:///Users/makszh/Desktop/Snapp/Snapp/ProfileModule/ProfileScreen/ProfileViewController.swift"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "709"
-                  endingLineNumber = "709">
+                  startingLineNumber = "710"
+                  endingLineNumber = "710">
                </Location>
                <Location
-                  uuid = "F1850C81-C989-412C-89F2-FE81ECA7D3F1 - 5f2ad1ec1d13fb77"
+                  uuid = "F1850C81-C989-412C-89F2-FE81ECA7D3F1 - 5f2ad1ec1d13fb18"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
@@ -72,8 +72,8 @@
                   urlString = "file:///Users/makszh/Desktop/Snapp/Snapp/ProfileModule/ProfileScreen/ProfileViewController.swift"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "709"
-                  endingLineNumber = "709">
+                  startingLineNumber = "710"
+                  endingLineNumber = "710">
                </Location>
             </Locations>
          </BreakpointContent>

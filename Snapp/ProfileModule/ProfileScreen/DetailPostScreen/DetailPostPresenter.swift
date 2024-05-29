@@ -14,10 +14,12 @@ protocol DetailPostViewProtocol: AnyObject {
     func updateCommentsTableView()
     func showCommentVC(with: String, commentID: String?, state: CommentState)
     func updateCommentsNumber()
+    func updateCommentsState()
 }
 
 protocol DetailPostPresenterProtocol: AnyObject {
     init(view: DetailPostViewProtocol, user: FirebaseUser, post: EachPost, image: UIImage, firestoreService: FireStoreServiceProtocol)
+    func updateComments()
 }
 
 final class DetailPostPresenter: DetailPostPresenterProtocol {
@@ -116,6 +118,7 @@ final class DetailPostPresenter: DetailPostPresenterProtocol {
             guard let self else { return }
             switch result {
             case .success(let currentPost):
+                self.post = currentPost
                 view?.updateCommentsTableView()
             case .failure(let failure):
                 view?.showError(descr: failure.localizedDescription)
@@ -125,6 +128,10 @@ final class DetailPostPresenter: DetailPostPresenterProtocol {
 
     func removeListener() {
         firestoreService.removeListenerForCurrentPost()
+    }
+
+    func updateComments() {
+        view?.updateCommentsState()
     }
 
 }

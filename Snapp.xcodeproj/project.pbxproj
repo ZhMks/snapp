@@ -79,6 +79,7 @@
 		B211C2872BBD494200C073EE /* FirebaseUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = B211C2862BBD494200C073EE /* FirebaseUser.swift */; };
 		B211C2892BBD558000C073EE /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = B211C2882BBD558000C073EE /* GoogleService-Info.plist */; };
 		B25104552C0708FB0006D006 /* PostCell.stringsdict in Resources */ = {isa = PBXBuildFile; fileRef = B25104532C0708FB0006D006 /* PostCell.stringsdict */; };
+		B26517BA2C076F770026A299 /* FavouriteTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B26517B92C076F770026A299 /* FavouriteTableViewCell.swift */; };
 		B26804B22BE4E63700DE74A4 /* PostTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B26804B12BE4E63700DE74A4 /* PostTableCell.swift */; };
 		B26804B52BE6229600DE74A4 /* ExtensionTableVIew.swift in Sources */ = {isa = PBXBuildFile; fileRef = B26804B42BE6229600DE74A4 /* ExtensionTableVIew.swift */; };
 		B26804C42BEE148600DE74A4 /* CreatePostPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B26804C32BEE148600DE74A4 /* CreatePostPresenter.swift */; };
@@ -171,6 +172,7 @@
 		B211C2862BBD494200C073EE /* FirebaseUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseUser.swift; sourceTree = "<group>"; };
 		B211C2882BBD558000C073EE /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		B25104542C0708FB0006D006 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.stringsdict; name = en; path = en.lproj/PostCell.stringsdict; sourceTree = "<group>"; };
+		B26517B92C076F770026A299 /* FavouriteTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavouriteTableViewCell.swift; sourceTree = "<group>"; };
 		B26804B12BE4E63700DE74A4 /* PostTableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostTableCell.swift; sourceTree = "<group>"; };
 		B26804B42BE6229600DE74A4 /* ExtensionTableVIew.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionTableVIew.swift; sourceTree = "<group>"; };
 		B26804C32BEE148600DE74A4 /* CreatePostPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreatePostPresenter.swift; sourceTree = "<group>"; };
@@ -327,6 +329,7 @@
 		B209E6232BC3FD370067D751 /* FavouritesScreen */ = {
 			isa = PBXGroup;
 			children = (
+				B26517B82C076F670026A299 /* FavouriteCell */,
 				B209E6242BC3FD450067D751 /* FavouritesViewController.swift */,
 				B209E6262BC3FD5B0067D751 /* FavouritesPresenter.swift */,
 			);
@@ -567,6 +570,14 @@
 				B211C2862BBD494200C073EE /* FirebaseUser.swift */,
 			);
 			path = FirebaseUser;
+			sourceTree = "<group>";
+		};
+		B26517B82C076F670026A299 /* FavouriteCell */ = {
+			isa = PBXGroup;
+			children = (
+				B26517B92C076F770026A299 /* FavouriteTableViewCell.swift */,
+			);
+			path = FavouriteCell;
 			sourceTree = "<group>";
 		};
 		B26804B02BE4E62500DE74A4 /* PostTableCell */ = {
@@ -909,6 +920,7 @@
 				B209E64C2BC7C8DE0067D751 /* AddProfileVc.swift in Sources */,
 				B209E61B2BC139000067D751 /* FeedViewController.swift in Sources */,
 				B2E51C762BF38CC500DE6102 /* CommentsTableCell.swift in Sources */,
+				B26517BA2C076F770026A299 /* FavouriteTableViewCell.swift in Sources */,
 				B29D0AEA2BD680BE00101029 /* DetailPresenter.swift in Sources */,
 				B211C26E2BBC405A00C073EE /* ThirdOnboardingPresenter.swift in Sources */,
 				B211C21E2BBBEACA00C073EE /* OnBoardingPresenter.swift in Sources */,

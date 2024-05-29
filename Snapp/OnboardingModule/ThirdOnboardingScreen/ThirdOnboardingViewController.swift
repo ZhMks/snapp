@@ -88,6 +88,7 @@ class ThirdOnboardingViewController: UIViewController {
         tuneNavItem()
         addSubviews()
         layout()
+        createGesture()
     }
 
     // MARK: -FUNCS
@@ -100,6 +101,16 @@ class ThirdOnboardingViewController: UIViewController {
         guard let text = acceptCodeTextField.text else { return }
         print(text)
         presenter.checkCode(code: text)
+    }
+
+    @objc func tapGestureAction() {
+        view.endEditing(true)
+        view.becomeFirstResponder()
+    }
+
+    private func createGesture() {
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(tapGestureAction))
+        view.addGestureRecognizer(tapGesture)
     }
 }
 

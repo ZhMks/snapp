@@ -298,6 +298,48 @@ final class FireStoreService: FireStoreServiceProtocol {
         }
     }
 
+    func fetchFavourites(user: String, completion: @escaping (Result<[EachPost], Error>) -> Void) {
+        let ref = Firestore.firestore().collection("Users").document(user).collection("Favourites")
+        var posts: [EachPost] = []
+        let dispatchGroup = DispatchGroup()
+        ref.getDocuments { snapshot, error in
+            if let error = error {
+
+            }
+
+            let dispatchGroup = DispatchGroup()
+            if let snapshot = snapshot {
+                if snapshot.documents.isEmpty {
+                    return
+                }
+                dispatchGroup.enter()
+                for document in snapshot.documents {
+                    do {
+                        let eachPost = try document.data(as: EachPost.self)
+                        posts.append(eachPost)
+                    }  catch let DecodingError.dataCorrupted(context) {
+                        print(context)
+                    } catch let DecodingError.keyNotFound(key, context) {
+                        print("Key '\(key)' not found:", context.debugDescription)
+                        print("codingPath:", context.codingPath)
+                    } catch let DecodingError.valueNotFound(value, context) {
+                        print("Value '\(value)' not found:", context.debugDescription)
+                        print("codingPath:", context.codingPath)
+                    } catch let DecodingError.typeMismatch(type, context)  {
+                        print("Type '\(type)' mismatch:", context.debugDescription)
+                        print("codingPath:", context.codingPath)
+                    } catch {
+                        print("error: ", error)
+                    }
+                }
+                dispatchGroup.leave()
+            }
+            dispatchGroup.notify(queue: .main) {
+                completion(.success(posts))
+            }
+        }
+    }
+
     func createUser(user: FirebaseUser, id: String) {
         do {
             try Firestore.firestore().collection("Users").document(id).setData(from: user)
