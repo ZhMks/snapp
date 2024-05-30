@@ -13,6 +13,13 @@ class SignInViewController: UIViewController {
     // MARK: -PROPERTIES
     var presenter: SignInPresenter!
 
+    private lazy var topSeparatorView: UIView = {
+        let topSeparatorView = UIView()
+        topSeparatorView.translatesAutoresizingMaskIntoConstraints = false
+        topSeparatorView.backgroundColor = .systemGray6
+        return topSeparatorView
+    }()
+
     private lazy var acceptCodeTextField: UITextField = {
         let acceptCodeTextField = UITextField()
         acceptCodeTextField.translatesAutoresizingMaskIntoConstraints = false
@@ -24,7 +31,7 @@ class SignInViewController: UIViewController {
         let centeredParagraphStyle = NSMutableParagraphStyle()
         centeredParagraphStyle.alignment = .center
 
-        let attributedString = NSAttributedString(string: "__-__-__-__-__", attributes: [NSAttributedString.Key.paragraphStyle: centeredParagraphStyle])
+        let attributedString = NSAttributedString(string: "__-__", attributes: [NSAttributedString.Key.paragraphStyle: centeredParagraphStyle])
         acceptCodeTextField.attributedPlaceholder = attributedString
         return acceptCodeTextField
     }()
@@ -44,7 +51,7 @@ class SignInViewController: UIViewController {
 // MARK: -LIFECYCLE
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = ColorCreator.shared.createBackgroundColorWithAlpah(alpha: 0.75)
+        view.backgroundColor = .systemBackground
         addSubviews()
         layout()
         createGesture()
@@ -93,6 +100,7 @@ extension SignInViewController: SignInViewProtocol {
 
 extension SignInViewController {
    private func addSubviews() {
+       view.addSubview(topSeparatorView)
         view.addSubview(acceptCodeTextField)
         view.addSubview(verifyCodeButton)
     }
@@ -101,14 +109,21 @@ extension SignInViewController {
         let safeArea = view.safeAreaLayoutGuide
 
         NSLayoutConstraint.activate([
+
+            topSeparatorView.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: 20),
+            topSeparatorView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 40),
+            topSeparatorView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -40),
+            topSeparatorView.heightAnchor.constraint(equalToConstant: 1),
+
             acceptCodeTextField.centerXAnchor.constraint(equalTo: safeArea.centerXAnchor),
             acceptCodeTextField.centerYAnchor.constraint(equalTo: safeArea.centerYAnchor),
-            acceptCodeTextField.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor, constant: -320),
+            acceptCodeTextField.heightAnchor.constraint(equalToConstant: 80),
+            acceptCodeTextField.widthAnchor.constraint(equalToConstant: 140),
 
             verifyCodeButton.topAnchor.constraint(equalTo: acceptCodeTextField.bottomAnchor, constant: 56),
-            verifyCodeButton.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 58),
-            verifyCodeButton.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -56),
-            verifyCodeButton.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor, constant: -236)
+            verifyCodeButton.centerXAnchor.constraint(equalTo: safeArea.centerXAnchor),
+            verifyCodeButton.heightAnchor.constraint(equalToConstant: 60),
+            verifyCodeButton.widthAnchor.constraint(equalToConstant: 120)
         ])
     }
 }

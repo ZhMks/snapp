@@ -23,6 +23,7 @@ protocol ProfileViewProtocol: AnyObject {
     func updateSubsribers()
     func updateSubscriptions()
     func updateTextData(user: FirebaseUser)
+    func updateAvatrImageWithStorie()
 }
 
 protocol ProfilePresenterProtocol: AnyObject {
@@ -73,11 +74,22 @@ final class ProfilePresenter: ProfilePresenterProtocol {
             case .success(let success):
                 self.posts = []
                 self.posts = success
-                view?.updateData(data: self.posts)
+                if let index = self.posts.firstIndex(where: { $0.isPinned == true }) {
+                    let pinnedPost = self.posts[index]
+                    self.posts.remove(at: index)
+                    self.posts.insert(pinnedPost, at: 0)
+                    self.view?.updateData(data: self.posts)
+                }
+                self.view?.updateData(data: self.posts)
             case .failure(let failure):
                 view?.showErrorAler(error: failure.localizedDescription)
             }
         }
+    }
+
+    func pinPost( docID: String) {
+        guard let user = mainUser.documentID else { return }
+        firestoreService.pinPost(user: user, docID: docID)
     }
 
     func addListenerForUser() {
@@ -105,17 +117,21 @@ final class ProfilePresenter: ProfilePresenterProtocol {
         
         let networkService = NetworkService()
 
-        let urlLink = Storage.storage().reference().child("users").child(userID).child("Stories").child(stringFromDate).child(image.description)
-        firestoreService.saveImageIntoStorage(urlLink: urlLink, photo: image) { [weak self] result in
+        let storageLink = Storage.storage().reference().child("users").child(userID).child("Stories").child(stringFromDate).child(image.description)
+            firestoreService.saveImageIntoStorage(urlLink: storageLink, photo: image) { [weak self] result in
             switch result {
             case .success(let success):
                 networkService.fetchImage(string: success.absoluteString) { [weak self] result in
+                    guard let self else { return }
                     switch result {
-                    case .success(let success):
-                        guard let storieImage = UIImage(data: success) else { return }
-                        self?.userStories?.append(storieImage)
+                    case .success(let data):
+                        guard let storieImage = UIImage(data: data) else { return }
+                        self.userStories?.append(storieImage)
+                        firestoreService.changeData(id: mainUser.documentID!, text: success.absoluteString, state: .storie)
+                        self.view?.updateAvatrImageWithStorie()
+                        
                     case .failure(let failure):
-                        self?.view?.showErrorAler(error: failure.localizedDescription)
+                        self.view?.showErrorAler(error: failure.localizedDescription)
                     }
                 }
             case .failure(let failure):

@@ -31,15 +31,33 @@ final class FavouritesPresenter: FavouritesPresenterProtocol {
 
     func fetchPosts() {
         guard let userID = user.documentID else { return }
-        firestoreService.getPosts(sub: userID) { [weak self] result in
+        firestoreService.fetchFavourites(user: userID) { [weak self] result in
             guard let self else { return }
             switch result {
-            case .success(let posts):
-                self.posts = posts
+            case .success(let success):
+                self.posts = success
                 view?.updateData()
-            case .failure(let failure):
+            case .failure(_):
                 return
             }
         }
+    }
+
+    func addSnapshotListenerToPost() {
+        guard let userID = user.documentID else { return }
+        firestoreService.addSnapshotListenerToFavourites(for: userID) { [weak self] result in
+            guard let self else { return }
+            switch result {
+            case .success(let success):
+                self.posts = success
+                view?.updateData()
+            case .failure(_):
+                return
+            }
+        }
+    }
+
+    func removeListener() {
+        firestoreService.removeListenerForFavourites()
     }
 }

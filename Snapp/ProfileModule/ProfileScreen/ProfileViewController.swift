@@ -353,6 +353,11 @@ class ProfileViewController: UIViewController {
 
 // MARK: -OUTPUT PRESENTER
 extension ProfileViewController: ProfileViewProtocol {
+    func updateAvatrImageWithStorie() {
+        avatarImageView.layer.borderColor = UIColor.systemOrange.cgColor
+        avatarImageView.layer.borderWidth = 1.0
+    }
+    
 
     func updateTextData(user: FirebaseUser) {
         jobLabel.text = user.job
@@ -425,11 +430,14 @@ extension ProfileViewController: UITableViewDataSource {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: PostTableCell.identifier, for: indexPath) as? PostTableCell else { return UITableViewCell() }
         let data = presenter.posts[indexPath.row]
         let date = presenter.posts[indexPath.row].date
+
+        guard let docID = data.documentID else { return UITableViewCell() }
         cell.buttonTappedHandler = { [weak self] in
             guard let self else { return }
                 guard let index = presenter.posts.firstIndex(where: { $0.documentID == data.documentID }) else { return }
                 presenter.posts.remove(at: index)
                 presenter.posts.insert(data, at: 0)
+                presenter.pinPost(docID: docID)
                 postsTableView.reloadData()
         }
         cell.updateView(post: data, user: presenter.mainUser, date: date, firestoreService: presenter.firestoreService)

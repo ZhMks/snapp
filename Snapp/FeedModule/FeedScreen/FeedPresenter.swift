@@ -12,6 +12,7 @@ protocol FeedViewProtocol: AnyObject {
     func showEmptyScreen()
     func updateViewTable()
     func updateStorieView()
+    func updateAvatarImage(image: UIImage)
 }
 
 protocol FeedPresenterProtocol: AnyObject {
@@ -33,6 +34,7 @@ final class FeedPresenter: FeedPresenterProtocol {
         self.view = view
         self.mainUser = user
         self.firestoreService = firestoreService
+        fetchImage()
     }
 
     func fetchUserStorie() {
@@ -99,6 +101,22 @@ final class FeedPresenter: FeedPresenterProtocol {
         dispatchGroup.notify(queue: .main) { [weak self] in
             guard let self else { return }
             view?.updateViewTable()
+        }
+    }
+
+    func fetchImage() {
+        let networkService = NetworkService()
+        if let userImage = mainUser.image {
+            networkService.fetchImage(string: userImage) { [weak self] result in
+                guard let self else { return }
+                switch result {
+                case .success(let success):
+                    guard let image = UIImage(data: success) else { return }
+                    view?.updateAvatarImage(image: image)
+                case .failure(_):
+                    return
+                }
+            }
         }
     }
 }

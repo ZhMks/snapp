@@ -17,6 +17,7 @@ enum ChangeStates {
     case interests
     case contacts
     case surname
+    case storie
 }
 
 enum PostErrors: Error {
@@ -62,6 +63,10 @@ protocol FireStoreServiceProtocol {
     func removeSubscribtion(sub: String, for user: String)
     func addSnapshotListenerToCurrentPost(docID: String, userID: String, completion: @escaping (Result<EachPost, Error>) -> Void)
     func removeListenerForCurrentPost()
+    func fetchFavourites(user: String, completion: @escaping (Result<[EachPost], Error>) -> Void)
+    func pinPost(user: String, docID: String)
+    func addSnapshotListenerToFavourites(for user: String, completion: @escaping (Result<[EachPost], Error>) -> Void)
+    func removeListenerForFavourites()
 }
 
 
@@ -72,6 +77,8 @@ final class FireStoreService: FireStoreServiceProtocol {
     var userListner: ListenerRegistration?
 
     var currentPostListner: ListenerRegistration?
+
+    var favouritesListener: ListenerRegistration?
 
     func addSnapshotListenerToUser(for user: String, completion: @escaping (Result<FirebaseUser, Error>) -> Void) {
         let ref = Firestore.firestore().collection("Users").document(user)
@@ -139,6 +146,44 @@ final class FireStoreService: FireStoreServiceProtocol {
                 }
             }
         }
+    }
+
+    func addSnapshotListenerToFavourites(for user: String, completion: @escaping (Result<[EachPost], Error>) -> Void) {
+        let ref =  Firestore.firestore().collection("Users").document(user).collection("Favourites")
+        var updatedArray: [EachPost] = []
+        let dispatchGroup = DispatchGroup()
+        self.favouritesListener = ref.addSnapshotListener { snapshot, error in
+            if let error = error {
+                completion(.failure(error))
+            }
+
+            if let snapshot = snapshot {
+                if snapshot.documents.isEmpty {
+                    updatedArray = []
+                    completion(.success(updatedArray))
+                } else {
+                    updatedArray = []
+                    for document in snapshot.documents {
+                        dispatchGroup.enter()
+                        do {
+                            let post = try  document.data(as: EachPost.self)
+                            updatedArray.append(post)
+                        } catch {
+                            completion(.failure(error))
+                        }
+                        dispatchGroup.leave()
+                    }
+                    dispatchGroup.notify(queue: .main) {
+                        print(updatedArray)
+                        completion(.success(updatedArray))
+                    }
+                }
+            }
+        }
+    }
+
+    func removeListenerForFavourites() {
+        favouritesListener?.remove()
     }
 
     func removeListenerForPosts() {
@@ -277,7 +322,7 @@ final class FireStoreService: FireStoreServiceProtocol {
             }
         }
     }
-
+    
     func changeData(id: String, text: String, state: ChangeStates) {
 
         let ref = Firestore.firestore().collection("Users").document(id)
@@ -295,6 +340,8 @@ final class FireStoreService: FireStoreServiceProtocol {
             ref.updateData(["contacts" : text])
         case .surname:
             ref.updateData(["surname" : text])
+        case .storie:
+            ref.updateData(["stories": FieldValue.arrayUnion([text])])
         }
     }
 
@@ -303,11 +350,10 @@ final class FireStoreService: FireStoreServiceProtocol {
         var posts: [EachPost] = []
         let dispatchGroup = DispatchGroup()
         ref.getDocuments { snapshot, error in
-            if let error = error {
+            if error != nil {
                 return
             }
 
-            let dispatchGroup = DispatchGroup()
             if let snapshot = snapshot {
                 if snapshot.documents.isEmpty {
                     return
@@ -369,9 +415,14 @@ final class FireStoreService: FireStoreServiceProtocol {
         }
     }
 
+    func pinPost(user: String, docID: String) {
+        let reft = Firestore.firestore().collection("Users").document(user).collection("posts").document(docID)
+        reft.updateData(["isPinned" : true])
+    }
+
     func createPost(date: String, text: String, image: UIImage?, for user: String, completion: @escaping (Result<EachPost, Error>) -> Void) {
         let postRef = Firestore.firestore().collection("Users").document(user).collection("posts")
-        var fireStorePost = EachPost(text: "", image: "", likes: 0, commentaries: 0, date: date, isCommentariesEnabled: true)
+        var fireStorePost = EachPost(text: "", image: "", likes: 0, commentaries: 0, date: date, isCommentariesEnabled: true, isPinned: false)
 
         if let image = image {
             let postStorageRef = Storage.storage().reference().child("users").child(user).child("posts").child(date).child(image.description)

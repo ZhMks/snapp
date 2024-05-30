@@ -40,6 +40,7 @@ struct EachPost: Codable {
     var commentaries: Int
     var date: String
     var isCommentariesEnabled: Bool
+    var isPinned: Bool
 }
 
 struct Comment: CommentOrAnswer {

@@ -45,9 +45,9 @@ final class DataChangePresenter: DataChangePresenterProtocol {
         checkState()
     }
 
-    func updateData(text: String) async {
+    func updateData(text: String)  {
         guard let id = user.documentID else { return }
-        await firestoreService.changeData(id: id, text: text, state: .name)
+        firestoreService.changeData(id: id, text: text, state: .name)
     }
 
     func checkState() {

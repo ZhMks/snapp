@@ -103,6 +103,15 @@ final class FeedViewController: UIViewController {
 // MARK: -OUTPUT PRESENTER
 extension FeedViewController: FeedViewProtocol {
 
+    func updateAvatarImage(image: UIImage) {
+        DispatchQueue.main.async { [weak self] in
+            guard let self else { return }
+            self.currentUserStorie.image = image
+            self.currentUserStorie.layer.cornerRadius = 20
+        }
+    }
+    
+
     func updateStorieView() {
         self.storiesCollection.reloadData()
     }

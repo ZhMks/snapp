@@ -194,6 +194,10 @@ extension MenuForPostView: MenuForPostViewProtocol {
 
     func updateViewForFeed() {
         layer.cornerRadius = 10
+        layer.shadowOffset = CGSize(width: 2.0, height: 2.0)
+        layer.shadowRadius = 3.0
+        layer.shadowOpacity = 1.0
+
         addSubview(topSeparatorView)
         addSubview(addToBookmarkButton)
         addSubview(enableNotificationButton)

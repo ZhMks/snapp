@@ -20,11 +20,21 @@ class FavouritesViewController: UIViewController {
 
     var presenter: FavouritesPresenter!
 
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        presenter.addSnapshotListenerToPost()
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
         addSubview()
         layout()
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        presenter.removeListener()
     }
 
 }

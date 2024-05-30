@@ -50,7 +50,7 @@ final class CreatePostPresenter: CreatePostPresenterProtocol {
                                         image: firestorePost.image,
                                         likes: firestorePost.likes,
                                         commentaries: firestorePost.commentaries,
-                                        date: firestorePost.date, isCommentariesEnabled: true)
+                                        date: firestorePost.date, isCommentariesEnabled: true, isPinned: false)
                 posts.append(eachPost)
                 completion(.success(posts))
             case .failure(let error):

@@ -116,7 +116,7 @@ final class DetailPresenter: DetailPresenterProtocol {
             switch result {
             case .success(let user):
                 self.user = user
-            case .failure(let failure):
+            case .failure(_):
                 return
             }
         }
@@ -132,7 +132,7 @@ final class DetailPresenter: DetailPresenterProtocol {
             switch result {
             case .success(let success):
                 self.posts = success
-            case .failure(let failure):
+            case .failure(_):
                 return
             }
         }
