@@ -234,6 +234,11 @@ extension FeedViewController: UITableViewDataSource {
             cell.updateView(post: data, user: user, date: data.date, firestoreService: presenter.firestoreService)
             cell.state = .feedCell
         }
+        cell.presentActivityController = { [weak self] controller in
+            guard let self else { return }
+            self.navigationController?.present(controller, animated: true)
+
+        }
         return cell
     }
 

@@ -22,6 +22,7 @@ final class PostTableCell: UITableViewCell {
     var state: PostTableState?
 
     var buttonTappedHandler: (()->Void)?
+    var presentActivityController: ((UIActivityViewController) -> Void)?
 
     var user: FirebaseUser?
     var post: EachPost?
@@ -219,7 +220,7 @@ final class PostTableCell: UITableViewCell {
                 let safeArea = contentView.safeAreaLayoutGuide
 
                 NSLayoutConstraint.activate([
-                    menuForPostVC.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: 120),
+                    menuForPostVC.heightAnchor.constraint(equalToConstant: 300),
                     menuForPostVC.centerXAnchor.constraint(equalTo: safeArea.centerXAnchor),
                     menuForPostVC.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
                     menuForPostVC.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
@@ -450,6 +451,11 @@ final class PostTableCell: UITableViewCell {
 }
 
 extension PostTableCell: MenuForPostDelegate {
+
+    func presentActivity(controller: UIActivityViewController) {
+        presentActivityController?(controller)
+    }
+    
 
     func pinPost(post: EachPost) {
         buttonTappedHandler?()

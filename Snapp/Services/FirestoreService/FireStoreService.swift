@@ -488,6 +488,7 @@ final class FireStoreService: FireStoreServiceProtocol {
         }
     }
 
+
     func getComments(post: String, user: String, completion: @escaping (Result<[Comment], Error>) -> Void) {
         let docReft = Firestore.firestore().collection("Users").document(user).collection("posts").document(post).collection("comments")
         var commentsArray: [Comment] = []

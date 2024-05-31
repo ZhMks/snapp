@@ -440,6 +440,12 @@ extension ProfileViewController: UITableViewDataSource {
                 presenter.pinPost(docID: docID)
                 postsTableView.reloadData()
         }
+
+        cell.presentActivityController = { [weak self] controller in
+            guard let self else { return }
+            self.navigationController?.present(controller, animated: true)
+
+        }
         cell.updateView(post: data, user: presenter.mainUser, date: date, firestoreService: presenter.firestoreService)
         cell.state = .profileCell
         return cell
@@ -464,6 +470,7 @@ extension ProfileViewController: UITableViewDelegate {
         guard let image = presenter.image  else { return }
         let detailPostPresenter = DetailPostPresenter(view: detailPostVC, user: presenter.mainUser, post: data, image: image, firestoreService: presenter.firestoreService)
         detailPostVC.presenter = detailPostPresenter
+        detailPostPresenter.state = .postMenu
         self.navigationController?.pushViewController(detailPostVC, animated: true)
         tableView.deselectRow(at: indexPath, animated: true)
     }

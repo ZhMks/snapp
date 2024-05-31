@@ -7,6 +7,7 @@
 
 import UIKit
 import FirebaseAuth
+import Firebase
 
 enum MenuState {
     case feedMenu
@@ -25,6 +26,7 @@ protocol MenuForPostPresenterProtocol: AnyObject {
 
 protocol MenuForPostDelegate: AnyObject {
     func pinPost(post: EachPost)
+    func presentActivity(controller: UIActivityViewController)
 }
 
 
@@ -46,6 +48,7 @@ final class MenuForPostPresenter: MenuForPostPresenterProtocol {
     }
 
     func saveIntoFavourites() {
+        print(post)
         guard let user = user.documentID else { return }
         firestoreService.saveIntoFavourites(post: post, for: user) { [weak self] result in
             guard let self else { return }
@@ -119,6 +122,10 @@ final class MenuForPostPresenter: MenuForPostPresenterProtocol {
         guard let mainUser = Auth.auth().currentUser?.uid else { return }
         guard let userID = user.documentID else { return }
         firestoreService.removeSubscribtion(sub: userID, for: mainUser)
+    }
+
+    func presentActivity(controller: UIActivityViewController) {
+        delegate?.presentActivity(controller: controller)
     }
 
 }
