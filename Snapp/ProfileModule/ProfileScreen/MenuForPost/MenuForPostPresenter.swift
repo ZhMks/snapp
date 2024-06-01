@@ -48,7 +48,6 @@ final class MenuForPostPresenter: MenuForPostPresenterProtocol {
     }
 
     func saveIntoFavourites() {
-        print(post)
         guard let user = user.documentID else { return }
         firestoreService.saveIntoFavourites(post: post, for: user) { [weak self] result in
             guard let self else { return }

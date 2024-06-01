@@ -44,7 +44,6 @@ final class ThirdOnboardingPresenter: ThirdOnboardingPresenterProtocol {
         authService?.verifyCode(code: code) { [weak self] result in
             switch result {
             case .success(let success):
-                print(success.uid)
                 self?.firestoreService?.getUser(id: success.uid) { result in
                     switch result {
                     case .success(let user):

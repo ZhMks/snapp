@@ -74,8 +74,8 @@
             filePath = "Snapp/FeedModule/FeedScreen/FeedViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "237"
-            endingLineNumber = "237"
+            startingLineNumber = "239"
+            endingLineNumber = "239"
             landmarkName = "tableView(_:cellForRowAt:)"
             landmarkType = "7">
             <Locations>
@@ -152,8 +152,8 @@
             filePath = "Snapp/ProfileModule/ProfileScreen/MenuForPost/MenuForPostPresenter.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "57"
-            endingLineNumber = "57"
+            startingLineNumber = "56"
+            endingLineNumber = "56"
             landmarkName = "saveIntoFavourites()"
             landmarkType = "7">
          </BreakpointContent>
@@ -168,8 +168,8 @@
             filePath = "Snapp/ProfileModule/ProfileScreen/MenuForPost/MenuForPostPresenter.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "59"
-            endingLineNumber = "59"
+            startingLineNumber = "58"
+            endingLineNumber = "58"
             landmarkName = "saveIntoFavourites()"
             landmarkType = "7">
          </BreakpointContent>

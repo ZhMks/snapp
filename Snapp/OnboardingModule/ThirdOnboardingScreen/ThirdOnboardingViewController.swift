@@ -99,7 +99,6 @@ class ThirdOnboardingViewController: UIViewController {
 
     @objc func acceptButtonTapped() {
         guard let text = acceptCodeTextField.text else { return }
-        print(text)
         presenter.checkCode(code: text)
     }
 

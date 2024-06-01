@@ -91,7 +91,7 @@ class LoginScreenViewController: UIViewController {
                         self?.navigationController?.present(signInVC, animated: true)
                     }
                 case false:
-                    print("ERROR in NUMBER")
+                    self?.loginpresenter.showAlert()
                 }
             }
         }

@@ -295,7 +295,10 @@ extension DetailPostViewController: DetailPostViewProtocol {
     
 
     func showError(descr: String) {
-        print(descr)
+        let uialert = UIAlertController(title: descr, message: descr, preferredStyle: .alert)
+        let action = UIAlertAction(title: .localized(string: "Отмена"), style: .cancel)
+        uialert.addAction(action)
+        navigationController?.present(uialert, animated: true)
     }
     
 

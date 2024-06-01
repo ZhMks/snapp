@@ -63,7 +63,6 @@ final class DetailPresenter: DetailPresenterProtocol {
             switch result {
             case .success(let success):
                 posts = success
-                print(posts)
                 view?.updateData(data: posts)
             case .failure(let failure):
                 switch failure.description {
@@ -81,9 +80,7 @@ final class DetailPresenter: DetailPresenterProtocol {
     }
 
     func addSubscriber() {
-        print(userID)
         guard  let currentUser = Auth.auth().currentUser?.uid else { return }
-        print(currentUser)
         firestoreService.saveSubscriber(mainUser: currentUser, id: userID)
     }
 

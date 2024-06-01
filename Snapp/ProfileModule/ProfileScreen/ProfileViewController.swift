@@ -413,7 +413,10 @@ extension ProfileViewController: ProfileViewProtocol {
     }
 
     func showErrorAler(error: String) {
-        print("\(error)")
+        let uialert = UIAlertController(title: error, message: error, preferredStyle: .alert)
+        let action = UIAlertAction(title: .localized(string: "Отмена"), style: .cancel)
+        uialert.addAction(action)
+        navigationController?.present(uialert, animated: true)
     }
 }
 
@@ -432,6 +435,7 @@ extension ProfileViewController: UITableViewDataSource {
         let date = presenter.posts[indexPath.row].date
 
         guard let docID = data.documentID else { return UITableViewCell() }
+        
         cell.buttonTappedHandler = { [weak self] in
             guard let self else { return }
                 guard let index = presenter.posts.firstIndex(where: { $0.documentID == data.documentID }) else { return }

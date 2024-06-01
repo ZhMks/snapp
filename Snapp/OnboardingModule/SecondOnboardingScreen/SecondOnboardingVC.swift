@@ -12,7 +12,7 @@ final class SecondOnboardingVC: UIViewController {
 
     // MARK: -PROPERTIES
 
-    var presenter: SecondOnboardingPresenterProtocol!
+    var presenter: SecondOnboardingPresenter!
 
     private lazy var mainTitle: UILabel = {
         let mainTitle = UILabel()
@@ -125,7 +125,7 @@ final class SecondOnboardingVC: UIViewController {
                         navigationController?.pushViewController(thirdController, animated: true)
                     }
                 case false:
-                    print("Error in authorisation")
+                    presenter.showError()
                 }
             }
         }

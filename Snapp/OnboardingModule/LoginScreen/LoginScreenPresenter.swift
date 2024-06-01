@@ -49,4 +49,8 @@ final class LoginPresenter: LoginPresenterProtocol {
             }
         })
     }
+
+    func showAlert() {
+        view?.showAlert()
+    }
 }

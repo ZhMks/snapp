@@ -118,7 +118,10 @@ class PhotoalbumViewController: UIViewController {
     // MARK: -PRESENTEROUTPUT
 extension PhotoalbumViewController: PhotoalbumViewProtocol {
     func showError(error: String) {
-        print(error)
+        let alertController = UIAlertController(title: error, message: error, preferredStyle: .alert)
+        let action = UIAlertAction(title: .localized(string: "Отмена"), style: .cancel)
+        alertController.addAction(action)
+        navigationController?.present(alertController, animated: true)
     }
     
     func updateCollectionView() {

@@ -51,4 +51,8 @@ final class SecondOnboardingPresenter: SecondOnboardingPresenterProtocol {
             }
         })
     }
+
+    func showError() {
+        view?.showAlert()
+    }
 }

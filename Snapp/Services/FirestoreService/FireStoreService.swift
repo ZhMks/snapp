@@ -103,7 +103,6 @@ final class FireStoreService: FireStoreServiceProtocol {
                     print("Type '\(type)' mismatch:", context.debugDescription)
                     print("codingPath:", context.codingPath)
                 } catch {
-                    print("error: ", error)
                     completion(.failure(error))
                 }
             }
@@ -140,7 +139,6 @@ final class FireStoreService: FireStoreServiceProtocol {
                         dispatchGroup.leave()
                     }
                     dispatchGroup.notify(queue: .main) {
-                        print(updatedArray)
                         completion(.success(updatedArray))
                     }
                 }
@@ -174,7 +172,6 @@ final class FireStoreService: FireStoreServiceProtocol {
                         dispatchGroup.leave()
                     }
                     dispatchGroup.notify(queue: .main) {
-                        print(updatedArray)
                         completion(.success(updatedArray))
                     }
                 }
@@ -213,7 +210,6 @@ final class FireStoreService: FireStoreServiceProtocol {
                     print("Type '\(type)' mismatch:", context.debugDescription)
                     print("codingPath:", context.codingPath)
                 } catch {
-                    print("error: ", error)
                     completion(.failure(error))
                 }
             }
@@ -241,7 +237,6 @@ final class FireStoreService: FireStoreServiceProtocol {
                     }
                     dispatchGroup.leave()
                 } catch {
-                    print(error.localizedDescription)
                     completion(.failure(error))
                 }
                 dispatchGroup.notify(queue: .main) {
@@ -255,7 +250,6 @@ final class FireStoreService: FireStoreServiceProtocol {
         let dbReference = Firestore.firestore().collection("Users")
         dbReference.getDocuments { snapshot, error in
             if let error = error {
-                print("Error in gettingUser: \(error.localizedDescription)")
                 completion(.failure(.invalidCredential))
             }
 
@@ -298,7 +292,6 @@ final class FireStoreService: FireStoreServiceProtocol {
         refDB.getDocuments { snapshot, error in
 
             if let error = error {
-                print(error.localizedDescription)
                 completion(.failure(.getError))
             }
             let dispatchGroup = DispatchGroup()
