@@ -67,6 +67,8 @@ protocol FireStoreServiceProtocol {
     func pinPost(user: String, docID: String)
     func addSnapshotListenerToFavourites(for user: String, completion: @escaping (Result<[EachPost], Error>) -> Void)
     func removeListenerForFavourites()
+    func incrementLikes(user: String, post: String)
+    func decrementLikes(user: String, post: String)
 }
 
 
@@ -246,10 +248,20 @@ final class FireStoreService: FireStoreServiceProtocol {
         }
     }
 
+    func incrementLikes(user: String, post: String) {
+        let dbReference = Firestore.firestore().collection("Users").document(user).collection("posts").document(post)
+        dbReference.updateData(["likes" : FieldValue.increment(1.0)])
+    }
+
+    func decrementLikes(user: String, post: String) {
+        let dbReference = Firestore.firestore().collection("Users").document(user).collection("posts").document(post)
+        dbReference.updateData(["likes" : FieldValue.increment(-1.0)])
+    }
+
     func getUser(id: String, completion: @escaping (Result<FirebaseUser, AuthorisationErrors>) -> Void) {
         let dbReference = Firestore.firestore().collection("Users")
         dbReference.getDocuments { snapshot, error in
-            if let error = error {
+            if error != nil {
                 completion(.failure(.invalidCredential))
             }
 
@@ -291,7 +303,7 @@ final class FireStoreService: FireStoreServiceProtocol {
 
         refDB.getDocuments { snapshot, error in
 
-            if let error = error {
+            if error != nil {
                 completion(.failure(.getError))
             }
             let dispatchGroup = DispatchGroup()

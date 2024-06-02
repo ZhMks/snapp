@@ -19,22 +19,6 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "00047B54-B087-4868-871F-728498681052"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Snapp/FavouritesModule/FavouritesScreen/FavouritesPresenter.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "46"
-            endingLineNumber = "46"
-            landmarkName = "addSnapshotListenerToPost()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
             uuid = "0F2F1B5D-E0F4-49B2-93CD-D58DFEDBFFE0"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
@@ -74,13 +58,13 @@
             filePath = "Snapp/FeedModule/FeedScreen/FeedViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "239"
-            endingLineNumber = "239"
+            startingLineNumber = "236"
+            endingLineNumber = "236"
             landmarkName = "tableView(_:cellForRowAt:)"
             landmarkType = "7">
             <Locations>
                <Location
-                  uuid = "036B992B-410E-4FC4-B0EC-EE7E6B1F2DCC - af1eed47b1cccbd6"
+                  uuid = "036B992B-410E-4FC4-B0EC-EE7E6B1F2DCC - af1eed47b1cccb35"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
@@ -90,11 +74,11 @@
                   urlString = "file:///Users/makszh/Desktop/Snapp/Snapp/FeedModule/FeedScreen/FeedViewController.swift"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "237"
-                  endingLineNumber = "237">
+                  startingLineNumber = "236"
+                  endingLineNumber = "236">
                </Location>
                <Location
-                  uuid = "036B992B-410E-4FC4-B0EC-EE7E6B1F2DCC - ec5b7903879e16a2"
+                  uuid = "036B992B-410E-4FC4-B0EC-EE7E6B1F2DCC - ec5b7903879e1641"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
@@ -104,26 +88,10 @@
                   urlString = "file:///Users/makszh/Desktop/Snapp/Snapp/FeedModule/FeedScreen/FeedViewController.swift"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "237"
-                  endingLineNumber = "237">
+                  startingLineNumber = "236"
+                  endingLineNumber = "236">
                </Location>
             </Locations>
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "B1ED57C0-419A-4EE1-9833-70E3D1EAEFEE"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Snapp/ProfileModule/ProfileScreen/PostTableCell/PostTableCell.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "455"
-            endingLineNumber = "455"
-            landmarkName = "presentActivity(controller:)"
-            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -171,6 +139,38 @@
             startingLineNumber = "58"
             endingLineNumber = "58"
             landmarkName = "saveIntoFavourites()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "17368B2C-A835-4028-A69B-8D9BE9984000"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Snapp/ProfileModule/ProfileScreen/MenuForPost/MenuForPostView.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "185"
+            endingLineNumber = "185"
+            landmarkName = "shareButtonTapped()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "F4A0B32D-87D9-47D8-8E42-6A4A05303358"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Snapp/ProfileModule/ProfileScreen/DetailPostScreen/DetailPostViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "230"
+            endingLineNumber = "230"
+            landmarkName = "likeButtonTapped()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

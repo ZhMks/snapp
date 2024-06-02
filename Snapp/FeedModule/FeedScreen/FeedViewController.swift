@@ -26,9 +26,6 @@ final class FeedViewController: UIViewController {
         let image = UIImage(systemName: "checkmark")
         currentUserStorie.image = image
         currentUserStorie.translatesAutoresizingMaskIntoConstraints = false
-        currentUserStorie.layer.cornerRadius = 12.0
-        currentUserStorie.layer.borderWidth = 1.0
-        currentUserStorie.layer.borderColor = UIColor.orange.cgColor
         currentUserStorie.backgroundColor = ColorCreator.shared.createTextColor()
         return currentUserStorie
     }()
@@ -68,7 +65,6 @@ final class FeedViewController: UIViewController {
         addSubviews()
         tuneTableView()
         layout()
-        presenter.fetchPosts()
     }
 
     override func viewWillDisappear(_ animated: Bool) {
@@ -107,6 +103,7 @@ extension FeedViewController: FeedViewProtocol {
         DispatchQueue.main.async { [weak self] in
             guard let self else { return }
             self.currentUserStorie.image = image
+            self.currentUserStorie.clipsToBounds = true
             self.currentUserStorie.layer.cornerRadius = 20
         }
     }

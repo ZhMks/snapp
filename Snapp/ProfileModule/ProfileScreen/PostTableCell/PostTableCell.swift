@@ -23,10 +23,13 @@ final class PostTableCell: UITableViewCell {
 
     var buttonTappedHandler: (()->Void)?
     var presentActivityController: ((UIActivityViewController) -> Void)?
+    var incrementLikes: ((_ post: String) -> Void)?
+    var decrementLikes: ((_ post: String) -> Void)?
 
     var user: FirebaseUser?
     var post: EachPost?
     var firestoreService: FireStoreServiceProtocol?
+
 
 
     private lazy var headerView: UIView = {
@@ -116,6 +119,7 @@ final class PostTableCell: UITableViewCell {
         likesButton.translatesAutoresizingMaskIntoConstraints = false
         likesButton.setBackgroundImage(UIImage(systemName: "heart"), for: .normal)
         likesButton.tintColor = ColorCreator.shared.createButtonColor()
+        likesButton.addTarget(self, action: #selector(likesButtonTapped), for: .touchUpInside)
         return likesButton
     }()
 
@@ -249,6 +253,17 @@ final class PostTableCell: UITableViewCell {
                 ])
             }
         default: return
+        }
+    }
+
+    @objc func likesButtonTapped() {
+        guard let post = self.post?.documentID else { return }
+        if self.likesButton.isSelected {
+            self.likesButton.setBackgroundImage(UIImage(systemName: "heart"), for: .normal)
+            decrementLikes?(post)
+        } else {
+            self.likesButton.setBackgroundImage(UIImage(systemName: "heart.fill"), for: .normal)
+           incrementLikes?(post)
         }
     }
 

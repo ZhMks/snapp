@@ -160,8 +160,7 @@ class MenuForPostView: UIView {
     @objc func getDocLink() {
         let doclink =  presenter.copyPostLink()
         let updatedUrlLink = "https://console.firebase.google.com/u/1/project/snappproject-9ca98/firestore/databases/-default-/data/" + doclink
-        var pasteBoard = UIPasteboard.general.url
-        pasteBoard = URL(string: updatedUrlLink)
+        UIPasteboard.general.url = URL(string: updatedUrlLink)
     }
 
     @objc func addToArchives() {

@@ -16,7 +16,7 @@ class DetailPostViewController: UIViewController {
 
     private lazy var detailPostView: UIView = {
         let detailPostView = UIView()
-        detailPostView.translatesAutoresizingMaskIntoConstraints = false
+//        detailPostView.translatesAutoresizingMaskIntoConstraints = false
         detailPostView.backgroundColor = .systemBackground
         return detailPostView
     }()
@@ -75,7 +75,9 @@ class DetailPostViewController: UIViewController {
         let likeButton = UIButton(type: .system)
         likeButton.translatesAutoresizingMaskIntoConstraints = false
         likeButton.setBackgroundImage(UIImage(systemName: "heart"), for: .normal)
+        likeButton.clipsToBounds = true
         likeButton.tintColor = ColorCreator.shared.createButtonColor()
+        likeButton.addTarget(self, action: #selector(likeButtonTapped), for: .touchUpInside)
         return likeButton
     }()
 
@@ -223,6 +225,16 @@ class DetailPostViewController: UIViewController {
         self.navigationItem.leftBarButtonItem = leftButton
     }
 
+    @objc func likeButtonTapped() {
+        if self.likeButton.isSelected {
+            self.likeButton.setBackgroundImage(UIImage(systemName: "heart"), for: .normal)
+            presenter.decrementLikes()
+        } else {
+            self.likeButton.setBackgroundImage(UIImage(systemName: "heart.fill"), for: .normal)
+            presenter.incrementLikes()
+        }
+    }
+
     @objc func showSettingsVC() {
         menuForPost.isHidden = false
         let menuForPostPresenter = MenuForPostPresenter(view: menuForPost, user: presenter.user, firestoreService: presenter.firestoreService, post: presenter.post, viewState: .feedMenu)
@@ -321,6 +333,7 @@ extension DetailPostViewController: DetailPostViewProtocol {
     func updateCommentsTableView() {
         commentsLabel.text = "\(presenter.post.commentaries)"
         tableViewTitle.text = .localized(string: "\(presenter.post.commentaries) Комментариев")
+        likesLabel.text = "\(presenter.post.likes)"
         commentsTableView.reloadData()
     }
 
@@ -330,7 +343,6 @@ extension DetailPostViewController: DetailPostViewProtocol {
             postImageView.image = image
             postImageView.clipsToBounds = true
             postImageView.layer.cornerRadius = 10
-            postImageView.contentMode = .scaleAspectFill
         }
     }
 
@@ -477,13 +489,13 @@ extension DetailPostViewController {
             jobLabel.bottomAnchor.constraint(equalTo: detailPostView.bottomAnchor, constant: -670),
 
             postImageView.topAnchor.constraint(equalTo: jobLabel.bottomAnchor, constant: 12),
-            postImageView.leadingAnchor.constraint(equalTo: detailPostView.leadingAnchor, constant: 16),
-            postImageView.trailingAnchor.constraint(equalTo: detailPostView.trailingAnchor, constant: -16),
-            postImageView.heightAnchor.constraint(lessThanOrEqualToConstant: 212),
+            postImageView.leadingAnchor.constraint(equalTo: detailPostView.leadingAnchor, constant: 20),
+            postImageView.trailingAnchor.constraint(equalTo: detailPostView.trailingAnchor, constant: -20),
+            postImageView.heightAnchor.constraint(lessThanOrEqualToConstant: 200),
 
             postTextLabel.topAnchor.constraint(equalTo: postImageView.bottomAnchor, constant: 5),
-            postTextLabel.leadingAnchor.constraint(equalTo: detailPostView.leadingAnchor, constant: 16),
-            postTextLabel.trailingAnchor.constraint(equalTo: detailPostView.trailingAnchor, constant: -16),
+            postTextLabel.leadingAnchor.constraint(equalTo: detailPostView.leadingAnchor, constant: 20),
+            postTextLabel.trailingAnchor.constraint(equalTo: detailPostView.trailingAnchor, constant: -20),
             postTextLabel.heightAnchor.constraint(lessThanOrEqualToConstant: 340),
 
             likeButton.topAnchor.constraint(equalTo: postTextLabel.bottomAnchor, constant: 16),

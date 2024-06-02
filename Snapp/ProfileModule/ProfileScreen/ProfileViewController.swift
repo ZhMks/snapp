@@ -445,6 +445,16 @@ extension ProfileViewController: UITableViewDataSource {
                 postsTableView.reloadData()
         }
 
+        cell.incrementLikes = { [weak self]  post in
+            guard let self else { return }
+            presenter.incrementLikes(post: post)
+        }
+
+        cell.decrementLikes = { [weak self] post in
+            guard let self else { return }
+            presenter.decrementLikes(post: post)
+        }
+
         cell.presentActivityController = { [weak self] controller in
             guard let self else { return }
             self.navigationController?.present(controller, animated: true)

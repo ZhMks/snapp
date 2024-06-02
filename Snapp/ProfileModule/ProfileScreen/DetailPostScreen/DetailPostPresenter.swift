@@ -134,4 +134,13 @@ final class DetailPostPresenter: DetailPostPresenterProtocol {
         view?.updateCommentsState()
     }
 
+    func incrementLikes() {
+        guard let user = user.documentID, let postID = post.documentID else { return }
+        firestoreService.incrementLikes(user: user, post: postID)
+    }
+
+    func decrementLikes() {
+        guard let user = user.documentID, let postID = post.documentID else { return }
+    }
+
 }

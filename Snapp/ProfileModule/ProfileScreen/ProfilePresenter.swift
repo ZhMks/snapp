@@ -211,4 +211,12 @@ final class ProfilePresenter: ProfilePresenterProtocol {
     func removeUserListener() {
         firestoreService.removeListenerForUser()
     }
+
+    func incrementLikes(post: String) {
+        firestoreService.incrementLikes(user: userID, post: post)
+    }
+
+    func decrementLikes(post: String) {
+        firestoreService.decrementLikes(user: userID, post: post)
+    }
 }
