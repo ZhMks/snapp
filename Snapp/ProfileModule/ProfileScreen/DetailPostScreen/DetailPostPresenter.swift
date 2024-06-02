@@ -15,6 +15,7 @@ protocol DetailPostViewProtocol: AnyObject {
     func showCommentVC(with: String, commentID: String?, state: CommentState)
     func updateCommentsNumber()
     func updateCommentsState()
+    func updateLikes()
 }
 
 protocol DetailPostPresenterProtocol: AnyObject {
@@ -31,6 +32,7 @@ final class DetailPostPresenter: DetailPostPresenterProtocol {
     var comments: [Comment : [Answer]?]?
     let firestoreService: FireStoreServiceProtocol
     var state: MenuState?
+    var likes: [Like]?
 
     init(view: DetailPostViewProtocol, user: FirebaseUser, post: EachPost, image: UIImage, firestoreService: FireStoreServiceProtocol) {
         self.view = view
@@ -39,6 +41,7 @@ final class DetailPostPresenter: DetailPostPresenterProtocol {
         self.image = image
         self.firestoreService = firestoreService
         fetchPostImage()
+        getLikes()
     }
 
     func fetchPostImage() {
@@ -89,6 +92,20 @@ final class DetailPostPresenter: DetailPostPresenterProtocol {
         }
     }
 
+    func getLikes() {
+        guard let user = user.documentID , let post = post.documentID  else { return }
+        firestoreService.getNumberOfLikesInpost(user: user, post: post) { [weak self] result in
+            guard let self else { return }
+            switch result {
+            case .success(let success):
+                self.likes = success
+                view?.updateLikes()
+            case .failure(let failure):
+                print(failure.localizedDescription)
+            }
+        }
+    }
+
     func updateData() {
         guard let user = user.documentID else { return }
         firestoreService.getPosts(sub: user) { [weak self] result in
@@ -120,6 +137,7 @@ final class DetailPostPresenter: DetailPostPresenterProtocol {
             case .success(let currentPost):
                 self.post = currentPost
                 view?.updateCommentsTableView()
+                view?.updateLikes()
             case .failure(let failure):
                 view?.showError(descr: failure.localizedDescription)
             }

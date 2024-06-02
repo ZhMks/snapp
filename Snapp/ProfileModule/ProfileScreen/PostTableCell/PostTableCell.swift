@@ -28,6 +28,7 @@ final class PostTableCell: UITableViewCell {
 
     var user: FirebaseUser?
     var post: EachPost?
+    var likes: [Like]?
     var firestoreService: FireStoreServiceProtocol?
 
 
@@ -206,6 +207,10 @@ final class PostTableCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
 
+    override var reuseIdentifier: String? {
+        return PostTableCell.identifier
+    }
+    
     // MARK: -FUNCS
 
     func checkCellState() {
@@ -275,7 +280,6 @@ final class PostTableCell: UITableViewCell {
         postTextLabel.text = post.text
         nameAndSurnameLabel.text = "\(user.name)" + "\(user.surname)"
         jobLabel.text = "\(user.job)"
-        likesLabel.text = "\(post.likes)"
         commentsLabel.text = "\(post.commentaries)"
         dateLabel.text = date
         let networkService = NetworkService()
@@ -311,6 +315,18 @@ final class PostTableCell: UITableViewCell {
                 return
             }
         }
+        guard let userID = user.documentID, let docID = post.documentID else { return }
+        firestoreService.getNumberOfLikesInpost(user: userID, post: docID) { [weak  self] result in
+            guard let self else { return }
+            switch result {
+            case .success(let likes):
+                self.likes = likes
+                self.likesLabel.text = "\(likes.count)"
+            case .failure(let failure):
+                print(failure.localizedDescription)
+            }
+        }
+
     }
 
     @objc func menuButtonTapped() {

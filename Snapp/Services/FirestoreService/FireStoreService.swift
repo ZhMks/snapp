@@ -69,6 +69,7 @@ protocol FireStoreServiceProtocol {
     func removeListenerForFavourites()
     func incrementLikes(user: String, post: String)
     func decrementLikes(user: String, post: String)
+    func getNumberOfLikesInpost(user: String, post: String, completion: @escaping (Result <[Like], Error>) -> Void)
 }
 
 
@@ -249,13 +250,58 @@ final class FireStoreService: FireStoreServiceProtocol {
     }
 
     func incrementLikes(user: String, post: String) {
-        let dbReference = Firestore.firestore().collection("Users").document(user).collection("posts").document(post)
-        dbReference.updateData(["likes" : FieldValue.increment(1.0)])
+        let like = Like(documentID: user)
+        let date = Date.now
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "dd-MM-YYYY"
+        let string = dateFormatter.string(from: date)
+        let dbReference = Firestore.firestore().collection("Users").document(user).collection("posts").document(post).collection("likes").document(user)
+        dbReference.setData(["date" : string])
     }
 
     func decrementLikes(user: String, post: String) {
-        let dbReference = Firestore.firestore().collection("Users").document(user).collection("posts").document(post)
-        dbReference.updateData(["likes" : FieldValue.increment(-1.0)])
+        let dbReference = Firestore.firestore().collection("Users").document(user).collection("posts").document(post).collection("likes").document(user)
+        dbReference.delete()
+    }
+
+    func getNumberOfLikesInpost(user: String, post: String, completion: @escaping (Result <[Like], Error>) -> Void) {
+        let dbRef = Firestore.firestore().collection("Users").document(user).collection("posts").document(post).collection("likes")
+        var likes: [Like] = []
+        let dispatchGroup = DispatchGroup()
+        dbRef.getDocuments { snapshot, error in
+            if let error = error {
+                completion(.failure(error))
+            }
+
+            if let snapshot = snapshot {
+                if !snapshot.documents.isEmpty {
+                    for document in snapshot.documents {
+                        dispatchGroup.enter()
+                        do {
+                            let like = try document.data(as: Like.self)
+                            likes.append(like)
+                        } catch let DecodingError.dataCorrupted(context) {
+                            print(context)
+                        } catch let DecodingError.keyNotFound(key, context) {
+                            print("Key '\(key)' not found:", context.debugDescription)
+                            print("codingPath:", context.codingPath)
+                        } catch let DecodingError.valueNotFound(value, context) {
+                            print("Value '\(value)' not found:", context.debugDescription)
+                            print("codingPath:", context.codingPath)
+                        } catch let DecodingError.typeMismatch(type, context)  {
+                            print("Type '\(type)' mismatch:", context.debugDescription)
+                            print("codingPath:", context.codingPath)
+                        } catch {
+                            completion(.failure(error))
+                        }
+                        dispatchGroup.leave()
+                    }
+                }
+                dispatchGroup.notify(queue: .main) {
+                    completion(.success(likes))
+                }
+            }
+        }
     }
 
     func getUser(id: String, completion: @escaping (Result<FirebaseUser, AuthorisationErrors>) -> Void) {

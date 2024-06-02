@@ -295,6 +295,12 @@ class DetailPostViewController: UIViewController {
 // MARK: -OUTPUTPRESENTER
 extension DetailPostViewController: DetailPostViewProtocol {
     
+    func updateLikes() {
+        guard let likes = presenter.likes else { return }
+        self.likesLabel.text = "\(likes.count)"
+    }
+    
+    
     func updateCommentsState() {
         if !presenter.post.isCommentariesEnabled {
             guard let docID = presenter.user.documentID else { return }
@@ -333,7 +339,6 @@ extension DetailPostViewController: DetailPostViewProtocol {
     func updateCommentsTableView() {
         commentsLabel.text = "\(presenter.post.commentaries)"
         tableViewTitle.text = .localized(string: "\(presenter.post.commentaries) Комментариев")
-        likesLabel.text = "\(presenter.post.likes)"
         commentsTableView.reloadData()
     }
 

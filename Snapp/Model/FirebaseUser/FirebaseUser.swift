@@ -51,6 +51,10 @@ struct Comment: CommentOrAnswer {
     var likes: Int
 }
 
+struct Like: Codable {
+    var documentID: String
+}
+
 struct Answer: CommentOrAnswer {
     @DocumentID var documentID: String?
     var text: String
