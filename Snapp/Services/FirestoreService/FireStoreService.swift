@@ -250,13 +250,15 @@ final class FireStoreService: FireStoreServiceProtocol {
     }
 
     func incrementLikes(user: String, post: String) {
-        let like = Like(documentID: user)
         let date = Date.now
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "dd-MM-YYYY"
         let string = dateFormatter.string(from: date)
+        let like = Like(documentID: user, date: string)
         let dbReference = Firestore.firestore().collection("Users").document(user).collection("posts").document(post).collection("likes").document(user)
-        dbReference.setData(["date" : string])
+        dbReference.setData(["date" : like.date!,
+                             "documentID" : like.documentID!
+                            ])
     }
 
     func decrementLikes(user: String, post: String) {

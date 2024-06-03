@@ -52,7 +52,8 @@ struct Comment: CommentOrAnswer {
 }
 
 struct Like: Codable {
-    var documentID: String
+    var documentID: String?
+    var date: String?
 }
 
 struct Answer: CommentOrAnswer {
