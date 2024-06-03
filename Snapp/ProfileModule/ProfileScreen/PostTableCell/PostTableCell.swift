@@ -263,12 +263,13 @@ final class PostTableCell: UITableViewCell {
 
     @objc func likesButtonTapped() {
         guard let post = self.post?.documentID else { return }
-        if self.likesButton.isSelected {
-            self.likesButton.setBackgroundImage(UIImage(systemName: "heart"), for: .normal)
+        if self.likesButton.backgroundImage(for: .normal) == UIImage(systemName: "heart.fill") {
             decrementLikes?(post)
-        } else {
+            self.likesButton.setBackgroundImage(UIImage(systemName: "heart"), for: .normal)
+        }
+        else {
+            incrementLikes?(post)
             self.likesButton.setBackgroundImage(UIImage(systemName: "heart.fill"), for: .normal)
-           incrementLikes?(post)
         }
     }
 

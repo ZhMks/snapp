@@ -226,12 +226,14 @@ class DetailPostViewController: UIViewController {
     }
 
     @objc func likeButtonTapped() {
-        if self.likeButton.isSelected {
-            self.likeButton.setBackgroundImage(UIImage(systemName: "heart"), for: .normal)
+
+        if self.likeButton.backgroundImage(for: .normal) == UIImage(systemName: "heart.fill") {
             presenter.decrementLikes()
-        } else {
-            self.likeButton.setBackgroundImage(UIImage(systemName: "heart.fill"), for: .normal)
+            self.likeButton.setBackgroundImage(UIImage(systemName: "heart"), for: .normal)
+        }
+        else {
             presenter.incrementLikes()
+            self.likeButton.setBackgroundImage(UIImage(systemName: "heart.fill"), for: .normal)
         }
     }
 
