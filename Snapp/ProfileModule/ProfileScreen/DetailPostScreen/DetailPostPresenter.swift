@@ -159,6 +159,7 @@ final class DetailPostPresenter: DetailPostPresenterProtocol {
 
     func decrementLikes() {
         guard let user = user.documentID, let postID = post.documentID else { return }
+        firestoreService.decrementLikes(user: user, post: postID)
     }
 
 }

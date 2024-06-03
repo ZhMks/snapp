@@ -296,7 +296,10 @@ class DetailPostViewController: UIViewController {
 extension DetailPostViewController: DetailPostViewProtocol {
     
     func updateLikes() {
-        guard let likes = presenter.likes else { return }
+        guard let likes = presenter.likes, let docID = presenter.user.documentID else { return }
+        if likes.contains(where: { $0.documentID! == docID }) {
+            self.likeButton.setBackgroundImage(UIImage(systemName: "heart.fill"), for: .normal)
+        }
         self.likesLabel.text = "\(likes.count)"
     }
     
