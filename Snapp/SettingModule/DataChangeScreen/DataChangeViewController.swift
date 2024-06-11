@@ -12,6 +12,10 @@ class DataChangeViewController: UIViewController {
     //MARK: -PROPERTIES
     var presenter: DataChangePresenter!
 
+    override var prefersStatusBarHidden: Bool {
+        return true
+    }
+
     private lazy var firstLabel: UILabel = {
         let firstLabel = UILabel()
         firstLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -43,7 +47,7 @@ class DataChangeViewController: UIViewController {
     private lazy var secondTextField: UITextField = {
         let secondTextField = UITextField()
         secondTextField.translatesAutoresizingMaskIntoConstraints = false
-        secondTextField.placeholder = .localized(string: "Имя")
+        secondTextField.placeholder = .localized(string: "Фамилия")
         secondTextField.textColor = ColorCreator.shared.createTextColor()
         secondTextField.layer.cornerRadius = 8
         secondTextField.backgroundColor = ColorCreator.shared.createPostBackgroundColor()
@@ -129,9 +133,6 @@ class DataChangeViewController: UIViewController {
 
     //MARK: -LIFECYCLE
 
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-    }
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
@@ -156,7 +157,7 @@ class DataChangeViewController: UIViewController {
         leftArrowButton.addTarget(self, action: #selector(cancelButtonTapped), for: .touchUpInside)
 
         let textView = UIView(frame: CGRect(x: 0, y: 0, width: 250, height: 30))
-        let title = UILabel(frame: CGRect(x: 40, y: 0, width: 120, height: 30))
+        let title = UILabel(frame: CGRect(x: 40, y: 0, width: 150, height: 30))
         title.text = .localized(string: "Основная информация")
         title.font = UIFont(name: "Inter-Medium", size: 14)
         textView.addSubview(title)
@@ -273,7 +274,7 @@ extension DataChangeViewController {
             firstLabel.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -300),
             firstLabel.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor, constant: -640),
 
-            firstTextField.topAnchor.constraint(equalTo: firstLabel.bottomAnchor, constant: 10),
+            firstTextField.topAnchor.constraint(equalTo: firstLabel.bottomAnchor, constant: 6),
             firstTextField.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 24),
             firstTextField.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -16),
             firstTextField.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor, constant: -580),

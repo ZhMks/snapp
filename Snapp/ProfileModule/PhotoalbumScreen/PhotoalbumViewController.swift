@@ -95,8 +95,8 @@ class PhotoalbumViewController: UIViewController {
         leftArrowButton.frame = CGRect(x: 0, y: 0, width: 30, height: 30)
         leftArrowButton.addTarget(self, action: #selector(dismissController), for: .touchUpInside)
 
-        let textView = UIView(frame: CGRect(x: 0, y: 0, width: 350, height: 30))
-        let title = UILabel(frame: CGRect(x: 40, y: 0, width: 250, height: 30))
+        let textView = UIView(frame: CGRect(x: 0, y: 0, width: 330, height: 30))
+        let title = UILabel(frame: CGRect(x: 20, y: 0, width: 250, height: 30))
         title.text = .localized(string: "Фотографии")
         title.font = UIFont(name: "Inter-Medium", size: 14)
         textView.addSubview(title)
@@ -133,14 +133,29 @@ extension PhotoalbumViewController: PhotoalbumViewProtocol {
 //MARK: -UICOLLECTIONVIEWDATASOURCE
 extension PhotoalbumViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        presenter.photoAlbum.count
+        if collectionView == albumCollectionView {
+            return 0
+        } else if collectionView == photoCollectionView {
+            let number = presenter.photoAlbum.values.count
+            return number
+        } else {
+            return 0
+        }
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ProfileCollectionViewCell.identifier, for: indexPath) as? ProfileCollectionViewCell else { return UICollectionViewCell() }
-        let image = presenter.photoAlbum[indexPath.row]
-        cell.updateView(image: image)
-        return cell
+        if collectionView == albumCollectionView {
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ProfileCollectionViewCell.identifier, for: indexPath) as? ProfileCollectionViewCell else { return UICollectionViewCell() }
+            return cell
+        } else if collectionView == photoCollectionView {
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ProfileCollectionViewCell.identifier, for: indexPath) as? ProfileCollectionViewCell else { return UICollectionViewCell() }
+            guard let imageDataSet = Array(presenter.photoAlbum.values)[indexPath.row] else { return UICollectionViewCell() }
+            let image = imageDataSet[indexPath.row]
+            cell.updateView(image: image)
+            return cell
+        } else {
+            return UICollectionViewCell()
+        }
     }
 }
 

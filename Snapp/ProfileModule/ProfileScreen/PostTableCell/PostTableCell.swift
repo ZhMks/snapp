@@ -279,7 +279,7 @@ final class PostTableCell: UITableViewCell {
         self.firestoreService = firestoreService
         menuForPostVC.isHidden = true
         postTextLabel.text = post.text
-        nameAndSurnameLabel.text = "\(user.name)" + "\(user.surname)"
+        nameAndSurnameLabel.text = "\(user.name)" + " \(user.surname)"
         jobLabel.text = "\(user.job)"
         commentsLabel.text = "\(post.commentaries)"
         dateLabel.text = date

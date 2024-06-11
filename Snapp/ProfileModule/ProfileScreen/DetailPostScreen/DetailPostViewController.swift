@@ -16,7 +16,6 @@ class DetailPostViewController: UIViewController {
 
     private lazy var detailPostView: UIView = {
         let detailPostView = UIView()
-//        detailPostView.translatesAutoresizingMaskIntoConstraints = false
         detailPostView.backgroundColor = .systemBackground
         return detailPostView
     }()
@@ -164,7 +163,7 @@ class DetailPostViewController: UIViewController {
         addCommentLabel.translatesAutoresizingMaskIntoConstraints = false
         addCommentLabel.font = UIFont(name: "Inter-Light", size: 12)
         addCommentLabel.textColor = .systemGray4
-        addCommentLabel.text = .localized(string: "оставить комментарий")
+        addCommentLabel.text = .localized(string: "Оставить комментарий")
         return addCommentLabel
     }()
 
@@ -337,7 +336,7 @@ extension DetailPostViewController: DetailPostViewProtocol {
          let commentPresenter = CommentViewPresenter(view: commentView, image: presenter.image, user: with, documentID: documentID, commentor: commentor, firestoreService: presenter.firestoreService, state: state)
          commentView.presenter = commentPresenter
          commentPresenter.commentID = commentID
-         commentView.modalPresentationStyle = .overCurrentContext
+         commentView.modalPresentationStyle = .formSheet
          present(commentView, animated: true)
     }
 

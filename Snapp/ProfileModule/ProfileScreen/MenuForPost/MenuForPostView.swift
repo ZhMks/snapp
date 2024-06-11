@@ -181,8 +181,8 @@ class MenuForPostView: UIView {
 
     @objc func shareButtonTapped() {
         let urlLink = "https://console.firebase.google.com/u/1/project/snappproject-9ca98/firestore/databases/-default-/data/" + presenter.copyPostLink()
-            let activityController = UIActivityViewController(activityItems: [urlLink], applicationActivities: nil)
-            presenter.presentActivity(controller: activityController)
+        let activityController = UIActivityViewController(activityItems: [urlLink], applicationActivities: nil)
+        presenter.presentActivity(controller: activityController)
     }
 
     @objc func swipeGesture() {

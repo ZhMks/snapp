@@ -30,7 +30,6 @@
 		B211C1E82BBB3C2900C073EE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B211C1E72BBB3C2900C073EE /* AppDelegate.swift */; };
 		B211C1EA2BBB3C2900C073EE /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B211C1E92BBB3C2900C073EE /* SceneDelegate.swift */; };
 		B211C1EC2BBB3C2900C073EE /* OnBoardingVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = B211C1EB2BBB3C2900C073EE /* OnBoardingVC.swift */; };
-		B211C1F22BBB3C2900C073EE /* Snapp.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = B211C1F02BBB3C2900C073EE /* Snapp.xcdatamodeld */; };
 		B211C1F42BBB3C2A00C073EE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B211C1F32BBB3C2A00C073EE /* Assets.xcassets */; };
 		B211C1F72BBB3C2A00C073EE /* Base in Resources */ = {isa = PBXBuildFile; fileRef = B211C1F62BBB3C2A00C073EE /* Base */; };
 		B211C2022BBB3C2A00C073EE /* SnappTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B211C2012BBB3C2A00C073EE /* SnappTests.swift */; };
@@ -146,7 +145,6 @@
 		B211C1E72BBB3C2900C073EE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		B211C1E92BBB3C2900C073EE /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		B211C1EB2BBB3C2900C073EE /* OnBoardingVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnBoardingVC.swift; sourceTree = "<group>"; };
-		B211C1F12BBB3C2900C073EE /* Snapp.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Snapp.xcdatamodel; sourceTree = "<group>"; };
 		B211C1F32BBB3C2A00C073EE /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		B211C1F62BBB3C2A00C073EE /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		B211C1F82BBB3C2A00C073EE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -416,13 +414,13 @@
 		B211C1E62BBB3C2900C073EE /* Snapp */ = {
 			isa = PBXGroup;
 			children = (
+				B209E6162BC1384F0067D751 /* FeedModule */,
 				B29D0AE52BD6809300101029 /* DetailUserModule */,
 				B29D0ADC2BD63AAE00101029 /* SearchModule */,
 				B209E6282BC3FDBE0067D751 /* SettingModule */,
 				B209E6222BC3FD270067D751 /* FavouritesModule */,
 				B209E61C2BC3FC0D0067D751 /* ProfileModule */,
 				B211C2772BBC6B7F00C073EE /* OnboardingModule */,
-				B209E6162BC1384F0067D751 /* FeedModule */,
 				B209E6152BBFD7880067D751 /* Extensions */,
 				B211C2842BBD493300C073EE /* Model */,
 				B211C27A2BBD320900C073EE /* Services */,
@@ -431,7 +429,6 @@
 				B211C1F32BBB3C2A00C073EE /* Assets.xcassets */,
 				B211C1F52BBB3C2A00C073EE /* LaunchScreen.storyboard */,
 				B211C1F82BBB3C2A00C073EE /* Info.plist */,
-				B211C1F02BBB3C2900C073EE /* Snapp.xcdatamodeld */,
 			);
 			path = Snapp;
 			sourceTree = "<group>";
@@ -883,7 +880,6 @@
 			files = (
 				B297FB562BFCBDE500A8C463 /* DataChangePresenter.swift in Sources */,
 				B209E6212BC3FC320067D751 /* ProfilePresenter.swift in Sources */,
-				B211C1F22BBB3C2900C073EE /* Snapp.xcdatamodeld in Sources */,
 				B211C2642BBC17B900C073EE /* Extension+String.swift in Sources */,
 				B2E51C712BF3880E00DE6102 /* DetailPostViewController.swift in Sources */,
 				B2E51C732BF3881900DE6102 /* DetailPostPresenter.swift in Sources */,
@@ -1441,19 +1437,6 @@
 			productName = "FirebaseStorageCombine-Community";
 		};
 /* End XCSwiftPackageProductDependency section */
-
-/* Begin XCVersionGroup section */
-		B211C1F02BBB3C2900C073EE /* Snapp.xcdatamodeld */ = {
-			isa = XCVersionGroup;
-			children = (
-				B211C1F12BBB3C2900C073EE /* Snapp.xcdatamodel */,
-			);
-			currentVersion = B211C1F12BBB3C2900C073EE /* Snapp.xcdatamodel */;
-			path = Snapp.xcdatamodeld;
-			sourceTree = "<group>";
-			versionGroupType = wrapper.xcdatamodel;
-		};
-/* End XCVersionGroup section */
 	};
 	rootObject = B211C1DC2BBB3C2900C073EE /* Project object */;
 }

@@ -23,7 +23,7 @@ class FirstBoardingVC: UIViewController {
         let registerButton = UIButton(type: .system)
         registerButton.backgroundColor = ColorCreator.shared.createButtonColor()
         registerButton.translatesAutoresizingMaskIntoConstraints = false
-        registerButton.setTitle(.localized(string: "Зарегестрироваться"), for: .normal)
+        registerButton.setTitle(.localized(string: "Зарегистрироваться"), for: .normal)
         registerButton.setTitleColor(.systemBackground, for: .normal)
         registerButton.layer.cornerRadius = 10.0
         registerButton.titleLabel?.font = UIFont(name: "Inter-Medium", size: 16)

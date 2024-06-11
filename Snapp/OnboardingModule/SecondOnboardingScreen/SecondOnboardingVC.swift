@@ -17,7 +17,7 @@ final class SecondOnboardingVC: UIViewController {
     private lazy var mainTitle: UILabel = {
         let mainTitle = UILabel()
         mainTitle.translatesAutoresizingMaskIntoConstraints = false
-        mainTitle.text = .localized(string: "ЗАРЕГЕСТРИРОВАТЬСЯ")
+        mainTitle.text = .localized(string: "ЗАРЕГИСТРИРОВАТЬСЯ")
         mainTitle.textColor = ColorCreator.shared.createTextColor()
         mainTitle.font = UIFont(name: "Inter-Medium", size: 18)
         mainTitle.textAlignment = .center
@@ -81,7 +81,7 @@ final class SecondOnboardingVC: UIViewController {
         politicsTitle.textAlignment = .center
         politicsTitle.font = UIFont(name: "Inter-Medium", size: 12)
         politicsTitle.textColor = .systemGray3
-        politicsTitle.text = .localized(string: "Нажимая кнопку “Далее” Вы принимаете пользовательское Соглашение и политику конфедициальности")
+        politicsTitle.text = .localized(string: "Нажимая кнопку “Далее” Вы принимаете пользовательское Соглашение и политику конфиденциальности")
         return politicsTitle
     }()
 
@@ -107,7 +107,7 @@ final class SecondOnboardingVC: UIViewController {
     }
 
     @objc func pushThirdController() {
-        let number = phoneTextField.text ?? "Test Text"
+        let number = phoneTextField.text!
         if presenter.validateText(phone: number) {
 
             presenter.authentificateUser(phone: number) { [weak self] isAuthorised in

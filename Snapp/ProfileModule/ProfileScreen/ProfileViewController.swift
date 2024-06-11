@@ -11,7 +11,6 @@ class ProfileViewController: UIViewController {
     // MARK: -PROPERTIES
     var presenter: ProfilePresenter!
 
-    let menuForPostView = MenuForPostView()
     var titleLabel = UILabel(frame: CGRect(x: 0, y: 0, width: 150, height: 30))
 
     private lazy var avatarImageView: UIImageView = {
@@ -27,6 +26,8 @@ class ProfileViewController: UIViewController {
         nameAndSurnameLabel.textColor = ColorCreator.shared.createTextColor()
         nameAndSurnameLabel.text = "\(presenter.mainUser.name) " + "  \(presenter.mainUser.surname)"
         nameAndSurnameLabel.translatesAutoresizingMaskIntoConstraints = false
+        nameAndSurnameLabel.numberOfLines = 0
+        nameAndSurnameLabel.textAlignment = .left
         return nameAndSurnameLabel
     }()
 
@@ -71,7 +72,11 @@ class ProfileViewController: UIViewController {
     private lazy var numberOfPosts: UILabel = {
         let numberOfPosts = UILabel()
         numberOfPosts.font = UIFont(name: "Inter-Medium", size: 14)
-        numberOfPosts.text = "\(presenter.posts.count)\nПубликаций"
+        numberOfPosts.text = 
+        """
+        \(presenter.posts.count)
+        Публикаций
+        """
         numberOfPosts.textAlignment = .center
         numberOfPosts.numberOfLines = 0
         numberOfPosts.translatesAutoresizingMaskIntoConstraints = false
@@ -82,7 +87,11 @@ class ProfileViewController: UIViewController {
     private lazy var numberOfSubscriptions: UILabel = {
         let numberOfSubscriptions = UILabel()
         numberOfSubscriptions.font = UIFont(name: "Inter-Medium", size: 14)
-        numberOfSubscriptions.text = "\(presenter.mainUser.subscribtions.count)\nПодписок"
+        numberOfSubscriptions.text = 
+        """
+        \(presenter.mainUser.subscribtions.count)
+        Подписок
+        """
         numberOfSubscriptions.textAlignment = .center
         numberOfSubscriptions.numberOfLines = 0
         numberOfSubscriptions.translatesAutoresizingMaskIntoConstraints = false
@@ -92,7 +101,11 @@ class ProfileViewController: UIViewController {
     private lazy var numberOfSubscribers: UILabel = {
         let numberOfSubscribers = UILabel()
         numberOfSubscribers.font = UIFont(name: "Inter-Medium", size: 14)
-        numberOfSubscribers.text = "\(presenter.mainUser.subscribers.count)\nПодписчиков"
+        numberOfSubscribers.text = 
+        """
+        \(presenter.mainUser.subscribers.count)
+        Подписчиков
+        """
         numberOfSubscribers.textAlignment = .center
         numberOfSubscribers.numberOfLines = 0
         numberOfSubscribers.translatesAutoresizingMaskIntoConstraints = false
@@ -184,7 +197,7 @@ class ProfileViewController: UIViewController {
     private lazy var photogalleryLabel: UILabel = {
         let photogalleryLabel = UILabel()
         photogalleryLabel.translatesAutoresizingMaskIntoConstraints = false
-        photogalleryLabel.text = .localized(string: "Фотографии" + "  \(presenter.mainUser.photoAlbum.count)")
+        photogalleryLabel.text = .localized(string: "Фотографии" + "  \(presenter.photoAlbum.values.count)")
         photogalleryLabel.font = UIFont(name: "Inter-Medium", size: 16)
         photogalleryLabel.textColor = ColorCreator.shared.createTextColor()
         return photogalleryLabel
@@ -265,7 +278,6 @@ class ProfileViewController: UIViewController {
         addSubviews()
         tuneTableView()
         layout()
-        addTapGestures()
     }
 
     override func viewWillDisappear(_ animated: Bool) {
@@ -289,7 +301,7 @@ class ProfileViewController: UIViewController {
         let settingsVC = SettingsViewController()
         let settingsPresenter = SettingPresenter(view: settingsVC, user: presenter.mainUser, firestoreService: presenter.firestoreService)
         settingsVC.presenter = settingsPresenter
-        settingsVC.modalPresentationStyle = .overCurrentContext
+        settingsVC.modalPresentationStyle = .overFullScreen
         let transition = CATransition()
         transition.duration = 0.5
         transition.type = CATransitionType.moveIn
@@ -320,18 +332,9 @@ class ProfileViewController: UIViewController {
         self.present(imagePicker, animated: true)
     }
 
-    func addTapGestures() {
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(tapOnViewHandler))
-        view.addGestureRecognizer(tapGesture)
-    }
-
-    @objc func tapOnViewHandler() {
-        menuForPostView.removeFromSuperview()
-    }
-
     @objc func goToPhotoalbumScreen() {
         let photoAlbumVC = PhotoalbumViewController()
-        let photoAlbumPresenter = PhotoalbumPresenter(view: photoAlbumVC, user: presenter.mainUser, firestoreService: presenter.firestoreService)
+        let photoAlbumPresenter = PhotoalbumPresenter(view: photoAlbumVC, photoAlbum: presenter.photoAlbum)
         photoAlbumVC.presenter = photoAlbumPresenter
         navigationController?.pushViewController(photoAlbumVC, animated: true)
     }
@@ -340,7 +343,7 @@ class ProfileViewController: UIViewController {
         let profileChangeController = ProfileChangeViewController()
         let profileChangePresenter = ProfileChangePresenter(view: profileChangeController, user: presenter.mainUser, firestoreService: presenter.firestoreService)
         profileChangeController.presenter = profileChangePresenter
-        profileChangeController.modalPresentationStyle = .overCurrentContext
+        profileChangeController.modalPresentationStyle = .overFullScreen
         let transition = CATransition()
         transition.duration = 0.5
         transition.type = CATransitionType.moveIn
@@ -357,14 +360,14 @@ extension ProfileViewController: ProfileViewProtocol {
         avatarImageView.layer.borderColor = UIColor.systemOrange.cgColor
         avatarImageView.layer.borderWidth = 1.0
     }
-    
+
 
     func updateTextData(user: FirebaseUser) {
         jobLabel.text = user.job
         nameAndSurnameLabel.text = "\(user.name)" + " \(user.surname)"
         titleLabel.text = user.identifier
     }
-    
+
 
     func updateSubscriptions() {
         numberOfSubscriptions.text = .localizePlurals(key: "Subscriptions", number: presenter.mainUser.subscribtions.count)
@@ -386,7 +389,7 @@ extension ProfileViewController: ProfileViewProtocol {
     func updateAlbum(photo: [UIImage]?) {
         DispatchQueue.main.async { [weak self] in
             guard let self else { return }
-            guard let number = presenter.photoAlbum?.count else { return }
+             let number = presenter.photoAlbum.keys.count
             photogalleryLabel.text = .localizePlurals(key: "Photo", number: number)
             photoCollectionView.reloadData()
         }
@@ -435,14 +438,14 @@ extension ProfileViewController: UITableViewDataSource {
         let date = presenter.posts[indexPath.row].date
 
         guard let docID = data.documentID else { return UITableViewCell() }
-        
+
         cell.buttonTappedHandler = { [weak self] in
             guard let self else { return }
-                guard let index = presenter.posts.firstIndex(where: { $0.documentID == data.documentID }) else { return }
-                presenter.posts.remove(at: index)
-                presenter.posts.insert(data, at: 0)
-                presenter.pinPost(docID: docID)
-                postsTableView.reloadData()
+            guard let index = presenter.posts.firstIndex(where: { $0.documentID == data.documentID }) else { return }
+            presenter.posts.remove(at: index)
+            presenter.posts.insert(data, at: 0)
+            presenter.pinPost(docID: docID)
+            postsTableView.reloadData()
         }
 
         cell.incrementLikes = { [weak self]  post in
@@ -495,17 +498,17 @@ extension ProfileViewController: UITableViewDelegate {
 extension ProfileViewController: UICollectionViewDataSource {
 
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        guard let number = presenter.photoAlbum?.count else { return 0 }
+        let number = presenter.photoAlbum.keys.count
         return number
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ProfileCollectionViewCell.identifier, for: indexPath) as? ProfileCollectionViewCell else { return UICollectionViewCell() }
-        guard let data = presenter.photoAlbum?[indexPath.row] else { return UICollectionViewCell() }
-        cell.updateView(image: data)
+        guard let data = Array(presenter.photoAlbum.values)[indexPath.section] else { return UICollectionViewCell() }
+        let image = data[indexPath.row]
+        cell.updateView(image: image)
         return cell
     }
-
 
 }
 
@@ -525,9 +528,9 @@ extension ProfileViewController: UIImagePickerControllerDelegate, UINavigationCo
 
         switch picker.sourceType {
         case .camera:
-            presenter.addPhotoToAlbum(image: image, state: .storieImage)
+            presenter.createMainPhotoAlbum(image: image)
         case .photoLibrary:
-            presenter.addPhotoToAlbum(image: image, state: .photoImage)
+            presenter.createMainPhotoAlbum(image: image)
         default: return
         }
 
@@ -536,8 +539,8 @@ extension ProfileViewController: UIImagePickerControllerDelegate, UINavigationCo
     }
 
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
-            dismiss(animated: true, completion: nil)
-        }
+        dismiss(animated: true, completion: nil)
+    }
 }
 
 // MARK: -LAYOUT

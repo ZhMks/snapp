@@ -17,7 +17,7 @@ class LoginScreenViewController: UIViewController {
         let greetingsLabel = UILabel()
         greetingsLabel.translatesAutoresizingMaskIntoConstraints = false
         greetingsLabel.text = .localized(string: "С возвращением")
-        greetingsLabel.font = UIFont(name: "Inter-Medium", size: 18)
+        greetingsLabel.font = UIFont(name: "Inter-Medium", size: 16)
         greetingsLabel.textColor = .systemYellow
         greetingsLabel.textAlignment = .center
         return greetingsLabel
@@ -75,7 +75,7 @@ class LoginScreenViewController: UIViewController {
     }
 
     @objc func pushThirdController() {
-        let number = phoneTextField.text ?? "Test Text"
+        let number = phoneTextField.text!
         if loginpresenter.checkPhone(number: number) {
             loginpresenter.authentificateUser(phone: number) { [weak self] result in
                 switch result {

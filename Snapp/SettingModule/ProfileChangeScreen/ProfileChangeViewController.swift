@@ -11,6 +11,10 @@ class ProfileChangeViewController: UIViewController {
 
     //MARK: -PROPERTIES
 
+    override var prefersStatusBarHidden: Bool {
+        return true
+    }
+
     var presenter: ProfileChangePresenter!
 
     private lazy var mainContentView: UIView = {
@@ -48,7 +52,7 @@ class ProfileChangeViewController: UIViewController {
     private lazy var mainInformationButton: UIButton = {
         let mainInformationButton = UIButton(type: .system)
         mainInformationButton.translatesAutoresizingMaskIntoConstraints = false
-        mainInformationButton.setTitle(.localized(string: "Основаня информация"), for: .normal)
+        mainInformationButton.setTitle(.localized(string: "Основная информация"), for: .normal)
         mainInformationButton.setTitleColor(ColorCreator.shared.createTextColor(), for: .normal)
         mainInformationButton.contentHorizontalAlignment = .left
         mainInformationButton.addTarget(self, action: #selector(showDetailDataChangeScreen), for: .touchUpInside)
@@ -155,12 +159,12 @@ extension ProfileChangeViewController {
 
         NSLayoutConstraint.activate([
             
-            mainContentView.topAnchor.constraint(equalTo: safeArea.topAnchor),
+            mainContentView.topAnchor.constraint(equalTo: view.topAnchor),
             mainContentView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 62),
             mainContentView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
-            mainContentView.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor),
+            mainContentView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
 
-            closeButton.topAnchor.constraint(equalTo: mainContentView.topAnchor, constant: 5),
+            closeButton.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: 15),
             closeButton.leadingAnchor.constraint(equalTo: mainContentView.leadingAnchor, constant: 30),
             closeButton.heightAnchor.constraint(equalToConstant: 35),
             closeButton.widthAnchor.constraint(equalToConstant: 35),

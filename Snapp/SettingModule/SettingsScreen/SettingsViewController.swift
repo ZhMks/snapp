@@ -12,6 +12,10 @@ class SettingsViewController: UIViewController {
     //MARK: -PROPERTIES
     var presenter: SettingPresenter!
 
+    override var prefersStatusBarHidden: Bool {
+        return true
+    }
+
     private lazy var mainView: UIView = {
         let mainView = UIView()
         mainView.translatesAutoresizingMaskIntoConstraints = false
@@ -195,12 +199,12 @@ extension SettingsViewController {
 
         NSLayoutConstraint.activate([
 
-            mainView.topAnchor.constraint(equalTo: safeArea.topAnchor),
+            mainView.topAnchor.constraint(equalTo: view.topAnchor),
             mainView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 62),
             mainView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
-            mainView.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor),
+            mainView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
 
-            leftArrowButton.topAnchor.constraint(equalTo: mainView.topAnchor),
+            leftArrowButton.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: 15),
             leftArrowButton.leadingAnchor.constraint(equalTo: mainView.leadingAnchor, constant: 30),
             leftArrowButton.heightAnchor.constraint(equalToConstant: 30),
             leftArrowButton.widthAnchor.constraint(equalToConstant: 35),
