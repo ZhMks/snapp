@@ -142,6 +142,12 @@ class SettingsViewController: UIViewController {
 
 
     //MARK: -LIFECYCLE
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        setNeedsStatusBarAppearanceUpdate()
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = ColorCreator.shared.createBackgroundColorWithAlpah(alpha: 0.5)

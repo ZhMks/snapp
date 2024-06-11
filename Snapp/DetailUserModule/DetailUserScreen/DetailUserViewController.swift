@@ -33,6 +33,7 @@ class DetailUserViewController: UIViewController {
         nameAndSurnameLabel.textColor = ColorCreator.shared.createTextColor()
         nameAndSurnameLabel.text = "\(presenter.user.name) " + "  \(presenter.user.surname)"
         nameAndSurnameLabel.translatesAutoresizingMaskIntoConstraints = false
+        nameAndSurnameLabel.numberOfLines = 0
         return nameAndSurnameLabel
     }()
 
@@ -88,11 +89,7 @@ class DetailUserViewController: UIViewController {
     private lazy var numberOfPosts: UILabel = {
         let numberOfPosts = UILabel()
         numberOfPosts.font = UIFont(name: "Inter-Medium", size: 14)
-        numberOfPosts.text = 
-        """
-        \(presenter.posts.count) 
-        Публикаций
-        """
+        numberOfPosts.text = "\(presenter.posts.count)" + "\nПубликаций"
         numberOfPosts.textAlignment = .center
         numberOfPosts.numberOfLines = 0
         numberOfPosts.translatesAutoresizingMaskIntoConstraints = false
@@ -103,11 +100,7 @@ class DetailUserViewController: UIViewController {
     private lazy var numberOfSubscriptions: UILabel = {
         let numberOfSubscriptions = UILabel()
         numberOfSubscriptions.font = UIFont(name: "Inter-Medium", size: 14)
-        numberOfSubscriptions.text = 
-        """
-        \(presenter.user.subscribtions.count)
-        Подписок
-        """
+        numberOfSubscriptions.text = "\(presenter.user.subscribtions.count)" + "\nПодписок"
         numberOfSubscriptions.textAlignment = .center
         numberOfSubscriptions.numberOfLines = 0
         numberOfSubscriptions.translatesAutoresizingMaskIntoConstraints = false
@@ -117,11 +110,7 @@ class DetailUserViewController: UIViewController {
     private lazy var numberOfSubscribers: UILabel = {
         let numberOfSubscribers = UILabel()
         numberOfSubscribers.font = UIFont(name: "Inter-Medium", size: 14)
-        numberOfSubscribers.text = 
-        """
-        \(presenter.user.subscribers.count)
-        Подписчиков
-        """
+        numberOfSubscribers.text = "\(presenter.user.subscribers.count)" + "\nПодписчиков"
         numberOfSubscribers.textAlignment = .center
         numberOfSubscribers.numberOfLines = 0
         numberOfSubscribers.translatesAutoresizingMaskIntoConstraints = false

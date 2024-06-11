@@ -277,57 +277,93 @@ final class PostTableCell: UITableViewCell {
         self.post = post
         self.user = user
         self.firestoreService = firestoreService
+
         menuForPostVC.isHidden = true
+        configureLabels(post: post, user: user, date: date)
+
+        fetchComments(for: post, user: user)
+        fetchPostImage(for: post)
+        fetchAvatarImage(for: user)
+        fetchLikes(for: post, user: user)
+    }
+
+    private func configureLabels(post: EachPost, user: FirebaseUser, date: String) {
         postTextLabel.text = post.text
-        nameAndSurnameLabel.text = "\(user.name)" + " \(user.surname)"
-        jobLabel.text = "\(user.job)"
-        commentsLabel.text = "\(post.commentaries)"
+        nameAndSurnameLabel.text = "\(user.name) \(user.surname)"
+        jobLabel.text = user.job
         dateLabel.text = date
-        let networkService = NetworkService()
-        if let postImage = post.image {
-            networkService.fetchImage(string: postImage) { [weak self] result in
-                guard let self else { return }
-                switch result {
-                case .success(let success):
-                    DispatchQueue.main.async {
-                        guard let image = UIImage(data: success) else { return }
-                        self.postImage.image = image
-                        self.postImage.clipsToBounds = true
-                        self.postImage.layer.cornerRadius = 30
-                        self.postImage.contentMode = .scaleAspectFill
-                    }
-                case .failure(_):
-                    return
-                }
+    }
+
+    private func fetchComments(for post: EachPost, user: FirebaseUser) {
+        guard let postID = post.documentID, let userID = user.documentID else { return }
+
+        firestoreService?.getComments(post: postID, user: userID) { [weak self] result in
+            guard let self = self else { return }
+
+            switch result {
+            case .success(let comments):
+                self.commentsLabel.text = "\(comments.count)"
+            case .failure(let error):
+                print("Failed to fetch comments: \(error.localizedDescription)")
             }
         }
-        guard let avatarImage = user.image else { return }
-        networkService.fetchImage(string: avatarImage) { [weak self] result in
-            guard let self else { return }
+    }
+
+    private func fetchPostImage(for post: EachPost) {
+        guard let postImageURL = post.image else { return }
+
+        let networkService = NetworkService()
+        networkService.fetchImage(string: postImageURL) { [weak self] result in
+            guard let self = self else { return }
+
             switch result {
-            case .success(let success):
+            case .success(let imageData):
                 DispatchQueue.main.async {
-                    guard let image = UIImage(data: success) else { return }
-                    self.avatarImageView.image = image
+                    self.postImage.image = UIImage(data: imageData)
+                    self.postImage.clipsToBounds = true
+                    self.postImage.layer.cornerRadius = 30
+                    self.postImage.contentMode = .scaleAspectFill
+                }
+            case .failure(let error):
+                print("Failed to fetch post image: \(error.localizedDescription)")
+            }
+        }
+    }
+
+    private func fetchAvatarImage(for user: FirebaseUser) {
+        guard let avatarImageURL = user.image else { return }
+
+        let networkService = NetworkService()
+        networkService.fetchImage(string: avatarImageURL) { [weak self] result in
+            guard let self = self else { return }
+
+            switch result {
+            case .success(let imageData):
+                DispatchQueue.main.async {
+                    self.avatarImageView.image = UIImage(data: imageData)
                     self.avatarImageView.clipsToBounds = true
                     self.avatarImageView.layer.cornerRadius = self.avatarImageView.frame.width / 2
                 }
-            case .failure(_):
-                return
+            case .failure(let error):
+                print("Failed to fetch avatar image: \(error.localizedDescription)")
             }
         }
-        guard let userID = user.documentID, let docID = post.documentID else { return }
-        firestoreService.getNumberOfLikesInpost(user: userID, post: docID) { [weak  self] result in
-            guard let self else { return }
+    }
+
+    private func fetchLikes(for post: EachPost, user: FirebaseUser) {
+        guard let postID = post.documentID, let userID = user.documentID else { return }
+        
+        firestoreService?.getNumberOfLikesInpost(user: userID, post: postID) { [weak self] result in
+            guard let self = self else { return }
+            
             switch result {
             case .success(let likes):
                 self.likes = likes
                 self.likesLabel.text = "\(likes.count)"
-            case .failure(let failure):
-                print(failure.localizedDescription)
+            case .failure(let error):
+                print("Failed to fetch likes: \(error.localizedDescription)")
             }
         }
-
     }
 
     @objc func menuButtonTapped() {

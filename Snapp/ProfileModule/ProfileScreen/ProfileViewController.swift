@@ -72,11 +72,7 @@ class ProfileViewController: UIViewController {
     private lazy var numberOfPosts: UILabel = {
         let numberOfPosts = UILabel()
         numberOfPosts.font = UIFont(name: "Inter-Medium", size: 14)
-        numberOfPosts.text = 
-        """
-        \(presenter.posts.count)
-        Публикаций
-        """
+        numberOfPosts.text = "\(presenter.posts.count)" + " \nПубликаций"
         numberOfPosts.textAlignment = .center
         numberOfPosts.numberOfLines = 0
         numberOfPosts.translatesAutoresizingMaskIntoConstraints = false
@@ -87,11 +83,7 @@ class ProfileViewController: UIViewController {
     private lazy var numberOfSubscriptions: UILabel = {
         let numberOfSubscriptions = UILabel()
         numberOfSubscriptions.font = UIFont(name: "Inter-Medium", size: 14)
-        numberOfSubscriptions.text = 
-        """
-        \(presenter.mainUser.subscribtions.count)
-        Подписок
-        """
+        numberOfSubscriptions.text = "\(presenter.mainUser.subscribtions.count)" + " \nПодписок"
         numberOfSubscriptions.textAlignment = .center
         numberOfSubscriptions.numberOfLines = 0
         numberOfSubscriptions.translatesAutoresizingMaskIntoConstraints = false
@@ -101,11 +93,7 @@ class ProfileViewController: UIViewController {
     private lazy var numberOfSubscribers: UILabel = {
         let numberOfSubscribers = UILabel()
         numberOfSubscribers.font = UIFont(name: "Inter-Medium", size: 14)
-        numberOfSubscribers.text = 
-        """
-        \(presenter.mainUser.subscribers.count)
-        Подписчиков
-        """
+        numberOfSubscribers.text = "\(presenter.mainUser.subscribers.count)" + " \nПодписчиков"
         numberOfSubscribers.textAlignment = .center
         numberOfSubscribers.numberOfLines = 0
         numberOfSubscribers.translatesAutoresizingMaskIntoConstraints = false
@@ -613,7 +601,7 @@ extension ProfileViewController {
 
             nameAndSurnameLabel.topAnchor.constraint(equalTo: mainContentView.topAnchor, constant: 20),
             nameAndSurnameLabel.leadingAnchor.constraint(equalTo: avatarImageView.trailingAnchor, constant: 15),
-            nameAndSurnameLabel.trailingAnchor.constraint(equalTo: mainContentView.trailingAnchor, constant: -110),
+            nameAndSurnameLabel.trailingAnchor.constraint(equalTo: mainContentView.trailingAnchor, constant: -70),
             nameAndSurnameLabel.bottomAnchor.constraint(equalTo: mainContentView.bottomAnchor, constant: -440),
 
             jobLabel.leadingAnchor.constraint(equalTo: avatarImageView.trailingAnchor, constant: 15),
@@ -636,24 +624,27 @@ extension ProfileViewController {
             editButton.trailingAnchor.constraint(equalTo: mainContentView.trailingAnchor, constant: -16),
             editButton.bottomAnchor.constraint(equalTo: mainContentView.bottomAnchor, constant: -314),
 
-            numberOfPosts.topAnchor.constraint(equalTo: editButton.bottomAnchor, constant: 20),
-            numberOfPosts.centerXAnchor.constraint(equalTo: createPostView.centerXAnchor),
-            numberOfPosts.bottomAnchor.constraint(equalTo: mainContentView.bottomAnchor, constant: -254),
-
-            numberOfSubscriptions.topAnchor.constraint(equalTo: editButton.bottomAnchor, constant: 20),
-            numberOfSubscriptions.centerXAnchor.constraint(equalTo: createStorieView.centerXAnchor),
-            numberOfSubscriptions.bottomAnchor.constraint(equalTo: mainContentView.bottomAnchor, constant: -254),
-
-            numberOfSubscribers.topAnchor.constraint(equalTo: editButton.bottomAnchor, constant: 20),
-            numberOfSubscribers.centerXAnchor.constraint(equalTo: addImageView.centerXAnchor),
-            numberOfSubscribers.bottomAnchor.constraint(equalTo: mainContentView.bottomAnchor, constant: -254),
-
             separatorView.topAnchor.constraint(equalTo: numberOfPosts.bottomAnchor, constant: 4),
             separatorView.leadingAnchor.constraint(equalTo: mainContentView.leadingAnchor, constant: 16),
             separatorView.trailingAnchor.constraint(equalTo: mainContentView.trailingAnchor, constant: -16),
             separatorView.bottomAnchor.constraint(equalTo: mainContentView.bottomAnchor, constant: -249),
 
-            createPostView.topAnchor.constraint(equalTo: mainContentView.topAnchor, constant: 262),
+            numberOfPosts.topAnchor.constraint(equalTo: separatorView.bottomAnchor, constant: 5),
+            numberOfPosts.leadingAnchor.constraint(equalTo: mainContentView.leadingAnchor, constant: 5),
+            numberOfPosts.trailingAnchor.constraint(equalTo: mainContentView.trailingAnchor, constant: -240),
+            numberOfPosts.bottomAnchor.constraint(equalTo: mainContentView.bottomAnchor, constant: -214),
+
+            numberOfSubscriptions.topAnchor.constraint(equalTo: separatorView.bottomAnchor, constant: 5),
+            numberOfSubscriptions.leadingAnchor.constraint(equalTo: numberOfPosts.trailingAnchor, constant: 10),
+            numberOfSubscriptions.trailingAnchor.constraint(equalTo: mainContentView.trailingAnchor, constant: -140),
+            numberOfSubscriptions.bottomAnchor.constraint(equalTo: mainContentView.bottomAnchor, constant: -214),
+
+            numberOfSubscribers.topAnchor.constraint(equalTo: separatorView.bottomAnchor, constant: 5),
+            numberOfSubscribers.leadingAnchor.constraint(equalTo: numberOfSubscriptions.trailingAnchor, constant: 20),
+            numberOfSubscribers.trailingAnchor.constraint(equalTo: mainContentView.trailingAnchor, constant: -10),
+            numberOfSubscribers.bottomAnchor.constraint(equalTo: mainContentView.bottomAnchor, constant: -214),
+
+            createPostView.topAnchor.constraint(equalTo: mainContentView.topAnchor, constant: 265),
             createPostView.leadingAnchor.constraint(equalTo: mainContentView.leadingAnchor, constant: 33),
             createPostView.trailingAnchor.constraint(equalTo: mainContentView.trailingAnchor, constant: -290),
             createPostView.bottomAnchor.constraint(equalTo: mainContentView.bottomAnchor, constant: -150),
@@ -668,7 +659,7 @@ extension ProfileViewController {
             createPostLabel.trailingAnchor.constraint(equalTo: createPostView.trailingAnchor),
             createPostLabel.bottomAnchor.constraint(equalTo: createPostView.bottomAnchor),
 
-            createStorieView.topAnchor.constraint(equalTo: mainContentView.topAnchor, constant: 262),
+            createStorieView.topAnchor.constraint(equalTo: mainContentView.topAnchor, constant: 265),
             createStorieView.leadingAnchor.constraint(equalTo: mainContentView.leadingAnchor, constant: 145),
             createStorieView.trailingAnchor.constraint(equalTo: mainContentView.trailingAnchor, constant: -160),
             createStorieView.bottomAnchor.constraint(equalTo: mainContentView.bottomAnchor, constant: -150),
@@ -683,7 +674,7 @@ extension ProfileViewController {
             createStorieLabel.trailingAnchor.constraint(equalTo: createStorieView.trailingAnchor),
             createStorieLabel.bottomAnchor.constraint(equalTo: createStorieView.bottomAnchor),
 
-            addImageView.topAnchor.constraint(equalTo: mainContentView.topAnchor, constant: 262),
+            addImageView.topAnchor.constraint(equalTo: mainContentView.topAnchor, constant: 265),
             addImageView.leadingAnchor.constraint(equalTo: mainContentView.leadingAnchor, constant: 273),
             addImageView.trailingAnchor.constraint(equalTo: mainContentView.trailingAnchor, constant: -50),
             addImageView.bottomAnchor.constraint(equalTo: mainContentView.bottomAnchor, constant: -150),
