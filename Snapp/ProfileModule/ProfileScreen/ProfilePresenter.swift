@@ -24,6 +24,8 @@ protocol ProfileViewProtocol: AnyObject {
     func updateSubscriptions()
     func updateTextData(user: FirebaseUser)
     func updateAvatrImageWithStorie()
+    func showMenuForPostVC(post: EachPost)
+    func showMenuForFeed(post: EachPost)
 }
 
 protocol ProfilePresenterProtocol: AnyObject {
@@ -170,29 +172,14 @@ final class ProfilePresenter: ProfilePresenterProtocol {
 print()
         }
     }
+    
+    func showMenuForPost(post: EachPost) {
+        view?.showMenuForPostVC(post: post)
+    }
 
-//    func fetchPhotoAlbum() {
-//        self.photoAlbum = []
-//        let networkService = NetworkService()
-//        let dispatchGroup = DispatchGroup()
-//        for link in mainUser.photoAlbum {
-//            dispatchGroup.enter()
-//            networkService.fetchImage(string: link) { [weak self] result in
-//                switch result {
-//                case .success(let data):
-//                    guard let image = UIImage(data: data) else { return }
-//                    self?.photoAlbum?.append(image)
-//                case .failure(let failure):
-//                    self?.view?.showErrorAler(error: failure.localizedDescription)
-//                }
-//                dispatchGroup.leave()
-//            }
-//        }
-//        dispatchGroup.notify(queue: .main) { [weak self] in
-//            guard let photoAlbum = self?.photoAlbum else { return }
-//            self?.view?.updateAlbum(photo: photoAlbum)
-//        }
-//    }
+    func showMenuForFeed(post: EachPost) {
+        view?.showMenuForFeed(post: post)
+    }
 
     func fetchSubsribers() {
         firestoreService.getUser(id: userID) { [weak self] result in

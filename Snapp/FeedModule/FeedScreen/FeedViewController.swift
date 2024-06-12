@@ -56,7 +56,6 @@ final class FeedViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         presenter.addUserListener()
-        presenter.fetchUserStorie()
     }
 
     override func viewDidLoad() {
@@ -65,6 +64,8 @@ final class FeedViewController: UIViewController {
         addSubviews()
         tuneTableView()
         layout()
+        presenter.fetchPosts()
+        presenter.fetchUserStorie()
     }
 
     override func viewWillDisappear(_ animated: Bool) {
@@ -231,7 +232,7 @@ extension FeedViewController: UITableViewDataSource {
         guard let user = user(forSection: indexPath.section) else { return UITableViewCell() }
         if let data = presenter.posts?[user]?[indexPath.row] {
             cell.updateView(post: data, user: user, date: data.date, firestoreService: presenter.firestoreService)
-            cell.state = .feedCell
+            cell.postcellstate = .feedState
         }
         cell.presentActivityController = { [weak self] controller in
             guard let self else { return }

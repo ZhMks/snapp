@@ -375,7 +375,7 @@ final class FireStoreService: FireStoreServiceProtocol {
             }
         }
     }
-    
+
     func changeData(id: String, text: String, state: ChangeStates) {
 
         let ref = Firestore.firestore().collection("Users").document(id)
@@ -642,30 +642,38 @@ final class FireStoreService: FireStoreServiceProtocol {
     func saveIntoFavourites(post: EachPost, for user: String, completion: @escaping (Result<EachPost, Error>) -> Void) {
         let docRef = Firestore.firestore().collection("Users").document(user).collection("Favourites")
 
-
         docRef.getDocuments { snapshot, error in
             if let error = error {
                 completion(.failure(error))
             }
 
             if let snapshot = snapshot {
-                for document in snapshot.documents {
-                    let textInPost = document.get("text") as? String
-                    if textInPost == post.text {
-                        break
-                    } else {
-                        do {
-                            try docRef.addDocument(from: post)
-                            completion(.success(post))
-                        } catch {
-                            print(error.localizedDescription)
-                            completion(.failure(error))
+                if snapshot.documents.isEmpty {
+                    do {
+                        try docRef.addDocument(from: post)
+                        completion(.success(post))
+                    } catch {
+                        print(error.localizedDescription)
+                        completion(.failure(error))
+                    }
+                } else {
+                    for document in snapshot.documents {
+                        let textInPost = document.get("text") as? String
+                        if textInPost == post.text {
+                            break
+                        } else {
+                            do {
+                                try docRef.addDocument(from: post)
+                                completion(.success(post))
+                            } catch {
+                                print(error.localizedDescription)
+                                completion(.failure(error))
+                            }
                         }
                     }
                 }
             }
         }
-
     }
 
     func disableCommentaries(id: String, user: String) {
@@ -742,6 +750,6 @@ final class FireStoreService: FireStoreServiceProtocol {
         let docRef = Firestore.firestore().collection("Users").document(user)
         docRef.updateData(["subscribtions" : FieldValue.arrayRemove([sub])])
     }
-
 }
+
 

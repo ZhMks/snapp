@@ -51,63 +51,63 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "036B992B-410E-4FC4-B0EC-EE7E6B1F2DCC"
+            uuid = "942900C8-11C0-4CDA-B221-DBE84587107B"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Snapp/FeedModule/FeedScreen/FeedViewController.swift"
+            filePath = "Snapp/Services/FirestoreService/FireStoreService.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "236"
-            endingLineNumber = "236"
-            landmarkName = "tableView(_:cellForRowAt:)"
+            startingLineNumber = "659"
+            endingLineNumber = "659"
+            landmarkName = "saveIntoFavourites(post:for:completion:)"
             landmarkType = "7">
-            <Locations>
-               <Location
-                  uuid = "036B992B-410E-4FC4-B0EC-EE7E6B1F2DCC - af1eed47b1cccb35"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "Snapp.FeedViewController.tableView(_: __C.UITableView, cellForRowAt: Foundation.IndexPath) -&gt; __C.UITableViewCell"
-                  moduleName = "Snapp"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/makszh/Desktop/Snapp/Snapp/FeedModule/FeedScreen/FeedViewController.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "236"
-                  endingLineNumber = "236">
-               </Location>
-               <Location
-                  uuid = "036B992B-410E-4FC4-B0EC-EE7E6B1F2DCC - ec5b7903879e1641"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "closure #1 (__C.UIActivityViewController) -&gt; () in Snapp.FeedViewController.tableView(_: __C.UITableView, cellForRowAt: Foundation.IndexPath) -&gt; __C.UITableViewCell"
-                  moduleName = "Snapp"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/makszh/Desktop/Snapp/Snapp/FeedModule/FeedScreen/FeedViewController.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "236"
-                  endingLineNumber = "236">
-               </Location>
-            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "17368B2C-A835-4028-A69B-8D9BE9984000"
+            uuid = "6E7DA1EA-F29E-4659-834E-620E328F37DB"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Snapp/ProfileModule/ProfileScreen/MenuForPost/MenuForPostView.swift"
+            filePath = "Snapp/Services/FirestoreService/FireStoreService.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "185"
-            endingLineNumber = "185"
-            landmarkName = "shareButtonTapped()"
+            startingLineNumber = "650"
+            endingLineNumber = "650"
+            landmarkName = "saveIntoFavourites(post:for:completion:)"
             landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "6E7DA1EA-F29E-4659-834E-620E328F37DB - 859fd8894867038e"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (Swift.Optional&lt;__C.FIRQuerySnapshot&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in Snapp.FireStoreService.saveIntoFavourites(post: Snapp.EachPost, for: Swift.String, completion: (Swift.Result&lt;Snapp.EachPost, Swift.Error&gt;) -&gt; ()) -&gt; ()"
+                  moduleName = "Snapp"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/makszh/Desktop/Snapp/Snapp/Services/FirestoreService/FireStoreService.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "650"
+                  endingLineNumber = "650">
+               </Location>
+               <Location
+                  uuid = "6E7DA1EA-F29E-4659-834E-620E328F37DB - 859fd8894867038e"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (Swift.Optional&lt;__C.FIRQuerySnapshot&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in Snapp.FireStoreService.saveIntoFavourites(post: Snapp.EachPost, for: Swift.String, completion: (Swift.Result&lt;Snapp.EachPost, Swift.Error&gt;) -&gt; ()) -&gt; ()"
+                  moduleName = "Snapp"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/makszh/Desktop/Snapp/Snapp/Services/FirestoreService/FireStoreService.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "650"
+                  endingLineNumber = "650">
+               </Location>
+            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

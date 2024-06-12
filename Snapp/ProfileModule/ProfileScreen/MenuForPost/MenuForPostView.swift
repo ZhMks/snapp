@@ -7,9 +7,16 @@
 
 import UIKit
 
-class MenuForPostView: UIView {
+enum MenuVCState {
+    case profile
+    case feed
+}
+
+class MenuForPostViewController: UIViewController {
 
     // MARK: -PROPERTIES
+
+    var menustate: MenuVCState?
 
     var presenter: MenuForPostPresenter!
 
@@ -130,15 +137,12 @@ class MenuForPostView: UIView {
     }()
     // MARK: -LIFECYCLE
 
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        backgroundColor = ColorCreator.shared.createPostBackgroundColor()
-        layer.cornerRadius = 10
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        view.backgroundColor = ColorCreator.shared.createPostBackgroundColor()
+        view.layer.cornerRadius = 10
         addGesture()
-    }
-
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+        switchMenuState()
     }
 
     //MARK: -FUNCS
@@ -146,7 +150,7 @@ class MenuForPostView: UIView {
     func addGesture() {
         let swipeGesture = UISwipeGestureRecognizer(target: self, action: #selector(swipeGesture))
         swipeGesture.direction = .down
-        self.addGestureRecognizer(swipeGesture)
+        view.addGestureRecognizer(swipeGesture)
     }
 
     @objc func saveIntoFavourites() {
@@ -185,34 +189,39 @@ class MenuForPostView: UIView {
         presenter.presentActivity(controller: activityController)
     }
 
-    @objc func swipeGesture() {
-        UIView.animate(withDuration: 0.5) {
-            self.removeFromSuperview()
+    func switchMenuState() {
+        switch menustate {
+        case .profile:
+            updateViewForPost()
+        case .feed:
+            updateViewForFeed()
+        case nil:
+            return
         }
+    }
+
+    @objc func swipeGesture() {
+        view.removeFromSuperview()
     }
 }
 
 
 //MARK: -OUTPUTPRESENTER
 
-extension MenuForPostView: MenuForPostViewProtocol {
+extension MenuForPostViewController: MenuForPostViewProtocol {
     
 
     func updateViewForFeed() {
-        layer.cornerRadius = 10
-        layer.shadowOffset = CGSize(width: 2.0, height: 2.0)
-        layer.shadowRadius = 3.0
-        layer.shadowOpacity = 1.0
 
-        addSubview(topSeparatorView)
-        addSubview(addToBookmarkButton)
-        addSubview(enableNotificationButton)
-        addSubview(saveLinkToPostButton)
-        addSubview(shareButton)
-        addSubview(cancellSubscribtionButton)
-        addSubview(reportButton)
+        view.addSubview(topSeparatorView)
+        view.addSubview(addToBookmarkButton)
+        view.addSubview(enableNotificationButton)
+        view.addSubview(saveLinkToPostButton)
+        view.addSubview(shareButton)
+        view.addSubview(cancellSubscribtionButton)
+        view.addSubview(reportButton)
 
-        let safeArea = safeAreaLayoutGuide
+        let safeArea = view.safeAreaLayoutGuide
 
         NSLayoutConstraint.activate([
             topSeparatorView.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: 30),
@@ -266,19 +275,19 @@ extension MenuForPostView: MenuForPostViewProtocol {
 
 // MARK: -LAYOUT
 
-extension MenuForPostView {
+extension MenuForPostViewController {
 
     func addSubviews() {
-        addSubview(addToBookmarkButton)
-        addSubview(pinPostButton)
-        addSubview(disableComment)
-        addSubview(saveLinkToPostButton)
-        addSubview(addPostToArchive)
-        addSubview(deletePost)
+        view.addSubview(addToBookmarkButton)
+        view.addSubview(pinPostButton)
+        view.addSubview(disableComment)
+        view.addSubview(saveLinkToPostButton)
+        view.addSubview(addPostToArchive)
+        view.addSubview(deletePost)
     }
 
     func layout() {
-        let safeArea = safeAreaLayoutGuide
+        let safeArea = view.safeAreaLayoutGuide
 
         NSLayoutConstraint.activate([
             addToBookmarkButton.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: 20),

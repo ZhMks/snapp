@@ -12,7 +12,6 @@ class DetailPostViewController: UIViewController {
 
     // MARK: -PROPERTIES
     var presenter: DetailPostPresenter!
-    let menuForPost = MenuForPostView()
 
     private lazy var detailPostView: UIView = {
         let detailPostView = UIView()
@@ -182,7 +181,6 @@ class DetailPostViewController: UIViewController {
         view.backgroundColor = .systemBackground
         updateAvatarImage()
         presenter.fetchComments()
-        addTapGesture()
         presenter.updateComments()
     }
 
@@ -191,13 +189,6 @@ class DetailPostViewController: UIViewController {
     }
 
     // MARK: -FUNCS
-
-    func addTapGesture() {
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissView))
-        tapGesture.numberOfTapsRequired = 1
-        view.addGestureRecognizer(tapGesture)
-    }
-
     func tuneNavItem() {
         let settingsButton = UIBarButtonItem(image: UIImage(named: "menu"),
                                              style: .plain,
@@ -237,23 +228,11 @@ class DetailPostViewController: UIViewController {
     }
 
     @objc func showSettingsVC() {
-        menuForPost.isHidden = false
-        let menuForPostPresenter = MenuForPostPresenter(view: menuForPost, user: presenter.user, firestoreService: presenter.firestoreService, post: presenter.post, viewState: .feedMenu)
-        menuForPost.presenter = menuForPostPresenter
-        menuForPost.layer.cornerRadius = 15
-
-        menuForPost.translatesAutoresizingMaskIntoConstraints = false
-
-        view.addSubview(menuForPost)
-
-        let safeArea = view.safeAreaLayoutGuide
-
-        NSLayoutConstraint.activate([
-            menuForPost.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: 430),
-            menuForPost.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
-            menuForPost.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
-            menuForPost.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor)
-        ])
+        let menuForPostVC = MenuForPostViewController()
+        let menuForPostPresenter = MenuForPostPresenter(view: menuForPostVC, user: self.presenter.user, firestoreService: self.presenter.firestoreService, post: self.presenter.post, viewState: .postMenu)
+        menuForPostVC.presenter = menuForPostPresenter
+        menuForPostVC.modalPresentationStyle = .pageSheet
+        self.navigationController?.present(menuForPostVC, animated: true)
     }
 
     @objc func dismissViewController() {
@@ -280,22 +259,16 @@ class DetailPostViewController: UIViewController {
         guard let commentor = Auth.auth().currentUser?.uid else { return }
         guard let user = presenter.user.documentID else { return }
         let commentPresenter = CommentViewPresenter(view: commentView, image: presenter.image, user: user, documentID: documentID, commentor: commentor, firestoreService: presenter.firestoreService, state: .comment)
-         commentView.presenter = commentPresenter
-         commentView.modalPresentationStyle = .overCurrentContext
-         present(commentView, animated: true)
+        commentView.presenter = commentPresenter
+        commentView.modalPresentationStyle = .overCurrentContext
+        present(commentView, animated: true)
     }
-
-    @objc func dismissView() {
-        menuForPost.removeFromSuperview()
-    }
-
-    
 }
 
 
 // MARK: -OUTPUTPRESENTER
 extension DetailPostViewController: DetailPostViewProtocol {
-    
+
     func updateLikes() {
         guard let likes = presenter.likes, let docID = presenter.user.documentID else { return }
         if likes.contains(where: { $0.documentID! == docID }) {
@@ -303,8 +276,8 @@ extension DetailPostViewController: DetailPostViewProtocol {
         }
         self.likesLabel.text = "\(likes.count)"
     }
-    
-    
+
+
     func updateCommentsState() {
         if !presenter.post.isCommentariesEnabled {
             guard let docID = presenter.user.documentID else { return }
@@ -314,7 +287,7 @@ extension DetailPostViewController: DetailPostViewProtocol {
             }
         }
     }
-    
+
 
     func showError(descr: String) {
         let uialert = UIAlertController(title: descr, message: descr, preferredStyle: .alert)
@@ -322,22 +295,22 @@ extension DetailPostViewController: DetailPostViewProtocol {
         uialert.addAction(action)
         navigationController?.present(uialert, animated: true)
     }
-    
+
 
     func updateCommentsNumber() {
         commentsLabel.text = "\(presenter.post.commentaries)"
         tableViewTitle.text = .localized(string: "\(presenter.post.commentaries) Комментариев")
     }
-    
+
     func showCommentVC(with: String, commentID: String?, state: CommentState) {
-         let commentView = CommentViewController()
-         guard let documentID = presenter.post.documentID else { return }
-         guard let commentor = Auth.auth().currentUser?.uid else { return }
-         let commentPresenter = CommentViewPresenter(view: commentView, image: presenter.image, user: with, documentID: documentID, commentor: commentor, firestoreService: presenter.firestoreService, state: state)
-         commentView.presenter = commentPresenter
-         commentPresenter.commentID = commentID
-         commentView.modalPresentationStyle = .formSheet
-         present(commentView, animated: true)
+        let commentView = CommentViewController()
+        guard let documentID = presenter.post.documentID else { return }
+        guard let commentor = Auth.auth().currentUser?.uid else { return }
+        let commentPresenter = CommentViewPresenter(view: commentView, image: presenter.image, user: with, documentID: documentID, commentor: commentor, firestoreService: presenter.firestoreService, state: state)
+        commentView.presenter = commentPresenter
+        commentPresenter.commentID = commentID
+        commentView.modalPresentationStyle = .formSheet
+        present(commentView, animated: true)
     }
 
     func updateCommentsTableView() {
@@ -392,7 +365,7 @@ extension DetailPostViewController: UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: CommentsTableCell.identifier, for: indexPath) as? CommentsTableCell else { return UITableViewCell()  }
-        
+
         guard let comment = comments(forSection: indexPath.section) else { return UITableViewCell() }
         if let answers = presenter.comments?[comment] {
             guard let answer = answers?[indexPath.row] else { return UITableViewCell() }
@@ -426,7 +399,6 @@ extension DetailPostViewController: UITableViewDelegate {
 extension DetailPostViewController {
 
     func addSubviews() {
-        menuForPost.isHidden = true
         view.addSubview(commentsTableView)
         detailPostView.addSubview(topSeparatorView)
         detailPostView.addSubview(avatarImageView)

@@ -7,9 +7,9 @@
 
 import UIKit
 
-enum PostTableState {
-    case feedCell
-    case profileCell
+enum PostCellState {
+    case feedState
+    case profileState
 }
 
 final class PostTableCell: UITableViewCell {
@@ -17,19 +17,17 @@ final class PostTableCell: UITableViewCell {
     //MARK: -PROPERTIES
     static let identifier = "PostTableCell"
 
-    let menuForPostVC = MenuForPostView()
-
-    var state: PostTableState?
-
     var buttonTappedHandler: (()->Void)?
     var presentActivityController: ((UIActivityViewController) -> Void)?
     var incrementLikes: ((_ post: String) -> Void)?
     var decrementLikes: ((_ post: String) -> Void)?
+    var presentSheetController: ((_ post: EachPost, _ state: PostCellState) -> Void)?
 
     var user: FirebaseUser?
     var post: EachPost?
     var likes: [Like]?
     var firestoreService: FireStoreServiceProtocol?
+    var postcellstate: PostCellState?
 
 
 
@@ -190,76 +188,30 @@ final class PostTableCell: UITableViewCell {
         return rightSeparatorView
     }()
 
+    private lazy var showDetailPost: UIButton = {
+        let showDetailPost = UIButton(type: .system)
+        showDetailPost.translatesAutoresizingMaskIntoConstraints = false
+        showDetailPost.setTitle(.localized(string: "Показать полностью..."), for: .normal)
+        showDetailPost.setTitleColor(.systemBlue, for: .normal)
+        showDetailPost.isHidden = true
+        return showDetailPost
+    }()
+
 
     // MARK: -LIFECYCLE
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: .default, reuseIdentifier: reuseIdentifier)
-        addSubviews()
-        backgroundColor = ColorCreator.shared.createPostBackgroundColor()
         contentView.backgroundColor = ColorCreator.shared.createPostBackgroundColor()
-        addTapGesture()
+        addSubviews()
         layout()
-        checkCellState()
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-
-    override var reuseIdentifier: String? {
-        return PostTableCell.identifier
-    }
     
     // MARK: -FUNCS
-
-    func checkCellState() {
-        switch self.state {
-        case .feedCell:
-            menuForPostVC.isHidden = false
-            guard let user = user else { return }
-            guard let firestoreService = firestoreService else { return }
-            if let post = post {
-                let menuForPostPresenter = MenuForPostPresenter(view: menuForPostVC, user: user, firestoreService: firestoreService, post: post, viewState: .feedMenu)
-                menuForPostPresenter.delegate = self
-                menuForPostVC.presenter = menuForPostPresenter
-                menuForPostVC.translatesAutoresizingMaskIntoConstraints = false
-                contentView.addSubview(menuForPostVC)
-
-                let safeArea = contentView.safeAreaLayoutGuide
-
-                NSLayoutConstraint.activate([
-                    menuForPostVC.heightAnchor.constraint(equalToConstant: 300),
-                    menuForPostVC.centerXAnchor.constraint(equalTo: safeArea.centerXAnchor),
-                    menuForPostVC.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
-                    menuForPostVC.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
-                    menuForPostVC.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor),
-                ])
-            }
-        case .profileCell:
-            menuForPostVC.isHidden = false
-            guard let user = user else { return }
-            guard let firestoreService = firestoreService else { return }
-            if let post = post {
-                let menuForPostPresenter = MenuForPostPresenter(view: menuForPostVC, user: user, firestoreService: firestoreService, post: post, viewState: .postMenu)
-                menuForPostPresenter.delegate = self
-                menuForPostVC.presenter = menuForPostPresenter
-                menuForPostVC.translatesAutoresizingMaskIntoConstraints = false
-
-                contentView.addSubview(menuForPostVC)
-
-                let safeArea = contentView.safeAreaLayoutGuide
-
-                NSLayoutConstraint.activate([
-                    menuForPostVC.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: 18),
-                    menuForPostVC.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 57),
-                    menuForPostVC.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -19),
-                    menuForPostVC.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor, constant: -170)
-                ])
-            }
-        default: return
-        }
-    }
 
     @objc func likesButtonTapped() {
         guard let post = self.post?.documentID else { return }
@@ -278,7 +230,6 @@ final class PostTableCell: UITableViewCell {
         self.user = user
         self.firestoreService = firestoreService
 
-        menuForPostVC.isHidden = true
         configureLabels(post: post, user: user, date: date)
 
         fetchComments(for: post, user: user)
@@ -367,25 +318,23 @@ final class PostTableCell: UITableViewCell {
     }
 
     @objc func menuButtonTapped() {
-
-        checkCellState()
-
+        guard let post = self.post else { return }
+        switch self.postcellstate {
+        case .feedState:
+            presentSheetController?(post, .feedState)
+        case .profileState:
+            presentSheetController?(post, .profileState)
+        default:
+            return
+        }
     }
 
-    func addTapGesture() {
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(removeMenu))
-        contentView.addGestureRecognizer(tapGesture)
-    }
 
-    @objc func removeMenu() {
-        menuForPostVC.removeFromSuperview()
-    }
 
 
     // MARK: -LAYOUT
 
     private func addSubviews() {
-
         contentView.addSubview(headerView)
         headerView.addSubview(avatarImageView)
         headerView.addSubview(nameAndSurnameLabel)
@@ -512,10 +461,8 @@ final class PostTableCell: UITableViewCell {
             rightSeparatorView.leadingAnchor.constraint(equalTo: ellipseView.trailingAnchor, constant: 10),
             rightSeparatorView.trailingAnchor.constraint(equalTo: footerView.trailingAnchor, constant: -16),
             rightSeparatorView.heightAnchor.constraint(equalToConstant: 1)
-
         ])
     }
-
 }
 
 extension PostTableCell: MenuForPostDelegate {
