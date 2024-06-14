@@ -7,6 +7,7 @@
 
 import UIKit
 import FirebaseStorage
+import FirebaseAuth
 
 
 enum ImageState {
@@ -24,7 +25,6 @@ protocol ProfileViewProtocol: AnyObject {
     func updateSubscriptions()
     func updateTextData(user: FirebaseUser)
     func updateAvatrImageWithStorie()
-    func showMenuForPostVC(post: EachPost)
     func showMenuForFeed(post: EachPost)
 }
 
@@ -68,7 +68,7 @@ final class ProfilePresenter: ProfilePresenterProtocol {
     }
 
     func addListenerForPost() {
-        guard let id = mainUser.documentID else { return }
+        guard let id = Auth.auth().currentUser?.uid else { return }
         firestoreService.addSnapshotListenerToPosts(for: id) { [weak self] result in
             guard let self else { return }
             switch result {
@@ -173,10 +173,6 @@ print()
         }
     }
     
-    func showMenuForPost(post: EachPost) {
-        view?.showMenuForPostVC(post: post)
-    }
-
     func showMenuForFeed(post: EachPost) {
         view?.showMenuForFeed(post: post)
     }

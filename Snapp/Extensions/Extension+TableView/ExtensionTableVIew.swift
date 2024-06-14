@@ -18,14 +18,12 @@ extension UITableView {
             header.leadingAnchor.constraint(equalTo: leadingAnchor),
             header.trailingAnchor.constraint(equalTo: trailingAnchor),
             header.topAnchor.constraint(equalTo: topAnchor),
-            header.bottomAnchor.constraint(equalTo: bottomAnchor)
         ])
-
-        header.setNeedsLayout()
+        print(header.frame)
+        
         header.layoutIfNeeded()
         header.frame.size = header.systemLayoutSizeFitting(UIView.layoutFittingExpandedSize)
-
-
+        print(header.frame)
     }
 }
 

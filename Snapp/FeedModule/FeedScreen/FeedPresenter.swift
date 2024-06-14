@@ -75,6 +75,7 @@ final class FeedPresenter: FeedPresenterProtocol {
     }
 
     func fetchPosts() {
+        print(mainUser.subscribtions)
         let dispatchGroup = DispatchGroup()
         posts = [:]
         for sub in mainUser.subscribtions {
@@ -83,7 +84,7 @@ final class FeedPresenter: FeedPresenterProtocol {
                 guard let self else { return }
                 switch result {
                 case .success(let success):
-                    firestoreService.getPosts(sub: sub, completion: { [weak self] result in
+                    self.firestoreService.getPosts(sub: sub, completion: { [weak self] result in
                         guard let self else { return }
                         switch result {
                         case .success(let postArray):
@@ -103,6 +104,8 @@ final class FeedPresenter: FeedPresenterProtocol {
             view?.updateViewTable()
         }
     }
+
+
 
     func fetchImage() {
         let networkService = NetworkService()

@@ -9,24 +9,16 @@ import UIKit
 import FirebaseAuth
 import Firebase
 
-enum MenuState {
-    case feedMenu
-    case postMenu
-}
-
 protocol MenuForPostViewProtocol: AnyObject {
     func showError(descr error: String)
-    func updateViewForFeed()
-    func updateViewForPost()
 }
 
 protocol MenuForPostPresenterProtocol: AnyObject {
-    init(view: MenuForPostViewProtocol, user: FirebaseUser, firestoreService: FireStoreServiceProtocol, post: EachPost, viewState: MenuState)
+    init(view: MenuForPostViewProtocol, user: FirebaseUser, firestoreService: FireStoreServiceProtocol, post: EachPost)
 }
 
 protocol MenuForPostDelegate: AnyObject {
     func pinPost(post: EachPost)
-    func presentActivity(controller: UIActivityViewController)
 }
 
 
@@ -35,16 +27,13 @@ final class MenuForPostPresenter: MenuForPostPresenterProtocol {
     let user: FirebaseUser
     let firestoreService: FireStoreServiceProtocol
     let post: EachPost
-    var viewState: MenuState
     weak var delegate: MenuForPostDelegate?
 
-    init(view: MenuForPostViewProtocol, user: FirebaseUser, firestoreService: FireStoreServiceProtocol, post: EachPost, viewState: MenuState) {
+    init(view: MenuForPostViewProtocol, user: FirebaseUser, firestoreService: FireStoreServiceProtocol, post: EachPost) {
         self.view = view
         self.user = user
         self.firestoreService = firestoreService
         self.post = post
-        self.viewState = viewState
-        checkViewState()
     }
 
     func saveIntoFavourites() {
@@ -81,7 +70,8 @@ final class MenuForPostPresenter: MenuForPostPresenterProtocol {
     }
 
     func pinPost(post: EachPost) {
-        delegate?.pinPost(post: self.post)
+        guard let userID = user.documentID, let docID = post.documentID else { return }
+        firestoreService.pinPost(user: userID, docID: docID)
     }
 
     func copyPostLink() -> String {
@@ -107,24 +97,4 @@ final class MenuForPostPresenter: MenuForPostPresenterProtocol {
             }
         }
     }
-
-    func checkViewState() {
-        switch self.viewState {
-        case .feedMenu:
-            view?.updateViewForFeed()
-        case .postMenu:
-            view?.updateViewForPost()
-        }
-    }
-
-    func removeSubscribtion() {
-        guard let mainUser = Auth.auth().currentUser?.uid else { return }
-        guard let userID = user.documentID else { return }
-        firestoreService.removeSubscribtion(sub: userID, for: mainUser)
-    }
-
-    func presentActivity(controller: UIActivityViewController) {
-        delegate?.presentActivity(controller: controller)
-    }
-
 }

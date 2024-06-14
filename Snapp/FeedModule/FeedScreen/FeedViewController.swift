@@ -200,7 +200,7 @@ extension FeedViewController: UITableViewDelegate {
                         if let avatarImage = UIImage(data: success) {
                                 let detailPostPresenter = DetailPostPresenter(view: detailPostVC, user: user, post: post, image: avatarImage, firestoreService: presenter.firestoreService)
                                     detailPostVC.presenter = detailPostPresenter
-                                    detailPostPresenter.state = .feedMenu
+                            detailPostVC.postMenuState = .feedPost
                                     self.navigationController?.pushViewController(detailPostVC, animated: true)
                         }
                     }
@@ -234,11 +234,7 @@ extension FeedViewController: UITableViewDataSource {
             cell.updateView(post: data, user: user, date: data.date, firestoreService: presenter.firestoreService)
             cell.postcellstate = .feedState
         }
-        cell.presentActivityController = { [weak self] controller in
-            guard let self else { return }
-            self.navigationController?.present(controller, animated: true)
-
-        }
+        
         return cell
     }
 

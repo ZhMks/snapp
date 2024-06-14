@@ -253,8 +253,8 @@ class ProfileViewController: UIViewController {
 
     // MARK: -LIFECYCLE
 
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
         presenter.addListenerForPost()
         presenter.addListenerForUser()
     }
@@ -264,7 +264,6 @@ class ProfileViewController: UIViewController {
         view.backgroundColor = .systemBackground
         tuneNavItem()
         addSubviews()
-        tuneTableView()
         layout()
     }
 
@@ -308,11 +307,6 @@ class ProfileViewController: UIViewController {
         }
     }
 
-    @objc func subscriberAdded() {
-        presenter.fetchSubsribers()
-    }
-
-
     @objc func addImageButtonTapped() {
         let imagePicker = UIImagePickerController()
         imagePicker.sourceType = .photoLibrary
@@ -346,30 +340,17 @@ class ProfileViewController: UIViewController {
 extension ProfileViewController: ProfileViewProtocol {
 
     func showMenuForFeed(post: EachPost) {
-        let menuForPostVC = MenuForPostViewController()
-        menuForPostVC.menustate = .profile
-        let presenter = MenuForPostPresenter(view: menuForPostVC, user: self.presenter.mainUser, firestoreService: self.presenter.firestoreService, post: post, viewState: .feedMenu)
-        menuForPostVC.modalPresentationStyle = .pageSheet
+        let menuForFeedVC = MenuForFeedViewController()
+        let presenter = MenuForFeedPresenter(view: menuForFeedVC, user: self.presenter.mainUser, firestoreService: self.presenter.firestoreService, post: post)
+        menuForFeedVC.modalPresentationStyle = .pageSheet
 
-        if let sheet = menuForPostVC.sheetPresentationController {
+        if let sheet = menuForFeedVC.sheetPresentationController {
             sheet.detents = [.medium()]
         }
-        menuForPostVC.presenter = presenter
-        self.navigationController?.present(menuForPostVC, animated: true)
+        menuForFeedVC.presenter = presenter
+        self.navigationController?.present(menuForFeedVC, animated: true)
     }
-    
 
-    func showMenuForPostVC(post: EachPost) {
-        let menuForPostVC = MenuForPostViewController()
-        menuForPostVC.menustate = .profile
-        let presenter = MenuForPostPresenter(view: menuForPostVC, user: self.presenter.mainUser, firestoreService: self.presenter.firestoreService, post: post, viewState: .postMenu)
-        menuForPostVC.modalPresentationStyle = .pageSheet
-        if let sheet = menuForPostVC.sheetPresentationController {
-            sheet.detents = [.medium()]
-        }
-        menuForPostVC.presenter = presenter
-        self.navigationController?.present(menuForPostVC, animated: true)
-    }
     
     func updateAvatrImageWithStorie() {
         avatarImageView.layer.borderColor = UIColor.systemOrange.cgColor
@@ -474,22 +455,6 @@ extension ProfileViewController: UITableViewDataSource {
             presenter.decrementLikes(post: post)
         }
 
-        cell.presentActivityController = { [weak self] controller in
-            guard let self else { return }
-            self.navigationController?.present(controller, animated: true)
-
-        }
-
-        cell.presentSheetController = { [weak self] post, state in
-            guard let self else { return }
-            switch state {
-            case .feedState:
-                presenter.showMenuForFeed(post: post)
-            case .profileState:
-                presenter.showMenuForPost(post: post)
-            }
-        }
-
         cell.updateView(post: data, user: presenter.mainUser, date: date, firestoreService: presenter.firestoreService)
         return cell
     }
@@ -513,7 +478,7 @@ extension ProfileViewController: UITableViewDelegate {
         guard let image = presenter.image  else { return }
         let detailPostPresenter = DetailPostPresenter(view: detailPostVC, user: presenter.mainUser, post: data, image: image, firestoreService: presenter.firestoreService)
         detailPostVC.presenter = detailPostPresenter
-        detailPostPresenter.state = .postMenu
+        detailPostVC.postMenuState = .detailPost
         self.navigationController?.pushViewController(detailPostVC, animated: true)
         tableView.deselectRow(at: indexPath, animated: true)
     }
@@ -683,8 +648,7 @@ extension ProfileViewController {
             separatorView.bottomAnchor.constraint(equalTo: mainContentView.bottomAnchor, constant: -249),
 
             createPostView.topAnchor.constraint(equalTo: mainContentView.topAnchor, constant: 262),
-            createPostView.leadingAnchor.constraint(equalTo: mainContentView.leadingAnchor, constant: 33),
-            createPostView.trailingAnchor.constraint(equalTo: mainContentView.trailingAnchor, constant: -290),
+            createPostView.centerXAnchor.constraint(equalTo: numberOfPosts.centerXAnchor),
             createPostView.bottomAnchor.constraint(equalTo: mainContentView.bottomAnchor, constant: -150),
 
             createPostButton.topAnchor.constraint(equalTo: createPostView.topAnchor, constant: 25),
@@ -698,8 +662,7 @@ extension ProfileViewController {
             createPostLabel.bottomAnchor.constraint(equalTo: createPostView.bottomAnchor),
 
             createStorieView.topAnchor.constraint(equalTo: mainContentView.topAnchor, constant: 262),
-            createStorieView.leadingAnchor.constraint(equalTo: mainContentView.leadingAnchor, constant: 145),
-            createStorieView.trailingAnchor.constraint(equalTo: mainContentView.trailingAnchor, constant: -160),
+            createStorieView.centerXAnchor.constraint(equalTo: numberOfSubscriptions.centerXAnchor),
             createStorieView.bottomAnchor.constraint(equalTo: mainContentView.bottomAnchor, constant: -150),
 
             createStorieButton.topAnchor.constraint(equalTo: createStorieView.topAnchor, constant: 25),
@@ -713,8 +676,7 @@ extension ProfileViewController {
             createStorieLabel.bottomAnchor.constraint(equalTo: createStorieView.bottomAnchor),
 
             addImageView.topAnchor.constraint(equalTo: mainContentView.topAnchor, constant: 262),
-            addImageView.leadingAnchor.constraint(equalTo: mainContentView.leadingAnchor, constant: 273),
-            addImageView.trailingAnchor.constraint(equalTo: mainContentView.trailingAnchor, constant: -50),
+            addImageView.centerXAnchor.constraint(equalTo: numberOfSubscribers.centerXAnchor),
             addImageView.bottomAnchor.constraint(equalTo: mainContentView.bottomAnchor, constant: -150),
 
             addImageButton.topAnchor.constraint(equalTo: addImageView.topAnchor, constant: 25),

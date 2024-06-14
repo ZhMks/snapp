@@ -8,10 +8,17 @@
 import UIKit
 import FirebaseAuth
 
+enum PostMenuState {
+    case feedPost
+    case detailPost
+}
+
 class DetailPostViewController: UIViewController {
 
     // MARK: -PROPERTIES
     var presenter: DetailPostPresenter!
+    var postMenuState: PostMenuState?
+    let menuForPost = MenuForPostView()
 
     private lazy var detailPostView: UIView = {
         let detailPostView = UIView()
@@ -182,6 +189,7 @@ class DetailPostViewController: UIViewController {
         updateAvatarImage()
         presenter.fetchComments()
         presenter.updateComments()
+        addTapGesture()
     }
 
     override func viewDidDisappear(_ animated: Bool) {
@@ -228,11 +236,21 @@ class DetailPostViewController: UIViewController {
     }
 
     @objc func showSettingsVC() {
-        let menuForPostVC = MenuForPostViewController()
-        let menuForPostPresenter = MenuForPostPresenter(view: menuForPostVC, user: self.presenter.user, firestoreService: self.presenter.firestoreService, post: self.presenter.post, viewState: .postMenu)
-        menuForPostVC.presenter = menuForPostPresenter
-        menuForPostVC.modalPresentationStyle = .pageSheet
-        self.navigationController?.present(menuForPostVC, animated: true)
+        switch postMenuState {
+        case .feedPost:
+            let menuForFeed = MenuForFeedViewController()
+            let menuForFeedPresenter = MenuForFeedPresenter(view: menuForFeed, user: self.presenter.user, firestoreService: self.presenter.firestoreService, post: self.presenter.post)
+            menuForFeed.presenter = menuForFeedPresenter
+            menuForFeed.modalPresentationStyle = .formSheet
+            if let sheet = menuForFeed.sheetPresentationController {
+                sheet.detents = [.medium()]
+            }
+            self.navigationController?.present(menuForFeed, animated: true)
+        case .detailPost:
+            self.presenter.showMenuForPost()
+        case nil:
+            return
+        }
     }
 
     @objc func dismissViewController() {
@@ -263,11 +281,35 @@ class DetailPostViewController: UIViewController {
         commentView.modalPresentationStyle = .overCurrentContext
         present(commentView, animated: true)
     }
+
+    func addTapGesture() {
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(removeMenuView))
+        tapGesture.numberOfTapsRequired = 1
+        view.addGestureRecognizer(tapGesture)
+    }
+
+    @objc func removeMenuView() {
+        menuForPost.removeFromSuperview()
+    }
 }
 
 
 // MARK: -OUTPUTPRESENTER
 extension DetailPostViewController: DetailPostViewProtocol {
+
+    func showMenuForPost() {
+        let menuForPostPresenter = MenuForPostPresenter(view: menuForPost, user: self.presenter.user, firestoreService: self.presenter.firestoreService, post: self.presenter.post)
+        menuForPost.presenter = menuForPostPresenter
+        menuForPost.translatesAutoresizingMaskIntoConstraints = false
+        menuForPost.isHidden = false
+        view.addSubview(menuForPost)
+        let safeArea = view.safeAreaLayoutGuide
+        NSLayoutConstraint.activate([
+            menuForPost.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: 20),
+            menuForPost.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -30),
+            menuForPost.heightAnchor.constraint(equalToConstant: 300)
+        ])
+    }
 
     func updateLikes() {
         guard let likes = presenter.likes, let docID = presenter.user.documentID else { return }
@@ -399,6 +441,7 @@ extension DetailPostViewController: UITableViewDelegate {
 extension DetailPostViewController {
 
     func addSubviews() {
+        menuForPost.isHidden = true
         view.addSubview(commentsTableView)
         detailPostView.addSubview(topSeparatorView)
         detailPostView.addSubview(avatarImageView)
@@ -477,7 +520,7 @@ extension DetailPostViewController {
             postTextLabel.topAnchor.constraint(equalTo: postImageView.bottomAnchor, constant: 5),
             postTextLabel.leadingAnchor.constraint(equalTo: detailPostView.leadingAnchor, constant: 20),
             postTextLabel.trailingAnchor.constraint(equalTo: detailPostView.trailingAnchor, constant: -20),
-            postTextLabel.heightAnchor.constraint(lessThanOrEqualToConstant: 340),
+            postTextLabel.bottomAnchor.constraint(equalTo: detailPostView.bottomAnchor),
 
             likeButton.topAnchor.constraint(equalTo: postTextLabel.bottomAnchor, constant: 16),
             likeButton.leadingAnchor.constraint(equalTo: detailPostView.leadingAnchor, constant: 17),
@@ -498,7 +541,7 @@ extension DetailPostViewController {
             commentsLabel.leadingAnchor.constraint(equalTo: commentsButton.trailingAnchor, constant: 5),
             commentsLabel.trailingAnchor.constraint(equalTo: detailPostView.trailingAnchor, constant: -231),
             commentsLabel.bottomAnchor.constraint(equalTo: separatorView.topAnchor, constant: -5),
-
+            
             bookmarkButton.topAnchor.constraint(equalTo: postTextLabel.bottomAnchor, constant: 16),
             bookmarkButton.leadingAnchor.constraint(equalTo: commentsLabel.trailingAnchor, constant: 183),
             bookmarkButton.trailingAnchor.constraint(equalTo: detailPostView.trailingAnchor, constant: -30),

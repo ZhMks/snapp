@@ -17,18 +17,18 @@ final class PostTableCell: UITableViewCell {
     //MARK: -PROPERTIES
     static let identifier = "PostTableCell"
 
-    var buttonTappedHandler: (()->Void)?
-    var presentActivityController: ((UIActivityViewController) -> Void)?
+    var buttonTappedHandler: (() -> Void)?
     var incrementLikes: ((_ post: String) -> Void)?
     var decrementLikes: ((_ post: String) -> Void)?
-    var presentSheetController: ((_ post: EachPost, _ state: PostCellState) -> Void)?
+    var showMenuForPost: ((_ post: EachPost) -> Void)?
+    var showFeedMenu: (() -> Void)?
 
     var user: FirebaseUser?
     var post: EachPost?
     var likes: [Like]?
     var firestoreService: FireStoreServiceProtocol?
     var postcellstate: PostCellState?
-
+    let menuForPost = MenuForPostView()
 
 
     private lazy var headerView: UIView = {
@@ -210,7 +210,7 @@ final class PostTableCell: UITableViewCell {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     // MARK: -FUNCS
 
     @objc func likesButtonTapped() {
@@ -303,10 +303,10 @@ final class PostTableCell: UITableViewCell {
 
     private func fetchLikes(for post: EachPost, user: FirebaseUser) {
         guard let postID = post.documentID, let userID = user.documentID else { return }
-        
+
         firestoreService?.getNumberOfLikesInpost(user: userID, post: postID) { [weak self] result in
             guard let self = self else { return }
-            
+
             switch result {
             case .success(let likes):
                 self.likes = likes
@@ -317,13 +317,33 @@ final class PostTableCell: UITableViewCell {
         }
     }
 
+    private func showMenu() {
+        menuForPost.isHidden = false
+        menuForPost.translatesAutoresizingMaskIntoConstraints = false
+        guard let user = self.user, let firestoreService = self.firestoreService, let post = self.post else { return }
+        let presenter = MenuForPostPresenter(view: menuForPost, user: user, firestoreService: firestoreService, post: post)
+        menuForPost.presenter = presenter
+
+        menuForPost.layer.shadowOffset = CGSize(width: 1.0, height: 1.0)
+        menuForPost.layer.shadowOpacity = 1.0
+        menuForPost.layer.shadowColor = UIColor.systemGray5.cgColor
+
+        contentView.addSubview(menuForPost)
+        let safeArea = contentView.safeAreaLayoutGuide
+        NSLayoutConstraint.activate([
+            menuForPost.topAnchor.constraint(equalTo: safeArea.topAnchor),
+            menuForPost.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 57),
+            menuForPost.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -19),
+            menuForPost.heightAnchor.constraint(equalToConstant: 300)
+        ])
+    }
+
     @objc func menuButtonTapped() {
-        guard let post = self.post else { return }
         switch self.postcellstate {
         case .feedState:
-            presentSheetController?(post, .feedState)
+            showFeedMenu?()
         case .profileState:
-            presentSheetController?(post, .profileState)
+            showMenu()
         default:
             return
         }
@@ -335,6 +355,7 @@ final class PostTableCell: UITableViewCell {
     // MARK: -LAYOUT
 
     private func addSubviews() {
+        menuForPost.isHidden = true
         contentView.addSubview(headerView)
         headerView.addSubview(avatarImageView)
         headerView.addSubview(nameAndSurnameLabel)
@@ -466,11 +487,6 @@ final class PostTableCell: UITableViewCell {
 }
 
 extension PostTableCell: MenuForPostDelegate {
-
-    func presentActivity(controller: UIActivityViewController) {
-        presentActivityController?(controller)
-    }
-    
 
     func pinPost(post: EachPost) {
         buttonTappedHandler?()

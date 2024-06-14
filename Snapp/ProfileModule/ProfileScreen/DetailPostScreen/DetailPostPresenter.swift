@@ -16,6 +16,7 @@ protocol DetailPostViewProtocol: AnyObject {
     func updateCommentsNumber()
     func updateCommentsState()
     func updateLikes()
+    func showMenuForPost()
 }
 
 protocol DetailPostPresenterProtocol: AnyObject {
@@ -31,7 +32,6 @@ final class DetailPostPresenter: DetailPostPresenterProtocol {
     let image: UIImage
     var comments: [Comment : [Answer]?]?
     let firestoreService: FireStoreServiceProtocol
-    var state: MenuState?
     var likes: [Like]?
 
     init(view: DetailPostViewProtocol, user: FirebaseUser, post: EachPost, image: UIImage, firestoreService: FireStoreServiceProtocol) {
@@ -160,6 +160,10 @@ final class DetailPostPresenter: DetailPostPresenterProtocol {
     func decrementLikes() {
         guard let user = user.documentID, let postID = post.documentID else { return }
         firestoreService.decrementLikes(user: user, post: postID)
+    }
+
+    func showMenuForPost() {
+        view?.showMenuForPost()
     }
 
 }

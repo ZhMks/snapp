@@ -101,6 +101,8 @@
 		B2E51C732BF3881900DE6102 /* DetailPostPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2E51C722BF3881900DE6102 /* DetailPostPresenter.swift */; };
 		B2E51C762BF38CC500DE6102 /* CommentsTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2E51C752BF38CC500DE6102 /* CommentsTableCell.swift */; };
 		B2E51C782BF4BF8B00DE6102 /* CollectionviewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2E51C772BF4BF8B00DE6102 /* CollectionviewCell.swift */; };
+		B2F0041B2C1AF47D00991CF5 /* MenuForFeedPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2F0041A2C1AF47D00991CF5 /* MenuForFeedPresenter.swift */; };
+		B2F0041D2C1AF49800991CF5 /* MenuForFeedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2F0041C2C1AF49800991CF5 /* MenuForFeedViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -193,6 +195,8 @@
 		B2E51C722BF3881900DE6102 /* DetailPostPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailPostPresenter.swift; sourceTree = "<group>"; };
 		B2E51C752BF38CC500DE6102 /* CommentsTableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentsTableCell.swift; sourceTree = "<group>"; };
 		B2E51C772BF4BF8B00DE6102 /* CollectionviewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionviewCell.swift; sourceTree = "<group>"; };
+		B2F0041A2C1AF47D00991CF5 /* MenuForFeedPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuForFeedPresenter.swift; sourceTree = "<group>"; };
+		B2F0041C2C1AF49800991CF5 /* MenuForFeedViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuForFeedViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -306,6 +310,7 @@
 		B209E61D2BC3FC180067D751 /* ProfileScreen */ = {
 			isa = PBXGroup;
 			children = (
+				B2F004172C1AF45C00991CF5 /* MenuForFeed */,
 				B27E1C6C2BFB4D1D00E1DEF9 /* MenuForPost */,
 				B2E51C6F2BF387FB00DE6102 /* DetailPostScreen */,
 				B26804B02BE4E62500DE74A4 /* PostTableCell */,
@@ -708,6 +713,15 @@
 			path = CommentsCell;
 			sourceTree = "<group>";
 		};
+		B2F004172C1AF45C00991CF5 /* MenuForFeed */ = {
+			isa = PBXGroup;
+			children = (
+				B2F0041A2C1AF47D00991CF5 /* MenuForFeedPresenter.swift */,
+				B2F0041C2C1AF49800991CF5 /* MenuForFeedViewController.swift */,
+			);
+			path = MenuForFeed;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -904,6 +918,7 @@
 				B27E1C6B2BF8A25A00E1DEF9 /* CommentViewController.swift in Sources */,
 				B27E1C732BFB940A00E1DEF9 /* PhotoalbumPresenter.swift in Sources */,
 				B211C2692BBC2F0200C073EE /* SecondOnboardingPresenter.swift in Sources */,
+				B2F0041D2C1AF49800991CF5 /* MenuForFeedViewController.swift in Sources */,
 				B211C2832BBD48EA00C073EE /* FireBaseAuthService.swift in Sources */,
 				B211C2802BBD3B2F00C073EE /* Extension+UIColor.swift in Sources */,
 				B209E6192BC138790067D751 /* FeedPresenter.swift in Sources */,
@@ -923,6 +938,7 @@
 				B211C2762BBC6A1D00C073EE /* LoginScreenPresenter.swift in Sources */,
 				B297FB542BFCBDDA00A8C463 /* DataChangeViewController.swift in Sources */,
 				B211C2742BBC6A1000C073EE /* LoginScreenViewController.swift in Sources */,
+				B2F0041B2C1AF47D00991CF5 /* MenuForFeedPresenter.swift in Sources */,
 				B209E6332BC3FEBE0067D751 /* ProfileChangePresenter.swift in Sources */,
 				B27E1C6E2BFB4D3A00E1DEF9 /* MenuForPostView.swift in Sources */,
 				B29D0ADF2BD63AD000101029 /* SearchViewController.swift in Sources */,

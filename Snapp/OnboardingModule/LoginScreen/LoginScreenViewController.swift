@@ -88,6 +88,10 @@ class LoginScreenViewController: UIViewController {
                                                               firebaseAuth:authService!,
                                                               firestoreService: firestoreService)
                         signInVC.presenter = signInPresenter
+                        signInVC.modalPresentationStyle = .formSheet
+                        if let sheet = signInVC.sheetPresentationController {
+                            sheet.detents = [.medium()]
+                        }
                         self?.navigationController?.present(signInVC, animated: true)
                     }
                 case false:

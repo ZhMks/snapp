@@ -7,26 +7,11 @@
 
 import UIKit
 
-enum MenuVCState {
-    case profile
-    case feed
-}
-
-class MenuForPostViewController: UIViewController {
+class MenuForPostView: UIView {
 
     // MARK: -PROPERTIES
 
-    var menustate: MenuVCState?
-
     var presenter: MenuForPostPresenter!
-
-    private lazy var topSeparatorView: UIView = {
-        let topSeparatorView = UIView()
-        topSeparatorView.translatesAutoresizingMaskIntoConstraints = false
-        topSeparatorView.backgroundColor = ColorCreator.shared.createButtonColor()
-        topSeparatorView.layer.cornerRadius = 2.0
-        return topSeparatorView
-    }()
 
     private lazy var addToBookmarkButton: UIButton = {
         let addToBookmarkButton = UIButton(type: .system)
@@ -37,48 +22,6 @@ class MenuForPostViewController: UIViewController {
         addToBookmarkButton.contentHorizontalAlignment = .left
         addToBookmarkButton.addTarget(self, action: #selector(saveIntoFavourites), for: .touchUpInside)
         return addToBookmarkButton
-    }()
-
-    private lazy var enableNotificationButton: UIButton = {
-        let enableNotification = UIButton(type: .system)
-        enableNotification.translatesAutoresizingMaskIntoConstraints = false
-        enableNotification.setTitle(.localized(string: "Включить уведомления"), for: .normal)
-        enableNotification.titleLabel?.font = UIFont(name: "Inter-Light", size: 14)
-        enableNotification.setTitleColor(ColorCreator.shared.createTextColor(), for: .normal)
-        enableNotification.contentHorizontalAlignment = .left
-        return enableNotification
-    }()
-
-    private lazy var shareButton: UIButton = {
-        let shareButton = UIButton(type: .system)
-        shareButton.translatesAutoresizingMaskIntoConstraints = false
-        shareButton.setTitle(.localized(string: "Поделиться в ..."), for: .normal)
-        shareButton.titleLabel?.font = UIFont(name: "Inter-Light", size: 14)
-        shareButton.setTitleColor(ColorCreator.shared.createTextColor(), for: .normal)
-        shareButton.contentHorizontalAlignment = .left
-        shareButton.addTarget(self, action: #selector(shareButtonTapped), for: .touchUpInside)
-        return shareButton
-    }()
-
-    private lazy var cancellSubscribtionButton: UIButton = {
-        let cancellSubscribtionButton = UIButton(type: .system)
-        cancellSubscribtionButton.translatesAutoresizingMaskIntoConstraints = false
-        cancellSubscribtionButton.setTitle(.localized(string: "Отменить подписку"), for: .normal)
-        cancellSubscribtionButton.titleLabel?.font = UIFont(name: "Inter-Light", size: 14)
-        cancellSubscribtionButton.setTitleColor(ColorCreator.shared.createTextColor(), for: .normal)
-        cancellSubscribtionButton.contentHorizontalAlignment = .left
-        cancellSubscribtionButton.addTarget(self, action: #selector(removeSubscribtion), for: .touchUpInside)
-        return cancellSubscribtionButton
-    }()
-
-    private lazy var reportButton: UIButton = {
-        let reportButton = UIButton(type: .system)
-        reportButton.translatesAutoresizingMaskIntoConstraints = false
-        reportButton.setTitle(.localized(string: "Пожаловаться"), for: .normal)
-        reportButton.titleLabel?.font = UIFont(name: "Inter-Light", size: 14)
-        reportButton.setTitleColor(ColorCreator.shared.createTextColor(), for: .normal)
-        reportButton.contentHorizontalAlignment = .left
-        return reportButton
     }()
 
     private lazy var pinPostButton: UIButton = {
@@ -135,137 +78,59 @@ class MenuForPostViewController: UIViewController {
         deletePost.addTarget(self, action: #selector(deleteDoc), for: .touchUpInside)
         return deletePost
     }()
+
     // MARK: -LIFECYCLE
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        view.backgroundColor = ColorCreator.shared.createPostBackgroundColor()
-        view.layer.cornerRadius = 10
-        addGesture()
-        switchMenuState()
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        backgroundColor = ColorCreator.shared.createPostBackgroundColor()
+        layer.cornerRadius = 10
+        addSubviews()
+        layout()
     }
-
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     //MARK: -FUNCS
-
-    func addGesture() {
-        let swipeGesture = UISwipeGestureRecognizer(target: self, action: #selector(swipeGesture))
-        swipeGesture.direction = .down
-        view.addGestureRecognizer(swipeGesture)
-    }
 
     @objc func saveIntoFavourites() {
         presenter.saveIntoFavourites()
+        self.removeFromSuperview()
     }
 
     @objc func disableCommentaries() {
         presenter.disableCommentaries()
+        self.removeFromSuperview()
     }
 
     @objc func getDocLink() {
         let doclink =  presenter.copyPostLink()
         let updatedUrlLink = "https://console.firebase.google.com/u/1/project/snappproject-9ca98/firestore/databases/-default-/data/" + doclink
         UIPasteboard.general.url = URL(string: updatedUrlLink)
+        self.removeFromSuperview()
     }
 
     @objc func addToArchives() {
         presenter.addPostToArchives()
+        self.removeFromSuperview()
     }
 
     @objc func deleteDoc() {
         presenter.deletePost()
-    }
-
-    @objc func removeSubscribtion() {
-        presenter.removeSubscribtion()
+        self.removeFromSuperview()
     }
 
     @objc func pinButtonTapped() {
         presenter.pinPost(post: presenter.post)
-    }
-
-    @objc func shareButtonTapped() {
-        let urlLink = "https://console.firebase.google.com/u/1/project/snappproject-9ca98/firestore/databases/-default-/data/" + presenter.copyPostLink()
-        let activityController = UIActivityViewController(activityItems: [urlLink], applicationActivities: nil)
-        presenter.presentActivity(controller: activityController)
-    }
-
-    func switchMenuState() {
-        switch menustate {
-        case .profile:
-            updateViewForPost()
-        case .feed:
-            updateViewForFeed()
-        case nil:
-            return
-        }
-    }
-
-    @objc func swipeGesture() {
-        view.removeFromSuperview()
+        self.removeFromSuperview()
     }
 }
 
 
 //MARK: -OUTPUTPRESENTER
 
-extension MenuForPostViewController: MenuForPostViewProtocol {
-    
-
-    func updateViewForFeed() {
-
-        view.addSubview(topSeparatorView)
-        view.addSubview(addToBookmarkButton)
-        view.addSubview(enableNotificationButton)
-        view.addSubview(saveLinkToPostButton)
-        view.addSubview(shareButton)
-        view.addSubview(cancellSubscribtionButton)
-        view.addSubview(reportButton)
-
-        let safeArea = view.safeAreaLayoutGuide
-
-        NSLayoutConstraint.activate([
-            topSeparatorView.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: 30),
-            topSeparatorView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 166),
-            topSeparatorView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -159),
-            topSeparatorView.heightAnchor.constraint(equalToConstant: 2),
-
-            addToBookmarkButton.topAnchor.constraint(equalTo: topSeparatorView.bottomAnchor, constant: 15),
-            addToBookmarkButton.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 28),
-            addToBookmarkButton.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -184),
-            addToBookmarkButton.heightAnchor.constraint(equalToConstant: 20),
-
-            enableNotificationButton.topAnchor.constraint(equalTo: addToBookmarkButton.bottomAnchor, constant: 18),
-            enableNotificationButton.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 28),
-            enableNotificationButton.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -180),
-            enableNotificationButton.heightAnchor.constraint(equalToConstant: 20),
-
-            saveLinkToPostButton.topAnchor.constraint(equalTo: enableNotificationButton.bottomAnchor, constant: 18),
-            saveLinkToPostButton.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 28),
-            saveLinkToPostButton.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -201),
-            saveLinkToPostButton.heightAnchor.constraint(equalToConstant: 20),
-
-            shareButton.topAnchor.constraint(equalTo: saveLinkToPostButton.bottomAnchor, constant: 18),
-            shareButton.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 28),
-            shareButton.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -239),
-            shareButton.heightAnchor.constraint(equalToConstant: 20),
-
-            cancellSubscribtionButton.topAnchor.constraint(equalTo: shareButton.bottomAnchor, constant: 18),
-            cancellSubscribtionButton.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 28),
-            cancellSubscribtionButton.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -208),
-            cancellSubscribtionButton.heightAnchor.constraint(equalToConstant: 20),
-
-            reportButton.topAnchor.constraint(equalTo: cancellSubscribtionButton.bottomAnchor, constant: 18),
-            reportButton.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 28),
-            reportButton.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -245),
-            reportButton.heightAnchor.constraint(equalToConstant: 20)
-        ])
-
-    }
-
-    func updateViewForPost() {
-        addSubviews()
-        layout()
-    }
+extension MenuForPostView: MenuForPostViewProtocol {
 
     func showError(descr error: String) {
         print(error)
@@ -275,19 +140,19 @@ extension MenuForPostViewController: MenuForPostViewProtocol {
 
 // MARK: -LAYOUT
 
-extension MenuForPostViewController {
+extension MenuForPostView {
 
     func addSubviews() {
-        view.addSubview(addToBookmarkButton)
-        view.addSubview(pinPostButton)
-        view.addSubview(disableComment)
-        view.addSubview(saveLinkToPostButton)
-        view.addSubview(addPostToArchive)
-        view.addSubview(deletePost)
+        addSubview(addToBookmarkButton)
+        addSubview(pinPostButton)
+        addSubview(disableComment)
+        addSubview(saveLinkToPostButton)
+        addSubview(addPostToArchive)
+        addSubview(deletePost)
     }
 
     func layout() {
-        let safeArea = view.safeAreaLayoutGuide
+        let safeArea = safeAreaLayoutGuide
 
         NSLayoutConstraint.activate([
             addToBookmarkButton.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: 20),
@@ -321,5 +186,4 @@ extension MenuForPostViewController {
             deletePost.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor, constant: -30)
         ])
     }
-
 }
