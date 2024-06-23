@@ -9,7 +9,7 @@ import UIKit
 
 class DataChangeViewController: UIViewController {
 
-    //MARK: -PROPERTIES
+    //MARK: -Properties
     var presenter: DataChangePresenter!
 
     override var prefersStatusBarHidden: Bool {
@@ -131,7 +131,7 @@ class DataChangeViewController: UIViewController {
         return fifthTextField
     }()
 
-    //MARK: -LIFECYCLE
+    //MARK: -Lifecycle
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -140,7 +140,7 @@ class DataChangeViewController: UIViewController {
         createGesture()
     }
 
-    //MARK: -FUNCS
+    //MARK: -Funcs
 
     func tuneNavItem() {
         let settingsButton = UIBarButtonItem(image: UIImage(systemName: "checkmark"),
@@ -204,52 +204,62 @@ class DataChangeViewController: UIViewController {
     }
 
     func updateButtonView() {
-        femaleButton.layer.cornerRadius = 20
-        femaleButton.clipsToBounds = true
+        femaleButton.layer.cornerRadius = 10
         femaleButton.layer.borderWidth = 1.0
         femaleButton.layer.borderColor = ColorCreator.shared.createButtonColor().cgColor
 
-        maleButton.layer.cornerRadius = 20
-        maleButton.clipsToBounds = true
+        maleButton.layer.cornerRadius = 10
         maleButton.layer.borderWidth = 1.0
         maleButton.layer.borderColor = ColorCreator.shared.createButtonColor().cgColor
     }
 }
 
 
-// MARK: -PRESENTEROUTPUT
+// MARK: -Presenter Output
 extension DataChangeViewController: DataChangeViewProtocol {
 
     func layoutForInformationView() {
-        addSubviews()
-        layout()
+        addSubviewsForInformation()
+        layoutForInformation()
         updateButtonView()
     }
     
     func layoutForContactsView() {
-        print()
+        firstLabel.text = "Контактная информация"
+        firstLabel.font = UIFont(name: "Inter-Medium", size: 18)
+        addSubviewsForContactsView()
+        layoutForContacts()
     }
     
     func layoutForInterestsView() {
-        print()
+        firstLabel.text = "Интересы"
+        firstLabel.font = UIFont(name: "Inter-Medium", size: 18)
+        addSubviewsForInterests()
+        layoutForInterests()
     }
     
     func layoutForEducationView() {
-        print()
+        firstLabel.text = "Образование"
+        firstLabel.font = UIFont(name: "Inter-Medium", size: 18)
+        addSubViewsForEducation()
+        layoutForEducation()
     }
     
     func layoutForCareerView() {
-        print()
+        firstLabel.text = "Карьера"
+        firstLabel.font = UIFont(name: "Inter-Medium", size: 18)
+        addSubviewsForCareer()
+        layoutForCareer()
     }
     
 
 }
 
 
-//MARK: -LAYOUT
+//MARK: -Layout
 extension DataChangeViewController {
 
-    func addSubviews() {
+    private func addSubviewsForInformation() {
         view.addSubview(firstLabel)
         view.addSubview(firstTextField)
         view.addSubview(secondLabel)
@@ -265,7 +275,7 @@ extension DataChangeViewController {
         view.addSubview(fifthTextField)
     }
 
-    func layout() {
+    private func layoutForInformation() {
         let safeArea = view.safeAreaLayoutGuide
 
         NSLayoutConstraint.activate([
@@ -336,4 +346,100 @@ extension DataChangeViewController {
         ])
     }
 
+    private func addSubviewsForContactsView() {
+        view.addSubview(firstLabel)
+        view.addSubview(firstTextField)
+        view.addSubview(secondLabel)
+        view.addSubview(secondTextField)
+    }
+
+    private func layoutForContacts() {
+        let safeArea = view.safeAreaLayoutGuide
+
+        NSLayoutConstraint.activate([
+            firstLabel.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: 20),
+            firstLabel.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 20),
+            firstLabel.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -110),
+            firstLabel.heightAnchor.constraint(equalToConstant: 30),
+
+            firstTextField.topAnchor.constraint(equalTo: firstLabel.bottomAnchor, constant: 15),
+            firstTextField.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 20),
+            firstTextField.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -60),
+            firstTextField.heightAnchor.constraint(equalToConstant: 50),
+
+            secondLabel.topAnchor.constraint(equalTo: safeArea.bottomAnchor, constant: 30),
+            secondLabel.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 20),
+            secondLabel.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -110),
+            secondLabel.heightAnchor.constraint(equalToConstant: 30),
+
+            secondTextField.topAnchor.constraint(equalTo: secondLabel.bottomAnchor, constant: 15),
+            secondTextField.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 20),
+            secondTextField.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -60),
+            secondTextField.heightAnchor.constraint(equalToConstant: 50)
+        ])
+    }
+
+    private func addSubviewsForInterests() {
+        view.addSubview(firstLabel)
+        view.addSubview(firstTextField)
+    }
+
+    private func layoutForInterests() {
+        let safeArea = view.safeAreaLayoutGuide
+
+        NSLayoutConstraint.activate([
+            firstLabel.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: 20),
+            firstLabel.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 20),
+            firstLabel.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -110),
+            firstLabel.heightAnchor.constraint(equalToConstant: 30),
+
+            firstTextField.topAnchor.constraint(equalTo: firstLabel.bottomAnchor, constant: 15),
+            firstTextField.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 20),
+            firstTextField.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -60),
+            firstTextField.heightAnchor.constraint(equalToConstant: 50)
+        ])
+    }
+
+    private func addSubViewsForEducation() {
+        view.addSubview(firstLabel)
+        view.addSubview(firstTextField)
+    }
+
+    private func layoutForEducation() {
+        let safeArea = view.safeAreaLayoutGuide
+
+        NSLayoutConstraint.activate([
+            firstLabel.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: 20),
+            firstLabel.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 20),
+            firstLabel.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -110),
+            firstLabel.heightAnchor.constraint(equalToConstant: 30),
+
+            firstTextField.topAnchor.constraint(equalTo: firstLabel.bottomAnchor, constant: 15),
+            firstTextField.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 20),
+            firstTextField.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -60),
+            firstTextField.heightAnchor.constraint(equalToConstant: 50)
+        ])
+    }
+
+
+    private func addSubviewsForCareer() {
+        view.addSubview(firstLabel)
+        view.addSubview(firstTextField)
+    }
+
+    private func layoutForCareer() {
+        let safeArea = view.safeAreaLayoutGuide
+
+        NSLayoutConstraint.activate([
+            firstLabel.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: 20),
+            firstLabel.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 20),
+            firstLabel.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -110),
+            firstLabel.heightAnchor.constraint(equalToConstant: 30),
+
+            firstTextField.topAnchor.constraint(equalTo: firstLabel.bottomAnchor, constant: 15),
+            firstTextField.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 20),
+            firstTextField.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -60),
+            firstTextField.heightAnchor.constraint(equalToConstant: 50)
+        ])
+    }
 }

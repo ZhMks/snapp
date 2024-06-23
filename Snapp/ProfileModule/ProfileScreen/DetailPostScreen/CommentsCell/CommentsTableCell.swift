@@ -10,7 +10,7 @@ import UIKit
 
 final class CommentsTableCell: UITableViewCell {
 
-    // MARK: -PROPERTIES
+    // MARK: -Properties
 
     static let identifier = "CommentsTableCell"
 
@@ -77,7 +77,7 @@ final class CommentsTableCell: UITableViewCell {
 
 
 
-    // MARK: -LIFECYCLE
+    // MARK: -Lifecycle
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: .default, reuseIdentifier: reuseIdentifier)
@@ -89,7 +89,7 @@ final class CommentsTableCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
 
-    // MARK: -FUNCS
+    // MARK: -Funcs
 
     func updateView(comment: Comment, firestoreService: FireStoreServiceProtocol) {
 
@@ -158,7 +158,7 @@ final class CommentsTableCell: UITableViewCell {
         buttonTappedHandler?()
     }
 
-    // MARK: -LAYOUT
+    // MARK: -Layout
 
     func addSubviews() {
         contentView.addSubview(avatarImageView)

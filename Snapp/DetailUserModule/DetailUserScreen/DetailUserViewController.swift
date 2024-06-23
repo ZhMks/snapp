@@ -9,7 +9,7 @@ import UIKit
 
 class DetailUserViewController: UIViewController {
 
-    //MARK: -PROPERTIES
+    //MARK: -Properties
 
     var presenter: DetailPresenter!
 
@@ -199,7 +199,7 @@ class DetailUserViewController: UIViewController {
     }()
 
 
-    // MARK: -LIFECYCLE
+    // MARK: -Lifecycle
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -227,7 +227,7 @@ class DetailUserViewController: UIViewController {
         presenter.removeObserverForPosts()
     }
 
-    // MARK: -FUNCS
+    // MARK: -Funcs
 
     @objc func addToSubscribers() {
         presenter.addSubscriber()
@@ -239,8 +239,21 @@ class DetailUserViewController: UIViewController {
 
 }
 
-// MARK: -OUTPUT PRESENTER
+// MARK: -Presenter Output
 extension DetailUserViewController: DetailViewProtocol {
+    
+    func showFeedMenu(post: EachPost) {
+        let menuForFeedVC = MenuForFeedViewController()
+        let presenter = MenuForFeedPresenter(view: menuForFeedVC, user: self.presenter.user, firestoreService: self.presenter.firestoreService, post: post)
+        menuForFeedVC.modalPresentationStyle = .pageSheet
+
+        if let sheet = menuForFeedVC.sheetPresentationController {
+            sheet.detents = [.medium()]
+        }
+        menuForFeedVC.presenter = presenter
+        self.navigationController?.present(menuForFeedVC, animated: true)
+    }
+    
 
     func updateAlbum(image: [UIImage]) {
         DispatchQueue.main.async { [weak self] in
@@ -275,7 +288,7 @@ extension DetailUserViewController: DetailViewProtocol {
 }
 
 
-// MARK: -TABLEVIEWDATASOURCE
+// MARK: -TableView DataSource
 
 extension DetailUserViewController: UITableViewDataSource {
 
@@ -287,7 +300,13 @@ extension DetailUserViewController: UITableViewDataSource {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: PostTableCell.identifier, for: indexPath) as? PostTableCell else { return UITableViewCell() }
         let data = presenter.posts[indexPath.row]
         let date = presenter.posts[indexPath.row].date
-        cell.updateView(post: data, user: presenter.user, date: date, firestoreService: presenter.firestoreService)
+        cell.updateView(post: data, user: presenter.user, date: date, firestoreService: presenter.firestoreService, state: .feedState)
+
+        cell.showMenuForFeed = { [weak self] post in
+            guard let self else { return }
+            presenter.showFeedMenu(post: post)
+
+        }
         return cell
     }
 
@@ -295,7 +314,7 @@ extension DetailUserViewController: UITableViewDataSource {
 }
 
 
-// MARK: -TABLEVIEWDELEGATE
+// MARK: -TableView Delegate
 
 extension DetailUserViewController: UITableViewDelegate {
 
@@ -304,11 +323,11 @@ extension DetailUserViewController: UITableViewDelegate {
         let detailPostVC = DetailPostViewController()
         guard let image = presenter.image  else { return }
         if data.image!.isEmpty {
-            let detailPostPresenter = DetailPostPresenter(view: detailPostVC, user: presenter.user, post: data, image: image, firestoreService: presenter.firestoreService)
+            let detailPostPresenter = DetailPostPresenter(view: detailPostVC, user: presenter.user, post: data, avatarImage: image, firestoreService: presenter.firestoreService)
             detailPostVC.presenter = detailPostPresenter
             self.navigationController?.pushViewController(detailPostVC, animated: true)
         } else {
-            let detailPostPresenter = DetailPostPresenter(view: detailPostVC, user: presenter.user, post: data, image: image, firestoreService: presenter.firestoreService)
+            let detailPostPresenter = DetailPostPresenter(view: detailPostVC, user: presenter.user, post: data, avatarImage: image, firestoreService: presenter.firestoreService)
             detailPostVC.presenter = detailPostPresenter
             self.navigationController?.pushViewController(detailPostVC, animated: true)
         }
@@ -316,7 +335,7 @@ extension DetailUserViewController: UITableViewDelegate {
 
 }
 
-// MARK: -UICOLLECTIONVIEWDATASOURCE
+// MARK: -UICollectionView DataSource
 extension DetailUserViewController: UICollectionViewDataSource {
 
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -333,14 +352,14 @@ extension DetailUserViewController: UICollectionViewDataSource {
 
 }
 
-// MARK: -UICOLLECTIONVIEWDELEGATE
+// MARK: -UICollectionView Delegate
 extension DetailUserViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         CGSize(width: 72, height: 68)
     }
 }
 
-// MARK: -LAYOUT
+// MARK: -Layout
 extension DetailUserViewController {
     func tuneNavItem() {
 

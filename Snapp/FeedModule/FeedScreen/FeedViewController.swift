@@ -10,7 +10,7 @@ import UIKit
 
 final class FeedViewController: UIViewController {
 
-    // MARK: -PROPERTIES
+    // MARK: -Properties
 
     var presenter: FeedPresenter!
 
@@ -51,7 +51,7 @@ final class FeedViewController: UIViewController {
         return feedTableView
     }()
 
-    // MARK: -LIFECYCLE
+    // MARK: -Lifecycle
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
@@ -73,7 +73,7 @@ final class FeedViewController: UIViewController {
         presenter.removeListener()
     }
 
-    // MARK: -FUNCS
+    // MARK: -Funcs
 
     func tuneTableView() {
         feedTableView.register(PostTableCell.self, forCellReuseIdentifier: PostTableCell.identifier)
@@ -97,24 +97,37 @@ final class FeedViewController: UIViewController {
 
 }
 
-// MARK: -OUTPUT PRESENTER
+// MARK: -Presenter Output
 extension FeedViewController: FeedViewProtocol {
+
+    func showMenuForFeed(post: EachPost) {
+        let feedMenu = MenuForFeedViewController()
+        let feedPresenter = MenuForFeedPresenter(view: feedMenu, user: self.presenter.mainUser, firestoreService: self.presenter.firestoreService, post: post)
+        feedMenu.presenter = feedPresenter
+        feedMenu.modalPresentationStyle = .formSheet
+
+        if let sheet = feedMenu.sheetPresentationController {
+            sheet.detents = [.medium()]
+        }
+        self.navigationController?.present(feedMenu, animated: true)
+    }
 
     func updateAvatarImage(image: UIImage) {
         DispatchQueue.main.async { [weak self] in
             guard let self else { return }
             self.currentUserStorie.image = image
             self.currentUserStorie.clipsToBounds = true
-            self.currentUserStorie.layer.cornerRadius = 20
+            print("AvatarImageFrame: \(self.currentUserStorie.frame.size.width)")
+            self.currentUserStorie.layer.cornerRadius = self.currentUserStorie.frame.size.width / 2
         }
     }
-    
 
     func updateStorieView() {
         self.storiesCollection.reloadData()
     }
     
     func updateViewTable() {
+        print(presenter.posts)
         self.feedTableView.reloadData()
     }
 
@@ -159,14 +172,14 @@ extension FeedViewController {
 
 }
 
-// MARK: -COLLECTIONVIEWFLOWDELEGATE
+// MARK: -CollectionView Delegate
 extension FeedViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         CGSize(width: 80, height: 40)
     }
 }
 
-// MARK: -COLLECTIONVIEWDATA
+// MARK: -CollectionView DataSource
 extension FeedViewController: UICollectionViewDataSource {
 
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -182,7 +195,7 @@ extension FeedViewController: UICollectionViewDataSource {
     }
 }
 
-// MARK: -TABLEVIEWDELEGATE
+// MARK: -TableView Delegate
 extension FeedViewController: UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -198,7 +211,7 @@ extension FeedViewController: UITableViewDelegate {
                     DispatchQueue.main.async { [weak self] in
                         guard let self else { return }
                         if let avatarImage = UIImage(data: success) {
-                                let detailPostPresenter = DetailPostPresenter(view: detailPostVC, user: user, post: post, image: avatarImage, firestoreService: presenter.firestoreService)
+                            let detailPostPresenter = DetailPostPresenter(view: detailPostVC, user: user, post: post, avatarImage: avatarImage, firestoreService: presenter.firestoreService)
                                     detailPostVC.presenter = detailPostPresenter
                             detailPostVC.postMenuState = .feedPost
                                     self.navigationController?.pushViewController(detailPostVC, animated: true)
@@ -213,7 +226,7 @@ extension FeedViewController: UITableViewDelegate {
 
 }
 
-// MARK: -TABLEVIEWDATASOURCE
+// MARK: -TableView DataSource
 extension FeedViewController: UITableViewDataSource {
 
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -231,10 +244,14 @@ extension FeedViewController: UITableViewDataSource {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: PostTableCell.identifier, for: indexPath) as? PostTableCell else { return UITableViewCell() }
         guard let user = user(forSection: indexPath.section) else { return UITableViewCell() }
         if let data = presenter.posts?[user]?[indexPath.row] {
-            cell.updateView(post: data, user: user, date: data.date, firestoreService: presenter.firestoreService)
-            cell.postcellstate = .feedState
+            cell.updateView(post: data, user: user, date: data.date, firestoreService: presenter.firestoreService, state: .feedState)
         }
-        
+
+        cell.showMenuForFeed = { [weak self] post in
+            guard let self else { return }
+            presenter.showMenuForFeed(post: post)
+        }
+
         return cell
     }
 

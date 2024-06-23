@@ -9,7 +9,7 @@ import UIKit
 
 class CommentViewController: UIViewController {
 
-    //MARK: -PROPERTIES
+    //MARK: -Properties
     var presenter: CommentViewPresenter!
 
     private lazy var avatarImageView: UIImageView = {
@@ -49,7 +49,7 @@ class CommentViewController: UIViewController {
         return label
     }()
 
-    //MARK: -LIFECYCLE
+    //MARK: -LifeCycle
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -61,7 +61,7 @@ class CommentViewController: UIViewController {
     }
 
 
-    // MARK: -FUNCS
+    // MARK: -Funcs
 
     @objc func removePlaceholder() {
         placeHolderLabel.isHidden = true
@@ -84,7 +84,7 @@ class CommentViewController: UIViewController {
     }
 }
 
-// MARK: -OUTPUTPRESENTER
+// MARK: -Presenter Output
 extension CommentViewController: CommentViewProtocol {
     func showError(error: String) {
         print("Error: \(error)")
@@ -92,7 +92,7 @@ extension CommentViewController: CommentViewProtocol {
 
 }
 
-// MARK: -UITEXTFIELDDELEGATE
+// MARK: -UItextFieldDelegate
 
 extension CommentViewController: UITextViewDelegate {
 
@@ -120,7 +120,7 @@ extension CommentViewController: UITextViewDelegate {
     }
 }
 
-    //MARK: - LAYOUT
+    //MARK: - Layout
 extension CommentViewController {
     func addSubviews() {
         view.addSubview(avatarImageView)

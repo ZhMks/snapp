@@ -8,7 +8,7 @@
 import UIKit
 
 class ProfileViewController: UIViewController {
-    // MARK: -PROPERTIES
+    // MARK: -Properties
     var presenter: ProfilePresenter!
 
     var titleLabel = UILabel(frame: CGRect(x: 0, y: 0, width: 150, height: 30))
@@ -46,6 +46,7 @@ class ProfileViewController: UIViewController {
         detailInfo.setTitle(.localized(string: "Подробная информация"), for: .normal)
         detailInfo.setTitleColor(ColorCreator.shared.createTextColor(), for: .normal)
         detailInfo.titleLabel?.font = UIFont(name: "Inter-Medium", size: 14)
+        detailInfo.addTarget(self, action: #selector(detailUserInformationTapped), for: .touchUpInside)
         return detailInfo
     }()
 
@@ -251,7 +252,7 @@ class ProfileViewController: UIViewController {
     }()
 
 
-    // MARK: -LIFECYCLE
+    // MARK: -Lifecycle
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
@@ -265,6 +266,7 @@ class ProfileViewController: UIViewController {
         tuneNavItem()
         addSubviews()
         layout()
+        tuneTableView()
     }
 
     override func viewWillDisappear(_ animated: Bool) {
@@ -274,7 +276,7 @@ class ProfileViewController: UIViewController {
         presenter.removeUserListener()
     }
 
-    // MARK: -FUNCS
+    // MARK: -Funcs
     @objc func createPostButtonTapped() {
         let createPostVC = CreatePostViewController()
         guard let userImage = presenter.image else { return }
@@ -334,23 +336,23 @@ class ProfileViewController: UIViewController {
         view.window!.layer.add(transition, forKey: kCATransition)
         navigationController?.present(profileChangeController, animated: true)
     }
-}
 
-// MARK: -OUTPUT PRESENTER
-extension ProfileViewController: ProfileViewProtocol {
+    @objc func detailUserInformationTapped() {
+        let detailUserInfoVC = DetailUserInformationViewController()
+        let detailUserInfoPresenter = DetailUserInformationPresenter(view: detailUserInfoVC, mainUser: self.presenter.mainUser)
+        detailUserInfoVC.presenter = detailUserInfoPresenter
+        detailUserInfoVC.modalPresentationStyle = .formSheet
 
-    func showMenuForFeed(post: EachPost) {
-        let menuForFeedVC = MenuForFeedViewController()
-        let presenter = MenuForFeedPresenter(view: menuForFeedVC, user: self.presenter.mainUser, firestoreService: self.presenter.firestoreService, post: post)
-        menuForFeedVC.modalPresentationStyle = .pageSheet
-
-        if let sheet = menuForFeedVC.sheetPresentationController {
+        if let sheet = detailUserInfoVC.sheetPresentationController {
             sheet.detents = [.medium()]
         }
-        menuForFeedVC.presenter = presenter
-        self.navigationController?.present(menuForFeedVC, animated: true)
-    }
 
+        self.navigationController?.present(detailUserInfoVC, animated: true)
+    }
+}
+
+// MARK: -Output Presenter
+extension ProfileViewController: ProfileViewProtocol {
     
     func updateAvatrImageWithStorie() {
         avatarImageView.layer.borderColor = UIColor.systemOrange.cgColor
@@ -396,11 +398,9 @@ extension ProfileViewController: ProfileViewProtocol {
         DispatchQueue.main.async { [weak self] in
             guard let self else { return }
             numberOfPosts.text = .localizePlurals(key: "Posts", number: presenter.posts.count)
-            self.tuneTableView()
             postsTableView.reloadData()
         }
     }
-
 
     func updateAvatarImage(image: UIImage) {
         DispatchQueue.main.async { [weak self] in
@@ -420,7 +420,7 @@ extension ProfileViewController: ProfileViewProtocol {
 }
 
 
-// MARK: -TABLEVIEWDATASOURCE
+// MARK: -TableView DataSource
 
 extension ProfileViewController: UITableViewDataSource {
 
@@ -430,11 +430,13 @@ extension ProfileViewController: UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: PostTableCell.identifier, for: indexPath) as? PostTableCell else { return UITableViewCell() }
-        cell.postcellstate = .profileState
+
         let data = presenter.posts[indexPath.row]
         let date = presenter.posts[indexPath.row].date
 
         guard let docID = data.documentID else { return UITableViewCell() }
+
+        cell.updateView(post: data, user: presenter.mainUser, date: date, firestoreService: presenter.firestoreService, state: .profileState)
 
         cell.buttonTappedHandler = { [weak self] in
             guard let self else { return }
@@ -448,14 +450,15 @@ extension ProfileViewController: UITableViewDataSource {
         cell.incrementLikes = { [weak self]  post in
             guard let self else { return }
             presenter.incrementLikes(post: post)
+            tableView.reloadRows(at: [indexPath], with: .automatic)
         }
 
         cell.decrementLikes = { [weak self] post in
             guard let self else { return }
             presenter.decrementLikes(post: post)
+            tableView.reloadRows(at: [indexPath], with: .automatic)
         }
-
-        cell.updateView(post: data, user: presenter.mainUser, date: date, firestoreService: presenter.firestoreService)
+       
         return cell
     }
 
@@ -463,7 +466,7 @@ extension ProfileViewController: UITableViewDataSource {
 }
 
 
-// MARK: -TABLEVIEWDELEGATE
+// MARK: -TableView Delegate
 
 extension ProfileViewController: UITableViewDelegate {
 
@@ -473,10 +476,14 @@ extension ProfileViewController: UITableViewDelegate {
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let data = presenter.posts[indexPath.row]
+        guard let image = self.presenter.image  else { return }
+        let data = self.presenter.posts[indexPath.row]
         let detailPostVC = DetailPostViewController()
-        guard let image = presenter.image  else { return }
-        let detailPostPresenter = DetailPostPresenter(view: detailPostVC, user: presenter.mainUser, post: data, image: image, firestoreService: presenter.firestoreService)
+        let detailPostPresenter = DetailPostPresenter(view: detailPostVC,
+                                                      user: self.presenter.mainUser,
+                                                      post: data,
+                                                      avatarImage: image,
+                                                      firestoreService: self.presenter.firestoreService)
         detailPostVC.presenter = detailPostPresenter
         detailPostVC.postMenuState = .detailPost
         self.navigationController?.pushViewController(detailPostVC, animated: true)
@@ -485,7 +492,7 @@ extension ProfileViewController: UITableViewDelegate {
 
 }
 
-// MARK: -COLLECTIONVIEWDATASOURCE
+// MARK: -CollectionView DataSource
 extension ProfileViewController: UICollectionViewDataSource {
 
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -503,14 +510,14 @@ extension ProfileViewController: UICollectionViewDataSource {
 
 }
 
-// MARK: -COLLECTIONVIEWDELEGATE
+// MARK: -CollectionView Delegate
 extension ProfileViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         CGSize(width: 72, height: 68)
     }
 }
 
-// MARK: -IMAGEPICKERDELEGATE
+// MARK: -ImagePicker Controller
 extension ProfileViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
 
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
@@ -534,7 +541,7 @@ extension ProfileViewController: UIImagePickerControllerDelegate, UINavigationCo
     }
 }
 
-// MARK: -LAYOUT
+// MARK: -Layout
 extension ProfileViewController {
 
     func tuneNavItem() {

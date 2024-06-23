@@ -9,6 +9,7 @@ import UIKit
 
 class FavouritesViewController: UIViewController {
 
+    // MARK: - Properties
     private lazy var favouritesTableView: UITableView = {
         let favouritesTableView = UITableView()
         favouritesTableView.translatesAutoresizingMaskIntoConstraints = false
@@ -19,6 +20,8 @@ class FavouritesViewController: UIViewController {
     }()
 
     var presenter: FavouritesPresenter!
+
+    // MARK: - Lifecycle
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -38,6 +41,7 @@ class FavouritesViewController: UIViewController {
     }
 
 }
+// MARK: - Presenter Output
 
 extension FavouritesViewController: FavouritesViewProtocol {
     func updateData() {
@@ -45,6 +49,7 @@ extension FavouritesViewController: FavouritesViewProtocol {
     }
 }
 
+// MARK: - TableView DataSource
 extension FavouritesViewController: UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -62,10 +67,13 @@ extension FavouritesViewController: UITableViewDataSource {
 
 }
 
+// MARK: - TableView Delegate
+
 extension FavouritesViewController: UITableViewDelegate {
 
 }
 
+// MARK: - Layout
 
 extension FavouritesViewController {
     func addSubview() {

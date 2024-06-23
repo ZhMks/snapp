@@ -25,7 +25,6 @@ protocol ProfileViewProtocol: AnyObject {
     func updateSubscriptions()
     func updateTextData(user: FirebaseUser)
     func updateAvatrImageWithStorie()
-    func showMenuForFeed(post: EachPost)
 }
 
 protocol ProfilePresenterProtocol: AnyObject {
@@ -79,6 +78,7 @@ final class ProfilePresenter: ProfilePresenterProtocol {
                     let pinnedPost = self.posts[index]
                     self.posts.remove(at: index)
                     self.posts.insert(pinnedPost, at: 0)
+                    print("Pinned array: \(self.posts)")
                     self.view?.updateData(data: self.posts)
                 }
                 self.view?.updateData(data: self.posts)
@@ -171,10 +171,6 @@ final class ProfilePresenter: ProfilePresenterProtocol {
         case .photoImage:
 print()
         }
-    }
-    
-    func showMenuForFeed(post: EachPost) {
-        view?.showMenuForFeed(post: post)
     }
 
     func fetchSubsribers() {

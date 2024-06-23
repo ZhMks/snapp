@@ -12,18 +12,20 @@ extension UITableView {
     func setAndLayout(header: UIView) {
         tableHeaderView = header
         header.translatesAutoresizingMaskIntoConstraints = false
-        
+
         NSLayoutConstraint.activate([
-            header.widthAnchor.constraint(equalTo: widthAnchor),
-            header.leadingAnchor.constraint(equalTo: leadingAnchor),
-            header.trailingAnchor.constraint(equalTo: trailingAnchor),
-            header.topAnchor.constraint(equalTo: topAnchor),
+            header.topAnchor.constraint(equalTo: self.topAnchor),
+            header.leadingAnchor.constraint(equalTo: self.leadingAnchor),
+            header.trailingAnchor.constraint(equalTo: self.trailingAnchor),
+            header.centerXAnchor.constraint(equalTo: self.centerXAnchor),
+            header.widthAnchor.constraint(equalTo: self.widthAnchor),
         ])
-        print(header.frame)
-        
+        //header.setNeedsLayout()
         header.layoutIfNeeded()
+
         header.frame.size = header.systemLayoutSizeFitting(UIView.layoutFittingExpandedSize)
-        print(header.frame)
+        self.tableHeaderView = header
+   
     }
 }
 

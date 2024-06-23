@@ -9,7 +9,7 @@ import UIKit
 
 class PhotoalbumViewController: UIViewController {
 
-    // MARK: -PROPERTIES
+    // MARK: -Properties
 
     var presenter: PhotoalbumPresenter!
 
@@ -69,7 +69,7 @@ class PhotoalbumViewController: UIViewController {
         return photoCollectionView
     }()
 
-    // MARK: -LIFECYCLE
+    // MARK: -Lifecycle
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -79,7 +79,7 @@ class PhotoalbumViewController: UIViewController {
         view.backgroundColor = .systemBackground
     }
 
-    // MARK: -FUNCS
+    // MARK: -Funcs
 
     func tuneNavItem() {
         let settingsButton = UIBarButtonItem(image: UIImage(systemName: "plus"),
@@ -115,7 +115,7 @@ class PhotoalbumViewController: UIViewController {
 }
 
 
-    // MARK: -PRESENTEROUTPUT
+    // MARK: -Presenter Output
 extension PhotoalbumViewController: PhotoalbumViewProtocol {
     func showError(error: String) {
         let alertController = UIAlertController(title: error, message: error, preferredStyle: .alert)
@@ -130,7 +130,7 @@ extension PhotoalbumViewController: PhotoalbumViewProtocol {
 }
 
 
-//MARK: -UICOLLECTIONVIEWDATASOURCE
+//MARK: -UICollectionView Datasource
 extension PhotoalbumViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if collectionView == albumCollectionView {
@@ -159,7 +159,7 @@ extension PhotoalbumViewController: UICollectionViewDataSource {
     }
 }
 
-//MARK: -UICOLLECTIONVIEWDELEGATE
+//MARK: -UICollectionView Delegate
 
 extension PhotoalbumViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
@@ -171,7 +171,7 @@ extension PhotoalbumViewController: UICollectionViewDelegateFlowLayout {
     }
 }
 
-// MARK: -LAYOUT
+// MARK: -Layout
 
 extension PhotoalbumViewController {
 

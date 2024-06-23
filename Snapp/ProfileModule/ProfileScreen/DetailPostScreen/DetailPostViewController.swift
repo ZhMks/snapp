@@ -15,7 +15,7 @@ enum PostMenuState {
 
 class DetailPostViewController: UIViewController {
 
-    // MARK: -PROPERTIES
+    // MARK: -Properties
     var presenter: DetailPostPresenter!
     var postMenuState: PostMenuState?
     let menuForPost = MenuForPostView()
@@ -23,20 +23,23 @@ class DetailPostViewController: UIViewController {
     private lazy var detailPostView: UIView = {
         let detailPostView = UIView()
         detailPostView.backgroundColor = .systemBackground
+        print("Init of detailPostVIew: \(detailPostView.frame)")
         return detailPostView
     }()
     private lazy var topSeparatorView: UIView = {
         let topSeparatorView = UIView()
         topSeparatorView.translatesAutoresizingMaskIntoConstraints = false
         topSeparatorView.backgroundColor = .systemGray4
+        print("Init of topSeparator: \(topSeparatorView.frame)")
         return topSeparatorView
     }()
 
     private lazy var avatarImageView: UIImageView = {
         let avatarImageView = UIImageView()
         avatarImageView.translatesAutoresizingMaskIntoConstraints = false
-        avatarImageView.image = presenter.image
+        avatarImageView.image = presenter.avatarImage
         avatarImageView.clipsToBounds = true
+        print("Init of avatarImage: \(avatarImageView.frame)")
         return avatarImageView
     }()
 
@@ -46,6 +49,7 @@ class DetailPostViewController: UIViewController {
         identifierLabel.font = UIFont(name: "Inter-Light", size: 12)
         identifierLabel.textColor = .systemOrange
         identifierLabel.text = presenter.user.identifier
+        print("Init of identifierLab: \(identifierLabel.frame)")
         return identifierLabel
     }()
 
@@ -55,6 +59,7 @@ class DetailPostViewController: UIViewController {
         jobLabel.textColor = .systemGray3
         jobLabel.font = UIFont(name: "Inter-Light", size: 12)
         jobLabel.text = presenter.user.job
+        print("Init of jobLab: \(jobLabel.frame)")
         return jobLabel
     }()
 
@@ -73,6 +78,7 @@ class DetailPostViewController: UIViewController {
         postTextLabel.numberOfLines = 0
         postTextLabel.textAlignment = .left
         postTextLabel.sizeToFit()
+        print("Init of postText: \(postTextLabel.frame)")
         return postTextLabel
     }()
 
@@ -83,6 +89,7 @@ class DetailPostViewController: UIViewController {
         likeButton.clipsToBounds = true
         likeButton.tintColor = ColorCreator.shared.createButtonColor()
         likeButton.addTarget(self, action: #selector(likeButtonTapped), for: .touchUpInside)
+        print("Init of likeBut: \(likeButton.frame)")
         return likeButton
     }()
 
@@ -92,6 +99,7 @@ class DetailPostViewController: UIViewController {
         likesLabel.font = UIFont(name: "Inter-Light", size: 14)
         likesLabel.textColor = ColorCreator.shared.createTextColor()
         likesLabel.text = .localized(string: "\(presenter.post.likes)")
+        print("Init of likesLabel: \(likesLabel.frame)")
         return likesLabel
     }()
 
@@ -100,6 +108,7 @@ class DetailPostViewController: UIViewController {
         commentsButton.translatesAutoresizingMaskIntoConstraints = false
         commentsButton.setBackgroundImage(UIImage(systemName: "bubble"), for: .normal)
         commentsButton.tintColor = ColorCreator.shared.createButtonColor()
+        print("Init of commentsBut: \(commentsButton.frame)")
         return commentsButton
     }()
 
@@ -109,6 +118,7 @@ class DetailPostViewController: UIViewController {
         commentsLabel.font = UIFont(name: "Inter-Light", size: 14)
         commentsLabel.textColor = ColorCreator.shared.createTextColor()
         commentsLabel.text = .localized(string: "\(presenter.post.commentaries)")
+        print("Init of commentsLabel: \(commentsLabel.frame)")
         return commentsLabel
     }()
 
@@ -117,6 +127,7 @@ class DetailPostViewController: UIViewController {
         bookmarkButton.translatesAutoresizingMaskIntoConstraints = false
         bookmarkButton.setBackgroundImage(UIImage(systemName: "bookmark"), for: .normal)
         bookmarkButton.tintColor = ColorCreator.shared.createButtonColor()
+        print("Init of bookmarkBut: \(bookmarkButton.frame)")
         return bookmarkButton
     }()
 
@@ -124,6 +135,7 @@ class DetailPostViewController: UIViewController {
         let separatorView = UIView()
         separatorView.translatesAutoresizingMaskIntoConstraints = false
         separatorView.backgroundColor = .systemGray5
+        print("Init of separatorView: \(separatorView.frame)")
         return separatorView
     }()
 
@@ -135,6 +147,7 @@ class DetailPostViewController: UIViewController {
         tableViewTitle.text = .localized(string: "Комментарии \(presenter.post.commentaries)")
         tableViewTitle.sizeToFit()
         tableViewTitle.numberOfLines = 0
+        print("Init of tableViewTitle: \(tableViewTitle.frame)")
         return tableViewTitle
     }()
 
@@ -143,6 +156,7 @@ class DetailPostViewController: UIViewController {
         commentsTableView.translatesAutoresizingMaskIntoConstraints = false
         commentsTableView.delegate = self
         commentsTableView.dataSource = self
+        print("Init of commentsTableView: \(commentsTableView.frame)")
         return commentsTableView
     }()
 
@@ -153,6 +167,7 @@ class DetailPostViewController: UIViewController {
         let tapgesture = UITapGestureRecognizer(target: self, action: #selector(addCommentTapped))
         tapgesture.numberOfTapsRequired = 1
         addCommentView.addGestureRecognizer(tapgesture)
+        print("Init of addcomment: \(addCommentView.frame)")
         return addCommentView
     }()
 
@@ -161,6 +176,7 @@ class DetailPostViewController: UIViewController {
         addCommentImage.translatesAutoresizingMaskIntoConstraints = false
         addCommentImage.image = UIImage(systemName: "paperclip")
         addCommentImage.tintColor = ColorCreator.shared.createButtonColor()
+        print("Init of addcommentimg: \(addCommentImage.frame)")
         return addCommentImage
     }()
 
@@ -170,34 +186,28 @@ class DetailPostViewController: UIViewController {
         addCommentLabel.font = UIFont(name: "Inter-Light", size: 12)
         addCommentLabel.textColor = .systemGray4
         addCommentLabel.text = .localized(string: "Оставить комментарий")
+        print("Init of addcommentlabel: \(addCommentLabel.frame)")
         return addCommentLabel
     }()
 
-    // MARK: -LIFECYCLE
+    // MARK: -Lifecycle
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        presenter.addlistener()
+        presenter.fetchComments()
+        presenter.getLikes()
     }
+
     override func viewDidLoad() {
         super.viewDidLoad()
-        addSubviews()
-        layout()
-        tuneNavItem()
-        tuneTableView()
         view.backgroundColor = .systemBackground
-        updateAvatarImage()
-        presenter.fetchComments()
-        presenter.updateComments()
         addTapGesture()
+        tuneNavItem()
+        presenter.fetchPostImage()
     }
 
-    override func viewDidDisappear(_ animated: Bool) {
-        presenter.removeListener()
-    }
-
-    // MARK: -FUNCS
-    func tuneNavItem() {
+    // MARK: -Funcs
+   private func tuneNavItem() {
         let settingsButton = UIBarButtonItem(image: UIImage(named: "menu"),
                                              style: .plain,
                                              target: self,
@@ -257,17 +267,18 @@ class DetailPostViewController: UIViewController {
         self.navigationController?.popViewController(animated: true)
     }
 
-    func tuneTableView() {
+   private func tuneTableView() {
         commentsTableView.register(CommentsTableCell.self, forCellReuseIdentifier: CommentsTableCell.identifier)
         commentsTableView.rowHeight = UITableView.automaticDimension
         commentsTableView.estimatedRowHeight = 44.0
         commentsTableView.setAndLayout(header: detailPostView)
+
         commentsTableView.tableFooterView = UIView()
         commentsTableView.separatorStyle = .none
         self.commentsTableView.reloadData()
     }
 
-    func updateAvatarImage() {
+    private func updateAvatarImage() {
         avatarImageView.layer.cornerRadius = avatarImageView.frame.size.width / 2
     }
 
@@ -276,13 +287,13 @@ class DetailPostViewController: UIViewController {
         guard let documentID = presenter.post.documentID else { return }
         guard let commentor = Auth.auth().currentUser?.uid else { return }
         guard let user = presenter.user.documentID else { return }
-        let commentPresenter = CommentViewPresenter(view: commentView, image: presenter.image, user: user, documentID: documentID, commentor: commentor, firestoreService: presenter.firestoreService, state: .comment)
+        let commentPresenter = CommentViewPresenter(view: commentView, image: presenter.avatarImage, user: user, documentID: documentID, commentor: commentor, firestoreService: presenter.firestoreService, state: .comment)
         commentView.presenter = commentPresenter
-        commentView.modalPresentationStyle = .overCurrentContext
+        commentView.modalPresentationStyle = .fullScreen
         present(commentView, animated: true)
     }
 
-    func addTapGesture() {
+   private func addTapGesture() {
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(removeMenuView))
         tapGesture.numberOfTapsRequired = 1
         view.addGestureRecognizer(tapGesture)
@@ -294,8 +305,15 @@ class DetailPostViewController: UIViewController {
 }
 
 
-// MARK: -OUTPUTPRESENTER
+// MARK: -Output Presenter
 extension DetailPostViewController: DetailPostViewProtocol {
+    
+   func showViewControllerWithoutImage() {
+        addSubviewsWithoutImage()
+        layoutSubviewsWithoutImage()
+        tuneTableView()
+       updateAvatarImage()
+    }
 
     func showMenuForPost() {
         let menuForPostPresenter = MenuForPostPresenter(view: menuForPost, user: self.presenter.user, firestoreService: self.presenter.firestoreService, post: self.presenter.post)
@@ -315,8 +333,11 @@ extension DetailPostViewController: DetailPostViewProtocol {
         guard let likes = presenter.likes, let docID = presenter.user.documentID else { return }
         if likes.contains(where: { $0.documentID! == docID }) {
             self.likeButton.setBackgroundImage(UIImage(systemName: "heart.fill"), for: .normal)
+        } else {
+            self.likeButton.setBackgroundImage(UIImage(systemName: "heart"), for: .normal)
         }
         self.likesLabel.text = "\(likes.count)"
+
     }
 
 
@@ -330,14 +351,12 @@ extension DetailPostViewController: DetailPostViewProtocol {
         }
     }
 
-
     func showError(descr: String) {
         let uialert = UIAlertController(title: descr, message: descr, preferredStyle: .alert)
         let action = UIAlertAction(title: .localized(string: "Отмена"), style: .cancel)
         uialert.addAction(action)
         navigationController?.present(uialert, animated: true)
     }
-
 
     func updateCommentsNumber() {
         commentsLabel.text = "\(presenter.post.commentaries)"
@@ -348,11 +367,16 @@ extension DetailPostViewController: DetailPostViewProtocol {
         let commentView = CommentViewController()
         guard let documentID = presenter.post.documentID else { return }
         guard let commentor = Auth.auth().currentUser?.uid else { return }
-        let commentPresenter = CommentViewPresenter(view: commentView, image: presenter.image, user: with, documentID: documentID, commentor: commentor, firestoreService: presenter.firestoreService, state: state)
+        let commentPresenter = CommentViewPresenter(view: commentView, image: presenter.avatarImage, user: with, documentID: documentID, commentor: commentor, firestoreService: presenter.firestoreService, state: state)
         commentView.presenter = commentPresenter
         commentPresenter.commentID = commentID
-        commentView.modalPresentationStyle = .formSheet
-        present(commentView, animated: true)
+        commentView.modalPresentationStyle = .pageSheet
+
+        if let sheet = commentView.sheetPresentationController {
+            sheet.detents = [.large()]
+            sheet.preferredCornerRadius = 15.0
+        }
+        self.navigationController?.present(commentView, animated: true)
     }
 
     func updateCommentsTableView() {
@@ -367,6 +391,10 @@ extension DetailPostViewController: DetailPostViewProtocol {
             postImageView.image = image
             postImageView.clipsToBounds = true
             postImageView.layer.cornerRadius = 10
+            addSubviews()
+            layout()
+            tuneTableView()
+            updateAvatarImage()
         }
     }
 
@@ -378,7 +406,7 @@ extension DetailPostViewController: DetailPostViewProtocol {
     }
 }
 
-//MARK: -TABLEVIEWDATATSOURCE
+//MARK: -TableView DataSource
 extension DetailPostViewController: UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
@@ -431,12 +459,12 @@ extension DetailPostViewController: UITableViewDataSource {
     }
 }
 
-//MARK: -TABLEVIEWDELEGATE
+//MARK: -TableView Delegate
 extension DetailPostViewController: UITableViewDelegate {
 
 }
 
-// MARK: -LAYOUT
+// MARK: -Layout
 
 extension DetailPostViewController {
 
@@ -459,7 +487,6 @@ extension DetailPostViewController {
         view.addSubview(addCommentView)
         addCommentView.addSubview(addCommentImage)
         addCommentView.addSubview(addCommentLabel)
-
     }
 
     func layout() {
@@ -502,17 +529,17 @@ extension DetailPostViewController {
             avatarImageView.heightAnchor.constraint(equalToConstant: 30),
             avatarImageView.widthAnchor.constraint(equalToConstant: 30),
 
-            identifierLabel.topAnchor.constraint(equalTo: topSeparatorView.bottomAnchor, constant: 18),
+            identifierLabel.topAnchor.constraint(equalTo: detailPostView.topAnchor, constant: 18),
             identifierLabel.leadingAnchor.constraint(equalTo: avatarImageView.trailingAnchor, constant: 16),
             identifierLabel.trailingAnchor.constraint(equalTo: detailPostView.trailingAnchor, constant: -210),
-            identifierLabel.bottomAnchor.constraint(equalTo: detailPostView.bottomAnchor, constant: -680),
+            identifierLabel.heightAnchor.constraint(equalToConstant: 15),
 
             jobLabel.topAnchor.constraint(equalTo: identifierLabel.bottomAnchor, constant: 2),
             jobLabel.leadingAnchor.constraint(equalTo: avatarImageView.trailingAnchor, constant: 16),
             jobLabel.trailingAnchor.constraint(equalTo: detailPostView.trailingAnchor, constant: -210),
-            jobLabel.bottomAnchor.constraint(equalTo: detailPostView.bottomAnchor, constant: -670),
+            jobLabel.heightAnchor.constraint(equalToConstant: 15),
 
-            postImageView.topAnchor.constraint(equalTo: jobLabel.bottomAnchor, constant: 12),
+            postImageView.topAnchor.constraint(equalTo: detailPostView.topAnchor, constant: 60),
             postImageView.leadingAnchor.constraint(equalTo: detailPostView.leadingAnchor, constant: 20),
             postImageView.trailingAnchor.constraint(equalTo: detailPostView.trailingAnchor, constant: -20),
             postImageView.heightAnchor.constraint(lessThanOrEqualToConstant: 200),
@@ -520,7 +547,7 @@ extension DetailPostViewController {
             postTextLabel.topAnchor.constraint(equalTo: postImageView.bottomAnchor, constant: 5),
             postTextLabel.leadingAnchor.constraint(equalTo: detailPostView.leadingAnchor, constant: 20),
             postTextLabel.trailingAnchor.constraint(equalTo: detailPostView.trailingAnchor, constant: -20),
-            postTextLabel.bottomAnchor.constraint(equalTo: detailPostView.bottomAnchor),
+            postTextLabel.heightAnchor.constraint(lessThanOrEqualToConstant: 320),
 
             likeButton.topAnchor.constraint(equalTo: postTextLabel.bottomAnchor, constant: 16),
             likeButton.leadingAnchor.constraint(equalTo: detailPostView.leadingAnchor, constant: 17),
@@ -542,6 +569,116 @@ extension DetailPostViewController {
             commentsLabel.trailingAnchor.constraint(equalTo: detailPostView.trailingAnchor, constant: -231),
             commentsLabel.bottomAnchor.constraint(equalTo: separatorView.topAnchor, constant: -5),
             
+            bookmarkButton.topAnchor.constraint(equalTo: postTextLabel.bottomAnchor, constant: 16),
+            bookmarkButton.leadingAnchor.constraint(equalTo: commentsLabel.trailingAnchor, constant: 183),
+            bookmarkButton.trailingAnchor.constraint(equalTo: detailPostView.trailingAnchor, constant: -30),
+            bookmarkButton.bottomAnchor.constraint(equalTo: separatorView.topAnchor, constant: -5),
+
+            separatorView.topAnchor.constraint(equalTo: bookmarkButton.bottomAnchor, constant: 17),
+            separatorView.leadingAnchor.constraint(equalTo: detailPostView.leadingAnchor, constant: 29),
+            separatorView.trailingAnchor.constraint(equalTo: detailPostView.trailingAnchor, constant: -29),
+            separatorView.heightAnchor.constraint(equalToConstant: 1),
+
+            tableViewTitle.topAnchor.constraint(equalTo: separatorView.bottomAnchor, constant: 15),
+            tableViewTitle.leadingAnchor.constraint(equalTo: detailPostView.leadingAnchor, constant: 16),
+            tableViewTitle.trailingAnchor.constraint(equalTo: detailPostView.trailingAnchor, constant: -200),
+            tableViewTitle.bottomAnchor.constraint(equalTo: detailPostView.bottomAnchor, constant: -8)
+        ])
+    }
+
+    func addSubviewsWithoutImage() {
+        menuForPost.isHidden = true
+        view.addSubview(commentsTableView)
+        detailPostView.addSubview(topSeparatorView)
+        detailPostView.addSubview(avatarImageView)
+        detailPostView.addSubview(identifierLabel)
+        detailPostView.addSubview(jobLabel)
+        detailPostView.addSubview(postTextLabel)
+        detailPostView.addSubview(likeButton)
+        detailPostView.addSubview(likesLabel)
+        detailPostView.addSubview(commentsButton)
+        detailPostView.addSubview(commentsLabel)
+        detailPostView.addSubview(bookmarkButton)
+        detailPostView.addSubview(separatorView)
+        detailPostView.addSubview(tableViewTitle)
+        view.addSubview(addCommentView)
+        addCommentView.addSubview(addCommentImage)
+        addCommentView.addSubview(addCommentLabel)
+    }
+
+    func layoutSubviewsWithoutImage() {
+        let safeArea = view.safeAreaLayoutGuide
+
+        NSLayoutConstraint.activate([
+
+            commentsTableView.topAnchor.constraint(equalTo: safeArea.topAnchor),
+            commentsTableView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
+            commentsTableView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
+            commentsTableView.widthAnchor.constraint(equalTo: safeArea.widthAnchor),
+            commentsTableView.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor),
+
+            addCommentView.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: 630),
+            addCommentView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
+            addCommentView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
+            addCommentView.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor),
+
+            addCommentImage.topAnchor.constraint(equalTo: addCommentView.topAnchor, constant: 14),
+            addCommentImage.leadingAnchor.constraint(equalTo: addCommentView.leadingAnchor, constant: 16),
+            addCommentImage.heightAnchor.constraint(equalToConstant: 15),
+            addCommentImage.widthAnchor.constraint(equalToConstant: 15),
+
+            addCommentLabel.centerYAnchor.constraint(equalTo: addCommentImage.centerYAnchor),
+            addCommentLabel.leadingAnchor.constraint(equalTo: addCommentImage.trailingAnchor, constant: 10),
+            addCommentLabel.trailingAnchor.constraint(equalTo: addCommentView.trailingAnchor, constant: -190),
+            addCommentLabel.bottomAnchor.constraint(equalTo: addCommentView.bottomAnchor, constant: -14)
+        ])
+
+        NSLayoutConstraint.activate([
+
+            topSeparatorView.topAnchor.constraint(equalTo: detailPostView.topAnchor),
+            topSeparatorView.leadingAnchor.constraint(equalTo: detailPostView.leadingAnchor, constant: 29),
+            topSeparatorView.trailingAnchor.constraint(equalTo: detailPostView.trailingAnchor, constant: -29),
+            topSeparatorView.heightAnchor.constraint(equalToConstant: 1),
+
+            avatarImageView.topAnchor.constraint(equalTo: topSeparatorView.bottomAnchor, constant: 18),
+            avatarImageView.leadingAnchor.constraint(equalTo: detailPostView.leadingAnchor, constant: 29),
+            avatarImageView.heightAnchor.constraint(equalToConstant: 30),
+            avatarImageView.widthAnchor.constraint(equalToConstant: 30),
+
+            identifierLabel.topAnchor.constraint(equalTo: detailPostView.topAnchor, constant: 18),
+            identifierLabel.leadingAnchor.constraint(equalTo: avatarImageView.trailingAnchor, constant: 16),
+            identifierLabel.trailingAnchor.constraint(equalTo: detailPostView.trailingAnchor, constant: -210),
+
+
+            jobLabel.topAnchor.constraint(equalTo: identifierLabel.bottomAnchor, constant: 2),
+            jobLabel.leadingAnchor.constraint(equalTo: avatarImageView.trailingAnchor, constant: 16),
+            jobLabel.trailingAnchor.constraint(equalTo: detailPostView.trailingAnchor, constant: -210),
+
+            postTextLabel.topAnchor.constraint(equalTo: jobLabel.bottomAnchor, constant: 15),
+            postTextLabel.leadingAnchor.constraint(equalTo: detailPostView.leadingAnchor, constant: 20),
+            postTextLabel.trailingAnchor.constraint(equalTo: detailPostView.trailingAnchor, constant: -20),
+            postTextLabel.heightAnchor.constraint(lessThanOrEqualToConstant: 320),
+
+            likeButton.topAnchor.constraint(equalTo: postTextLabel.bottomAnchor, constant: 16),
+            likeButton.leadingAnchor.constraint(equalTo: detailPostView.leadingAnchor, constant: 17),
+            likeButton.trailingAnchor.constraint(equalTo: detailPostView.trailingAnchor, constant: -350),
+            likeButton.bottomAnchor.constraint(equalTo: separatorView.topAnchor, constant: -5),
+
+            likesLabel.topAnchor.constraint(equalTo: postTextLabel.bottomAnchor, constant: 16),
+            likesLabel.leadingAnchor.constraint(equalTo: likeButton.trailingAnchor, constant: 5),
+            likesLabel.trailingAnchor.constraint(equalTo: detailPostView.trailingAnchor, constant: -307),
+            likesLabel.bottomAnchor.constraint(equalTo: separatorView.topAnchor, constant: -5),
+
+            commentsButton.topAnchor.constraint(equalTo: postTextLabel.bottomAnchor, constant: 16),
+            commentsButton.leadingAnchor.constraint(equalTo: likesLabel.trailingAnchor, constant: 24),
+            commentsButton.trailingAnchor.constraint(equalTo: detailPostView.trailingAnchor, constant: -264),
+            commentsButton.bottomAnchor.constraint(equalTo: separatorView.topAnchor, constant: -5),
+
+            commentsLabel.topAnchor.constraint(equalTo: postTextLabel.bottomAnchor, constant: 16),
+            commentsLabel.leadingAnchor.constraint(equalTo: commentsButton.trailingAnchor, constant: 5),
+            commentsLabel.trailingAnchor.constraint(equalTo: detailPostView.trailingAnchor, constant: -231),
+            commentsLabel.bottomAnchor.constraint(equalTo: separatorView.topAnchor, constant: -5),
+
             bookmarkButton.topAnchor.constraint(equalTo: postTextLabel.bottomAnchor, constant: 16),
             bookmarkButton.leadingAnchor.constraint(equalTo: commentsLabel.trailingAnchor, constant: 183),
             bookmarkButton.trailingAnchor.constraint(equalTo: detailPostView.trailingAnchor, constant: -30),

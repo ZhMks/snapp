@@ -13,6 +13,7 @@ protocol FeedViewProtocol: AnyObject {
     func updateViewTable()
     func updateStorieView()
     func updateAvatarImage(image: UIImage)
+    func showMenuForFeed(post: EachPost)
 }
 
 protocol FeedPresenterProtocol: AnyObject {
@@ -63,7 +64,6 @@ final class FeedPresenter: FeedPresenterProtocol {
             case .success(let success):
                 self.mainUser = success
                 self.fetchPosts()
-                self.fetchUserStorie()
             case .failure(_):
                 self.view?.showEmptyScreen()
             }
@@ -75,9 +75,8 @@ final class FeedPresenter: FeedPresenterProtocol {
     }
 
     func fetchPosts() {
-        print(mainUser.subscribtions)
-        let dispatchGroup = DispatchGroup()
         posts = [:]
+        let dispatchGroup = DispatchGroup()
         for sub in mainUser.subscribtions {
             dispatchGroup.enter()
             firestoreService.getUser(id: sub, completion: { [weak self] result in
@@ -105,8 +104,6 @@ final class FeedPresenter: FeedPresenterProtocol {
         }
     }
 
-
-
     func fetchImage() {
         let networkService = NetworkService()
         if let userImage = mainUser.image {
@@ -121,5 +118,9 @@ final class FeedPresenter: FeedPresenterProtocol {
                 }
             }
         }
+    }
+
+    func showMenuForFeed(post: EachPost) {
+        view?.showMenuForFeed(post: post)
     }
 }

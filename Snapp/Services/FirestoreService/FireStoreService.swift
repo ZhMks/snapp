@@ -38,15 +38,18 @@ enum PostErrors: Error {
 }
 
 protocol FireStoreServiceProtocol {
+    // Функции для работы с пользователем
     func getAllUsers(completion: @escaping (Result<[FirebaseUser], Error>) -> Void)
     func getUser(id: String, completion: @escaping (Result<FirebaseUser, AuthorisationErrors>) -> Void)
-    func getPosts(sub: String, completion: @escaping (Result<[EachPost], PostErrors>) -> Void)
-    func changeData(id: String, text: String, state: ChangeStates)
-    func createPost(date: String, text: String, image: UIImage?, for user: String, completion: @escaping (Result<EachPost, Error>) -> Void)
-    func saveImageIntoStorage(urlLink: StorageReference, photo: UIImage, completion: @escaping (Result <URL, Error>) -> Void)
     func createUser(user: FirebaseUser, id: String)
     func saveSubscriber(mainUser: String, id: String)
-    func saveImageIntoPhotoAlbum(image: String, user: String)
+    func addSnapshotListenerToUser(for user: String, completion: @escaping (Result<FirebaseUser, Error>) -> Void)
+    func removeListenerForUser()
+    func changeData(id: String, text: String, state: ChangeStates)
+
+    // Функции для работы с постом
+    func getPosts(sub: String, completion: @escaping (Result<[EachPost], PostErrors>) -> Void)
+    func createPost(date: String, text: String, image: UIImage?, for user: String, completion: @escaping (Result<EachPost, Error>) -> Void)
     func addComment(mainUser: String, text: String, documentID: String, commentor: String, completion: @escaping (Result<Comment, Error>) -> Void)
     func getComments(post: String, user: String, completion: @escaping (Result<[Comment], Error>) -> Void)
     func addAnswerToComment(postID: String, user: String, commentID: String, answer: Answer, completion: @escaping (Result<Answer, Error>) -> Void)
@@ -56,11 +59,7 @@ protocol FireStoreServiceProtocol {
     func disableCommentaries(id: String, user: String)
     func addDocToArchives(post: EachPost, user: String, completion: @escaping (Result<EachPost, Error>) -> Void)
     func addSnapshotListenerToPosts(for user: String, completion: @escaping (Result<[EachPost], Error>) -> Void)
-    func addSnapshotListenerToUser(for user: String, completion: @escaping (Result<FirebaseUser, Error>) -> Void)
     func removeListenerForPosts()
-    func removeListenerForUser()
-    func deleteDocument(docID: String, user: String, completion: @escaping (Result<Bool, Error>) -> Void)
-    func removeSubscribtion(sub: String, for user: String)
     func addSnapshotListenerToCurrentPost(docID: String, userID: String, completion: @escaping (Result<EachPost, Error>) -> Void)
     func removeListenerForCurrentPost()
     func fetchFavourites(user: String, completion: @escaping (Result<[EachPost], Error>) -> Void)
@@ -70,6 +69,13 @@ protocol FireStoreServiceProtocol {
     func incrementLikes(user: String, post: String)
     func decrementLikes(user: String, post: String)
     func getNumberOfLikesInpost(user: String, post: String, completion: @escaping (Result <[Like], Error>) -> Void)
+    func fetchArchives(user: String, completion: @escaping(Result<[EachPost], Error>) -> Void)
+    func deleteDocument(docID: String, user: String, completion: @escaping (Result<Bool, Error>) -> Void)
+    func removeSubscribtion(sub: String, for user: String)
+    
+    // Функции для работы с изображением
+    func saveImageIntoStorage(urlLink: StorageReference, photo: UIImage, completion: @escaping (Result <URL, Error>) -> Void)
+    func saveImageIntoPhotoAlbum(image: String, user: String)
 }
 
 
@@ -269,6 +275,7 @@ final class FireStoreService: FireStoreServiceProtocol {
     func getNumberOfLikesInpost(user: String, post: String, completion: @escaping (Result <[Like], Error>) -> Void) {
         let dbRef = Firestore.firestore().collection("Users").document(user).collection("posts").document(post).collection("likes")
         var likes: [Like] = []
+        print("Number of Likes in function: \(likes.count)")
         let dispatchGroup = DispatchGroup()
         dbRef.getDocuments { snapshot, error in
             if let error = error {
@@ -298,6 +305,8 @@ final class FireStoreService: FireStoreServiceProtocol {
                         }
                         dispatchGroup.leave()
                     }
+                } else {
+                    completion(.success(likes))
                 }
                 dispatchGroup.notify(queue: .main) {
                     completion(.success(likes))
@@ -687,6 +696,7 @@ final class FireStoreService: FireStoreServiceProtocol {
     }
 
     func addDocToArchives(post: EachPost, user: String, completion: @escaping (Result<EachPost, Error>) -> Void) {
+        print("Archive: \(user), \(post.documentID) ")
         guard let documentID = post.documentID else {
             return
         }
@@ -712,6 +722,7 @@ final class FireStoreService: FireStoreServiceProtocol {
                                 guard  self != nil else { return }
                                 switch result {
                                 case .success(_):
+                                    print("Successfully archived")
                                     dispatchGroup.leave()
                                 case .failure(let failure):
                                     completion(.failure(failure))
@@ -742,6 +753,7 @@ final class FireStoreService: FireStoreServiceProtocol {
             if let error = error {
                 completion(.failure(error))
             }
+            print("Succesfully deleted")
             completion(.success(true))
         }
     }
@@ -749,6 +761,87 @@ final class FireStoreService: FireStoreServiceProtocol {
     func removeSubscribtion(sub: String, for user: String) {
         let docRef = Firestore.firestore().collection("Users").document(user)
         docRef.updateData(["subscribtions" : FieldValue.arrayRemove([sub])])
+        print("Successfully removed")
+    }
+
+
+    func fetchArchives(user: String, completion: @escaping(Result<[EachPost], Error>) -> Void) {
+        var decodedDocuments: [EachPost] = []
+        let dispatchGroup = DispatchGroup()
+        let link = Firestore.firestore().collection("Users").document(user).collection("Archive")
+        link.getDocuments { snapshot, error in
+            if let error = error {
+                completion(.failure(error))
+            }
+
+            if let snapshot = snapshot {
+                dispatchGroup.enter()
+                for document in snapshot.documents {
+                    do {
+                        let decodedDoc = try document.data(as: EachPost.self)
+                        decodedDocuments.append(decodedDoc)
+                    } catch let DecodingError.dataCorrupted(context) {
+                        print(context)
+                    } catch let DecodingError.keyNotFound(key, context) {
+                        print("Key '\(key)' not found:", context.debugDescription)
+                        print("codingPath:", context.codingPath)
+                    } catch let DecodingError.valueNotFound(value, context) {
+                        print("Value '\(value)' not found:", context.debugDescription)
+                        print("codingPath:", context.codingPath)
+                    } catch let DecodingError.typeMismatch(type, context)  {
+                        print("Type '\(type)' mismatch:", context.debugDescription)
+                        print("codingPath:", context.codingPath)
+                    } catch {
+                        print("error: ", error)
+                        completion(.failure(error))
+                    }
+                    dispatchGroup.leave()
+                }
+                dispatchGroup.notify(queue: .main) {
+                    completion(.success(decodedDocuments))
+                }
+            }
+        }
+    }
+
+    func fetchBookmarkedPosts(user: String, completion: @escaping (Result<[EachPost], Error>) -> Void) {
+        let link = Firestore.firestore().collection("users").document(user).collection("Bookmarks")
+        let dispatchGroup = DispatchGroup()
+        var decodedDocuments: [EachPost] = []
+
+        link.getDocuments { snapshot, error in
+            if let error = error {
+                completion(.failure(error))
+            }
+
+            if let snapshot = snapshot {
+                dispatchGroup.enter()
+                for document in snapshot.documents {
+                    do {
+                        let decodedDoc = try document.data(as: EachPost.self)
+                        decodedDocuments.append(decodedDoc)
+                    } catch let DecodingError.dataCorrupted(context) {
+                        print(context)
+                    } catch let DecodingError.keyNotFound(key, context) {
+                        print("Key '\(key)' not found:", context.debugDescription)
+                        print("codingPath:", context.codingPath)
+                    } catch let DecodingError.valueNotFound(value, context) {
+                        print("Value '\(value)' not found:", context.debugDescription)
+                        print("codingPath:", context.codingPath)
+                    } catch let DecodingError.typeMismatch(type, context)  {
+                        print("Type '\(type)' mismatch:", context.debugDescription)
+                        print("codingPath:", context.codingPath)
+                    } catch {
+                        print("error: ", error)
+                        completion(.failure(error))
+                    }
+                    dispatchGroup.leave()
+                }
+                dispatchGroup.notify(queue: .main) {
+                    completion(.success(decodedDocuments))
+                }
+            }
+        }
     }
 }
 

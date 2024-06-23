@@ -20,8 +20,8 @@ final class PostTableCell: UITableViewCell {
     var buttonTappedHandler: (() -> Void)?
     var incrementLikes: ((_ post: String) -> Void)?
     var decrementLikes: ((_ post: String) -> Void)?
-    var showMenuForPost: ((_ post: EachPost) -> Void)?
-    var showFeedMenu: (() -> Void)?
+    var showMenuForFeed: ((_ post: EachPost) -> Void)?
+
 
     var user: FirebaseUser?
     var post: EachPost?
@@ -225,10 +225,11 @@ final class PostTableCell: UITableViewCell {
         }
     }
 
-    func updateView(post: EachPost, user: FirebaseUser, date: String, firestoreService: FireStoreServiceProtocol) {
+    func updateView(post: EachPost, user: FirebaseUser, date: String, firestoreService: FireStoreServiceProtocol, state: PostCellState) {
         self.post = post
         self.user = user
         self.firestoreService = firestoreService
+        self.postcellstate = state
 
         configureLabels(post: post, user: user, date: date)
 
@@ -303,14 +304,21 @@ final class PostTableCell: UITableViewCell {
 
     private func fetchLikes(for post: EachPost, user: FirebaseUser) {
         guard let postID = post.documentID, let userID = user.documentID else { return }
-
+        print("PostID in fetchLikes: \(postID)")
         firestoreService?.getNumberOfLikesInpost(user: userID, post: postID) { [weak self] result in
             guard let self = self else { return }
 
             switch result {
             case .success(let likes):
-                self.likes = likes
-                self.likesLabel.text = "\(likes.count)"
+                if likes.isEmpty {
+                    self.likes = likes
+                    self.likesLabel.text = "\(likes.count)"
+                    likesButton.setBackgroundImage(UIImage(systemName: "heart"), for: .normal)
+                } else {
+                    self.likes = likes
+                    self.likesLabel.text = "\(likes.count)"
+                    likesButton.setBackgroundImage(UIImage(systemName: "heart.fill"), for: .normal)
+                }
             case .failure(let error):
                 print("Failed to fetch likes: \(error.localizedDescription)")
             }
@@ -339,9 +347,10 @@ final class PostTableCell: UITableViewCell {
     }
 
     @objc func menuButtonTapped() {
+        guard let post = self.post else { return }
         switch self.postcellstate {
         case .feedState:
-            showFeedMenu?()
+            showMenuForFeed?(post)
         case .profileState:
             showMenu()
         default:

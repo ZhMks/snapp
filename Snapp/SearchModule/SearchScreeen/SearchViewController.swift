@@ -10,7 +10,7 @@ import UIKit
 class SearchViewController: UIViewController {
 
 
-    // MARK: -PROPERTIES
+    // MARK: -Properties
     private lazy var allUsersTable: UITableView = {
         let allUsersTable = UITableView(frame: .zero, style: .insetGrouped)
         allUsersTable.translatesAutoresizingMaskIntoConstraints = false
@@ -22,7 +22,7 @@ class SearchViewController: UIViewController {
 
     var presenter: SearchPresenter!
 
-    //MARK: -LIFECYCLE
+    //MARK: -Lifecycle
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -33,11 +33,11 @@ class SearchViewController: UIViewController {
     }
 
 
-    //MARK: -FUNCS
+    //MARK: -Funcs
 }
 
 
-//MARK: -OUTPUTPRESENTER
+//MARK: -Presenter Output
 
 extension SearchViewController: SearchViewProtocol {
 
@@ -81,7 +81,7 @@ extension SearchViewController: SearchViewProtocol {
 }
 
 
-//MARK: -LAYOUT
+//MARK: -Layout
 
 extension SearchViewController {
 
@@ -101,7 +101,7 @@ extension SearchViewController {
     }
 }
 
-// MARK: -TABLEVIEWDATASOURCE
+// MARK: -TableView DataSource
 extension SearchViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         presenter.usersArray.count
@@ -118,7 +118,7 @@ extension SearchViewController: UITableViewDataSource {
 
 }
 
-// MARK: -TABLEVIEWDELEGATE
+// MARK: -TableView Delegate
 extension SearchViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let user = presenter.usersArray[indexPath.row]

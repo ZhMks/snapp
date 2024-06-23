@@ -9,7 +9,7 @@ import UIKit
 
 class CreatePostViewController: UIViewController {
 
-    // MARK: -PROPERTIES
+    // MARK: -Properties
 
     var presenter: CreatePostPresenter!
     var textViewHeightConstraint: NSLayoutConstraint!
@@ -76,7 +76,7 @@ class CreatePostViewController: UIViewController {
 
 
 
-    // MARK: -LIFECYCLE
+    // MARK: -Lifecycle
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
@@ -95,7 +95,7 @@ class CreatePostViewController: UIViewController {
         NotificationCenter.default.removeObserver(self)
     }
 
-    // MARK: -FUNCS
+    // MARK: -Funcs
 
     @objc func sendPostButtonTapped() {
         presenter.createPost(text: createPostTextView.text, image: createPostImageView.image) { [weak self] result in
@@ -142,7 +142,7 @@ class CreatePostViewController: UIViewController {
     }
 }
 
-// MARK: -OUTPUT PRESENTER
+// MARK: -Presenter Output
 
 extension CreatePostViewController: CreatePostViewProtocol {
     func showErrorAlert(error: String) {
@@ -155,7 +155,7 @@ extension CreatePostViewController: CreatePostViewProtocol {
 
 }
 
-// MARK: -TEXTVIEWDELEGATE
+// MARK: -TextField Delegate
 
 extension CreatePostViewController: UITextViewDelegate {
 
@@ -187,7 +187,7 @@ extension CreatePostViewController: UITextViewDelegate {
     }
 }
 
-// MARK: -IMAGEPICKERDELEGATE
+// MARK: -ImagePicker Controller
 
 extension CreatePostViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
 
@@ -202,7 +202,7 @@ extension CreatePostViewController: UIImagePickerControllerDelegate, UINavigatio
 }
 
 
-// MARK: -LAYOUT
+// MARK: -Layout
 
 extension CreatePostViewController {
     func addSubviews() {

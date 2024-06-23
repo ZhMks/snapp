@@ -9,6 +9,7 @@ import UIKit
 
 class MenuForFeedViewController: UIViewController {
 
+    // MARK: - Properties
     var presenter: MenuForFeedPresenter!
 
     private lazy var topSeparatorView: UIView = {
@@ -84,17 +85,17 @@ class MenuForFeedViewController: UIViewController {
         return saveLinkToPost
     }()
 
-    // MARK: -LIFECYCLE
+    // MARK: -Lifecycle
 
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = ColorCreator.shared.createPostBackgroundColor()
-        view.layer.cornerRadius = 10
+        view.layer.cornerRadius = 20
         addSubviews()
         layout()
     }
 
-    //MARK: -FUNCS
+    //MARK: -Funcs
 
     @objc func enableNotificationsButtonTapped() {
 
@@ -126,7 +127,7 @@ class MenuForFeedViewController: UIViewController {
 }
 
 
-//MARK: -OUTPUTPRESENTER
+//MARK: -Presenter Output
 
 extension MenuForFeedViewController: MenuForFeedViewProtocol {
     func showActivityController() {
@@ -146,7 +147,7 @@ extension MenuForFeedViewController: MenuForFeedViewProtocol {
 }
 
 
-// MARK: -LAYOUT
+// MARK: -Layout
 
 extension MenuForFeedViewController {
 

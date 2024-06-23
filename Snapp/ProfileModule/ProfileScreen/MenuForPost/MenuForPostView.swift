@@ -9,7 +9,7 @@ import UIKit
 
 class MenuForPostView: UIView {
 
-    // MARK: -PROPERTIES
+    // MARK: -Properties
 
     var presenter: MenuForPostPresenter!
 
@@ -79,7 +79,7 @@ class MenuForPostView: UIView {
         return deletePost
     }()
 
-    // MARK: -LIFECYCLE
+    // MARK: -Lifecycle
     override init(frame: CGRect) {
         super.init(frame: frame)
         backgroundColor = ColorCreator.shared.createPostBackgroundColor()
@@ -92,7 +92,7 @@ class MenuForPostView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    //MARK: -FUNCS
+    //MARK: -Funcs
 
     @objc func saveIntoFavourites() {
         presenter.saveIntoFavourites()
@@ -128,7 +128,7 @@ class MenuForPostView: UIView {
 }
 
 
-//MARK: -OUTPUTPRESENTER
+//MARK: -Presenter Output
 
 extension MenuForPostView: MenuForPostViewProtocol {
 
@@ -138,7 +138,7 @@ extension MenuForPostView: MenuForPostViewProtocol {
 }
 
 
-// MARK: -LAYOUT
+// MARK: -Layout
 
 extension MenuForPostView {
 

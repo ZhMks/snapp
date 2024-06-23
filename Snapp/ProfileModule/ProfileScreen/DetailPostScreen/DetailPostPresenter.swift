@@ -17,10 +17,11 @@ protocol DetailPostViewProtocol: AnyObject {
     func updateCommentsState()
     func updateLikes()
     func showMenuForPost()
+    func showViewControllerWithoutImage()
 }
 
 protocol DetailPostPresenterProtocol: AnyObject {
-    init(view: DetailPostViewProtocol, user: FirebaseUser, post: EachPost, image: UIImage, firestoreService: FireStoreServiceProtocol)
+    init(view: DetailPostViewProtocol, user: FirebaseUser, post: EachPost, avatarImage: UIImage, firestoreService: FireStoreServiceProtocol)
     func updateComments()
 }
 
@@ -29,19 +30,17 @@ final class DetailPostPresenter: DetailPostPresenterProtocol {
     weak var view: DetailPostViewProtocol?
     let user: FirebaseUser
     var post: EachPost
-    let image: UIImage
+    let avatarImage: UIImage
     var comments: [Comment : [Answer]?]?
     let firestoreService: FireStoreServiceProtocol
     var likes: [Like]?
 
-    init(view: DetailPostViewProtocol, user: FirebaseUser, post: EachPost, image: UIImage, firestoreService: FireStoreServiceProtocol) {
+    init(view: DetailPostViewProtocol, user: FirebaseUser, post: EachPost, avatarImage: UIImage, firestoreService: FireStoreServiceProtocol) {
         self.view = view
         self.user = user
         self.post = post
-        self.image = image
+        self.avatarImage = avatarImage
         self.firestoreService = firestoreService
-        fetchPostImage()
-        getLikes()
     }
 
     func fetchPostImage() {
@@ -53,11 +52,12 @@ final class DetailPostPresenter: DetailPostPresenterProtocol {
                 case .success(let success):
                     guard let image = UIImage(data: success) else { return }
                     self.view?.updateImageView(image: image)
-                case .failure(let failure):
-                    print(failure.localizedDescription)
+                case .failure(_):
+                    return
                 }
             }
         }
+        view?.showViewControllerWithoutImage()
     }
 
     func fetchComments() {
@@ -128,26 +128,6 @@ final class DetailPostPresenter: DetailPostPresenterProtocol {
         view?.showCommentVC(with: user, commentID: commentID, state: state)
     }
 
-    func addlistener() {
-        guard let docID = post.documentID else { return }
-        guard let userID = user.documentID else { return }
-        firestoreService.addSnapshotListenerToCurrentPost(docID: docID, userID: userID) { [weak self] result in
-            guard let self else { return }
-            switch result {
-            case .success(let currentPost):
-                self.post = currentPost
-                view?.updateCommentsTableView()
-                view?.updateLikes()
-            case .failure(let failure):
-                view?.showError(descr: failure.localizedDescription)
-            }
-        }
-    }
-
-    func removeListener() {
-        firestoreService.removeListenerForCurrentPost()
-    }
-
     func updateComments() {
         view?.updateCommentsState()
     }
@@ -155,11 +135,13 @@ final class DetailPostPresenter: DetailPostPresenterProtocol {
     func incrementLikes() {
         guard let user = user.documentID, let postID = post.documentID else { return }
         firestoreService.incrementLikes(user: user, post: postID)
+        getLikes()
     }
 
     func decrementLikes() {
         guard let user = user.documentID, let postID = post.documentID else { return }
         firestoreService.decrementLikes(user: user, post: postID)
+        getLikes()
     }
 
     func showMenuForPost() {

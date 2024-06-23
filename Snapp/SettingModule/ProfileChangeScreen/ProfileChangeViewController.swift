@@ -9,7 +9,7 @@ import UIKit
 
 class ProfileChangeViewController: UIViewController {
 
-    //MARK: -PROPERTIES
+    //MARK: -Properties
 
     override var prefersStatusBarHidden: Bool {
         return true
@@ -65,6 +65,7 @@ class ProfileChangeViewController: UIViewController {
         contactsButton.setTitle(.localized(string: "Контакты"), for: .normal)
         contactsButton.setTitleColor(ColorCreator.shared.createTextColor(), for: .normal)
         contactsButton.contentHorizontalAlignment = .left
+        contactsButton.addTarget(self, action: #selector(showContactChangeScreen), for: .touchUpInside)
         return contactsButton
     }()
 
@@ -74,6 +75,7 @@ class ProfileChangeViewController: UIViewController {
         interestsButton.setTitle(.localized(string: "Интересы"), for: .normal)
         interestsButton.setTitleColor(ColorCreator.shared.createTextColor(), for: .normal)
         interestsButton.contentHorizontalAlignment = .left
+        interestsButton.addTarget(self, action: #selector(showInterestChangeScreen), for: .touchUpInside)
         return interestsButton
     }()
 
@@ -83,6 +85,7 @@ class ProfileChangeViewController: UIViewController {
         educationButton.setTitle(.localized(string: "Образование"), for: .normal)
         educationButton.setTitleColor(ColorCreator.shared.createTextColor(), for: .normal)
         educationButton.contentHorizontalAlignment = .left
+        educationButton.addTarget(self, action: #selector(showEducationChangeScreen), for: .touchUpInside)
         return educationButton
     }()
 
@@ -92,10 +95,11 @@ class ProfileChangeViewController: UIViewController {
         careerButton.setTitle(.localized(string: "Карьера"), for: .normal)
         careerButton.setTitleColor(ColorCreator.shared.createTextColor(), for: .normal)
         careerButton.contentHorizontalAlignment = .left
+        careerButton.addTarget(self, action: #selector(showCareerChangeScreen), for: .touchUpInside)
         return careerButton
     }()
 
-    //MARK: -LIFECYCLE
+    //MARK: -Lifecycle
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -115,7 +119,7 @@ class ProfileChangeViewController: UIViewController {
     }
 
 
-    // MARK: -FUNCS
+    // MARK: -Funcs
 
     @objc func closeButtonTapped() {
         dismiss(animated: true)
@@ -130,16 +134,52 @@ class ProfileChangeViewController: UIViewController {
         present(navigationController, animated: true)
     }
 
+    @objc func showContactChangeScreen() {
+        let dataChangeViewController = DataChangeViewController()
+        let navigationController = UINavigationController(rootViewController: dataChangeViewController)
+        let dataChangePresenter = DataChangePresenter(view: dataChangeViewController, user: self.presenter.user, firestoreService: self.presenter.firestoreService, state: .contacts)
+        dataChangeViewController.presenter = dataChangePresenter
+        navigationController.modalPresentationStyle = .overCurrentContext
+        present(navigationController, animated: true)
+    }
+
+    @objc func showInterestChangeScreen() {
+        let dataChangeViewController = DataChangeViewController()
+        let navigationController = UINavigationController(rootViewController: dataChangeViewController)
+        let dataChangePresenter = DataChangePresenter(view: dataChangeViewController, user: self.presenter.user, firestoreService: self.presenter.firestoreService, state: .interests)
+        dataChangeViewController.presenter = dataChangePresenter
+        navigationController.modalPresentationStyle = .overCurrentContext
+        present(navigationController, animated: true)
+    }
+
+    @objc func showEducationChangeScreen() {
+        let dataChangeViewController = DataChangeViewController()
+        let navigationController = UINavigationController(rootViewController: dataChangeViewController)
+        let dataChangePresenter = DataChangePresenter(view: dataChangeViewController, user: self.presenter.user, firestoreService: self.presenter.firestoreService, state: .education)
+        dataChangeViewController.presenter = dataChangePresenter
+        navigationController.modalPresentationStyle = .overCurrentContext
+        present(navigationController, animated: true)
+    }
+
+    @objc func showCareerChangeScreen() {
+        let dataChangeViewController = DataChangeViewController()
+        let navigationController = UINavigationController(rootViewController: dataChangeViewController)
+        let dataChangePresenter = DataChangePresenter(view: dataChangeViewController, user: self.presenter.user, firestoreService: self.presenter.firestoreService, state: .career)
+        dataChangeViewController.presenter = dataChangePresenter
+        navigationController.modalPresentationStyle = .overCurrentContext
+        present(navigationController, animated: true)
+    }
+
 }
 
 
-// MARK: -PRESENTEROUTPUT
+// MARK: -Presenter Output
 extension ProfileChangeViewController: ProfileChangeViewProtocol {
 
 }
 
 
-//MARK: -LAYOUT
+//MARK: -Layout
 extension ProfileChangeViewController {
 
     func addSubviews() {

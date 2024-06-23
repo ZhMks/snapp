@@ -16,6 +16,8 @@ protocol DetailViewProtocol: AnyObject {
     func showErrorAler(error: String)
 
     func updateAlbum(image: [UIImage])
+
+    func showFeedMenu(post: EachPost)
 }
 
 protocol DetailPresenterProtocol: AnyObject {
@@ -137,5 +139,9 @@ final class DetailPresenter: DetailPresenterProtocol {
 
     func removeObserverForPosts() {
         firestoreService.removeListenerForPosts()
+    }
+
+    func showFeedMenu(post: EachPost) {
+        view?.showFeedMenu(post: post)
     }
 }
