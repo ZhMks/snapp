@@ -101,9 +101,9 @@ class ProfileChangeViewController: UIViewController {
 
     //MARK: -Lifecycle
 
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        navigationController?.navigationBar.isHidden = true
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        NotificationCenter.default.addObserver(self, selector: #selector(fetchUserIfNeeded), name: Notification.Name("DataChanged"), object: nil)
     }
 
     override func viewDidLoad() {
@@ -126,48 +126,27 @@ class ProfileChangeViewController: UIViewController {
     }
 
     @objc func showDetailDataChangeScreen() {
-        let datachangeViewController = DataChangeViewController()
-        let navigationController = UINavigationController(rootViewController: datachangeViewController)
-        let datachangePresenter = DataChangePresenter(view: datachangeViewController, user: presenter.user, firestoreService: presenter.firestoreService, state: .mainInformation)
-        datachangeViewController.presenter = datachangePresenter
-        navigationController.modalPresentationStyle = .overCurrentContext
-        present(navigationController, animated: true)
+        presenter.goToDetailDataChangeScreen()
     }
 
     @objc func showContactChangeScreen() {
-        let dataChangeViewController = DataChangeViewController()
-        let navigationController = UINavigationController(rootViewController: dataChangeViewController)
-        let dataChangePresenter = DataChangePresenter(view: dataChangeViewController, user: self.presenter.user, firestoreService: self.presenter.firestoreService, state: .contacts)
-        dataChangeViewController.presenter = dataChangePresenter
-        navigationController.modalPresentationStyle = .overCurrentContext
-        present(navigationController, animated: true)
+        presenter.goToContactsChangeScreen()
     }
 
     @objc func showInterestChangeScreen() {
-        let dataChangeViewController = DataChangeViewController()
-        let navigationController = UINavigationController(rootViewController: dataChangeViewController)
-        let dataChangePresenter = DataChangePresenter(view: dataChangeViewController, user: self.presenter.user, firestoreService: self.presenter.firestoreService, state: .interests)
-        dataChangeViewController.presenter = dataChangePresenter
-        navigationController.modalPresentationStyle = .overCurrentContext
-        present(navigationController, animated: true)
+        presenter.goToInterestsChangeScreen()
     }
 
     @objc func showEducationChangeScreen() {
-        let dataChangeViewController = DataChangeViewController()
-        let navigationController = UINavigationController(rootViewController: dataChangeViewController)
-        let dataChangePresenter = DataChangePresenter(view: dataChangeViewController, user: self.presenter.user, firestoreService: self.presenter.firestoreService, state: .education)
-        dataChangeViewController.presenter = dataChangePresenter
-        navigationController.modalPresentationStyle = .overCurrentContext
-        present(navigationController, animated: true)
+        presenter.goToEducationChangeScreen()
     }
 
     @objc func showCareerChangeScreen() {
-        let dataChangeViewController = DataChangeViewController()
-        let navigationController = UINavigationController(rootViewController: dataChangeViewController)
-        let dataChangePresenter = DataChangePresenter(view: dataChangeViewController, user: self.presenter.user, firestoreService: self.presenter.firestoreService, state: .career)
-        dataChangeViewController.presenter = dataChangePresenter
-        navigationController.modalPresentationStyle = .overCurrentContext
-        present(navigationController, animated: true)
+        presenter.goToCareerChangeScreen()
+    }
+
+    @objc func fetchUserIfNeeded() {
+        presenter.getUserData()
     }
 
 }
@@ -175,6 +154,59 @@ class ProfileChangeViewController: UIViewController {
 
 // MARK: -Presenter Output
 extension ProfileChangeViewController: ProfileChangeViewProtocol {
+
+    func showError(descr: String) {
+        let uialertController = UIAlertController(title: .localized(string: "Ошибка"), message: .localized(string: descr), preferredStyle: .actionSheet)
+        let alertAction = UIAlertAction(title: .localized(string: "Ошибка"), style: .cancel)
+        uialertController.addAction(alertAction)
+        self.navigationController?.present(uialertController, animated: true)
+    }
+    
+    func presentDataChangeScreen() {
+        let datachangeViewController = DataChangeViewController()
+        let navigationController = UINavigationController(rootViewController: datachangeViewController)
+        let datachangePresenter = DataChangePresenter(view: datachangeViewController, user: presenter.user, firestoreService: presenter.firestoreService, state: .mainInformation)
+        datachangeViewController.presenter = datachangePresenter
+        navigationController.modalPresentationStyle = .overCurrentContext
+        present(navigationController, animated: true)
+    }
+    
+    func presentContactsChangeScreen() {
+        let dataChangeViewController = DataChangeViewController()
+        let navigationController = UINavigationController(rootViewController: dataChangeViewController)
+        let dataChangePresenter = DataChangePresenter(view: dataChangeViewController, user: self.presenter.user, firestoreService: self.presenter.firestoreService, state: .contacts)
+        dataChangeViewController.presenter = dataChangePresenter
+        navigationController.modalPresentationStyle = .overCurrentContext
+        present(navigationController, animated: true)
+    }
+    
+    func presentInterestChangeScreen() {
+        let dataChangeViewController = DataChangeViewController()
+        let navigationController = UINavigationController(rootViewController: dataChangeViewController)
+        let dataChangePresenter = DataChangePresenter(view: dataChangeViewController, user: self.presenter.user, firestoreService: self.presenter.firestoreService, state: .interests)
+        dataChangeViewController.presenter = dataChangePresenter
+        navigationController.modalPresentationStyle = .overCurrentContext
+        present(navigationController, animated: true)
+    }
+    
+    func presentEducationChangeScreen() {
+        let dataChangeViewController = DataChangeViewController()
+        let navigationController = UINavigationController(rootViewController: dataChangeViewController)
+        let dataChangePresenter = DataChangePresenter(view: dataChangeViewController, user: self.presenter.user, firestoreService: self.presenter.firestoreService, state: .education)
+        dataChangeViewController.presenter = dataChangePresenter
+        navigationController.modalPresentationStyle = .overCurrentContext
+        present(navigationController, animated: true)
+    }
+    
+    func presentCareerChangeScreen() {
+        let dataChangeViewController = DataChangeViewController()
+        let navigationController = UINavigationController(rootViewController: dataChangeViewController)
+        let dataChangePresenter = DataChangePresenter(view: dataChangeViewController, user: self.presenter.user, firestoreService: self.presenter.firestoreService, state: .career)
+        dataChangeViewController.presenter = dataChangePresenter
+        navigationController.modalPresentationStyle = .overCurrentContext
+        present(navigationController, animated: true)
+    }
+    
 
 }
 

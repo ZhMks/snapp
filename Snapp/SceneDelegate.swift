@@ -76,7 +76,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         (UIApplication.shared.delegate as? AppDelegate)?.saveContext()
     }
 
-    func changeRootViewController(_ vc: UIViewController, user: FirebaseUser) {
+    func changeRootViewController(_ vc: UIViewController, user: FirebaseUser, mainUserID: String) {
 
         let fireStoreService = FireStoreService()
 
@@ -91,7 +91,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         favouriteNavVC.tabBarItem = UITabBarItem(title: .localized(string: "Сохраненные"), image: UIImage(systemName: "heart"), tag: 3)
 
         let feedVC = FeedViewController()
-        let feedPresenter = FeedPresenter(view: feedVC, user: user, firestoreService: fireStoreService)
+        let feedPresenter = FeedPresenter(view: feedVC, user: user, firestoreService: fireStoreService, mainUser: mainUserID)
         feedVC.presenter = feedPresenter
         let feedNavVc = UINavigationController(rootViewController: feedVC)
         feedNavVc.tabBarItem = UITabBarItem(title: .localized(string: "Главная"), image: UIImage(systemName: "house"), tag: 0)
@@ -100,7 +100,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         profileNavVC.tabBarItem = UITabBarItem(title: .localized(string: "Профиль"), image: UIImage(systemName: "person.crop.circle"), tag: 1)
 
         let searchVC = SearchViewController()
-        let searchPresenter = SearchPresenter(view: searchVC, firestoreService: fireStoreService)
+        let searchPresenter = SearchPresenter(view: searchVC, firestoreService: fireStoreService, mainUser: mainUserID)
         searchVC.presenter = searchPresenter
         let searchNavVC = UINavigationController(rootViewController: searchVC)
         searchNavVC.tabBarItem = UITabBarItem(title: .localized(string: "Поиск"), image: UIImage(systemName: "magnifyingglass"), tag: 2)

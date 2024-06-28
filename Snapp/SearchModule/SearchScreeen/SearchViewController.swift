@@ -47,7 +47,7 @@ extension SearchViewController: SearchViewProtocol {
 
     func goToNextVC(user: FirebaseUser, userID: String) {
         let detailVC = DetailUserViewController()
-        let detailPresenter = DetailPresenter(view: detailVC, user: user, userID: userID, firestoreService: presenter.firestoreService)
+        let detailPresenter = DetailPresenter(view: detailVC, user: user, mainUserID: userID, firestoreService: presenter.firestoreService)
         detailVC.presenter = detailPresenter
         navigationController?.pushViewController(detailVC, animated: true)
     }
@@ -122,8 +122,7 @@ extension SearchViewController: UITableViewDataSource {
 extension SearchViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let user = presenter.usersArray[indexPath.row]
-        guard let documentID = user.documentID else { return }
-        presenter.showNextVC(user: user, userID: documentID)
+        presenter.showNextVC(user: user, userID: self.presenter.mainUserID)
         tableView.deselectRow(at: indexPath, animated: true)
     }
 }

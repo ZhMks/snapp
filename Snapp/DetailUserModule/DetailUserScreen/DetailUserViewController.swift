@@ -244,11 +244,15 @@ extension DetailUserViewController: DetailViewProtocol {
     
     func showFeedMenu(post: EachPost) {
         let menuForFeedVC = MenuForFeedViewController()
-        let presenter = MenuForFeedPresenter(view: menuForFeedVC, user: self.presenter.user, firestoreService: self.presenter.firestoreService, post: post)
-        menuForFeedVC.modalPresentationStyle = .pageSheet
+        let presenter = MenuForFeedPresenter(view: menuForFeedVC, user: self.presenter.user, firestoreService: self.presenter.firestoreService, post: post, mainUserID: self.presenter.mainUserID)
+        menuForFeedVC.modalPresentationStyle = .formSheet
 
         if let sheet = menuForFeedVC.sheetPresentationController {
-            sheet.detents = [.medium()]
+            let customHeight = UISheetPresentationController.Detent.custom(identifier: .init("customHeight")) { context in
+                return 300
+            }
+            sheet.detents = [customHeight]
+            sheet.largestUndimmedDetentIdentifier = .some(customHeight.identifier)
         }
         menuForFeedVC.presenter = presenter
         self.navigationController?.present(menuForFeedVC, animated: true)
@@ -300,13 +304,26 @@ extension DetailUserViewController: UITableViewDataSource {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: PostTableCell.identifier, for: indexPath) as? PostTableCell else { return UITableViewCell() }
         let data = presenter.posts[indexPath.row]
         let date = presenter.posts[indexPath.row].date
-        cell.updateView(post: data, user: presenter.user, date: date, firestoreService: presenter.firestoreService, state: .feedState)
+        cell.updateView(post: data, user: presenter.user, date: date, firestoreService: presenter.firestoreService, state: .feedState, mainUserID: self.presenter.mainUserID)
 
         cell.showMenuForFeed = { [weak self] post in
             guard let self else { return }
             presenter.showFeedMenu(post: post)
 
         }
+
+        cell.incrementLikes = { [weak self] post in
+            guard let self else { return }
+            presenter.incrementLikes(post: post)
+            tableView.reloadRows(at: [indexPath], with: .fade)
+        }
+
+        cell.decrementLikes = { [weak self] post in
+            guard let self else { return }
+            presenter.decrementLikes(post: post)
+            tableView.reloadRows(at: [indexPath], with: .fade)
+        }
+
         return cell
     }
 
@@ -323,11 +340,11 @@ extension DetailUserViewController: UITableViewDelegate {
         let detailPostVC = DetailPostViewController()
         guard let image = presenter.image  else { return }
         if data.image!.isEmpty {
-            let detailPostPresenter = DetailPostPresenter(view: detailPostVC, user: presenter.user, post: data, avatarImage: image, firestoreService: presenter.firestoreService)
+            let detailPostPresenter = DetailPostPresenter(view: detailPostVC, user: presenter.user, mainUserID: self.presenter.mainUserID, post: data, avatarImage: image, firestoreService: presenter.firestoreService)
             detailPostVC.presenter = detailPostPresenter
             self.navigationController?.pushViewController(detailPostVC, animated: true)
         } else {
-            let detailPostPresenter = DetailPostPresenter(view: detailPostVC, user: presenter.user, post: data, avatarImage: image, firestoreService: presenter.firestoreService)
+            let detailPostPresenter = DetailPostPresenter(view: detailPostVC, user: presenter.user, mainUserID: self.presenter.mainUserID, post: data, avatarImage: image, firestoreService: presenter.firestoreService)
             detailPostVC.presenter = detailPostPresenter
             self.navigationController?.pushViewController(detailPostVC, animated: true)
         }

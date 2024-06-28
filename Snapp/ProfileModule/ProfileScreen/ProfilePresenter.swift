@@ -28,7 +28,7 @@ protocol ProfileViewProtocol: AnyObject {
 }
 
 protocol ProfilePresenterProtocol: AnyObject {
-    init(view: ProfileViewProtocol, mainUser: FirebaseUser, userID: String, firestoreService: FireStoreServiceProtocol)
+    init(view: ProfileViewProtocol, mainUser: FirebaseUser, mainUserID: String, firestoreService: FireStoreServiceProtocol)
 }
 
 final class ProfilePresenter: ProfilePresenterProtocol {
@@ -38,16 +38,16 @@ final class ProfilePresenter: ProfilePresenterProtocol {
     var firestoreService: FireStoreServiceProtocol
     var posts: [EachPost] = []
     var image: UIImage?
-    let userID: String
+    let mainUserID: String
     var userStories: [UIImage]?
     var photoAlbum: [UIImage: [UIImage]?] = [:]
     let networkService = NetworkService()
 
-    init(view: ProfileViewProtocol, mainUser: FirebaseUser, userID: String, firestoreService: FireStoreServiceProtocol) {
+    init(view: ProfileViewProtocol, mainUser: FirebaseUser, mainUserID: String, firestoreService: FireStoreServiceProtocol) {
         self.view = view
         self.mainUser = mainUser
         self.firestoreService = firestoreService
-        self.userID = userID
+        self.mainUserID = mainUserID
         fetchAvatarImage()
     }
 
@@ -67,8 +67,7 @@ final class ProfilePresenter: ProfilePresenterProtocol {
     }
 
     func addListenerForPost() {
-        guard let id = Auth.auth().currentUser?.uid else { return }
-        firestoreService.addSnapshotListenerToPosts(for: id) { [weak self] result in
+        firestoreService.addSnapshotListenerToPosts(for: mainUserID) { [weak self] result in
             guard let self else { return }
             switch result {
             case .success(let success):
@@ -84,6 +83,18 @@ final class ProfilePresenter: ProfilePresenterProtocol {
                 self.view?.updateData(data: self.posts)
             case .failure(let failure):
                 view?.showErrorAler(error: failure.localizedDescription)
+            }
+        }
+    }
+
+    func addPostToBookMarks(post: EachPost) {
+        firestoreService.saveToBookMarks(user: mainUserID, post: post) { [weak self] result in
+            guard let self else { return }
+            switch result {
+            case .success(let savedPost):
+                return
+            case .failure(let error):
+                view?.showErrorAler(error: error.localizedDescription)
             }
         }
     }
@@ -116,7 +127,7 @@ final class ProfilePresenter: ProfilePresenterProtocol {
         dateFormatter.dateFormat = "dd MMM"
         let stringFromDate = dateFormatter.string(from: date)
 
-        let storageLink = Storage.storage().reference().child("users").child(userID).child("Stories").child(stringFromDate).child(image.description)
+        let storageLink = Storage.storage().reference().child("users").child(mainUserID).child("Stories").child(stringFromDate).child(image.description)
             firestoreService.saveImageIntoStorage(urlLink: storageLink, photo: image) { [weak self] result in
             switch result {
             case .success(let success):
@@ -144,7 +155,7 @@ final class ProfilePresenter: ProfilePresenterProtocol {
         dateFormatter.dateFormat = "dd MMM"
         let stringFromDate = dateFormatter.string(from: date)
 
-        let urlLink = Storage.storage().reference().child("users").child(userID).child("PhotoAlbum").child(stringFromDate).child("CoverImage")
+        let urlLink = Storage.storage().reference().child("users").child(mainUserID).child("PhotoAlbum").child(stringFromDate).child("CoverImage")
             firestoreService.saveImageIntoStorage(urlLink: urlLink, photo: image) { [weak self] result in
                 switch result {
                 case .success(let imageURL):
@@ -174,7 +185,7 @@ print()
     }
 
     func fetchSubsribers() {
-        firestoreService.getUser(id: userID) { [weak self] result in
+        firestoreService.getUser(id: mainUserID) { [weak self] result in
             switch result {
             case .success(let success):
                 self?.mainUser = success
@@ -194,10 +205,12 @@ print()
     }
 
     func incrementLikes(post: String) {
-        firestoreService.incrementLikes(user: userID, post: post)
+        guard let useID = mainUser.documentID else { return }
+        firestoreService.incrementLikes(user: useID, mainUser: mainUserID, post: post)
     }
 
     func decrementLikes(post: String) {
-        firestoreService.decrementLikes(user: userID, post: post)
+        guard let userID = mainUser.documentID else { return }
+        firestoreService.decrementLikes(user: userID, mainUser: mainUserID, post: post)
     }
 }

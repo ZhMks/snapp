@@ -7,25 +7,23 @@
 
 import UIKit
 
-protocol ProfileChangeViewProtocol: AnyObject {}
+protocol ProfileChangeViewProtocol: AnyObject {
+    func presentDataChangeScreen()
+    func presentContactsChangeScreen()
+    func presentInterestChangeScreen()
+    func presentEducationChangeScreen()
+    func presentCareerChangeScreen()
+    func showError(descr: String)
+}
 
 protocol ProfileChangePresenterProtocol: AnyObject {
     init(view: ProfileChangeViewProtocol?, user: FirebaseUser, firestoreService: FireStoreServiceProtocol)
-    func changeName()
-    func changeSurname()
-    func changeSex()
-    func changeDateOfBirth()
-    func changeCity()
-    func changeContacts()
-    func changeInterests()
-    func changeEducation()
-    func changeJob()
 }
 
 final class ProfileChangePresenter: ProfileChangePresenterProtocol {
 
 
-   weak var view: ProfileChangeViewProtocol?
+    weak var view: ProfileChangeViewProtocol?
     var user: FirebaseUser
     var firestoreService: FireStoreServiceProtocol
 
@@ -35,39 +33,36 @@ final class ProfileChangePresenter: ProfileChangePresenterProtocol {
         self.firestoreService = firestoreService
     }
 
-    func changeName() {
-
+    func goToDetailDataChangeScreen() {
+        view?.presentDataChangeScreen()
     }
 
-    func changeSurname() {
-
+    func goToContactsChangeScreen() {
+        view?.presentContactsChangeScreen()
     }
 
-    func changeSex() {
-
+    func goToInterestsChangeScreen() {
+        view?.presentInterestChangeScreen()
     }
 
-    func changeDateOfBirth() {
-
+    func goToEducationChangeScreen() {
+        view?.presentEducationChangeScreen()
     }
 
-    func changeCity() {
-
+    func goToCareerChangeScreen() {
+        view?.presentCareerChangeScreen()
     }
 
-    func changeContacts() {
-
-    }
-
-    func changeInterests() {
-
-    }
-
-    func changeEducation() {
-
-    }
-
-    func changeJob() {
-        
+    func getUserData() {
+        guard let userID = user.documentID else { return }
+        firestoreService.getUser(id: userID) { [weak self] result in
+            guard let self else { return }
+            switch result {
+            case .success(let user):
+                self.user = user
+            case .failure(let failure):
+                view?.showError(descr: failure.localizedDescription)
+            }
+        }
     }
 }

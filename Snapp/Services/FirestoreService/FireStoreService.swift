@@ -66,13 +66,15 @@ protocol FireStoreServiceProtocol {
     func pinPost(user: String, docID: String)
     func addSnapshotListenerToFavourites(for user: String, completion: @escaping (Result<[EachPost], Error>) -> Void)
     func removeListenerForFavourites()
-    func incrementLikes(user: String, post: String)
-    func decrementLikes(user: String, post: String)
+    func incrementLikes(user: String, mainUser: String, post: String)
+    func decrementLikes(user: String, mainUser: String, post: String)
     func getNumberOfLikesInpost(user: String, post: String, completion: @escaping (Result <[Like], Error>) -> Void)
     func fetchArchives(user: String, completion: @escaping(Result<[EachPost], Error>) -> Void)
     func deleteDocument(docID: String, user: String, completion: @escaping (Result<Bool, Error>) -> Void)
     func removeSubscribtion(sub: String, for user: String)
-    
+    func saveToBookMarks(user: String, post: EachPost, completion: @escaping (Result<EachPost, Error>) -> Void)
+    func fetchBookmarkedPosts(user: String, completion: @escaping (Result<[EachPost], Error>) -> Void)
+
     // Функции для работы с изображением
     func saveImageIntoStorage(urlLink: StorageReference, photo: UIImage, completion: @escaping (Result <URL, Error>) -> Void)
     func saveImageIntoPhotoAlbum(image: String, user: String)
@@ -230,53 +232,47 @@ final class FireStoreService: FireStoreServiceProtocol {
     }
 
     func getAllUsers(completion: @escaping (Result<[FirebaseUser], Error>) -> Void) {
+        var usersArray: [FirebaseUser] = []
         let dbReference = Firestore.firestore().collection("Users")
         dbReference.getDocuments { snapshot, error in
             if let error = error {
                 completion(.failure(error))
             }
             if let snapshot = snapshot {
-                let dispatchGroup = DispatchGroup()
-                var usersArray: [FirebaseUser] = []
                 do {
-                    dispatchGroup.enter()
                     for document in snapshot.documents {
                         let currentUser = try document.data(as: FirebaseUser.self)
                         usersArray.append(currentUser)
                     }
-                    dispatchGroup.leave()
                 } catch {
                     completion(.failure(error))
                 }
-                dispatchGroup.notify(queue: .main) {
-                    completion(.success(usersArray))
-                }
             }
+            completion(.success(usersArray))
         }
     }
 
-    func incrementLikes(user: String, post: String) {
+    func incrementLikes(user: String, mainUser: String, post: String) {
         let date = Date.now
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "dd-MM-YYYY"
         let string = dateFormatter.string(from: date)
-        let like = Like(documentID: user, date: string)
-        let dbReference = Firestore.firestore().collection("Users").document(user).collection("posts").document(post).collection("likes").document(user)
+        let like = Like(documentID: mainUser, date: string)
+        let dbReference = Firestore.firestore().collection("Users").document(user).collection("posts").document(post).collection("likes").document(mainUser)
         dbReference.setData(["date" : like.date!,
                              "documentID" : like.documentID!
                             ])
     }
 
-    func decrementLikes(user: String, post: String) {
-        let dbReference = Firestore.firestore().collection("Users").document(user).collection("posts").document(post).collection("likes").document(user)
+    func decrementLikes(user: String, mainUser: String, post: String) {
+        let dbReference = Firestore.firestore().collection("Users").document(user).collection("posts").document(post).collection("likes").document(mainUser)
         dbReference.delete()
     }
 
     func getNumberOfLikesInpost(user: String, post: String, completion: @escaping (Result <[Like], Error>) -> Void) {
         let dbRef = Firestore.firestore().collection("Users").document(user).collection("posts").document(post).collection("likes")
         var likes: [Like] = []
-        print("Number of Likes in function: \(likes.count)")
-        let dispatchGroup = DispatchGroup()
+
         dbRef.getDocuments { snapshot, error in
             if let error = error {
                 completion(.failure(error))
@@ -285,7 +281,6 @@ final class FireStoreService: FireStoreServiceProtocol {
             if let snapshot = snapshot {
                 if !snapshot.documents.isEmpty {
                     for document in snapshot.documents {
-                        dispatchGroup.enter()
                         do {
                             let like = try document.data(as: Like.self)
                             likes.append(like)
@@ -303,14 +298,11 @@ final class FireStoreService: FireStoreServiceProtocol {
                         } catch {
                             completion(.failure(error))
                         }
-                        dispatchGroup.leave()
                     }
                 } else {
                     completion(.success(likes))
                 }
-                dispatchGroup.notify(queue: .main) {
-                    completion(.success(likes))
-                }
+                completion(.success(likes))
             }
         }
     }
@@ -318,70 +310,79 @@ final class FireStoreService: FireStoreServiceProtocol {
     func getUser(id: String, completion: @escaping (Result<FirebaseUser, AuthorisationErrors>) -> Void) {
         let dbReference = Firestore.firestore().collection("Users")
         dbReference.getDocuments { snapshot, error in
-            if error != nil {
+            if let error = error {
+                print("Error getting documents: \(error)")
                 completion(.failure(.invalidCredential))
+                return
             }
 
-            if let snapshot = snapshot {
-                if snapshot.documents.isEmpty {
-                    completion(.failure(.userAlreadyExist))
-                }
-                for document in snapshot.documents {
-                    if document.documentID == id {
-                        do {
-                            let currentUser = try document.data(as: FirebaseUser.self)
-                            completion(.success(currentUser))
-                        } catch let DecodingError.dataCorrupted(context) {
-                            print(context)
-                        } catch let DecodingError.keyNotFound(key, context) {
-                            print("Key '\(key)' not found:", context.debugDescription)
-                            print("codingPath:", context.codingPath)
-                        } catch let DecodingError.valueNotFound(value, context) {
-                            print("Value '\(value)' not found:", context.debugDescription)
-                            print("codingPath:", context.codingPath)
-                        } catch let DecodingError.typeMismatch(type, context)  {
-                            print("Type '\(type)' mismatch:", context.debugDescription)
-                            print("codingPath:", context.codingPath)
-                        } catch {
-                            print("error: ", error)
-                        }
-                    } else {
-                        completion(.failure(.invalidCredential))
+            guard let snapshot = snapshot else {
+                completion(.failure(.invalidCredential))
+                return
+            }
+
+            if snapshot.documents.isEmpty {
+                completion(.failure(.userAlreadyExist))
+                return
+            }
+
+            for document in snapshot.documents {
+                if document.documentID == id {
+                    do {
+                        let currentUser = try document.data(as: FirebaseUser.self)
+                        completion(.success(currentUser))
+                        return
+                    } catch let DecodingError.dataCorrupted(context) {
+                        print(context)
+                    } catch let DecodingError.keyNotFound(key, context) {
+                        print("Key '\(key)' not found:", context.debugDescription)
+                        print("codingPath:", context.codingPath)
+                    } catch let DecodingError.valueNotFound(value, context) {
+                        print("Value '\(value)' not found:", context.debugDescription)
+                        print("codingPath:", context.codingPath)
+                    } catch let DecodingError.typeMismatch(type, context) {
+                        print("Type '\(type)' mismatch:", context.debugDescription)
+                        print("codingPath:", context.codingPath)
+                    } catch {
+                        print("error: ", error)
                     }
                 }
             }
+            // If no document matched
+            completion(.failure(.invalidCredential))
         }
     }
 
-    func getPosts(sub: String, completion: @escaping (Result<[EachPost], PostErrors>) -> Void)  {
-
+    func getPosts(sub: String, completion: @escaping (Result<[EachPost], PostErrors>) -> Void) {
         let refDB = Firestore.firestore().collection("Users").document(sub).collection("posts")
         var posts: [EachPost] = []
 
         refDB.getDocuments { snapshot, error in
-
-            if error != nil {
+            if let error = error {
+                print("Error getting posts: \(error)")
                 completion(.failure(.getError))
+                return
             }
-            let dispatchGroup = DispatchGroup()
-            if let snapshot = snapshot {
-                if snapshot.documents.isEmpty {
-                    return
+
+            guard let snapshot = snapshot else {
+                completion(.failure(.getError))
+                return
+            }
+
+            if snapshot.documents.isEmpty {
+                completion(.success([]))
+                return
+            }
+
+            for document in snapshot.documents {
+                do {
+                    let eachPost = try document.data(as: EachPost.self)
+                    posts.append(eachPost)
+                } catch {
+                    print(error.localizedDescription)
                 }
-                dispatchGroup.enter()
-                for document in snapshot.documents {
-                    do {
-                        let eachPost = try document.data(as: EachPost.self)
-                        posts.append(eachPost)
-                    } catch {
-                        print(error.localizedDescription)
-                    }
-                }
-                dispatchGroup.leave()
             }
-            dispatchGroup.notify(queue: .main) {
-                completion(.success(posts))
-            }
+            completion(.success(posts))
         }
     }
 
@@ -696,7 +697,6 @@ final class FireStoreService: FireStoreServiceProtocol {
     }
 
     func addDocToArchives(post: EachPost, user: String, completion: @escaping (Result<EachPost, Error>) -> Void) {
-        print("Archive: \(user), \(post.documentID) ")
         guard let documentID = post.documentID else {
             return
         }
@@ -804,9 +804,18 @@ final class FireStoreService: FireStoreServiceProtocol {
         }
     }
 
+    func saveToBookMarks(user: String, post: EachPost, completion: @escaping (Result<EachPost, Error>) -> Void) {
+        let link = Firestore.firestore().collection("users").document(user).collection("Bookmarks")
+        do {
+         try link.addDocument(from: post)
+            completion(.success(post))
+        } catch {
+            completion(.failure(error))
+        }
+    }
+
     func fetchBookmarkedPosts(user: String, completion: @escaping (Result<[EachPost], Error>) -> Void) {
         let link = Firestore.firestore().collection("users").document(user).collection("Bookmarks")
-        let dispatchGroup = DispatchGroup()
         var decodedDocuments: [EachPost] = []
 
         link.getDocuments { snapshot, error in
@@ -815,7 +824,6 @@ final class FireStoreService: FireStoreServiceProtocol {
             }
 
             if let snapshot = snapshot {
-                dispatchGroup.enter()
                 for document in snapshot.documents {
                     do {
                         let decodedDoc = try document.data(as: EachPost.self)
@@ -835,12 +843,9 @@ final class FireStoreService: FireStoreServiceProtocol {
                         print("error: ", error)
                         completion(.failure(error))
                     }
-                    dispatchGroup.leave()
-                }
-                dispatchGroup.notify(queue: .main) {
-                    completion(.success(decodedDocuments))
                 }
             }
+            completion(.success(decodedDocuments))
         }
     }
 }

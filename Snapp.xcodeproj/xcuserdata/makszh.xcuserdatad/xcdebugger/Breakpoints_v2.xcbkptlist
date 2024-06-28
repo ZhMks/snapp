@@ -58,8 +58,8 @@
             filePath = "Snapp/Services/FirestoreService/FireStoreService.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "668"
-            endingLineNumber = "668"
+            startingLineNumber = "669"
+            endingLineNumber = "669"
             landmarkName = "saveIntoFavourites(post:for:completion:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -74,13 +74,13 @@
             filePath = "Snapp/Services/FirestoreService/FireStoreService.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "659"
-            endingLineNumber = "659"
+            startingLineNumber = "660"
+            endingLineNumber = "660"
             landmarkName = "saveIntoFavourites(post:for:completion:)"
             landmarkType = "7">
             <Locations>
                <Location
-                  uuid = "6E7DA1EA-F29E-4659-834E-620E328F37DB - 859fd88948670257"
+                  uuid = "6E7DA1EA-F29E-4659-834E-620E328F37DB - 859fd88948670274"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
@@ -90,11 +90,11 @@
                   urlString = "file:///Users/makszh/Desktop/Snapp/Snapp/Services/FirestoreService/FireStoreService.swift"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "659"
-                  endingLineNumber = "659">
+                  startingLineNumber = "660"
+                  endingLineNumber = "660">
                </Location>
                <Location
-                  uuid = "6E7DA1EA-F29E-4659-834E-620E328F37DB - 859fd88948670257"
+                  uuid = "6E7DA1EA-F29E-4659-834E-620E328F37DB - 859fd88948670274"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
@@ -104,8 +104,8 @@
                   urlString = "file:///Users/makszh/Desktop/Snapp/Snapp/Services/FirestoreService/FireStoreService.swift"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "659"
-                  endingLineNumber = "659">
+                  startingLineNumber = "660"
+                  endingLineNumber = "660">
                </Location>
             </Locations>
          </BreakpointContent>
@@ -113,47 +113,15 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "80CA7925-50CD-49BC-89D4-935B1D1C167E"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Snapp/ProfileModule/ProfileScreen/MenuForPost/MenuForPostView.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "98"
-            endingLineNumber = "98"
-            landmarkName = "saveIntoFavourites()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "A8F0E824-8B77-42B8-94C3-243EBC66AC35"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Snapp/ProfileModule/ProfileScreen/MenuForPost/MenuForPostView.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "103"
-            endingLineNumber = "103"
-            landmarkName = "disableCommentaries()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "89AAED4A-6ABC-459F-99A3-AEF71C3962FF"
+            uuid = "295DB944-73AD-4F77-8963-9D27C414917A"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Snapp/FeedModule/FeedScreen/FeedViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "131"
-            endingLineNumber = "131"
+            startingLineNumber = "137"
+            endingLineNumber = "137"
             landmarkName = "updateViewTable()"
             landmarkType = "7">
          </BreakpointContent>
@@ -161,15 +129,15 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "AA9962AF-4759-46A1-9108-BA3DAE5AE833"
+            uuid = "A32E6507-6D69-4D93-97BD-352DBF41360A"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Snapp/FeedModule/FeedScreen/FeedPresenter.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "103"
-            endingLineNumber = "103"
+            startingLineNumber = "146"
+            endingLineNumber = "146"
             landmarkName = "fetchPosts()"
             landmarkType = "7">
          </BreakpointContent>
@@ -177,16 +145,32 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "F005A634-56F6-4139-9FA1-5D4A205F17AE"
+            uuid = "660CC8B6-746C-49BB-B13D-A0CAD4708170"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Snapp/Services/FirestoreService/FireStoreService.swift"
+            filePath = "Snapp/FeedModule/FeedScreen/FeedPresenter.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "741"
-            endingLineNumber = "741"
-            landmarkName = "addDocToArchives(post:user:completion:)"
+            startingLineNumber = "122"
+            endingLineNumber = "122"
+            landmarkName = "fetchPosts()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "8CA0D981-83E9-40AB-998A-F3A366C94646"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Snapp/FeedModule/FeedScreen/FeedPresenter.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "130"
+            endingLineNumber = "130"
+            landmarkName = "fetchPosts()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

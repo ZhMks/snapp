@@ -280,7 +280,7 @@ class ProfileViewController: UIViewController {
     @objc func createPostButtonTapped() {
         let createPostVC = CreatePostViewController()
         guard let userImage = presenter.image else { return }
-        let createPostPresenter = CreatePostPresenter(view: createPostVC, mainUser: presenter.mainUser, userID: presenter.userID, firestoreService: presenter.firestoreService, image: userImage, posts: presenter.posts)
+        let createPostPresenter = CreatePostPresenter(view: createPostVC, mainUser: presenter.mainUser, userID: presenter.mainUserID, firestoreService: presenter.firestoreService, image: userImage, posts: presenter.posts)
         createPostVC.presenter = createPostPresenter
         createPostVC.modalPresentationStyle = .formSheet
         navigationController?.present(createPostVC, animated: true)
@@ -339,7 +339,7 @@ class ProfileViewController: UIViewController {
 
     @objc func detailUserInformationTapped() {
         let detailUserInfoVC = DetailUserInformationViewController()
-        let detailUserInfoPresenter = DetailUserInformationPresenter(view: detailUserInfoVC, mainUser: self.presenter.mainUser)
+        let detailUserInfoPresenter = DetailUserInformationPresenter(view: detailUserInfoVC, mainUser: self.presenter.mainUser, mainUserID: self.presenter.mainUserID)
         detailUserInfoVC.presenter = detailUserInfoPresenter
         detailUserInfoVC.modalPresentationStyle = .formSheet
 
@@ -436,9 +436,9 @@ extension ProfileViewController: UITableViewDataSource {
 
         guard let docID = data.documentID else { return UITableViewCell() }
 
-        cell.updateView(post: data, user: presenter.mainUser, date: date, firestoreService: presenter.firestoreService, state: .profileState)
+        cell.updateView(post: data, user: presenter.mainUser, date: date, firestoreService: presenter.firestoreService, state: .profileState, mainUserID: self.presenter.mainUserID)
 
-        cell.buttonTappedHandler = { [weak self] in
+        cell.manuButtonTappedHandler = { [weak self] in
             guard let self else { return }
             guard let index = presenter.posts.firstIndex(where: { $0.documentID == data.documentID }) else { return }
             presenter.posts.remove(at: index)
@@ -458,7 +458,12 @@ extension ProfileViewController: UITableViewDataSource {
             presenter.decrementLikes(post: post)
             tableView.reloadRows(at: [indexPath], with: .automatic)
         }
-       
+
+        cell.bookmarkButtonTapHandler = { [weak self] post in
+            guard let self else { return }
+            
+
+        }
         return cell
     }
 
@@ -480,7 +485,7 @@ extension ProfileViewController: UITableViewDelegate {
         let data = self.presenter.posts[indexPath.row]
         let detailPostVC = DetailPostViewController()
         let detailPostPresenter = DetailPostPresenter(view: detailPostVC,
-                                                      user: self.presenter.mainUser,
+                                                      user: self.presenter.mainUser, mainUserID: self.presenter.mainUserID,
                                                       post: data,
                                                       avatarImage: image,
                                                       firestoreService: self.presenter.firestoreService)

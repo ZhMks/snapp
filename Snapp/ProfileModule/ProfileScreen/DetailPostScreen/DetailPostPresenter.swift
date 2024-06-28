@@ -21,7 +21,7 @@ protocol DetailPostViewProtocol: AnyObject {
 }
 
 protocol DetailPostPresenterProtocol: AnyObject {
-    init(view: DetailPostViewProtocol, user: FirebaseUser, post: EachPost, avatarImage: UIImage, firestoreService: FireStoreServiceProtocol)
+    init(view: DetailPostViewProtocol, user: FirebaseUser, mainUserID: String, post: EachPost, avatarImage: UIImage, firestoreService: FireStoreServiceProtocol)
     func updateComments()
 }
 
@@ -34,13 +34,15 @@ final class DetailPostPresenter: DetailPostPresenterProtocol {
     var comments: [Comment : [Answer]?]?
     let firestoreService: FireStoreServiceProtocol
     var likes: [Like]?
+    let mainUserID: String
 
-    init(view: DetailPostViewProtocol, user: FirebaseUser, post: EachPost, avatarImage: UIImage, firestoreService: FireStoreServiceProtocol) {
+    init(view: DetailPostViewProtocol, user: FirebaseUser, mainUserID: String, post: EachPost, avatarImage: UIImage, firestoreService: FireStoreServiceProtocol) {
         self.view = view
         self.user = user
         self.post = post
         self.avatarImage = avatarImage
         self.firestoreService = firestoreService
+        self.mainUserID = mainUserID
     }
 
     func fetchPostImage() {
@@ -133,14 +135,15 @@ final class DetailPostPresenter: DetailPostPresenterProtocol {
     }
 
     func incrementLikes() {
-        guard let user = user.documentID, let postID = post.documentID else { return }
-        firestoreService.incrementLikes(user: user, post: postID)
+        guard let postID = post.documentID, let userID = user.documentID else { return }
+
+        firestoreService.incrementLikes(user: userID, mainUser: mainUserID, post: postID)
         getLikes()
     }
 
     func decrementLikes() {
-        guard let user = user.documentID, let postID = post.documentID else { return }
-        firestoreService.decrementLikes(user: user, post: postID)
+        guard let postID = post.documentID, let userID = user.documentID else { return }
+        firestoreService.decrementLikes(user: userID, mainUser: mainUserID, post: postID)
         getLikes()
     }
 

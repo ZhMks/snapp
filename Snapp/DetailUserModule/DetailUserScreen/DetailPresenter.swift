@@ -21,7 +21,7 @@ protocol DetailViewProtocol: AnyObject {
 }
 
 protocol DetailPresenterProtocol: AnyObject {
-    init(view: DetailViewProtocol, user: FirebaseUser, userID: String, firestoreService: FireStoreServiceProtocol)
+    init(view: DetailViewProtocol, user: FirebaseUser, mainUserID: String, firestoreService: FireStoreServiceProtocol)
 }
 
 final class DetailPresenter: DetailPresenterProtocol {
@@ -31,13 +31,13 @@ final class DetailPresenter: DetailPresenterProtocol {
     var user: FirebaseUser
     var posts: [EachPost] = []
     var image: UIImage?
-    let userID: String
+    let mainUserID: String
     var photoAlbum: [UIImage]?
 
-    init(view: DetailViewProtocol, user: FirebaseUser, userID: String, firestoreService: FireStoreServiceProtocol) {
+    init(view: DetailViewProtocol, user: FirebaseUser, mainUserID: String, firestoreService: FireStoreServiceProtocol) {
         self.view = view
         self.user = user
-        self.userID = userID
+        self.mainUserID = mainUserID
         self.firestoreService = firestoreService
         fetchImage()
         fetchPhotoAlbum()
@@ -60,7 +60,8 @@ final class DetailPresenter: DetailPresenterProtocol {
     }
 
     func fetchPosts() {
-        firestoreService.getPosts(sub: userID) { [weak self] result in
+        guard let id = user.documentID else { return }
+        firestoreService.getPosts(sub: id) { [weak self] result in
             guard let self else { return }
             switch result {
             case .success(let success):
@@ -82,8 +83,8 @@ final class DetailPresenter: DetailPresenterProtocol {
     }
 
     func addSubscriber() {
-        guard  let currentUser = Auth.auth().currentUser?.uid else { return }
-        firestoreService.saveSubscriber(mainUser: currentUser, id: userID)
+        guard let id = user.documentID else { return }
+        firestoreService.saveSubscriber(mainUser: mainUserID, id: id)
     }
 
     func fetchPhotoAlbum() {
@@ -110,7 +111,8 @@ final class DetailPresenter: DetailPresenterProtocol {
     }
 
     func addObserverForuser() {
-        firestoreService.addSnapshotListenerToUser(for: userID) { [weak self] result in
+        guard let id = user.documentID else { return }
+        firestoreService.addSnapshotListenerToUser(for: id) { [weak self] result in
             guard let self else { return }
             switch result {
             case .success(let user):
@@ -126,7 +128,8 @@ final class DetailPresenter: DetailPresenterProtocol {
     }
 
     func addObserverForPost() {
-        firestoreService.addSnapshotListenerToPosts(for: userID) { [weak self] result in
+        guard let id = user.documentID else { return }
+        firestoreService.addSnapshotListenerToPosts(for: id) { [weak self] result in
             guard let self else { return }
             switch result {
             case .success(let success):
@@ -143,5 +146,15 @@ final class DetailPresenter: DetailPresenterProtocol {
 
     func showFeedMenu(post: EachPost) {
         view?.showFeedMenu(post: post)
+    }
+
+    func incrementLikes(post: String) {
+        guard let userID = user.documentID else { return }
+        firestoreService.incrementLikes(user: userID, mainUser: mainUserID, post: post)
+    }
+
+    func decrementLikes(post: String) {
+        guard let userID = user.documentID else { return }
+        firestoreService.decrementLikes(user: userID, mainUser: mainUserID, post: post)
     }
 }

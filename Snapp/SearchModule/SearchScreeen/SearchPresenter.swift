@@ -16,7 +16,7 @@ protocol SearchViewProtocol: AnyObject {
 }
 
 protocol SearchPresenterProtocol: AnyObject {
-    init(view: SearchViewProtocol?, firestoreService: FireStoreServiceProtocol)
+    init(view: SearchViewProtocol?, firestoreService: FireStoreServiceProtocol, mainUser: String)
     func showNextVC(user: FirebaseUser, userID: String)
 }
 
@@ -25,14 +25,15 @@ final class SearchPresenter: SearchPresenterProtocol {
     weak var view: SearchViewProtocol?
     let firestoreService: FireStoreServiceProtocol
     var usersArray: [FirebaseUser] = []
+    let mainUserID: String
 
-    init(view: SearchViewProtocol?, firestoreService: FireStoreServiceProtocol) {
+    init(view: SearchViewProtocol?, firestoreService: FireStoreServiceProtocol, mainUser: String) {
         self.view = view
         self.firestoreService = firestoreService
+        self.mainUserID = mainUser
     }
 
     func getAllUsers() {
-        let currentUser = Auth.auth().currentUser
         firestoreService.getAllUsers { [weak self] result in
             guard let self else { return }
             switch result {
@@ -40,7 +41,7 @@ final class SearchPresenter: SearchPresenterProtocol {
                 var userIDSet = Set(usersArray.map({ $0.documentID }))
 
                 for firebaseUser in firebaseUserArray {
-                    guard let documentID = firebaseUser.documentID, documentID != currentUser?.uid else { continue }
+                    guard let documentID = firebaseUser.documentID, documentID != mainUserID else { continue }
 
                     if !userIDSet.contains(documentID) {
                         usersArray.append(firebaseUser)

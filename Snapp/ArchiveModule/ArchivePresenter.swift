@@ -14,7 +14,7 @@ protocol ArchiveViewProtocol: AnyObject {
 
 
 protocol ArchivePresenterProtocol: AnyObject {
-    init(view: ArchiveViewProtocol, user: FirebaseUser, firestoreService: FireStoreServiceProtocol)
+    init(view: ArchiveViewProtocol, user: FirebaseUser, firestoreService: FireStoreServiceProtocol, mainUser: String)
 }
 
 final class ArchivePresenter: ArchivePresenterProtocol {
@@ -22,11 +22,13 @@ final class ArchivePresenter: ArchivePresenterProtocol {
     var posts: [EachPost]?
     let mainUser: FirebaseUser
     let firestoreService: FireStoreServiceProtocol
+    let mainUserID: String
 
-    init(view: ArchiveViewProtocol, user: FirebaseUser, firestoreService: FireStoreServiceProtocol) {
+    init(view: ArchiveViewProtocol, user: FirebaseUser, firestoreService: FireStoreServiceProtocol, mainUser: String) {
         self.view = view
         self.mainUser = user
         self.firestoreService = firestoreService
+        self.mainUserID = mainUser
     }
 
     private func fetchPosts() {

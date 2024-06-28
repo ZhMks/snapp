@@ -86,6 +86,7 @@ class MenuForPostView: UIView {
         layer.cornerRadius = 10
         addSubviews()
         layout()
+        addTapGestureToView()
     }
     
     required init?(coder: NSCoder) {
@@ -124,6 +125,15 @@ class MenuForPostView: UIView {
     @objc func pinButtonTapped() {
         presenter.pinPost(post: presenter.post)
         self.removeFromSuperview()
+    }
+
+    @objc func tapOnView() {
+        self.removeFromSuperview()
+    }
+
+    private func addTapGestureToView() {
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(tapOnView))
+        self.addGestureRecognizer(tapGesture)
     }
 }
 

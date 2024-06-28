@@ -162,10 +162,10 @@ final class AddProfileVc: UIViewController {
     func plusButtonTapped(user: FirebaseUser, id: String) {
         let profileVC = ProfileViewController()
         let firestoreService = presenter.firestoreService
-        let presenter = ProfilePresenter(view: profileVC, mainUser: user, userID: id, firestoreService: firestoreService!)
+        let presenter = ProfilePresenter(view: profileVC, mainUser: user, mainUserID: id, firestoreService: firestoreService!)
         profileVC.presenter = presenter
 
-        (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootViewController(profileVC, user: user)
+        (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootViewController(profileVC, user: user, mainUserID: id)
     }
 
    @objc private func pickAvatar() {

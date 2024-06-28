@@ -168,7 +168,7 @@ extension MenuForFeedViewController {
             topSeparatorView.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: 30),
             topSeparatorView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 166),
             topSeparatorView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -159),
-            topSeparatorView.heightAnchor.constraint(equalToConstant: 2),
+            topSeparatorView.heightAnchor.constraint(equalToConstant: 3),
 
             addToBookmarkButton.topAnchor.constraint(equalTo: topSeparatorView.bottomAnchor, constant: 15),
             addToBookmarkButton.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 28),

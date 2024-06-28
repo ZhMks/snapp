@@ -10,6 +10,10 @@ import XCTest
 @testable import FirebaseAuth
 
 class MockView: SecondOnboardingViewProtocol {
+    func showAuthorisationAlert(error: String) {
+        <#code#>
+    }
+    
     func showAlert() {
     }
 }
@@ -24,36 +28,37 @@ class MockValidator: ValidatorProtocol {
 }
 
 class MocFireBaseAuthService: FireBaseAuthProtocol {
-
-    var verificationID: String?
-    
-    func signUpUser(phone: String, completion: @escaping (Bool) -> Void) {
+    func signUpUser(phone: String, completion: @escaping (Result<Bool, any Error>) -> Void) {
         Auth.auth().settings?.isAppVerificationDisabledForTesting = true
         PhoneAuthProvider.provider().verifyPhoneNumber(phone, uiDelegate: nil) { verificationID, error in
-            if let _ = error {
-                completion(false)
+            if let error = error {
+                completion(.failure(error))
             }
             if let _ = verificationID {
-                completion(true)
+                completion(.success(true))
             }
         }
     }
     
-    func verifyCode(code: String, completion: @escaping (Bool) -> Void) {
+    func verifyCode(code: String, completion: @escaping (Result<User, Snapp.AuthorisationErrors>) -> Void) {
         Auth.auth().settings?.isAppVerificationDisabledForTesting = true
         let verificationID = ""
         let credential = PhoneAuthProvider.provider().credential(withVerificationID: verificationID, verificationCode: code)
         Auth.auth().signIn(with: credential) { authData, error in
-            if let _ = error {
-                completion(false)
+            if let error = error {
+                completion(.failure(.invalidCredential))
             }
-            if let _ = authData {
-                completion(true)
+            if let data = authData {
+                completion(.success(data.user))
             }
         }
     }
     
+    func logOut(completion: @escaping (Result<Void, any Error>) -> Void) {
+        print()
+    }
 
+    var verificationID: String?
 }
 
 final class SnappTests: XCTestCase {

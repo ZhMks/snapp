@@ -66,9 +66,9 @@ class SignInViewController: UIViewController {
                 let firestoreService = self?.presenter.firestoreService
                 let profileVC = ProfileViewController()
                 guard let userID = Auth.auth().currentUser?.uid else { return }
-                let presenter = ProfilePresenter(view: profileVC, mainUser: user, userID: userID , firestoreService: firestoreService!)
+                let presenter = ProfilePresenter(view: profileVC, mainUser: user, mainUserID: userID , firestoreService: firestoreService!)
                 profileVC.presenter = presenter
-                (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootViewController(profileVC, user: user)
+                (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootViewController(profileVC, user: user, mainUserID: userID)
             case .failure(let error):
                 print(error.localizedDescription)
             }

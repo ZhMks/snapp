@@ -64,8 +64,7 @@ final class FeedViewController: UIViewController {
         addSubviews()
         tuneTableView()
         layout()
-        presenter.fetchPosts()
-        presenter.fetchUserStorie()
+     //   presenter.fetchMainUserStorie()
     }
 
     override func viewWillDisappear(_ animated: Bool) {
@@ -99,15 +98,23 @@ final class FeedViewController: UIViewController {
 
 // MARK: -Presenter Output
 extension FeedViewController: FeedViewProtocol {
+    func showError(descr: String) {
+        print(descr)
+    }
+    
 
     func showMenuForFeed(post: EachPost) {
         let feedMenu = MenuForFeedViewController()
-        let feedPresenter = MenuForFeedPresenter(view: feedMenu, user: self.presenter.mainUser, firestoreService: self.presenter.firestoreService, post: post)
+        let feedPresenter = MenuForFeedPresenter(view: feedMenu, user: self.presenter.mainUser, firestoreService: self.presenter.firestoreService, post: post, mainUserID: self.presenter.mainUserID)
         feedMenu.presenter = feedPresenter
         feedMenu.modalPresentationStyle = .formSheet
 
         if let sheet = feedMenu.sheetPresentationController {
-            sheet.detents = [.medium()]
+            let customHeight = UISheetPresentationController.Detent.custom(identifier: .init("customHeight")) { context in
+                return 300
+            }
+            sheet.detents = [customHeight]
+            sheet.largestUndimmedDetentIdentifier = .some(customHeight.identifier)
         }
         self.navigationController?.present(feedMenu, animated: true)
     }
@@ -127,7 +134,6 @@ extension FeedViewController: FeedViewProtocol {
     }
     
     func updateViewTable() {
-        print(presenter.posts)
         self.feedTableView.reloadData()
     }
 
@@ -211,7 +217,7 @@ extension FeedViewController: UITableViewDelegate {
                     DispatchQueue.main.async { [weak self] in
                         guard let self else { return }
                         if let avatarImage = UIImage(data: success) {
-                            let detailPostPresenter = DetailPostPresenter(view: detailPostVC, user: user, post: post, avatarImage: avatarImage, firestoreService: presenter.firestoreService)
+                            let detailPostPresenter = DetailPostPresenter(view: detailPostVC, user: user, mainUserID: self.presenter.mainUserID, post: post, avatarImage: avatarImage, firestoreService: presenter.firestoreService)
                                     detailPostVC.presenter = detailPostPresenter
                             detailPostVC.postMenuState = .feedPost
                                     self.navigationController?.pushViewController(detailPostVC, animated: true)
@@ -244,7 +250,8 @@ extension FeedViewController: UITableViewDataSource {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: PostTableCell.identifier, for: indexPath) as? PostTableCell else { return UITableViewCell() }
         guard let user = user(forSection: indexPath.section) else { return UITableViewCell() }
         if let data = presenter.posts?[user]?[indexPath.row] {
-            cell.updateView(post: data, user: user, date: data.date, firestoreService: presenter.firestoreService, state: .feedState)
+            print("Data: \(data), user: \(user)")
+            cell.updateView(post: data, user: user, date: data.date, firestoreService: presenter.firestoreService, state: .feedState, mainUserID: self.presenter.mainUserID)
         }
 
         cell.showMenuForFeed = { [weak self] post in

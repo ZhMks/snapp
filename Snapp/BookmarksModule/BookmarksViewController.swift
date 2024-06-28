@@ -31,6 +31,16 @@ class BookmarksViewController: UIViewController {
 // MARK: - Presenter Output
 
 extension BookmarksViewController: BookmarksViewProtocol {
+
+    func updateTableView() {
+        DispatchQueue.main.async { [weak self] in
+            guard let self else { return }
+            addSubviews()
+            layoutSubviews()
+            bookmarksTableView.reloadData()
+        }
+    }
+    
     func showError() {
         print("Error in Bookmarks Posts Fetch")
     }
@@ -48,7 +58,7 @@ extension BookmarksViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: PostTableCell.identifier, for: indexPath) as? PostTableCell else { return UITableViewCell() }
         guard let data = presenter.posts?[indexPath.row] else { return UITableViewCell() }
-        cell.updateView(post: data, user: presenter.user, date: data.date, firestoreService: presenter.firestoreService, state: .profileState)
+        cell.updateView(post: data, user: presenter.user, date: data.date, firestoreService: presenter.firestoreService, state: .profileState, mainUserID: self.presenter.mainUserID)
         return cell
     }
 
@@ -63,5 +73,19 @@ extension BookmarksViewController: UITableViewDelegate {
 // MARK: - Layout
 
 extension BookmarksViewController {
+    private func addSubviews() {
+        view.addSubview(bookmarksTableView)
+    }
 
+    private func layoutSubviews() {
+        let safeArea = view.safeAreaLayoutGuide
+
+        NSLayoutConstraint.activate([
+            bookmarksTableView.topAnchor.constraint(equalTo: safeArea.topAnchor),
+            bookmarksTableView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
+            bookmarksTableView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
+            bookmarksTableView.widthAnchor.constraint(equalTo: safeArea.widthAnchor),
+            bookmarksTableView.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor)
+        ])
+    }
 }

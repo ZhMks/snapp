@@ -249,7 +249,7 @@ class DetailPostViewController: UIViewController {
         switch postMenuState {
         case .feedPost:
             let menuForFeed = MenuForFeedViewController()
-            let menuForFeedPresenter = MenuForFeedPresenter(view: menuForFeed, user: self.presenter.user, firestoreService: self.presenter.firestoreService, post: self.presenter.post)
+            let menuForFeedPresenter = MenuForFeedPresenter(view: menuForFeed, user: self.presenter.user, firestoreService: self.presenter.firestoreService, post: self.presenter.post, mainUserID: self.presenter.mainUserID)
             menuForFeed.presenter = menuForFeedPresenter
             menuForFeed.modalPresentationStyle = .formSheet
             if let sheet = menuForFeed.sheetPresentationController {
@@ -285,9 +285,8 @@ class DetailPostViewController: UIViewController {
     @objc func addCommentTapped() {
         let commentView = CommentViewController()
         guard let documentID = presenter.post.documentID else { return }
-        guard let commentor = Auth.auth().currentUser?.uid else { return }
         guard let user = presenter.user.documentID else { return }
-        let commentPresenter = CommentViewPresenter(view: commentView, image: presenter.avatarImage, user: user, documentID: documentID, commentor: commentor, firestoreService: presenter.firestoreService, state: .comment)
+        let commentPresenter = CommentViewPresenter(view: commentView, image: presenter.avatarImage, user: user, documentID: documentID, commentor: self.presenter.mainUserID, firestoreService: presenter.firestoreService, state: .comment)
         commentView.presenter = commentPresenter
         commentView.modalPresentationStyle = .fullScreen
         present(commentView, animated: true)
@@ -312,7 +311,7 @@ extension DetailPostViewController: DetailPostViewProtocol {
         addSubviewsWithoutImage()
         layoutSubviewsWithoutImage()
         tuneTableView()
-       updateAvatarImage()
+        updateAvatarImage()
     }
 
     func showMenuForPost() {
@@ -330,8 +329,8 @@ extension DetailPostViewController: DetailPostViewProtocol {
     }
 
     func updateLikes() {
-        guard let likes = presenter.likes, let docID = presenter.user.documentID else { return }
-        if likes.contains(where: { $0.documentID! == docID }) {
+        guard let likes = presenter.likes else { return }
+        if likes.contains(where: { $0.documentID! == presenter.mainUserID }) {
             self.likeButton.setBackgroundImage(UIImage(systemName: "heart.fill"), for: .normal)
         } else {
             self.likeButton.setBackgroundImage(UIImage(systemName: "heart"), for: .normal)
@@ -344,7 +343,7 @@ extension DetailPostViewController: DetailPostViewProtocol {
     func updateCommentsState() {
         if !presenter.post.isCommentariesEnabled {
             guard let docID = presenter.user.documentID else { return }
-            if docID != Auth.auth().currentUser?.uid {
+            if docID != self.presenter.mainUserID {
                 addCommentView.backgroundColor = .clear
                 addCommentView.isHidden = true
             }
@@ -366,8 +365,7 @@ extension DetailPostViewController: DetailPostViewProtocol {
     func showCommentVC(with: String, commentID: String?, state: CommentState) {
         let commentView = CommentViewController()
         guard let documentID = presenter.post.documentID else { return }
-        guard let commentor = Auth.auth().currentUser?.uid else { return }
-        let commentPresenter = CommentViewPresenter(view: commentView, image: presenter.avatarImage, user: with, documentID: documentID, commentor: commentor, firestoreService: presenter.firestoreService, state: state)
+        let commentPresenter = CommentViewPresenter(view: commentView, image: presenter.avatarImage, user: with, documentID: documentID, commentor: self.presenter.mainUserID, firestoreService: presenter.firestoreService, state: state)
         commentView.presenter = commentPresenter
         commentPresenter.commentID = commentID
         commentView.modalPresentationStyle = .pageSheet
@@ -539,10 +537,10 @@ extension DetailPostViewController {
             jobLabel.trailingAnchor.constraint(equalTo: detailPostView.trailingAnchor, constant: -210),
             jobLabel.heightAnchor.constraint(equalToConstant: 15),
 
-            postImageView.topAnchor.constraint(equalTo: detailPostView.topAnchor, constant: 60),
-            postImageView.leadingAnchor.constraint(equalTo: detailPostView.leadingAnchor, constant: 20),
-            postImageView.trailingAnchor.constraint(equalTo: detailPostView.trailingAnchor, constant: -20),
-            postImageView.heightAnchor.constraint(lessThanOrEqualToConstant: 200),
+            postImageView.topAnchor.constraint(equalTo: jobLabel.bottomAnchor, constant: 12),
+            postImageView.leadingAnchor.constraint(equalTo: detailPostView.leadingAnchor, constant: 16),
+            postImageView.trailingAnchor.constraint(equalTo: detailPostView.trailingAnchor, constant: -16),
+            postImageView.heightAnchor.constraint(lessThanOrEqualToConstant: 212),
 
             postTextLabel.topAnchor.constraint(equalTo: postImageView.bottomAnchor, constant: 5),
             postTextLabel.leadingAnchor.constraint(equalTo: detailPostView.leadingAnchor, constant: 20),

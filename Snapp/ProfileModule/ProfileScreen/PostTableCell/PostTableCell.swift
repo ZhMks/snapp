@@ -17,10 +17,12 @@ final class PostTableCell: UITableViewCell {
     //MARK: -PROPERTIES
     static let identifier = "PostTableCell"
 
-    var buttonTappedHandler: (() -> Void)?
+    var manuButtonTappedHandler: (() -> Void)?
     var incrementLikes: ((_ post: String) -> Void)?
     var decrementLikes: ((_ post: String) -> Void)?
     var showMenuForFeed: ((_ post: EachPost) -> Void)?
+    var bookmarkButtonTapHandler: ((EachPost) -> Void)?
+
 
 
     var user: FirebaseUser?
@@ -29,6 +31,7 @@ final class PostTableCell: UITableViewCell {
     var firestoreService: FireStoreServiceProtocol?
     var postcellstate: PostCellState?
     let menuForPost = MenuForPostView()
+    var mainUserID: String?
 
 
     private lazy var headerView: UIView = {
@@ -153,6 +156,7 @@ final class PostTableCell: UITableViewCell {
         bookmarkButton.translatesAutoresizingMaskIntoConstraints = false
         bookmarkButton.setBackgroundImage(UIImage(systemName: "bookmark"), for: .normal)
         bookmarkButton.tintColor = ColorCreator.shared.createButtonColor()
+        bookmarkButton.addTarget(self, action: #selector(bookmarkButtonTapped), for: .touchUpInside)
         return bookmarkButton
     }()
 
@@ -225,11 +229,12 @@ final class PostTableCell: UITableViewCell {
         }
     }
 
-    func updateView(post: EachPost, user: FirebaseUser, date: String, firestoreService: FireStoreServiceProtocol, state: PostCellState) {
+    func updateView(post: EachPost, user: FirebaseUser, date: String, firestoreService: FireStoreServiceProtocol, state: PostCellState, mainUserID: String) {
         self.post = post
         self.user = user
         self.firestoreService = firestoreService
         self.postcellstate = state
+        self.mainUserID = mainUserID
 
         configureLabels(post: post, user: user, date: date)
 
@@ -264,21 +269,25 @@ final class PostTableCell: UITableViewCell {
     private func fetchPostImage(for post: EachPost) {
         guard let postImageURL = post.image else { return }
 
-        let networkService = NetworkService()
-        networkService.fetchImage(string: postImageURL) { [weak self] result in
-            guard let self = self else { return }
+        if !postImageURL.isEmpty {
+            let networkService = NetworkService()
+            networkService.fetchImage(string: postImageURL) { [weak self] result in
+                guard let self = self else { return }
 
-            switch result {
-            case .success(let imageData):
-                DispatchQueue.main.async {
-                    self.postImage.image = UIImage(data: imageData)
-                    self.postImage.clipsToBounds = true
-                    self.postImage.layer.cornerRadius = 30
-                    self.postImage.contentMode = .scaleAspectFill
+                switch result {
+                case .success(let imageData):
+                    DispatchQueue.main.async {
+                        self.postImage.image = UIImage(data: imageData)
+                        self.postImage.clipsToBounds = true
+                        self.postImage.layer.cornerRadius = 30
+                        self.postImage.contentMode = .scaleAspectFill
+                    }
+                case .failure(let error):
+                    print("Failed to fetch post image: \(error.localizedDescription)")
                 }
-            case .failure(let error):
-                print("Failed to fetch post image: \(error.localizedDescription)")
             }
+        } else {
+            return
         }
     }
 
@@ -315,15 +324,23 @@ final class PostTableCell: UITableViewCell {
                     self.likesLabel.text = "\(likes.count)"
                     likesButton.setBackgroundImage(UIImage(systemName: "heart"), for: .normal)
                 } else {
-                    self.likes = likes
-                    self.likesLabel.text = "\(likes.count)"
-                    likesButton.setBackgroundImage(UIImage(systemName: "heart.fill"), for: .normal)
+                    for like in likes {
+                        if like.documentID! == mainUserID {
+                            self.likes = likes
+                            self.likesLabel.text = "\(likes.count)"
+                            likesButton.setBackgroundImage(UIImage(systemName: "heart.fill"), for: .normal)
+                        } else {
+                            self.likes = likes
+                            self.likesLabel.text = "\(likes.count)"
+                        }
+                    }
                 }
             case .failure(let error):
                 print("Failed to fetch likes: \(error.localizedDescription)")
             }
         }
     }
+
 
     private func showMenu() {
         menuForPost.isHidden = false
@@ -359,6 +376,10 @@ final class PostTableCell: UITableViewCell {
     }
 
 
+    @objc func bookmarkButtonTapped() {
+        guard let post = self.post else { return }
+        bookmarkButtonTapHandler?(post)
+    }
 
 
     // MARK: -LAYOUT
@@ -498,6 +519,6 @@ final class PostTableCell: UITableViewCell {
 extension PostTableCell: MenuForPostDelegate {
 
     func pinPost(post: EachPost) {
-        buttonTappedHandler?()
+        manuButtonTappedHandler?()
     }
 }

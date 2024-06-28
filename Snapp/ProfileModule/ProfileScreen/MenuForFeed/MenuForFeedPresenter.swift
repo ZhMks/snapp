@@ -16,7 +16,7 @@ protocol MenuForFeedViewProtocol: AnyObject {
 }
 
 protocol MenuForFeedPresenterProtocol: AnyObject {
-    init(view: MenuForFeedViewProtocol, user: FirebaseUser, firestoreService: FireStoreServiceProtocol, post: EachPost)
+    init(view: MenuForFeedViewProtocol, user: FirebaseUser, firestoreService: FireStoreServiceProtocol, post: EachPost, mainUserID: String)
 }
 
 final class MenuForFeedPresenter: MenuForFeedPresenterProtocol {
@@ -25,12 +25,14 @@ final class MenuForFeedPresenter: MenuForFeedPresenterProtocol {
     let user: FirebaseUser
     let firestoreService: FireStoreServiceProtocol
     let post: EachPost
+    let mainUserID: String
 
-    init(view: MenuForFeedViewProtocol, user: FirebaseUser, firestoreService: FireStoreServiceProtocol, post: EachPost) {
+    init(view: MenuForFeedViewProtocol, user: FirebaseUser, firestoreService: FireStoreServiceProtocol, post: EachPost, mainUserID: String) {
         self.view = view
         self.user = user
         self.firestoreService = firestoreService
         self.post = post
+        self.mainUserID = mainUserID
     }
 
     func saveIntoFavourites() {
@@ -56,9 +58,8 @@ final class MenuForFeedPresenter: MenuForFeedPresenterProtocol {
     }
 
     func removeSubscribtion() {
-        guard let mainUser = Auth.auth().currentUser?.uid else { return }
         guard let userID = user.documentID else { return }
-        firestoreService.removeSubscribtion(sub: userID, for: mainUser)
+        firestoreService.removeSubscribtion(sub: userID, for: mainUserID)
     }
 
     func enableNotifications() {

@@ -73,11 +73,13 @@ final class DataChangePresenter: DataChangePresenterProtocol {
     func changeName(text: String)  {
         guard let id = user.documentID else { return }
          firestoreService.changeData(id: id, text: text, state: .name)
+        NotificationCenter.default.post(name: Notification.Name("DataChanged"), object: nil)
     }
 
     func changeSurnamet(text: String)  {
         guard let id = user.documentID else { return }
          firestoreService.changeData(id: id, text: text, state: .surname)
+        NotificationCenter.default.post(name: Notification.Name("DataChanged"), object: nil)
     }
 
     func changeDateOfBirth(text: String)  {
