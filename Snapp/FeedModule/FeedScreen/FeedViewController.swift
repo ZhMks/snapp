@@ -64,7 +64,7 @@ final class FeedViewController: UIViewController {
         addSubviews()
         tuneTableView()
         layout()
-     //   presenter.fetchMainUserStorie()
+        presenter.fetchMainUserStorie()
     }
 
     override func viewWillDisappear(_ animated: Bool) {

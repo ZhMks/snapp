@@ -93,7 +93,8 @@ final class FireStoreService: FireStoreServiceProtocol {
 
     func addSnapshotListenerToUser(for user: String, completion: @escaping (Result<FirebaseUser, Error>) -> Void) {
         let ref = Firestore.firestore().collection("Users").document(user)
-        self.userListner = ref.addSnapshotListener({ snapshot, error in
+        self.userListner = ref.addSnapshotListener({ [weak self] snapshot, error in
+            guard let self else { return }
             if let error = error {
                 completion(.failure(error))
             }
@@ -128,7 +129,8 @@ final class FireStoreService: FireStoreServiceProtocol {
         let ref =  Firestore.firestore().collection("Users").document(user).collection("posts")
         var updatedArray: [EachPost] = []
         let dispatchGroup = DispatchGroup()
-        self.postListner = ref.addSnapshotListener { snapshot, error in
+        self.postListner = ref.addSnapshotListener { [weak self] snapshot, error in
+            guard let self else { return }
             if let error = error {
                 completion(.failure(error))
             }
@@ -161,7 +163,8 @@ final class FireStoreService: FireStoreServiceProtocol {
         let ref =  Firestore.firestore().collection("Users").document(user).collection("Favourites")
         var updatedArray: [EachPost] = []
         let dispatchGroup = DispatchGroup()
-        self.favouritesListener = ref.addSnapshotListener { snapshot, error in
+        self.favouritesListener = ref.addSnapshotListener { [weak self] snapshot, error in
+            guard let self else { return }
             if let error = error {
                 completion(.failure(error))
             }
@@ -200,7 +203,8 @@ final class FireStoreService: FireStoreServiceProtocol {
 
     func addSnapshotListenerToCurrentPost(docID: String, userID: String, completion: @escaping (Result<EachPost, Error>) -> Void) {
         let ref =  Firestore.firestore().collection("Users").document(userID).collection("posts").document(docID)
-        self.currentPostListner = ref.addSnapshotListener { docSnapshot, error in
+        self.currentPostListner = ref.addSnapshotListener { [weak self] docSnapshot, error in
+            guard let self else { return }
             if let error = error {
                 completion(.failure(error))
             }
@@ -234,7 +238,8 @@ final class FireStoreService: FireStoreServiceProtocol {
     func getAllUsers(completion: @escaping (Result<[FirebaseUser], Error>) -> Void) {
         var usersArray: [FirebaseUser] = []
         let dbReference = Firestore.firestore().collection("Users")
-        dbReference.getDocuments { snapshot, error in
+        dbReference.getDocuments { [weak self] snapshot, error in
+            guard let self else { return }
             if let error = error {
                 completion(.failure(error))
             }
@@ -273,7 +278,8 @@ final class FireStoreService: FireStoreServiceProtocol {
         let dbRef = Firestore.firestore().collection("Users").document(user).collection("posts").document(post).collection("likes")
         var likes: [Like] = []
 
-        dbRef.getDocuments { snapshot, error in
+        dbRef.getDocuments { [weak self] snapshot, error in
+            guard let self else { return }
             if let error = error {
                 completion(.failure(error))
             }
@@ -309,7 +315,8 @@ final class FireStoreService: FireStoreServiceProtocol {
 
     func getUser(id: String, completion: @escaping (Result<FirebaseUser, AuthorisationErrors>) -> Void) {
         let dbReference = Firestore.firestore().collection("Users")
-        dbReference.getDocuments { snapshot, error in
+        dbReference.getDocuments { [weak self] snapshot, error in
+            guard let self else { return }
             if let error = error {
                 print("Error getting documents: \(error)")
                 completion(.failure(.invalidCredential))
@@ -357,7 +364,8 @@ final class FireStoreService: FireStoreServiceProtocol {
         let refDB = Firestore.firestore().collection("Users").document(sub).collection("posts")
         var posts: [EachPost] = []
 
-        refDB.getDocuments { snapshot, error in
+        refDB.getDocuments { [weak self] snapshot, error in
+            guard let self else { return }
             if let error = error {
                 print("Error getting posts: \(error)")
                 completion(.failure(.getError))
@@ -412,7 +420,8 @@ final class FireStoreService: FireStoreServiceProtocol {
         let ref = Firestore.firestore().collection("Users").document(user).collection("Favourites")
         var posts: [EachPost] = []
         let dispatchGroup = DispatchGroup()
-        ref.getDocuments { snapshot, error in
+        ref.getDocuments { [weak self] snapshot, error in
+            guard let self else { return }
             if error != nil {
                 return
             }
@@ -443,7 +452,8 @@ final class FireStoreService: FireStoreServiceProtocol {
                 }
                 dispatchGroup.leave()
             }
-            dispatchGroup.notify(queue: .main) {
+            dispatchGroup.notify(queue: .main) { [weak self] in
+                guard let self else { return }
                 completion(.success(posts))
             }
         }
@@ -556,7 +566,8 @@ final class FireStoreService: FireStoreServiceProtocol {
         let docReft = Firestore.firestore().collection("Users").document(user).collection("posts").document(post).collection("comments")
         var commentsArray: [Comment] = []
 
-        docReft.getDocuments { snapshot, error in
+        docReft.getDocuments { [weak self] snapshot, error in
+            guard let self else { return }
             if let error = error {
                 completion(.failure(error))
             }
@@ -613,8 +624,8 @@ final class FireStoreService: FireStoreServiceProtocol {
         let docReft = Firestore.firestore().collection("Users").document(user).collection("posts").document(post).collection("comments").document(comment).collection("answers")
         var answers: [Answer] = []
 
-        docReft.getDocuments { snapshot, error in
-
+        docReft.getDocuments { [weak self] snapshot, error in
+            guard let self else { return }
             if let error = error {
                 completion(.failure(error))
             }
@@ -652,7 +663,8 @@ final class FireStoreService: FireStoreServiceProtocol {
     func saveIntoFavourites(post: EachPost, for user: String, completion: @escaping (Result<EachPost, Error>) -> Void) {
         let docRef = Firestore.firestore().collection("Users").document(user).collection("Favourites")
 
-        docRef.getDocuments { snapshot, error in
+        docRef.getDocuments { [weak self]  snapshot, error in
+            guard let self else { return }
             if let error = error {
                 completion(.failure(error))
             }
@@ -735,7 +747,8 @@ final class FireStoreService: FireStoreServiceProtocol {
                 case .failure(let failure):
                     completion(.failure(failure))
                 }
-                dispatchGroup.notify(queue: .main) {
+                dispatchGroup.notify(queue: .main) { [weak self] in
+                    guard let self else { return }
                     do {
                         try archiveRef.addDocument(from: newPost)
                         completion(.success(newPost))
@@ -769,7 +782,8 @@ final class FireStoreService: FireStoreServiceProtocol {
         var decodedDocuments: [EachPost] = []
         let dispatchGroup = DispatchGroup()
         let link = Firestore.firestore().collection("Users").document(user).collection("Archive")
-        link.getDocuments { snapshot, error in
+        link.getDocuments { [weak self] snapshot, error in
+            guard let self else { return }
             if let error = error {
                 completion(.failure(error))
             }
@@ -797,7 +811,8 @@ final class FireStoreService: FireStoreServiceProtocol {
                     }
                     dispatchGroup.leave()
                 }
-                dispatchGroup.notify(queue: .main) {
+                dispatchGroup.notify(queue: .main) { [weak self] in
+                    guard let self else { return }
                     completion(.success(decodedDocuments))
                 }
             }
@@ -818,7 +833,8 @@ final class FireStoreService: FireStoreServiceProtocol {
         let link = Firestore.firestore().collection("users").document(user).collection("Bookmarks")
         var decodedDocuments: [EachPost] = []
 
-        link.getDocuments { snapshot, error in
+        link.getDocuments { [weak self] snapshot, error in
+            guard let self else { return }
             if let error = error {
                 completion(.failure(error))
             }

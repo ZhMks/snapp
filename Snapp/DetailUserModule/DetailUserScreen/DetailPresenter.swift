@@ -39,8 +39,6 @@ final class DetailPresenter: DetailPresenterProtocol {
         self.user = user
         self.mainUserID = mainUserID
         self.firestoreService = firestoreService
-        fetchImage()
-        fetchPhotoAlbum()
     }
 
     func fetchImage()  {
@@ -94,12 +92,16 @@ final class DetailPresenter: DetailPresenterProtocol {
         for link in user.photoAlbum {
             dispatchGroup.enter()
             networkService.fetchImage(string: link) { [weak self] result in
+                guard let self = self else {
+                    dispatchGroup.leave()
+                    return
+                }
                 switch result {
                 case .success(let data):
                     guard let image = UIImage(data: data) else { return }
-                    self?.photoAlbum?.append(image)
+                    self.photoAlbum?.append(image)
                 case .failure(let failure):
-                    self?.view?.showErrorAler(error: failure.localizedDescription)
+                    self.view?.showErrorAler(error: failure.localizedDescription)
                 }
                 dispatchGroup.leave()
             }
@@ -128,12 +130,18 @@ final class DetailPresenter: DetailPresenterProtocol {
     }
 
     func addObserverForPost() {
+        let dispatchQueue = DispatchQueue(label: "inter")
         guard let id = user.documentID else { return }
         firestoreService.addSnapshotListenerToPosts(for: id) { [weak self] result in
             guard let self else { return }
             switch result {
             case .success(let success):
                 self.posts = success
+                dispatchQueue.async { [weak self] in
+                    self?.fetchPosts()
+                    self?.fetchImage()
+                }
+                fetchPhotoAlbum()
             case .failure(_):
                 return
             }

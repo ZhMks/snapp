@@ -201,11 +201,6 @@ class DetailUserViewController: UIViewController {
 
     // MARK: -Lifecycle
 
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        presenter.fetchPosts()
-    }
-
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         presenter.addObserverForuser()

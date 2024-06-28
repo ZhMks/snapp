@@ -97,11 +97,11 @@ final class FeedPresenter: FeedPresenterProtocol {
     func addUserListener() {
         guard let userID = mainUser.documentID else { return }
         firestoreService.addSnapshotListenerToUser(for: userID) { [weak self] result in
-            guard let self else { return }
+            guard let self = self else { return }
             switch result {
             case .success(let success):
                 self.mainUser = success
-              //  self.fetchPosts()
+                self.fetchPosts()
               //  self.fetchSubscribersStorie()
             case .failure(_):
                 self.view?.showEmptyScreen()
@@ -114,36 +114,41 @@ final class FeedPresenter: FeedPresenterProtocol {
     }
 
     func fetchPosts() {
-        print(mainUser.subscribtions)
         posts = [:]
         let dispatchGroup = DispatchGroup()
         for sub in mainUser.subscribtions {
-            print(sub)
             dispatchGroup.enter()
             firestoreService.getUser(id: sub) { [weak self] result in
-                guard let self else { return }
+                guard let self = self else {
+                    dispatchGroup.leave()
+                    return
+                }
                 switch result {
                 case .success(let firebaseUser):
-                    firestoreService.getPosts(sub: firebaseUser.documentID!) { [weak self] result in
-                        guard let self else { return }
+                    self.firestoreService.getPosts(sub: firebaseUser.documentID!) { [weak self] result in
+                        guard let self = self else {
+                            dispatchGroup.leave()
+                            return
+                        }
                         defer {
                             dispatchGroup.leave()
                         }
                         switch result {
                         case .success(let postArray):
-                            posts?.updateValue(postArray, forKey: firebaseUser)
+                            self.posts?.updateValue(postArray, forKey: firebaseUser)
                         case .failure(let failure):
-                            view?.showError(descr: failure.localizedDescription)
+                            self.view?.showError(descr: failure.localizedDescription)
                         }
                     }
                 case .failure(let error):
-                    view?.showError(descr: error.localizedDescription)
+                    self.view?.showError(descr: error.localizedDescription)
+                    dispatchGroup.leave()
                 }
             }
         }
         dispatchGroup.notify(queue: .main) { [weak self] in
-            guard let self else { return }
-            view?.updateViewTable()
+            guard let self = self else { return }
+            self.view?.updateViewTable()
         }
     }
 
