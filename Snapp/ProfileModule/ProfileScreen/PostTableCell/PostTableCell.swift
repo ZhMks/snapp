@@ -14,7 +14,7 @@ enum PostCellState {
 
 final class PostTableCell: UITableViewCell {
 
-    //MARK: -PROPERTIES
+    //MARK: -Properties
     static let identifier = "PostTableCell"
 
     var manuButtonTappedHandler: (() -> Void)?
@@ -202,7 +202,7 @@ final class PostTableCell: UITableViewCell {
     }()
 
 
-    // MARK: -LIFECYCLE
+    // MARK: -Lifecycle
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: .default, reuseIdentifier: reuseIdentifier)
@@ -215,7 +215,10 @@ final class PostTableCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
 
-    // MARK: -FUNCS
+     deinit {
+        print("Cell is deallocated")
+    }
+    // MARK: -Funcs
 
     @objc func likesButtonTapped() {
         guard let post = self.post?.documentID else { return }
@@ -256,7 +259,6 @@ final class PostTableCell: UITableViewCell {
 
         firestoreService?.getComments(post: postID, user: userID) { [weak self] result in
             guard let self = self else { return }
-
             switch result {
             case .success(let comments):
                 self.commentsLabel.text = "\(comments.count)"
@@ -275,9 +277,10 @@ final class PostTableCell: UITableViewCell {
                 guard let self = self else { return }
 
                 switch result {
-                case .success(let imageData):
-                    DispatchQueue.main.async {
-                        self.postImage.image = UIImage(data: imageData)
+                case .success(let image):
+                    DispatchQueue.main.async { [weak self] in
+                        guard let self = self else { return }
+                        self.postImage.image = image
                         self.postImage.clipsToBounds = true
                         self.postImage.layer.cornerRadius = 30
                         self.postImage.contentMode = .scaleAspectFill
@@ -299,9 +302,10 @@ final class PostTableCell: UITableViewCell {
             guard let self = self else { return }
 
             switch result {
-            case .success(let imageData):
-                DispatchQueue.main.async {
-                    self.avatarImageView.image = UIImage(data: imageData)
+            case .success(let image):
+                DispatchQueue.main.async { [weak self] in
+                    guard let self = self else { return }
+                    self.avatarImageView.image = image
                     self.avatarImageView.clipsToBounds = true
                     self.avatarImageView.layer.cornerRadius = self.avatarImageView.frame.width / 2
                 }
@@ -313,7 +317,7 @@ final class PostTableCell: UITableViewCell {
 
     private func fetchLikes(for post: EachPost, user: FirebaseUser) {
         guard let postID = post.documentID, let userID = user.documentID else { return }
-        print("PostID in fetchLikes: \(postID)")
+        
         firestoreService?.getNumberOfLikesInpost(user: userID, post: postID) { [weak self] result in
             guard let self = self else { return }
 

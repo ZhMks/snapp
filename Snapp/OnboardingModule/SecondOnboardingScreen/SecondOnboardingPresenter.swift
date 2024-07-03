@@ -6,8 +6,6 @@
 //
 
 import Foundation
-import FirebaseAuth
-import FirebaseFirestore
 
 
 protocol SecondOnboardingViewProtocol: AnyObject {
@@ -16,10 +14,7 @@ protocol SecondOnboardingViewProtocol: AnyObject {
 }
 
 protocol SecondOnboardingPresenterProtocol: AnyObject {
-    var authService: FireBaseAuthProtocol { get set }
     init (view: SecondOnboardingViewProtocol, authService: FireBaseAuthProtocol)
-    func validateText(phone: String) -> Bool
-    func authentificateUser(phone: String, completions: @escaping (Bool) -> Void)
 }
 
 final class SecondOnboardingPresenter: SecondOnboardingPresenterProtocol {
@@ -27,7 +22,7 @@ final class SecondOnboardingPresenter: SecondOnboardingPresenterProtocol {
     weak var view: SecondOnboardingViewProtocol?
     var authService: FireBaseAuthProtocol
 
-    init(view: any SecondOnboardingViewProtocol, authService: FireBaseAuthProtocol) {
+    init(view: SecondOnboardingViewProtocol, authService: FireBaseAuthProtocol) {
         self.view = view
         self.authService = authService
     }
@@ -43,11 +38,12 @@ final class SecondOnboardingPresenter: SecondOnboardingPresenterProtocol {
     func authentificateUser(phone: String, completions: @escaping (Bool) -> Void) {
 
         authService.signUpUser(phone: phone, completion: { [weak self] result in
+            guard let self = self else { return }
             switch result {
             case .success(_):
                 completions(true)
             case .failure(let failure):
-                self?.view?.showAuthorisationAlert(error: failure.localizedDescription)
+                self.view?.showAuthorisationAlert(error: failure.localizedDescription)
             }
         })
     }

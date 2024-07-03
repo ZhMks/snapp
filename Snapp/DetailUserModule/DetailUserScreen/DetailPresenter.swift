@@ -15,9 +15,11 @@ protocol DetailViewProtocol: AnyObject {
 
     func showErrorAler(error: String)
 
-    func updateAlbum(image: [UIImage])
+    func updateAlbum()
 
     func showFeedMenu(post: EachPost)
+
+    func updateSubButton()
 }
 
 protocol DetailPresenterProtocol: AnyObject {
@@ -30,7 +32,7 @@ final class DetailPresenter: DetailPresenterProtocol {
     let firestoreService: FireStoreServiceProtocol
     var user: FirebaseUser
     var posts: [EachPost] = []
-    var image: UIImage?
+    var avatarImage: UIImage?
     let mainUserID: String
     var photoAlbum: [UIImage]?
 
@@ -39,17 +41,21 @@ final class DetailPresenter: DetailPresenterProtocol {
         self.user = user
         self.mainUserID = mainUserID
         self.firestoreService = firestoreService
+        checkSubscribers()
     }
 
-    func fetchImage()  {
+    deinit {
+        print("DetailUserPresenter Deinited")
+    }
+
+   private func fetchImage()  {
         guard let urlLink = user.image else { return }
         let networkService = NetworkService()
         networkService.fetchImage(string: urlLink) { [weak self] result in
-            guard let self else { return }
+            guard let self = self else { return }
             switch result {
-            case .success(let data):
-                guard let image = UIImage(data: data) else { return }
-                self.image = image
+            case .success(let image):
+                self.avatarImage = image
                 view?.updateAvatarImage(image: image)
             case .failure(let failure):
                 view?.showErrorAler(error: failure.localizedDescription)
@@ -57,10 +63,10 @@ final class DetailPresenter: DetailPresenterProtocol {
         }
     }
 
-    func fetchPosts() {
+   private func fetchPosts() {
         guard let id = user.documentID else { return }
         firestoreService.getPosts(sub: id) { [weak self] result in
-            guard let self else { return }
+            guard let self = self else { return }
             switch result {
             case .success(let success):
                 posts = success
@@ -97,8 +103,7 @@ final class DetailPresenter: DetailPresenterProtocol {
                     return
                 }
                 switch result {
-                case .success(let data):
-                    guard let image = UIImage(data: data) else { return }
+                case .success(let image):
                     self.photoAlbum?.append(image)
                 case .failure(let failure):
                     self.view?.showErrorAler(error: failure.localizedDescription)
@@ -107,18 +112,20 @@ final class DetailPresenter: DetailPresenterProtocol {
             }
         }
         dispatchGroup.notify(queue: .main) { [weak self] in
-            guard let photoAlbum = self?.photoAlbum else { return }
-            self?.view?.updateAlbum(image: photoAlbum)
+            guard let self = self else { return }
+            self.view?.updateAlbum()
         }
     }
 
     func addObserverForuser() {
         guard let id = user.documentID else { return }
         firestoreService.addSnapshotListenerToUser(for: id) { [weak self] result in
-            guard let self else { return }
+            guard let self = self else { return }
             switch result {
             case .success(let user):
                 self.user = user
+                self.fetchImage()
+                self.fetchPosts()
             case .failure(_):
                 return
             }
@@ -130,18 +137,13 @@ final class DetailPresenter: DetailPresenterProtocol {
     }
 
     func addObserverForPost() {
-        let dispatchQueue = DispatchQueue(label: "inter")
         guard let id = user.documentID else { return }
         firestoreService.addSnapshotListenerToPosts(for: id) { [weak self] result in
-            guard let self else { return }
+            guard let self = self else { return }
             switch result {
             case .success(let success):
                 self.posts = success
-                dispatchQueue.async { [weak self] in
-                    self?.fetchPosts()
-                    self?.fetchImage()
-                }
-                fetchPhotoAlbum()
+                self.view?.updateData(data: self.posts)
             case .failure(_):
                 return
             }
@@ -164,5 +166,13 @@ final class DetailPresenter: DetailPresenterProtocol {
     func decrementLikes(post: String) {
         guard let userID = user.documentID else { return }
         firestoreService.decrementLikes(user: userID, mainUser: mainUserID, post: post)
+    }
+
+    func checkSubscribers() {
+        for sub in user.subscribers {
+            if sub == mainUserID {
+                view?.updateSubButton()
+            }
+        }
     }
 }

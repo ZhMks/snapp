@@ -40,7 +40,7 @@ final class BookmarksPresenter: BookmarksPresenterProtocol {
             case .success(let bookmarkedPosts):
                 self.posts = bookmarkedPosts
                 view?.updateTableView()
-            case .failure(let error):
+            case .failure(_):
                 view?.showError()
             }
         }

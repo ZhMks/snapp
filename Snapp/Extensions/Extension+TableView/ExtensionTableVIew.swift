@@ -14,18 +14,17 @@ extension UITableView {
         header.translatesAutoresizingMaskIntoConstraints = false
 
         NSLayoutConstraint.activate([
-            header.topAnchor.constraint(equalTo: self.topAnchor),
-            header.leadingAnchor.constraint(equalTo: self.leadingAnchor),
-            header.trailingAnchor.constraint(equalTo: self.trailingAnchor),
-            header.centerXAnchor.constraint(equalTo: self.centerXAnchor),
-            header.widthAnchor.constraint(equalTo: self.widthAnchor),
+            header.topAnchor.constraint(equalTo: topAnchor),
+            header.leadingAnchor.constraint(equalTo: leadingAnchor),
+            header.trailingAnchor.constraint(equalTo: trailingAnchor),
+            header.centerXAnchor.constraint(equalTo: centerXAnchor),
+            header.widthAnchor.constraint(equalTo: widthAnchor),
         ])
-        //header.setNeedsLayout()
+
         header.layoutIfNeeded()
 
         header.frame.size = header.systemLayoutSizeFitting(UIView.layoutFittingExpandedSize)
-        self.tableHeaderView = header
-   
+        tableHeaderView = header
     }
 }
 

@@ -207,7 +207,7 @@ class DetailPostViewController: UIViewController {
     }
 
     // MARK: -Funcs
-   private func tuneNavItem() {
+    private func tuneNavItem() {
         let settingsButton = UIBarButtonItem(image: UIImage(named: "menu"),
                                              style: .plain,
                                              target: self,
@@ -253,7 +253,11 @@ class DetailPostViewController: UIViewController {
             menuForFeed.presenter = menuForFeedPresenter
             menuForFeed.modalPresentationStyle = .formSheet
             if let sheet = menuForFeed.sheetPresentationController {
-                sheet.detents = [.medium()]
+                let customHeight = UISheetPresentationController.Detent.custom(identifier: .init("customHeight")) { context in
+                    return 300
+                }
+                sheet.detents = [customHeight]
+                sheet.largestUndimmedDetentIdentifier = .some(customHeight.identifier)
             }
             self.navigationController?.present(menuForFeed, animated: true)
         case .detailPost:
@@ -267,7 +271,7 @@ class DetailPostViewController: UIViewController {
         self.navigationController?.popViewController(animated: true)
     }
 
-   private func tuneTableView() {
+    private func tuneTableView() {
         commentsTableView.register(CommentsTableCell.self, forCellReuseIdentifier: CommentsTableCell.identifier)
         commentsTableView.rowHeight = UITableView.automaticDimension
         commentsTableView.estimatedRowHeight = 44.0
@@ -292,7 +296,7 @@ class DetailPostViewController: UIViewController {
         present(commentView, animated: true)
     }
 
-   private func addTapGesture() {
+    private func addTapGesture() {
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(removeMenuView))
         tapGesture.numberOfTapsRequired = 1
         view.addGestureRecognizer(tapGesture)
@@ -306,8 +310,8 @@ class DetailPostViewController: UIViewController {
 
 // MARK: -Output Presenter
 extension DetailPostViewController: DetailPostViewProtocol {
-    
-   func showViewControllerWithoutImage() {
+
+    func showViewControllerWithoutImage() {
         addSubviewsWithoutImage()
         layoutSubviewsWithoutImage()
         tuneTableView()
@@ -566,7 +570,7 @@ extension DetailPostViewController {
             commentsLabel.leadingAnchor.constraint(equalTo: commentsButton.trailingAnchor, constant: 5),
             commentsLabel.trailingAnchor.constraint(equalTo: detailPostView.trailingAnchor, constant: -231),
             commentsLabel.bottomAnchor.constraint(equalTo: separatorView.topAnchor, constant: -5),
-            
+
             bookmarkButton.topAnchor.constraint(equalTo: postTextLabel.bottomAnchor, constant: 16),
             bookmarkButton.leadingAnchor.constraint(equalTo: commentsLabel.trailingAnchor, constant: 183),
             bookmarkButton.trailingAnchor.constraint(equalTo: detailPostView.trailingAnchor, constant: -30),

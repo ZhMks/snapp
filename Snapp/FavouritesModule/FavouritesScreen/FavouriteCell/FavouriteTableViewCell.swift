@@ -181,9 +181,8 @@ final class FavouriteTableViewCell: UITableViewCell {
             networkService.fetchImage(string: postImage) { [weak self] result in
                 guard let self else { return }
                 switch result {
-                case .success(let success):
+                case .success(let image):
                     DispatchQueue.main.async {
-                        guard let image = UIImage(data: success) else { return }
                         self.postImage.image = image
                         self.postImage.clipsToBounds = true
                         self.postImage.layer.cornerRadius = 30
@@ -198,9 +197,8 @@ final class FavouriteTableViewCell: UITableViewCell {
         networkService.fetchImage(string: avatarImage) { [weak self] result in
             guard let self else { return }
             switch result {
-            case .success(let success):
+            case .success(let image):
                 DispatchQueue.main.async {
-                    guard let image = UIImage(data: success) else { return }
                     self.avatarImageView.image = image
                     self.avatarImageView.clipsToBounds = true
                     self.avatarImageView.layer.cornerRadius = self.avatarImageView.frame.width / 2

@@ -30,14 +30,14 @@ enum InternetErrors: Error {
 }
 
 protocol INetworkService {
-    func fetchImage(string: String, completion: @escaping(Result<Data, InternetErrors>) -> Void)
+    func fetchImage(string: String, completion: @escaping(Result<UIImage, InternetErrors>) -> Void)
 }
 
 
 final class NetworkService: INetworkService {
 
 
-    func fetchImage(string: String, completion: @escaping (Result<Data, InternetErrors>) -> Void) {
+    func fetchImage(string: String, completion: @escaping (Result<UIImage, InternetErrors>) -> Void) {
         guard let url = URL.init(string: string) else { return }
         let request = URLRequest(url: url)
         URLSession.shared.dataTask(with: request) { data, response, error in
@@ -56,7 +56,8 @@ final class NetworkService: INetworkService {
                 }
             }
             if let data = data {
-                completion(.success(data))
+                guard let image = UIImage(data: data) else { return }
+                completion(.success(image))
             }
         }
         .resume()

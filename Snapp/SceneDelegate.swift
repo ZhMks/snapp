@@ -6,7 +6,6 @@
 //
 
 import UIKit
-import FirebaseCore
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
@@ -19,18 +18,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
         let window = UIWindow(windowScene: windowScene)
 
-    
-//        let fireUser = FirebaseUser(name: "King", surname: "PunchMan", identifier: "KingsPuch", job: "Hero", subscribers: ["Sub1", "Sub2"], subscribtions: ["Sub3", "Sub4"], stories: ["Stories1", "Stories2"], image: "https://firebasestorage.googleapis.com:443/v0/b/snappproject-9ca98.appspot.com/o/users%2FQu7irRWg3jN83xac8ZBTtwBy8EF2%2Favatar?alt=media&token=b01ca331-d32f-46fd-b603-cbc9591c5785")
-//        let firestoreService = FireStoreService()
-//        let userID = "uuptdvnyBrcXwovEv3U69uxMD7m1"
-//        let image = UIImage(systemName: "checkmark")!
-//        let posts: [MainPost] = []
-//        let docID = "Qu7irRWg3jN83xac8ZBTtwBy8EF2"
-//
-//        let profileVC = ProfileViewController()
-//        let profilePresenter = ProfilePresenter(view: profileVC, mainUser: fireUser, userID: docID, firestoreService: firestoreService)
-//        profileVC.presenter = profilePresenter
-
         let controller = FirstBoardingVC()
         let presenter = Presenter(view: controller)
         controller.presener = presenter
@@ -41,8 +28,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window.makeKeyAndVisible()
 
         self.window = window
-        FirebaseApp.configure()
-
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {
@@ -73,25 +58,22 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // to restore the scene back to its current state.
 
         // Save changes in the application's managed object context when the application transitions to the background.
-        (UIApplication.shared.delegate as? AppDelegate)?.saveContext()
     }
 
-    func changeRootViewController(_ vc: UIViewController, user: FirebaseUser, mainUserID: String) {
-
-        let fireStoreService = FireStoreService()
+    func changeRootViewController(_ vc: UIViewController, user: FirebaseUser, mainUserID: String, firestoreService: FireStoreServiceProtocol) {
 
         guard let window = self.window else {
             return
         }
 
         let favouritesVC = FavouritesViewController()
-        let favouritesPresenter = FavouritesPresenter(view: favouritesVC, user: user, firestoreService: fireStoreService)
+        let favouritesPresenter = FavouritesPresenter(view: favouritesVC, user: user, firestoreService: firestoreService)
         favouritesVC.presenter = favouritesPresenter
         let favouriteNavVC = UINavigationController(rootViewController: favouritesVC)
         favouriteNavVC.tabBarItem = UITabBarItem(title: .localized(string: "Сохраненные"), image: UIImage(systemName: "heart"), tag: 3)
 
         let feedVC = FeedViewController()
-        let feedPresenter = FeedPresenter(view: feedVC, user: user, firestoreService: fireStoreService, mainUser: mainUserID)
+        let feedPresenter = FeedPresenter(view: feedVC, user: user, firestoreService: firestoreService, mainUser: mainUserID)
         feedVC.presenter = feedPresenter
         let feedNavVc = UINavigationController(rootViewController: feedVC)
         feedNavVc.tabBarItem = UITabBarItem(title: .localized(string: "Главная"), image: UIImage(systemName: "house"), tag: 0)
@@ -100,7 +82,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         profileNavVC.tabBarItem = UITabBarItem(title: .localized(string: "Профиль"), image: UIImage(systemName: "person.crop.circle"), tag: 1)
 
         let searchVC = SearchViewController()
-        let searchPresenter = SearchPresenter(view: searchVC, firestoreService: fireStoreService, mainUser: mainUserID)
+        let searchPresenter = SearchPresenter(view: searchVC, firestoreService: firestoreService, mainUser: mainUserID)
         searchVC.presenter = searchPresenter
         let searchNavVC = UINavigationController(rootViewController: searchVC)
         searchNavVC.tabBarItem = UITabBarItem(title: .localized(string: "Поиск"), image: UIImage(systemName: "magnifyingglass"), tag: 2)

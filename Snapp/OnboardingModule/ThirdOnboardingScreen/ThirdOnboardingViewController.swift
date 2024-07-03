@@ -10,11 +10,9 @@ import FirebaseAuth
 
 class ThirdOnboardingViewController: UIViewController {
 
-    // MARK: -PROPERTIES
+    // MARK: -Properties
 
     var presenter: ThirdOnboardingPresenter!
-
-    var number: String
 
     private lazy var registrationAccept: UILabel = {
         let registrationAccept = UILabel()
@@ -29,7 +27,7 @@ class ThirdOnboardingViewController: UIViewController {
     private lazy var informationText: UILabel = {
         let informationText = UILabel()
         informationText.translatesAutoresizingMaskIntoConstraints = false
-        informationText.text = .localized(string: "Мы отправили SMS с кодом на номер") + "     \(number)"
+        informationText.text = .localized(string: "Мы отправили SMS с кодом на номер") + "     \(presenter.number!)"
         informationText.font = UIFont(name: "Inter-Medium", size: 14)
         informationText.textColor = ColorCreator.shared.createTextColor()
         informationText.textAlignment = .center
@@ -71,16 +69,7 @@ class ThirdOnboardingViewController: UIViewController {
         return checkmarkImage
     }()
 
-    // MARK: -LIFECYCLE
-
-    init(number: String) {
-        self.number = number
-        super.init(nibName: nil, bundle: nil)
-    }
-
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
+    // MARK: -Lifecycle
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -91,7 +80,7 @@ class ThirdOnboardingViewController: UIViewController {
         createGesture()
     }
 
-    // MARK: -FUNCS
+    // MARK: -Funcs
 
     @objc func dismissController() {
         self.navigationController?.popViewController(animated: true)
@@ -115,7 +104,7 @@ class ThirdOnboardingViewController: UIViewController {
 
 
 
-// MARK: -OUTPUT PRESENTER
+// MARK: -Presenter Output
 extension ThirdOnboardingViewController: ThirdOnboardingViewProtocol {
 
     func showCreateUserScreen() {
@@ -142,7 +131,7 @@ extension ThirdOnboardingViewController: ThirdOnboardingViewProtocol {
     }
 }
 
-// MARK: -LAYOUT
+// MARK: -Layout
 
 extension ThirdOnboardingViewController {
 

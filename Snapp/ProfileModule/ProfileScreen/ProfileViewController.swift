@@ -254,12 +254,6 @@ class ProfileViewController: UIViewController {
 
     // MARK: -Lifecycle
 
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        presenter.addListenerForPost()
-        presenter.addListenerForUser()
-    }
-
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
@@ -267,19 +261,13 @@ class ProfileViewController: UIViewController {
         addSubviews()
         layout()
         tuneTableView()
-    }
-
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        NotificationCenter.default.removeObserver(self)
-        presenter.removePostListener()
-        presenter.removeUserListener()
+        presenter.fetchAvatarImage()
     }
 
     // MARK: -Funcs
     @objc func createPostButtonTapped() {
         let createPostVC = CreatePostViewController()
-        guard let userImage = presenter.image else { return }
+        guard let userImage = presenter.avatarImage else { return }
         let createPostPresenter = CreatePostPresenter(view: createPostVC, mainUser: presenter.mainUser, userID: presenter.mainUserID, firestoreService: presenter.firestoreService, image: userImage, posts: presenter.posts)
         createPostVC.presenter = createPostPresenter
         createPostVC.modalPresentationStyle = .formSheet
@@ -318,7 +306,8 @@ class ProfileViewController: UIViewController {
 
     @objc func goToPhotoalbumScreen() {
         let photoAlbumVC = PhotoalbumViewController()
-        let photoAlbumPresenter = PhotoalbumPresenter(view: photoAlbumVC, photoAlbum: presenter.photoAlbum)
+        let uiimageTest : [UIImage: [UIImage]?] = [:]
+        let photoAlbumPresenter = PhotoalbumPresenter(view: photoAlbumVC, photoAlbum: uiimageTest)
         photoAlbumVC.presenter = photoAlbumPresenter
         navigationController?.pushViewController(photoAlbumVC, animated: true)
     }
@@ -460,8 +449,8 @@ extension ProfileViewController: UITableViewDataSource {
         }
 
         cell.bookmarkButtonTapHandler = { [weak self] post in
-            guard let self else { return }
-            
+            guard let self = self else { return }
+
 
         }
         return cell
@@ -481,7 +470,7 @@ extension ProfileViewController: UITableViewDelegate {
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        guard let image = self.presenter.image  else { return }
+        guard let image = self.presenter.avatarImage  else { return }
         let data = self.presenter.posts[indexPath.row]
         let detailPostVC = DetailPostViewController()
         let detailPostPresenter = DetailPostPresenter(view: detailPostVC,
@@ -531,13 +520,11 @@ extension ProfileViewController: UIImagePickerControllerDelegate, UINavigationCo
 
         switch picker.sourceType {
         case .camera:
-            presenter.createMainPhotoAlbum(image: image)
+            presenter.addImageToPhotoAlbum(image: image, state: .storieImage)
         case .photoLibrary:
-            presenter.createMainPhotoAlbum(image: image)
+            presenter.addImageToPhotoAlbum(image: image, state: .photoImage)
         default: return
         }
-
-        NotificationCenter.default.post(name: Notification.Name("imageIsSelected"), object: nil)
         self.dismiss(animated: true)
     }
 

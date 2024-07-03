@@ -9,6 +9,8 @@ import UIKit
 
 final class ProfileCollectionViewCell: UICollectionViewCell {
 
+    // MARK: - Properties
+
 static let identifier = "ProfileCollectionViewCell"
 
     private lazy var photoImageView: UIImageView = {
@@ -19,6 +21,8 @@ static let identifier = "ProfileCollectionViewCell"
         return photoImageView
     }()
 
+    // MARK: - Lifecycle
+
     override init(frame: CGRect) {
         super.init(frame: frame)
         addSubviews()
@@ -28,12 +32,18 @@ static let identifier = "ProfileCollectionViewCell"
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
-    func addSubviews() {
+
+    deinit {
+        print("Cell is deallocated")
+    }
+
+    // MARK: - Funcs
+
+  private  func addSubviews() {
         contentView.addSubview(photoImageView)
     }
 
-    func layoutViews() {
+   private func layoutViews() {
         let safeArea = contentView.safeAreaLayoutGuide
 
         NSLayoutConstraint.activate([

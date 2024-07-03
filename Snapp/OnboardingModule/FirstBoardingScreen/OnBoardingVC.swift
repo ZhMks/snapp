@@ -9,7 +9,7 @@ import UIKit
 
 class FirstBoardingVC: UIViewController {
 
-    // MARK: -PROPERTIES
+    // MARK: -Properties
 
     var presener: MainPresenterProtocol!
 
@@ -42,7 +42,7 @@ class FirstBoardingVC: UIViewController {
         return authorizeButton
     }()
 
-    // MARK: -LIFECYCLE
+    // MARK: -Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
@@ -50,7 +50,7 @@ class FirstBoardingVC: UIViewController {
         layout()
     }
 
-    // MARK: -FUNCS
+    // MARK: -Funcs
 
     @objc func showSecondOnboardingVC() {
         let authService = FireBaseAuthService()
@@ -69,12 +69,12 @@ class FirstBoardingVC: UIViewController {
     }
 }
 
-// MARK: -OUTPUT PRESENTER
+// MARK: -Presenter Output
 extension FirstBoardingVC: MainViewProtocol {
 
 }
 
-// MARK: -LAYOUT
+// MARK: -Layout
 extension FirstBoardingVC {
     private func addSubviews() {
         view.addSubview(onboardingImage)

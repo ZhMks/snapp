@@ -6,11 +6,6 @@
 //
 
 import Foundation
-import FirebaseFirestore
-import FirebaseFirestoreSwift
-import FirebaseStorage
-import FirebaseAuth
-import CoreData
 
 
 protocol ThirdOnboardingViewProtocol: AnyObject {
@@ -20,39 +15,37 @@ protocol ThirdOnboardingViewProtocol: AnyObject {
 }
 
 protocol ThirdOnboardingPresenterProtocol: AnyObject {
-    var authService: FireBaseAuthProtocol? { get set }
-    var firestoreService: FireStoreServiceProtocol? { get set }
     init (view: ThirdOnboardingViewProtocol, authService: FireBaseAuthProtocol, firestoreService: FireStoreServiceProtocol)
-    func checkCode(code: String)
 }
 
 final class ThirdOnboardingPresenter: ThirdOnboardingPresenterProtocol {
 
     weak var view: ThirdOnboardingViewProtocol?
-    var authService: FireBaseAuthProtocol?
-    var firestoreService: FireStoreServiceProtocol?
-    let firestore = Firestore.firestore()
+    let authService: FireBaseAuthProtocol
+    let firestoreService: FireStoreServiceProtocol
+    var number: String?
 
-    init(view: any ThirdOnboardingViewProtocol, authService: FireBaseAuthProtocol, firestoreService: FireStoreServiceProtocol) {
+    init(view: ThirdOnboardingViewProtocol, authService: FireBaseAuthProtocol, firestoreService: FireStoreServiceProtocol) {
         self.view = view
         self.authService = authService
         self.firestoreService = firestoreService
     }
 
     func checkCode(code: String) {
-        authService?.verifyCode(code: code) { [weak self] result in
+        authService.verifyCode(code: code) { [weak self] result in
+            guard let self = self else { return }
             switch result {
             case .success(let success):
-                self?.firestoreService?.getUser(id: success.uid) { result in
+                self.firestoreService.getUser(id: success.uid) { result in
                     switch result {
                     case .success(let user):
-                        self?.view?.showUserExistAlert(id: user.documentID!)
+                        self.view?.showUserExistAlert(id: user.documentID!)
                     case .failure(_):
-                        self?.view?.showCreateUserScreen()
+                        self.view?.showCreateUserScreen()
                     }
                 }
             case .failure(let failure):
-                self?.view?.showErrorAlert(error: failure.description)
+                self.view?.showErrorAlert(error: failure.description)
             }
         }
     }

@@ -82,16 +82,15 @@ final class SearchTableViewCell: UITableViewCell {
             guard let self else { return }
             switch result {
             case .success(let success):
-                let uiImage = UIImage(data: success)
                 DispatchQueue.main.async { [weak self] in
-                    guard let self else { return }
-                    userImage.image = uiImage
+                    guard let self = self else { return }
+                    userImage.image = success
                     updateImageView()
                 }
             case .failure(_):
                 let uiImage = UIImage(systemName: "checkmark")
                 DispatchQueue.main.async { [weak self] in
-                    guard let self else { return }
+                    guard let self = self else { return }
                     userImage.image = uiImage
                 }
             }

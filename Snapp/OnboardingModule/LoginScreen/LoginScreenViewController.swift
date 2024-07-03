@@ -9,7 +9,7 @@ import UIKit
 
 class LoginScreenViewController: UIViewController {
 
-    // MARK: - PROPERTIES
+    // MARK: - Properties
 
     var loginpresenter: LoginPresenter!
 
@@ -63,7 +63,7 @@ class LoginScreenViewController: UIViewController {
         return nextButton
     }()
 
-    // MARK: -LIFECYCLE
+    // MARK: -LifeCycle
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -74,28 +74,37 @@ class LoginScreenViewController: UIViewController {
         createGesture()
     }
 
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        NotificationCenter.default.removeObserver(self)
+    }
+
+    // MARK: - Funcs
+
     @objc func pushThirdController() {
         let number = phoneTextField.text!
         if loginpresenter.checkPhone(number: number) {
             loginpresenter.authentificateUser(phone: number) { [weak self] result in
+                guard let self = self else { return }
                 switch result {
                 case true:
-                    DispatchQueue.main.async {
+                    DispatchQueue.main.async { [weak self] in
+                        guard let self = self else { return }
                         let signInVC = SignInViewController()
-                        let authService = self?.loginpresenter.authService
+                        let authService = self.loginpresenter.authService
                         let firestoreService = FireStoreService()
                         let signInPresenter = SignInPresenter(view: signInVC,
-                                                              firebaseAuth:authService!,
+                                                              firebaseAuth:authService,
                                                               firestoreService: firestoreService)
                         signInVC.presenter = signInPresenter
                         signInVC.modalPresentationStyle = .formSheet
                         if let sheet = signInVC.sheetPresentationController {
                             sheet.detents = [.medium()]
                         }
-                        self?.navigationController?.present(signInVC, animated: true)
+                        self.navigationController?.present(signInVC, animated: true)
                     }
                 case false:
-                    self?.loginpresenter.showAlert()
+                    self.loginpresenter.showAlert()
                 }
             }
         }
@@ -112,7 +121,7 @@ class LoginScreenViewController: UIViewController {
     }
 }
 
-// MARK: -PRESENTEROUTPUT
+// MARK: -Presenter Output
 
 extension LoginScreenViewController: LoginViewProtocol {
     func showAlert() {
@@ -125,7 +134,7 @@ extension LoginScreenViewController: LoginViewProtocol {
     }
 }
 
-//MARK: -LAYOUT
+//MARK: -Layout
 
 extension LoginScreenViewController {
     private func addSubviews() {
@@ -172,6 +181,8 @@ extension LoginScreenViewController {
     }
 }
 
+
+// MARK: - TextField Delegate
 extension LoginScreenViewController: UITextFieldDelegate {
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
 
@@ -180,10 +191,6 @@ extension LoginScreenViewController: UITextFieldDelegate {
         let newString = (text as NSString).replacingCharacters(in: range, with: string)
 
         textField.text = StringFormatter.shared.format(with: "+X (XXX) XXX-XXXX", phone: newString)
-
-        if textField.text!.count > 16 {
-            NotificationCenter.default.post(name: NSNotification.Name("NumberFullFilled"), object: nil)
-        }
 
         return false
     }

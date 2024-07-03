@@ -15,7 +15,6 @@ protocol AddProfileViewProtocol: AnyObject {
 
 protocol AddProfilePresenterProtocol: AnyObject {
     init(view: AddProfileViewProtocol, firestoreService: FireStoreServiceProtocol)
-    func createUser(id: String, name: String, surname: String, job: String, image: UIImage, completion: @escaping (Result <FirebaseUser, Error>) -> Void)
 }
 
 
@@ -47,9 +46,9 @@ final class AddProfilePresenter: AddProfilePresenterProtocol {
                                         stories: [],
                                         image: "",
                                         photoAlbum: [],
-        sex: false)
+                                        sex: false)
         firestoreService?.saveImageIntoStorage(urlLink: ref, photo: image) { [weak self] result in
-            guard let self else { return }
+            guard let self = self else { return }
             switch result {
             case .success(let success):
                 firebaseUser.image = success.absoluteString

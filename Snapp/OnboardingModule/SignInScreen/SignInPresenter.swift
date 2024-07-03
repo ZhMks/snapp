@@ -15,7 +15,6 @@ protocol SignInViewProtocol: AnyObject {
 
 protocol SignInPresenterProtocol: AnyObject {
     init(view: SignInViewProtocol?, firebaseAuth: FireBaseAuthProtocol, firestoreService: FireStoreServiceProtocol)
-    func checkCode(code: String, completion: @escaping (Result<FirebaseUser, Error>) -> Void)
 }
 
 final class SignInPresenter: SignInPresenterProtocol {
@@ -32,10 +31,11 @@ final class SignInPresenter: SignInPresenterProtocol {
 
     func checkCode(code: String, completion: @escaping (Result<FirebaseUser, Error>) -> Void) {
         fireBaseAuthService.verifyCode(code: code) { [weak self] result in
-            guard let self else { return }
+            guard let self = self else { return }
             switch result {
             case .success(let user):
-                firestoreService.getUser(id: user.uid) { result in
+                firestoreService.getUser(id: user.uid) { [weak self] result in
+                    guard let self = self else { return }
                     switch result {
                     case .success(let user):
                         completion(.success(user))

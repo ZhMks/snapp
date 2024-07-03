@@ -106,8 +106,7 @@ final class CommentsTableCell: UITableViewCell {
                 networkService.fetchImage(string: avatarImage) { [weak self] result in
                     guard let self else { return }
                     switch result {
-                    case .success(let success):
-                        guard let image = UIImage(data: success) else { return }
+                    case .success(let image):
                         DispatchQueue.main.async {
                             self.avatarImageView.image = image
                             self.avatarImageView.clipsToBounds = true
@@ -137,8 +136,7 @@ final class CommentsTableCell: UITableViewCell {
                 networkService.fetchImage(string: avatarImage) { [weak self] result in
                     guard let self else { return }
                     switch result {
-                    case .success(let success):
-                        guard let image = UIImage(data: success) else { return }
+                    case .success(let image):
                         DispatchQueue.main.async {
                             self.avatarImageView.image = image
                             self.avatarImageView.clipsToBounds = true

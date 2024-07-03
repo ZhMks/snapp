@@ -17,7 +17,6 @@ protocol SearchViewProtocol: AnyObject {
 
 protocol SearchPresenterProtocol: AnyObject {
     init(view: SearchViewProtocol?, firestoreService: FireStoreServiceProtocol, mainUser: String)
-    func showNextVC(user: FirebaseUser, userID: String)
 }
 
 final class SearchPresenter: SearchPresenterProtocol {
@@ -33,9 +32,13 @@ final class SearchPresenter: SearchPresenterProtocol {
         self.mainUserID = mainUser
     }
 
+    deinit {
+        print("SearchPresenter is deinited")
+    }
+
     func getAllUsers() {
         firestoreService.getAllUsers { [weak self] result in
-            guard let self else { return }
+            guard let self = self else { return }
             switch result {
             case .success(let firebaseUserArray):
                 var userIDSet = Set(usersArray.map({ $0.documentID }))

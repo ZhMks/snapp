@@ -32,6 +32,10 @@ class SearchViewController: UIViewController {
         presenter.getAllUsers()
     }
 
+    deinit {
+        print("SearchVC is deinited")
+    }
+
 
     //MARK: -Funcs
 }
@@ -80,27 +84,6 @@ extension SearchViewController: SearchViewProtocol {
     }
 }
 
-
-//MARK: -Layout
-
-extension SearchViewController {
-
-    private func addSubviews() {
-        view.addSubview(allUsersTable)
-    }
-
-    private func layout() {
-        let safeArea = view.safeAreaLayoutGuide
-
-        NSLayoutConstraint.activate([
-            allUsersTable.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: 15),
-            allUsersTable.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 25),
-            allUsersTable.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -20),
-            allUsersTable.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor, constant: -15)
-        ])
-    }
-}
-
 // MARK: -TableView DataSource
 extension SearchViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -126,4 +109,27 @@ extension SearchViewController: UITableViewDelegate {
         tableView.deselectRow(at: indexPath, animated: true)
     }
 }
+
+
+//MARK: -Layout
+
+extension SearchViewController {
+
+    private func addSubviews() {
+        view.addSubview(allUsersTable)
+    }
+
+    private func layout() {
+        let safeArea = view.safeAreaLayoutGuide
+
+        NSLayoutConstraint.activate([
+            allUsersTable.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: 15),
+            allUsersTable.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 25),
+            allUsersTable.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -20),
+            allUsersTable.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor, constant: -15)
+        ])
+    }
+}
+
+
 

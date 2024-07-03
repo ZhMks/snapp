@@ -10,7 +10,7 @@ import UIKit
 
 final class SecondOnboardingVC: UIViewController {
 
-    // MARK: -PROPERTIES
+    // MARK: -Properties
 
     var presenter: SecondOnboardingPresenter!
 
@@ -85,7 +85,7 @@ final class SecondOnboardingVC: UIViewController {
         return politicsTitle
     }()
 
-    // MARK: -LIFECYCLE
+    // MARK: -Lifecycle
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -100,7 +100,12 @@ final class SecondOnboardingVC: UIViewController {
         createGesture()
     }
 
-    // MARK: -FUNCS
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        NotificationCenter.default.removeObserver(self)
+    }
+
+    // MARK: -Funcs
 
     @objc func dismissController() {
         self.navigationController?.popViewController(animated: true)
@@ -111,17 +116,18 @@ final class SecondOnboardingVC: UIViewController {
         if presenter.validateText(phone: number) {
 
             presenter.authentificateUser(phone: number) { [weak self] isAuthorised in
-                guard let self else { return }
+                guard let self = self else { return }
                 switch isAuthorised {
                 case true:
                     DispatchQueue.main.async { [weak self] in
-                        guard let self else { return }
-                        let thirdController = ThirdOnboardingViewController(number: number)
+                        guard let self = self else { return }
+                        let thirdController = ThirdOnboardingViewController()
                         let firestoreService = FireStoreService()
                         let thirdPresenter = ThirdOnboardingPresenter(view: thirdController,
                                                                       authService: presenter.authService,
                                                                       firestoreService: firestoreService)
                         thirdController.presenter = thirdPresenter
+                        thirdPresenter.number = number
                         navigationController?.pushViewController(thirdController, animated: true)
                     }
                 case false:
@@ -143,7 +149,7 @@ final class SecondOnboardingVC: UIViewController {
 
 }
 
-// MARK: -OUTPUT PRESENTER
+// MARK: -Presenter Output
 
 extension SecondOnboardingVC: SecondOnboardingViewProtocol {
 
@@ -168,7 +174,7 @@ extension SecondOnboardingVC: SecondOnboardingViewProtocol {
 
 }
 
-// MARK: - LAYOUT
+// MARK: - Layout
 
 extension SecondOnboardingVC {
 
@@ -227,7 +233,7 @@ extension SecondOnboardingVC {
     }
 }
 
-// MARK: -TEXTFIELDDELEGATE
+// MARK: -TextField Delegate
 
 extension SecondOnboardingVC: UITextFieldDelegate {
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {

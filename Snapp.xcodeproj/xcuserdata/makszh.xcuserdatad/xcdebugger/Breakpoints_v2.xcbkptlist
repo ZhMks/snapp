@@ -26,8 +26,8 @@
             filePath = "Snapp/FavouritesModule/FavouritesScreen/FavouriteCell/FavouriteTableViewCell.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "208"
-            endingLineNumber = "208"
+            startingLineNumber = "206"
+            endingLineNumber = "206"
             landmarkName = "updateView(post:user:date:firestoreService:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -42,8 +42,8 @@
             filePath = "Snapp/FavouritesModule/FavouritesScreen/FavouriteCell/FavouriteTableViewCell.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "192"
-            endingLineNumber = "192"
+            startingLineNumber = "191"
+            endingLineNumber = "191"
             landmarkName = "updateView(post:user:date:firestoreService:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -51,16 +51,16 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "295DB944-73AD-4F77-8963-9D27C414917A"
+            uuid = "C89371EE-2723-4CBA-BACA-D3C020703F2F"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Snapp/FeedModule/FeedScreen/FeedViewController.swift"
+            filePath = "Snapp/SearchModule/SearchScreeen/SearchViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "137"
-            endingLineNumber = "137"
-            landmarkName = "updateViewTable()"
+            startingLineNumber = "107"
+            endingLineNumber = "107"
+            landmarkName = "tableView(_:didSelectRowAt:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

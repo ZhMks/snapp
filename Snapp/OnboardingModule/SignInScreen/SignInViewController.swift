@@ -61,14 +61,15 @@ class SignInViewController: UIViewController {
     @objc func verifyCodeButtonTapped() {
         guard let code = acceptCodeTextField.text else { return }
         presenter.checkCode(code: code) { [weak self] result in
+            guard let self = self else { return }
             switch result {
             case .success(let user):
-                let firestoreService = self?.presenter.firestoreService
+                let firestoreService = self.presenter.firestoreService 
                 let profileVC = ProfileViewController()
                 guard let userID = Auth.auth().currentUser?.uid else { return }
-                let presenter = ProfilePresenter(view: profileVC, mainUser: user, mainUserID: userID , firestoreService: firestoreService!)
+                let presenter = ProfilePresenter(view: profileVC, mainUser: user, mainUserID: userID , firestoreService: firestoreService)
                 profileVC.presenter = presenter
-                (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootViewController(profileVC, user: user, mainUserID: userID)
+                (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootViewController(profileVC, user: user, mainUserID: userID, firestoreService: firestoreService)
             case .failure(let error):
                 print(error.localizedDescription)
             }

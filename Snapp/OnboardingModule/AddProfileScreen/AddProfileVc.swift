@@ -140,7 +140,7 @@ final class AddProfileVc: UIViewController {
                              surname: surNameTextField.text!,
                              job: jobNameTextField.text!,
                              image: avatarImage.image!) { [weak self] result in
-            guard let self else { return }
+            guard let self = self else { return }
             guard let userID = Auth.auth().currentUser?.uid else { return }
             switch result {
             case .success(let user):
@@ -161,11 +161,11 @@ final class AddProfileVc: UIViewController {
 
     func plusButtonTapped(user: FirebaseUser, id: String) {
         let profileVC = ProfileViewController()
-        let firestoreService = presenter.firestoreService
-        let presenter = ProfilePresenter(view: profileVC, mainUser: user, mainUserID: id, firestoreService: firestoreService!)
+        guard let firestoreService = presenter.firestoreService else { return }
+        let presenter = ProfilePresenter(view: profileVC, mainUser: user, mainUserID: id, firestoreService: firestoreService)
         profileVC.presenter = presenter
 
-        (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootViewController(profileVC, user: user, mainUserID: id)
+        (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootViewController(profileVC, user: user, mainUserID: id, firestoreService: firestoreService)
     }
 
    @objc private func pickAvatar() {
@@ -304,7 +304,6 @@ extension AddProfileVc: UITextFieldDelegate {
     }
 
     private func removeKeyboardObservers(){
-        let notificationCenter = NotificationCenter.default
-        notificationCenter.removeObserver(self)
+        NotificationCenter.default.removeObserver(self)
     }
 }

@@ -19,7 +19,6 @@ protocol FeedViewProtocol: AnyObject {
 
 protocol FeedPresenterProtocol: AnyObject {
     init(view: FeedViewProtocol, user: FirebaseUser, firestoreService: FireStoreServiceProtocol, mainUser: String)
-    func fetchPosts()
 }
 
 
@@ -38,7 +37,11 @@ final class FeedPresenter: FeedPresenterProtocol {
         self.mainUser = user
         self.firestoreService = firestoreService
         self.mainUserID = mainUser
-        fetchAvatarImage()
+        addUserListener()
+    }
+
+    deinit {
+        removeListener()
     }
 
     func fetchMainUserStorie() {
@@ -48,8 +51,7 @@ final class FeedPresenter: FeedPresenterProtocol {
                 networkService.fetchImage(string: storie) { [weak self] result in
                     switch result {
                     case .success(let success):
-                        guard let storieImage = UIImage(data: success) else { return }
-                        self?.userStories?.append(storieImage)
+                        self?.userStories?.append(success)
                         self?.view?.updateStorieView()
                     case .failure(let failure):
                         print(failure)
@@ -60,41 +62,10 @@ final class FeedPresenter: FeedPresenterProtocol {
     }
 
     func fetchSubscribersStorie() {
-        let dispatchGroup = DispatchGroup()
-        let networkService = NetworkService()
-        for sub in mainUser.subscribtions {
-            dispatchGroup.enter()
-            firestoreService.getUser(id: sub) { [weak self] result in
-                guard let self else { return }
-                switch result {
-                case .success(let user):
-                    if !user.stories.isEmpty {
-                        for storie in user.stories {
-                            networkService.fetchImage(string: storie) { [weak self] result in
-                                guard let self else { return }
-                                switch result {
-                                case .success(let imgData):
-                                    guard let image = UIImage(data: imgData) else { return }
-                                    self.userStories?.append(image)
-                                case .failure(let failure):
-                                    view?.showError(descr: failure.localizedDescription)
-                                }
-                            }
-                        }
-                        dispatchGroup.leave()
-                    }
-                case .failure(let failure):
-                    view?.showError(descr: failure.localizedDescription)
-                }
-            }
-        }
-        dispatchGroup.notify(queue: .main) { [weak self] in
-            guard let self else { return }
-            view?.updateViewTable()
-        }
+
     }
 
-    func addUserListener() {
+    private func addUserListener() {
         guard let userID = mainUser.documentID else { return }
         firestoreService.addSnapshotListenerToUser(for: userID) { [weak self] result in
             guard let self = self else { return }
@@ -102,18 +73,17 @@ final class FeedPresenter: FeedPresenterProtocol {
             case .success(let success):
                 self.mainUser = success
                 self.fetchPosts()
-              //  self.fetchSubscribersStorie()
             case .failure(_):
                 self.view?.showEmptyScreen()
             }
         }
     }
 
-    func removeListener() {
+   private func removeListener() {
         firestoreService.removeListenerForUser()
     }
 
-    func fetchPosts() {
+   private func fetchPosts() {
         posts = [:]
         let dispatchGroup = DispatchGroup()
         for sub in mainUser.subscribtions {
@@ -125,6 +95,7 @@ final class FeedPresenter: FeedPresenterProtocol {
                 }
                 switch result {
                 case .success(let firebaseUser):
+                    print("Sub inside getUSER: \(firebaseUser.name)")
                     self.firestoreService.getPosts(sub: firebaseUser.documentID!) { [weak self] result in
                         guard let self = self else {
                             dispatchGroup.leave()
@@ -135,6 +106,7 @@ final class FeedPresenter: FeedPresenterProtocol {
                         }
                         switch result {
                         case .success(let postArray):
+                            print("Posts for SUB: \(sub): \(postArray)")
                             self.posts?.updateValue(postArray, forKey: firebaseUser)
                         case .failure(let failure):
                             self.view?.showError(descr: failure.localizedDescription)
@@ -156,10 +128,9 @@ final class FeedPresenter: FeedPresenterProtocol {
         let networkService = NetworkService()
         if let userImage = mainUser.image {
             networkService.fetchImage(string: userImage) { [weak self] result in
-                guard let self else { return }
+                guard let self = self else { return }
                 switch result {
-                case .success(let success):
-                    guard let image = UIImage(data: success) else { return }
+                case .success(let image):
                     view?.updateAvatarImage(image: image)
                 case .failure(_):
                     return

@@ -60,6 +60,7 @@ class DetailUserViewController: UIViewController {
         signalImage.translatesAutoresizingMaskIntoConstraints = false
         signalImage.tintColor = .systemOrange
         signalImage.clipsToBounds = true
+        signalImage.layer.cornerRadius = signalImage.frame.size.width / 2
         return signalImage
     }()
 
@@ -81,7 +82,8 @@ class DetailUserViewController: UIViewController {
         sendMessageButton.titleLabel?.font = UIFont(name: "Inter-Medium", size: 16)
         sendMessageButton.setTitleColor(.white, for: .normal)
         sendMessageButton.setTitle(.localized(string: "Сообщение"), for: .normal)
-        sendMessageButton.backgroundColor = ColorCreator.shared.createButtonColor()
+        sendMessageButton.backgroundColor = .systemGray2
+        sendMessageButton.isEnabled = false
         sendMessageButton.layer.cornerRadius = 10.0
         return sendMessageButton
     }()
@@ -201,12 +203,6 @@ class DetailUserViewController: UIViewController {
 
     // MARK: -Lifecycle
 
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        presenter.addObserverForuser()
-        presenter.addObserverForPost()
-    }
-
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
@@ -214,12 +210,11 @@ class DetailUserViewController: UIViewController {
         tuneNavItem()
         addSubviews()
         layout()
+        presenter.fetchPhotoAlbum()
     }
 
-    override func viewDidDisappear(_ animated: Bool) {
-        super.viewDidDisappear(animated)
-        presenter.removeObserverForUser()
-        presenter.removeObserverForPosts()
+    deinit {
+        print("DetailuserController is deinited")
     }
 
     // MARK: -Funcs
@@ -236,7 +231,12 @@ class DetailUserViewController: UIViewController {
 
 // MARK: -Presenter Output
 extension DetailUserViewController: DetailViewProtocol {
-    
+
+    func updateSubButton() {
+        subscribeButton.backgroundColor = .systemGray3
+        subscribeButton.isEnabled = false
+    }
+
     func showFeedMenu(post: EachPost) {
         let menuForFeedVC = MenuForFeedViewController()
         let presenter = MenuForFeedPresenter(view: menuForFeedVC, user: self.presenter.user, firestoreService: self.presenter.firestoreService, post: post, mainUserID: self.presenter.mainUserID)
@@ -254,16 +254,17 @@ extension DetailUserViewController: DetailViewProtocol {
     }
     
 
-    func updateAlbum(image: [UIImage]) {
+    func updateAlbum() {
         DispatchQueue.main.async { [weak self] in
-            self?.photoCollectionView.reloadData()
+            guard let self = self else { return }
+            self.photoCollectionView.reloadData()
         }
     }
 
 
     func updateData(data: [EachPost]) {
         DispatchQueue.main.async { [weak self] in
-            guard let self else { return }
+            guard let self = self else { return }
             self.tuneTableView()
         }
     }
@@ -271,7 +272,7 @@ extension DetailUserViewController: DetailViewProtocol {
 
     func updateAvatarImage(image: UIImage) {
         DispatchQueue.main.async { [weak self] in
-            guard let self else { return }
+            guard let self = self else { return }
             self.avatarImageView.image = image
             self.avatarImageView.clipsToBounds = true
             self.avatarImageView.layer.cornerRadius = self.avatarImageView.frame.size.width / 2
@@ -299,22 +300,23 @@ extension DetailUserViewController: UITableViewDataSource {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: PostTableCell.identifier, for: indexPath) as? PostTableCell else { return UITableViewCell() }
         let data = presenter.posts[indexPath.row]
         let date = presenter.posts[indexPath.row].date
-        cell.updateView(post: data, user: presenter.user, date: date, firestoreService: presenter.firestoreService, state: .feedState, mainUserID: self.presenter.mainUserID)
+        let mainUserID = self.presenter.mainUserID
+        let firestoreService = presenter.firestoreService
+        cell.updateView(post: data, user: presenter.user, date: date, firestoreService: firestoreService, state: .feedState, mainUserID: mainUserID)
 
         cell.showMenuForFeed = { [weak self] post in
-            guard let self else { return }
+            guard let self = self else { return }
             presenter.showFeedMenu(post: post)
-
         }
 
         cell.incrementLikes = { [weak self] post in
-            guard let self else { return }
+            guard let self = self else { return }
             presenter.incrementLikes(post: post)
             tableView.reloadRows(at: [indexPath], with: .fade)
         }
 
         cell.decrementLikes = { [weak self] post in
-            guard let self else { return }
+            guard let self = self else { return }
             presenter.decrementLikes(post: post)
             tableView.reloadRows(at: [indexPath], with: .fade)
         }
@@ -333,7 +335,7 @@ extension DetailUserViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let data = presenter.posts[indexPath.row]
         let detailPostVC = DetailPostViewController()
-        guard let image = presenter.image  else { return }
+        guard let image = presenter.avatarImage  else { return }
         if data.image!.isEmpty {
             let detailPostPresenter = DetailPostPresenter(view: detailPostVC, user: presenter.user, mainUserID: self.presenter.mainUserID, post: data, avatarImage: image, firestoreService: presenter.firestoreService)
             detailPostVC.presenter = detailPostPresenter
@@ -524,8 +526,6 @@ extension DetailUserViewController {
             searchButton.trailingAnchor.constraint(equalTo: viewForTableTitle.trailingAnchor, constant: -8),
             searchButton.bottomAnchor.constraint(equalTo: viewForTableTitle.bottomAnchor, constant: -5)
         ])
-
-        signalImage.layer.cornerRadius = signalImage.frame.size.width / 2
     }
 
     func tuneTableView() {
