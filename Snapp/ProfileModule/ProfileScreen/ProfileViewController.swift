@@ -245,6 +245,7 @@ class ProfileViewController: UIViewController {
 
     private lazy var postsTableView: UITableView = {
         let postsTableView = UITableView()
+        postsTableView.register(PostTableCell.self, forCellReuseIdentifier: PostTableCell.identifier)
         postsTableView.translatesAutoresizingMaskIntoConstraints = false
         postsTableView.delegate = self
         postsTableView.dataSource = self
@@ -261,14 +262,13 @@ class ProfileViewController: UIViewController {
         addSubviews()
         layout()
         tuneTableView()
-        presenter.fetchAvatarImage()
     }
 
     // MARK: -Funcs
     @objc func createPostButtonTapped() {
         let createPostVC = CreatePostViewController()
         guard let userImage = presenter.avatarImage else { return }
-        let createPostPresenter = CreatePostPresenter(view: createPostVC, mainUser: presenter.mainUser, userID: presenter.mainUserID, firestoreService: presenter.firestoreService, image: userImage, posts: presenter.posts)
+        let createPostPresenter = CreatePostPresenter(view: createPostVC, mainUser: presenter.mainUser, userID: presenter.mainUserID, image: userImage, posts: presenter.posts)
         createPostVC.presenter = createPostPresenter
         createPostVC.modalPresentationStyle = .formSheet
         navigationController?.present(createPostVC, animated: true)
@@ -276,7 +276,7 @@ class ProfileViewController: UIViewController {
 
     @objc func showSettingsVC() {
         let settingsVC = SettingsViewController()
-        let settingsPresenter = SettingPresenter(view: settingsVC, user: presenter.mainUser, firestoreService: presenter.firestoreService)
+        let settingsPresenter = SettingPresenter(view: settingsVC, user: presenter.mainUser)
         settingsVC.presenter = settingsPresenter
         settingsVC.modalPresentationStyle = .overFullScreen
         let transition = CATransition()
@@ -314,7 +314,7 @@ class ProfileViewController: UIViewController {
 
     @objc func editProfileButtonTapped() {
         let profileChangeController = ProfileChangeViewController()
-        let profileChangePresenter = ProfileChangePresenter(view: profileChangeController, user: presenter.mainUser, firestoreService: presenter.firestoreService)
+        let profileChangePresenter = ProfileChangePresenter(view: profileChangeController, user: presenter.mainUser)
         profileChangeController.presenter = profileChangePresenter
         profileChangeController.modalPresentationStyle = .overFullScreen
         let transition = CATransition()
@@ -342,12 +342,6 @@ class ProfileViewController: UIViewController {
 
 // MARK: -Output Presenter
 extension ProfileViewController: ProfileViewProtocol {
-    
-    func updateAvatrImageWithStorie() {
-        avatarImageView.layer.borderColor = UIColor.systemOrange.cgColor
-        avatarImageView.layer.borderWidth = 1.0
-    }
-
 
     func updateTextData(user: FirebaseUser) {
         jobLabel.text = user.job
@@ -355,22 +349,12 @@ extension ProfileViewController: ProfileViewProtocol {
         titleLabel.text = user.identifier
     }
 
-
     func updateSubscriptions() {
         numberOfSubscriptions.text = .localizePlurals(key: "Subscriptions", number: presenter.mainUser.subscribtions.count)
     }
 
-
     func updateSubsribers() {
         numberOfSubscriptions.text = .localizePlurals(key: "Subsciptions", number: presenter.mainUser.subscribers.count)
-    }
-
-    func updateStorie(stories: [UIImage]?) {
-        guard let stories = stories else { return }
-        if !stories.isEmpty {
-            avatarImageView.layer.borderColor = UIColor.red.cgColor
-            avatarImageView.layer.borderWidth = 1.0
-        }
     }
 
     func updateAlbum(photo: [UIImage]?) {
@@ -381,7 +365,6 @@ extension ProfileViewController: ProfileViewProtocol {
             photoCollectionView.reloadData()
         }
     }
-
 
     func updateData(data: [EachPost]) {
         DispatchQueue.main.async { [weak self] in
@@ -421,42 +404,34 @@ extension ProfileViewController: UITableViewDataSource {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: PostTableCell.identifier, for: indexPath) as? PostTableCell else { return UITableViewCell() }
 
         let data = presenter.posts[indexPath.row]
-        let date = presenter.posts[indexPath.row].date
 
         guard let docID = data.documentID else { return UITableViewCell() }
 
-        cell.updateView(post: data, user: presenter.mainUser, date: date, firestoreService: presenter.firestoreService, state: .profileState, mainUserID: self.presenter.mainUserID)
+        cell.updateView(post: data, user: presenter.mainUser, state: .profileState, mainUserID: self.presenter.mainUserID)
 
         cell.manuButtonTappedHandler = { [weak self] in
-            guard let self else { return }
-            guard let index = presenter.posts.firstIndex(where: { $0.documentID == data.documentID }) else { return }
-            presenter.posts.remove(at: index)
-            presenter.posts.insert(data, at: 0)
-            presenter.pinPost(docID: docID)
-            postsTableView.reloadData()
+            guard let index = self?.presenter.posts.firstIndex(where: { $0.documentID == data.documentID }) else { return }
+            self?.presenter.posts.remove(at: index)
+            self?.presenter.posts.insert(data, at: 0)
+            self?.presenter.pinPost(docID: docID)
+            self?.postsTableView.reloadData()
         }
 
-        cell.incrementLikes = { [weak self]  post in
-            guard let self else { return }
-            presenter.incrementLikes(post: post)
-            tableView.reloadRows(at: [indexPath], with: .automatic)
+        cell.incrementLikes = { [weak self, weak tableView]  post in
+            self?.presenter.incrementLikes(post: post)
+            tableView?.reloadRows(at: [indexPath], with: .automatic)
         }
 
-        cell.decrementLikes = { [weak self] post in
-            guard let self else { return }
-            presenter.decrementLikes(post: post)
-            tableView.reloadRows(at: [indexPath], with: .automatic)
+        cell.decrementLikes = { [weak self, weak tableView] post in
+            self?.presenter.decrementLikes(post: post)
+            tableView?.reloadRows(at: [indexPath], with: .automatic)
         }
 
         cell.bookmarkButtonTapHandler = { [weak self] post in
-            guard let self = self else { return }
-
-
+            self?.presenter.addPostToBookMarks(post: post)
         }
         return cell
     }
-
-
 }
 
 
@@ -476,8 +451,7 @@ extension ProfileViewController: UITableViewDelegate {
         let detailPostPresenter = DetailPostPresenter(view: detailPostVC,
                                                       user: self.presenter.mainUser, mainUserID: self.presenter.mainUserID,
                                                       post: data,
-                                                      avatarImage: image,
-                                                      firestoreService: self.presenter.firestoreService)
+                                                      avatarImage: image)
         detailPostVC.presenter = detailPostPresenter
         detailPostVC.postMenuState = .detailPost
         self.navigationController?.pushViewController(detailPostVC, animated: true)
@@ -722,10 +696,8 @@ extension ProfileViewController {
     }
 
     func tuneTableView() {
-        postsTableView.register(PostTableCell.self, forCellReuseIdentifier: PostTableCell.identifier)
         postsTableView.rowHeight = UITableView.automaticDimension
         postsTableView.estimatedRowHeight = 44.0
-        postsTableView.tableHeaderView = mainContentView
         postsTableView.tableFooterView = UIView()
         postsTableView.setAndLayout(header: mainContentView)
         postsTableView.separatorStyle = .none

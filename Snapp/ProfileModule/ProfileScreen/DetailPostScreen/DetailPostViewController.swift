@@ -249,7 +249,7 @@ class DetailPostViewController: UIViewController {
         switch postMenuState {
         case .feedPost:
             let menuForFeed = MenuForFeedViewController()
-            let menuForFeedPresenter = MenuForFeedPresenter(view: menuForFeed, user: self.presenter.user, firestoreService: self.presenter.firestoreService, post: self.presenter.post, mainUserID: self.presenter.mainUserID)
+            let menuForFeedPresenter = MenuForFeedPresenter(view: menuForFeed, user: self.presenter.user, post: self.presenter.post, mainUserID: self.presenter.mainUserID)
             menuForFeed.presenter = menuForFeedPresenter
             menuForFeed.modalPresentationStyle = .formSheet
             if let sheet = menuForFeed.sheetPresentationController {
@@ -290,7 +290,7 @@ class DetailPostViewController: UIViewController {
         let commentView = CommentViewController()
         guard let documentID = presenter.post.documentID else { return }
         guard let user = presenter.user.documentID else { return }
-        let commentPresenter = CommentViewPresenter(view: commentView, image: presenter.avatarImage, user: user, documentID: documentID, commentor: self.presenter.mainUserID, firestoreService: presenter.firestoreService, state: .comment)
+        let commentPresenter = CommentViewPresenter(view: commentView, image: presenter.avatarImage, user: user, documentID: documentID, commentor: self.presenter.mainUserID, state: .comment)
         commentView.presenter = commentPresenter
         commentView.modalPresentationStyle = .fullScreen
         present(commentView, animated: true)
@@ -319,7 +319,7 @@ extension DetailPostViewController: DetailPostViewProtocol {
     }
 
     func showMenuForPost() {
-        let menuForPostPresenter = MenuForPostPresenter(view: menuForPost, user: self.presenter.user, firestoreService: self.presenter.firestoreService, post: self.presenter.post)
+        let menuForPostPresenter = MenuForPostPresenter(view: menuForPost, user: self.presenter.user, post: self.presenter.post)
         menuForPost.presenter = menuForPostPresenter
         menuForPost.translatesAutoresizingMaskIntoConstraints = false
         menuForPost.isHidden = false
@@ -369,7 +369,7 @@ extension DetailPostViewController: DetailPostViewProtocol {
     func showCommentVC(with: String, commentID: String?, state: CommentState) {
         let commentView = CommentViewController()
         guard let documentID = presenter.post.documentID else { return }
-        let commentPresenter = CommentViewPresenter(view: commentView, image: presenter.avatarImage, user: with, documentID: documentID, commentor: self.presenter.mainUserID, firestoreService: presenter.firestoreService, state: state)
+        let commentPresenter = CommentViewPresenter(view: commentView, image: presenter.avatarImage, user: with, documentID: documentID, commentor: self.presenter.mainUserID, state: state)
         commentView.presenter = commentPresenter
         commentPresenter.commentID = commentID
         commentView.modalPresentationStyle = .pageSheet
@@ -414,7 +414,7 @@ extension DetailPostViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: CommentsTableCell.identifier) as? CommentsTableCell else { return UIView() }
         guard let commentInSection = comments(forSection: section) else { return UITableViewCell() }
-        cell.updateView(comment: commentInSection, firestoreService: presenter.firestoreService)
+        cell.updateView(comment: commentInSection)
         cell.buttonTappedHandler = { [weak self] in
             self?.presenter.showCommetVC(with: commentInSection.commentor, commentID: commentInSection.documentID, state: .answer)
         }
@@ -442,12 +442,12 @@ extension DetailPostViewController: UITableViewDataSource {
         if let answers = presenter.comments?[comment] {
             guard let answer = answers?[indexPath.row] else { return UITableViewCell() }
             let commentor = answer.commentor
-            presenter.firestoreService.getUser(id: commentor) { [weak self] result in
+            FireStoreService.shared.getUser(id: commentor) { [weak self] result in
                 guard let self else { return }
                 switch result {
                 case .success(let user):
                     cell.backgroundColor = .systemBackground
-                    cell.updateAnswers(answer: answer, user: user, date: answer.date, firestoreService: presenter.firestoreService)
+                    cell.updateAnswers(answer: answer, user: user, date: answer.date)
                     guard let commentor = user.documentID else { return }
                     cell.buttonTappedHandler = { [weak self] in
                         self?.presenter.showCommetVC(with: commentor, commentID: comment.documentID, state: .answer)

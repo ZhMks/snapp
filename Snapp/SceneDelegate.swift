@@ -60,20 +60,20 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // Save changes in the application's managed object context when the application transitions to the background.
     }
 
-    func changeRootViewController(_ vc: UIViewController, user: FirebaseUser, mainUserID: String, firestoreService: FireStoreServiceProtocol) {
+    func changeRootViewController(_ vc: UIViewController, user: FirebaseUser, mainUserID: String) {
 
         guard let window = self.window else {
             return
         }
 
         let favouritesVC = FavouritesViewController()
-        let favouritesPresenter = FavouritesPresenter(view: favouritesVC, user: user, firestoreService: firestoreService)
+        let favouritesPresenter = FavouritesPresenter(view: favouritesVC, user: user)
         favouritesVC.presenter = favouritesPresenter
         let favouriteNavVC = UINavigationController(rootViewController: favouritesVC)
         favouriteNavVC.tabBarItem = UITabBarItem(title: .localized(string: "Сохраненные"), image: UIImage(systemName: "heart"), tag: 3)
 
         let feedVC = FeedViewController()
-        let feedPresenter = FeedPresenter(view: feedVC, user: user, firestoreService: firestoreService, mainUser: mainUserID)
+        let feedPresenter = FeedPresenter(view: feedVC, user: user, mainUser: mainUserID)
         feedVC.presenter = feedPresenter
         let feedNavVc = UINavigationController(rootViewController: feedVC)
         feedNavVc.tabBarItem = UITabBarItem(title: .localized(string: "Главная"), image: UIImage(systemName: "house"), tag: 0)
@@ -82,7 +82,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         profileNavVC.tabBarItem = UITabBarItem(title: .localized(string: "Профиль"), image: UIImage(systemName: "person.crop.circle"), tag: 1)
 
         let searchVC = SearchViewController()
-        let searchPresenter = SearchPresenter(view: searchVC, firestoreService: firestoreService, mainUser: mainUserID)
+        let searchPresenter = SearchPresenter(view: searchVC, mainUser: mainUserID)
         searchVC.presenter = searchPresenter
         let searchNavVC = UINavigationController(rootViewController: searchVC)
         searchNavVC.tabBarItem = UITabBarItem(title: .localized(string: "Поиск"), image: UIImage(systemName: "magnifyingglass"), tag: 2)

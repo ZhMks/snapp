@@ -18,7 +18,7 @@ protocol FeedViewProtocol: AnyObject {
 }
 
 protocol FeedPresenterProtocol: AnyObject {
-    init(view: FeedViewProtocol, user: FirebaseUser, firestoreService: FireStoreServiceProtocol, mainUser: String)
+    init(view: FeedViewProtocol, user: FirebaseUser, mainUser: String)
 }
 
 
@@ -29,19 +29,12 @@ final class FeedPresenter: FeedPresenterProtocol {
     var userStories: [UIImage]?
     var mainUser: FirebaseUser
     var posts: [FirebaseUser : [EachPost]]?
-    let firestoreService: FireStoreServiceProtocol
     let mainUserID: String
 
-    init(view: FeedViewProtocol, user: FirebaseUser, firestoreService: FireStoreServiceProtocol, mainUser: String) {
+    init(view: FeedViewProtocol, user: FirebaseUser, mainUser: String) {
         self.view = view
         self.mainUser = user
-        self.firestoreService = firestoreService
         self.mainUserID = mainUser
-        addUserListener()
-    }
-
-    deinit {
-        removeListener()
     }
 
     func fetchMainUserStorie() {
@@ -67,7 +60,7 @@ final class FeedPresenter: FeedPresenterProtocol {
 
     private func addUserListener() {
         guard let userID = mainUser.documentID else { return }
-        firestoreService.addSnapshotListenerToUser(for: userID) { [weak self] result in
+        FireStoreService.shared.addSnapshotListenerToUser(for: userID) { [weak self] result in
             guard let self = self else { return }
             switch result {
             case .success(let success):
@@ -80,49 +73,92 @@ final class FeedPresenter: FeedPresenterProtocol {
     }
 
    private func removeListener() {
-        firestoreService.removeListenerForUser()
+       FireStoreService.shared.removeListenerForUser()
     }
 
-   private func fetchPosts() {
+   func fetchPosts() {
         posts = [:]
-        let dispatchGroup = DispatchGroup()
-        for sub in mainUser.subscribtions {
-            dispatchGroup.enter()
-            firestoreService.getUser(id: sub) { [weak self] result in
-                guard let self = self else {
-                    dispatchGroup.leave()
-                    return
-                }
-                switch result {
-                case .success(let firebaseUser):
-                    print("Sub inside getUSER: \(firebaseUser.name)")
-                    self.firestoreService.getPosts(sub: firebaseUser.documentID!) { [weak self] result in
-                        guard let self = self else {
-                            dispatchGroup.leave()
-                            return
-                        }
-                        defer {
-                            dispatchGroup.leave()
-                        }
-                        switch result {
-                        case .success(let postArray):
-                            print("Posts for SUB: \(sub): \(postArray)")
-                            self.posts?.updateValue(postArray, forKey: firebaseUser)
-                        case .failure(let failure):
-                            self.view?.showError(descr: failure.localizedDescription)
-                        }
+        let semaphore = DispatchSemaphore(value: 0)
+        let queue = DispatchQueue.global(qos: .background)
+
+        queue.async { [weak self] in
+            guard let self = self else { return }
+            for sub in mainUser.subscribtions {
+                FireStoreService.shared.getUser(id: sub) { [weak self] result in
+                    guard let self = self else {
+                        semaphore.signal()
+                        return
                     }
-                case .failure(let error):
-                    self.view?.showError(descr: error.localizedDescription)
-                    dispatchGroup.leave()
+                    switch result {
+                    case .success(let firebaseUser):
+                        FireStoreService.shared.getPosts(sub: firebaseUser.documentID!) { [weak self] result in
+                            guard let self = self else {
+                                semaphore.signal()
+                                return
+                            }
+                            switch result {
+                            case .success(let postArray):
+                                self.posts?.updateValue(postArray, forKey: firebaseUser)
+                            case .failure(let failure):
+                                self.view?.showError(descr: failure.localizedDescription)
+                            }
+                            semaphore.signal()
+                        }
+                    case .failure(let error):
+                        self.view?.showError(descr: error.localizedDescription)
+                        semaphore.signal()
+                    }
                 }
+                semaphore.wait()
+            }
+
+            DispatchQueue.main.async { [weak self] in
+                guard let self = self else { return }
+                self.view?.updateViewTable()
             }
         }
-        dispatchGroup.notify(queue: .main) { [weak self] in
-            guard let self = self else { return }
-            self.view?.updateViewTable()
-        }
     }
+
+//   func fetchPosts() {
+//        posts = [:]
+//        let dispatchGroup = DispatchGroup()
+//        for sub in mainUser.subscribtions {
+//            firestoreService.getUser(id: sub) { [weak self] result in
+//                guard let self = self else {
+//                    dispatchGroup.leave()
+//                    return
+//                }
+//                switch result {
+//                case .success(let firebaseUser):
+//                    dispatchGroup.enter()
+//                    print("Sub inside getUSER: \(firebaseUser.name)")
+//                    self.firestoreService.getPosts(sub: firebaseUser.documentID!) { [weak self] result in
+//                        guard let self = self else {
+//                            dispatchGroup.leave()
+//                            return
+//                        }
+//                        defer {
+//                            dispatchGroup.leave()
+//                        }
+//                        switch result {
+//                        case .success(let postArray):
+//                            print("Posts for SUB: \(sub): \(postArray)")
+//                            self.posts?.updateValue(postArray, forKey: firebaseUser)
+//                        case .failure(let failure):
+//                            self.view?.showError(descr: failure.localizedDescription)
+//                        }
+//                    }
+//                case .failure(let error):
+//                    self.view?.showError(descr: error.localizedDescription)
+//                    dispatchGroup.leave()
+//                }
+//            }
+//        }
+//        dispatchGroup.notify(queue: .main) { [weak self] in
+//            guard let self = self else { return }
+//            self.view?.updateViewTable()
+//        }
+//    }
 
     func fetchAvatarImage() {
         let networkService = NetworkService()

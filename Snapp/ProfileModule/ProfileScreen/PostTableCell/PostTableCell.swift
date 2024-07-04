@@ -28,9 +28,7 @@ final class PostTableCell: UITableViewCell {
     var user: FirebaseUser?
     var post: EachPost?
     var likes: [Like]?
-    var firestoreService: FireStoreServiceProtocol?
     var postcellstate: PostCellState?
-    let menuForPost = MenuForPostView()
     var mainUserID: String?
 
 
@@ -216,8 +214,9 @@ final class PostTableCell: UITableViewCell {
     }
 
      deinit {
-        print("Cell is deallocated")
+        print("TableViewCell is deallocated")
     }
+    
     // MARK: -Funcs
 
     @objc func likesButtonTapped() {
@@ -232,19 +231,22 @@ final class PostTableCell: UITableViewCell {
         }
     }
 
-    func updateView(post: EachPost, user: FirebaseUser, date: String, firestoreService: FireStoreServiceProtocol, state: PostCellState, mainUserID: String) {
+    func updateView(post: EachPost, user: FirebaseUser, state: PostCellState, mainUserID: String) {
+
         self.post = post
         self.user = user
-        self.firestoreService = firestoreService
         self.postcellstate = state
         self.mainUserID = mainUserID
 
-        configureLabels(post: post, user: user, date: date)
+        configureLabels(post: post, user: user, date: post.date)
 
         fetchComments(for: post, user: user)
         fetchPostImage(for: post)
-        fetchAvatarImage(for: user)
         fetchLikes(for: post, user: user)
+
+        if let avatarImageURL = user.image {
+            fetchAvatarImage(user: avatarImageURL)
+        }
     }
 
     private func configureLabels(post: EachPost, user: FirebaseUser, date: String) {
@@ -257,7 +259,7 @@ final class PostTableCell: UITableViewCell {
     private func fetchComments(for post: EachPost, user: FirebaseUser) {
         guard let postID = post.documentID, let userID = user.documentID else { return }
 
-        firestoreService?.getComments(post: postID, user: userID) { [weak self] result in
+        FireStoreService.shared.getComments(post: postID, user: userID) { [weak self] result in
             guard let self = self else { return }
             switch result {
             case .success(let comments):
@@ -294,31 +296,11 @@ final class PostTableCell: UITableViewCell {
         }
     }
 
-    private func fetchAvatarImage(for user: FirebaseUser) {
-        guard let avatarImageURL = user.image else { return }
-
-        let networkService = NetworkService()
-        networkService.fetchImage(string: avatarImageURL) { [weak self] result in
-            guard let self = self else { return }
-
-            switch result {
-            case .success(let image):
-                DispatchQueue.main.async { [weak self] in
-                    guard let self = self else { return }
-                    self.avatarImageView.image = image
-                    self.avatarImageView.clipsToBounds = true
-                    self.avatarImageView.layer.cornerRadius = self.avatarImageView.frame.width / 2
-                }
-            case .failure(let error):
-                print("Failed to fetch avatar image: \(error.localizedDescription)")
-            }
-        }
-    }
 
     private func fetchLikes(for post: EachPost, user: FirebaseUser) {
         guard let postID = post.documentID, let userID = user.documentID else { return }
         
-        firestoreService?.getNumberOfLikesInpost(user: userID, post: postID) { [weak self] result in
+        FireStoreService.shared.getNumberOfLikesInpost(user: userID, post: postID) { [weak self] result in
             guard let self = self else { return }
 
             switch result {
@@ -345,13 +327,28 @@ final class PostTableCell: UITableViewCell {
         }
     }
 
+    private func fetchAvatarImage(user: String) {
+        let networkService = NetworkService()
+        networkService.fetchImage(string: user) { [weak self] result in
+            switch result {
+            case .success(let image):
+                self?.avatarImageView.image = image
+                self?.avatarImageView.clipsToBounds = true
+                self?.avatarImageView.layer.cornerRadius = (self?.avatarImageView.frame.size.width)! / 2
+            case .failure(let failure):
+                return
+            }
+        }
+    }
+
 
     private func showMenu() {
-        menuForPost.isHidden = false
+        let menuForPost = MenuForPostView()
         menuForPost.translatesAutoresizingMaskIntoConstraints = false
-        guard let user = self.user, let firestoreService = self.firestoreService, let post = self.post else { return }
-        let presenter = MenuForPostPresenter(view: menuForPost, user: user, firestoreService: firestoreService, post: post)
+        guard let user = self.user, let post = self.post else { return }
+        let presenter = MenuForPostPresenter(view: menuForPost, user: user, post: post)
         menuForPost.presenter = presenter
+        presenter.delegate = self
 
         menuForPost.layer.shadowOffset = CGSize(width: 1.0, height: 1.0)
         menuForPost.layer.shadowOpacity = 1.0
@@ -383,13 +380,13 @@ final class PostTableCell: UITableViewCell {
     @objc func bookmarkButtonTapped() {
         guard let post = self.post else { return }
         bookmarkButtonTapHandler?(post)
+        print("Bookmark")
     }
 
 
     // MARK: -LAYOUT
 
     private func addSubviews() {
-        menuForPost.isHidden = true
         contentView.addSubview(headerView)
         headerView.addSubview(avatarImageView)
         headerView.addSubview(nameAndSurnameLabel)
@@ -522,7 +519,7 @@ final class PostTableCell: UITableViewCell {
 
 extension PostTableCell: MenuForPostDelegate {
 
-    func pinPost(post: EachPost) {
+    func pinPost() {
         manuButtonTappedHandler?()
     }
 }

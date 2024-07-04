@@ -59,7 +59,8 @@ extension ArchiveViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: PostTableCell.identifier, for: indexPath) as? PostTableCell else { return UITableViewCell() }
         guard let dataforCell = presenter.posts?[indexPath.row] else { return UITableViewCell() }
-        cell.updateView(post: dataforCell, user: self.presenter.mainUser, date: dataforCell.date, firestoreService: self.presenter.firestoreService, state: .profileState, mainUserID: self.presenter.mainUserID)
+        let image = UIImage(systemName: "checkmark")
+        cell.updateView(post: dataforCell, user: self.presenter.mainUser, state: .profileState, mainUserID: self.presenter.mainUserID, image: image!)
         return cell
     }
     

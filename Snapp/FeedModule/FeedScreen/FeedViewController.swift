@@ -58,6 +58,7 @@ final class FeedViewController: UIViewController {
         tuneTableView()
         layout()
         presenter.fetchAvatarImage()
+        presenter.fetchPosts()
     }
 
     // MARK: -Funcs
@@ -93,7 +94,7 @@ extension FeedViewController: FeedViewProtocol {
 
     func showMenuForFeed(post: EachPost) {
         let feedMenu = MenuForFeedViewController()
-        let feedPresenter = MenuForFeedPresenter(view: feedMenu, user: self.presenter.mainUser, firestoreService: self.presenter.firestoreService, post: post, mainUserID: self.presenter.mainUserID)
+        let feedPresenter = MenuForFeedPresenter(view: feedMenu, user: self.presenter.mainUser, post: post, mainUserID: self.presenter.mainUserID)
         feedMenu.presenter = feedPresenter
         feedMenu.modalPresentationStyle = .formSheet
 
@@ -201,7 +202,7 @@ extension FeedViewController: UITableViewDelegate {
                 guard let self else { return }
                 switch result {
                 case .success(let avatarImage):
-                    let detailPostPresenter = DetailPostPresenter(view: detailPostVC, user: user, mainUserID: self.presenter.mainUserID, post: post, avatarImage: avatarImage, firestoreService: presenter.firestoreService)
+                    let detailPostPresenter = DetailPostPresenter(view: detailPostVC, user: user, mainUserID: self.presenter.mainUserID, post: post, avatarImage: avatarImage)
                     detailPostVC.presenter = detailPostPresenter
                     detailPostVC.postMenuState = .feedPost
                     self.navigationController?.pushViewController(detailPostVC, animated: true)
@@ -232,7 +233,8 @@ extension FeedViewController: UITableViewDataSource {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: PostTableCell.identifier, for: indexPath) as? PostTableCell else { return UITableViewCell() }
         guard let user = user(forSection: indexPath.section) else { return UITableViewCell() }
         if let data = presenter.posts?[user]?[indexPath.row] {
-            cell.updateView(post: data, user: user, date: data.date, firestoreService: presenter.firestoreService, state: .feedState, mainUserID: self.presenter.mainUserID)
+            let image = UIImage(systemName: "checkmark")
+            cell.updateView(post: data, user: user, state: .feedState, mainUserID: self.presenter.mainUserID, image: image!)
         }
 
         cell.showMenuForFeed = { [weak self] post in

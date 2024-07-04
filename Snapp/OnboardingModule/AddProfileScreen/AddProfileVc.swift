@@ -161,11 +161,10 @@ final class AddProfileVc: UIViewController {
 
     func plusButtonTapped(user: FirebaseUser, id: String) {
         let profileVC = ProfileViewController()
-        guard let firestoreService = presenter.firestoreService else { return }
-        let presenter = ProfilePresenter(view: profileVC, mainUser: user, mainUserID: id, firestoreService: firestoreService)
+        let presenter = ProfilePresenter(view: profileVC, mainUser: user, mainUserID: id)
         profileVC.presenter = presenter
 
-        (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootViewController(profileVC, user: user, mainUserID: id, firestoreService: firestoreService)
+        (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootViewController(profileVC, user: user, mainUserID: id)
     }
 
    @objc private func pickAvatar() {
@@ -274,7 +273,7 @@ extension AddProfileVc {
 
 }
 
-// MARK: -PICKERCONTROLLER
+// MARK: -ImagePickerController Delegate
 extension AddProfileVc: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
 
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
@@ -286,7 +285,7 @@ extension AddProfileVc: UIImagePickerControllerDelegate, UINavigationControllerD
 }
 
 
-// MARK: -TEXTFIELDDELEGATE
+// MARK: -TextField Delegate
 extension AddProfileVc: UITextFieldDelegate {
     private func setupKeyboardObservers() {
         let notificationCenter = NotificationCenter.default

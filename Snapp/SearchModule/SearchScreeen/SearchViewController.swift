@@ -51,7 +51,7 @@ extension SearchViewController: SearchViewProtocol {
 
     func goToNextVC(user: FirebaseUser, userID: String) {
         let detailVC = DetailUserViewController()
-        let detailPresenter = DetailPresenter(view: detailVC, user: user, mainUserID: userID, firestoreService: presenter.firestoreService)
+        let detailPresenter = DetailPresenter(view: detailVC, user: user, mainUserID: userID)
         detailVC.presenter = detailPresenter
         navigationController?.pushViewController(detailVC, animated: true)
     }

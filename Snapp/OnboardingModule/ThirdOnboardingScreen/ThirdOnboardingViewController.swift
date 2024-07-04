@@ -109,9 +109,7 @@ extension ThirdOnboardingViewController: ThirdOnboardingViewProtocol {
 
     func showCreateUserScreen() {
         let addProfileVC = AddProfileVc()
-        let firestoreService = FireStoreService()
-        let addProfilePresenter = AddProfilePresenter(view: addProfileVC,
-                                                      firestoreService: firestoreService)
+        let addProfilePresenter = AddProfilePresenter(view: addProfileVC)
         addProfileVC.presenter = addProfilePresenter
         navigationController?.pushViewController(addProfileVC, animated: true)
     }

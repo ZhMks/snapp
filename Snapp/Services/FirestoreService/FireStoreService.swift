@@ -92,6 +92,10 @@ final class FireStoreService: FireStoreServiceProtocol {
 
     var favouritesListener: ListenerRegistration?
 
+    static let shared = FireStoreService()
+
+    private init() {}
+
     func addSnapshotListenerToUser(for user: String, completion: @escaping (Result<FirebaseUser, Error>) -> Void) {
         self.userListner?.remove()
         let ref = Firestore.firestore().collection("Users").document(user)
@@ -353,8 +357,8 @@ final class FireStoreService: FireStoreServiceProtocol {
         var posts: [EachPost] = []
 
         refDB.getDocuments { snapshot, error in
-            if let error = error {
-                print("Error getting posts: \(error)")
+
+            if error != nil {
                 completion(.failure(.getError))
                 return
             }

@@ -27,27 +27,25 @@ protocol DataChangeViewProtocol: AnyObject {
 }
 
 protocol DataChangePresenterProtocol: AnyObject {
-    init(view: DataChangeViewProtocol, user: FirebaseUser, firestoreService: FireStoreServiceProtocol, state: DataChangeState)
+    init(view: DataChangeViewProtocol, user: FirebaseUser, state: DataChangeState)
 }
 
 final class DataChangePresenter: DataChangePresenterProtocol {
 
     weak var view: DataChangeViewProtocol?
     let user: FirebaseUser
-    let firestoreService: FireStoreServiceProtocol
     let state: DataChangeState
 
-    init(view: DataChangeViewProtocol, user: FirebaseUser, firestoreService: FireStoreServiceProtocol, state: DataChangeState) {
+    init(view: DataChangeViewProtocol, user: FirebaseUser, state: DataChangeState) {
         self.view = view
         self.user = user
-        self.firestoreService = firestoreService
         self.state = state
         checkState()
     }
 
     func updateData(text: String)  {
         guard let id = user.documentID else { return }
-        firestoreService.changeData(id: id, text: text, state: .name)
+        FireStoreService.shared.changeData(id: id, text: text, state: .name)
     }
 
     func checkState() {
@@ -67,23 +65,23 @@ final class DataChangePresenter: DataChangePresenterProtocol {
 
     func changeCity(text: String)  {
         guard let id = user.documentID else { return }
-         firestoreService.changeData(id: id, text: text, state: .identifier)
+        FireStoreService.shared.changeData(id: id, text: text, state: .identifier)
     }
 
     func changeName(text: String)  {
         guard let id = user.documentID else { return }
-         firestoreService.changeData(id: id, text: text, state: .name)
+        FireStoreService.shared.changeData(id: id, text: text, state: .name)
         NotificationCenter.default.post(name: Notification.Name("DataChanged"), object: nil)
     }
 
     func changeSurnamet(text: String)  {
         guard let id = user.documentID else { return }
-         firestoreService.changeData(id: id, text: text, state: .surname)
+        FireStoreService.shared.changeData(id: id, text: text, state: .surname)
         NotificationCenter.default.post(name: Notification.Name("DataChanged"), object: nil)
     }
 
     func changeDateOfBirth(text: String)  {
         guard let id = user.documentID else { return }
-         firestoreService.changeData(id: id, text: text, state: .job)
+        FireStoreService.shared.changeData(id: id, text: text, state: .job)
     }
 }

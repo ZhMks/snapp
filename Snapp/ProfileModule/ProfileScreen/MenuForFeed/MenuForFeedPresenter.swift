@@ -16,28 +16,26 @@ protocol MenuForFeedViewProtocol: AnyObject {
 }
 
 protocol MenuForFeedPresenterProtocol: AnyObject {
-    init(view: MenuForFeedViewProtocol, user: FirebaseUser, firestoreService: FireStoreServiceProtocol, post: EachPost, mainUserID: String)
+    init(view: MenuForFeedViewProtocol, user: FirebaseUser, post: EachPost, mainUserID: String)
 }
 
 final class MenuForFeedPresenter: MenuForFeedPresenterProtocol {
 
     weak var view: MenuForFeedViewProtocol?
     let user: FirebaseUser
-    let firestoreService: FireStoreServiceProtocol
     let post: EachPost
     let mainUserID: String
 
-    init(view: MenuForFeedViewProtocol, user: FirebaseUser, firestoreService: FireStoreServiceProtocol, post: EachPost, mainUserID: String) {
+    init(view: MenuForFeedViewProtocol, user: FirebaseUser, post: EachPost, mainUserID: String) {
         self.view = view
         self.user = user
-        self.firestoreService = firestoreService
         self.post = post
         self.mainUserID = mainUserID
     }
 
     func saveIntoFavourites() {
         guard let user = user.documentID else { return }
-        firestoreService.saveIntoFavourites(post: post, for: user) { [weak self] result in
+        FireStoreService.shared.saveIntoFavourites(post: post, for: user) { [weak self] result in
             guard let self else { return }
             switch result {
             case .success(_):
@@ -51,7 +49,7 @@ final class MenuForFeedPresenter: MenuForFeedPresenterProtocol {
     func copyPostLink() -> String {
         guard let user = user.documentID else { return "" }
         if let documentID = post.documentID {
-            let urlLink = firestoreService.getDocLink(for: documentID, user: user)
+            let urlLink = FireStoreService.shared.getDocLink(for: documentID, user: user)
             return urlLink
         }
         return ""
@@ -59,7 +57,7 @@ final class MenuForFeedPresenter: MenuForFeedPresenterProtocol {
 
     func removeSubscribtion() {
         guard let userID = user.documentID else { return }
-        firestoreService.removeSubscribtion(sub: userID, for: mainUserID)
+        FireStoreService.shared.removeSubscribtion(sub: userID, for: mainUserID)
     }
 
     func enableNotifications() {

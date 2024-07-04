@@ -57,8 +57,9 @@ extension BookmarksViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: PostTableCell.identifier, for: indexPath) as? PostTableCell else { return UITableViewCell() }
+        let image = UIImage(systemName: "checkmark")
         guard let data = presenter.posts?[indexPath.row] else { return UITableViewCell() }
-        cell.updateView(post: data, user: presenter.user, date: data.date, firestoreService: presenter.firestoreService, state: .profileState, mainUserID: self.presenter.mainUserID)
+        cell.updateView(post: data, user: presenter.user, state: .profileState, mainUserID: self.presenter.mainUserID, image: image!)
         return cell
     }
 

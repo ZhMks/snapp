@@ -169,7 +169,7 @@ final class FavouriteTableViewCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
 
-    func updateView(post: EachPost, user: FirebaseUser, date: String, firestoreService: FireStoreServiceProtocol) {
+    func updateView(post: EachPost, user: FirebaseUser, date: String) {
         postTextLabel.text = post.text
         nameAndSurnameLabel.text = "\(user.name)" + "\(user.surname)"
         jobLabel.text = "\(user.job)"

@@ -19,7 +19,7 @@ protocol CommentViewProtocol: AnyObject {
 }
 
 protocol CommentPresenterProtocol: AnyObject {
-    init(view: CommentViewProtocol, image: UIImage, user: String, documentID: String, commentor: String, firestoreService: FireStoreServiceProtocol, state: CommentState)
+    init(view: CommentViewProtocol, image: UIImage, user: String, documentID: String, commentor: String, state: CommentState)
 }
 
 final class CommentViewPresenter: CommentPresenterProtocol {
@@ -27,23 +27,21 @@ final class CommentViewPresenter: CommentPresenterProtocol {
     let documentID: String
     weak var view: CommentViewProtocol?
     let commentor: String
-    let firestoreService: FireStoreServiceProtocol
     let image: UIImage
     var commentID: String?
     let state: CommentState
 
-    init(view: any CommentViewProtocol, image: UIImage, user: String,  documentID: String, commentor: String, firestoreService: any FireStoreServiceProtocol, state: CommentState) {
+    init(view: any CommentViewProtocol, image: UIImage, user: String,  documentID: String, commentor: String, state: CommentState) {
         self.view = view
         self.image = image
         self.user = user
         self.documentID = documentID
         self.commentor = commentor
-        self.firestoreService = firestoreService
         self.state = state
     }
     
     func addComment(text: String) {
-        firestoreService.addComment(mainUser: user, text: text, documentID: documentID, commentor: commentor) { [weak self] result in
+        FireStoreService.shared.addComment(mainUser: user, text: text, documentID: documentID, commentor: commentor) { [weak self] result in
             guard let self else { return }
             switch result {
             case .success(_):
@@ -62,7 +60,7 @@ final class CommentViewPresenter: CommentPresenterProtocol {
         let stringFromDate = dateFormatter.string(from: date)
 
         let answer = Answer(text: text, commentor: commentor, date: stringFromDate, likes: 0)
-        firestoreService.addAnswerToComment(postID: documentID, user: user, commentID: commentID, answer: answer) { [weak self] result in
+        FireStoreService.shared.addAnswerToComment(postID: documentID, user: user, commentID: commentID, answer: answer) { [weak self] result in
             guard let self else { return }
             switch result {
             case .success(_):

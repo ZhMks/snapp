@@ -13,7 +13,7 @@ protocol CreatePostViewProtocol: AnyObject {
 }
 
 protocol CreatePostPresenterProtocol: AnyObject {
-    init(view: CreatePostViewProtocol?, mainUser: FirebaseUser, userID: String, firestoreService: FireStoreServiceProtocol, image: UIImage, posts: [EachPost])
+    init(view: CreatePostViewProtocol?, mainUser: FirebaseUser, userID: String,  image: UIImage, posts: [EachPost])
     func createPost(text: String, image: UIImage?, completion: @escaping (Result<[EachPost]?, Error>) -> Void)
 }
 
@@ -22,16 +22,14 @@ final class CreatePostPresenter: CreatePostPresenterProtocol {
     let mainUser: FirebaseUser
     weak  var view: CreatePostViewProtocol?
     let userID: String
-    let firestoreService: FireStoreServiceProtocol
     let image: UIImage
     var posts: [EachPost]
 
 
-    init(view: CreatePostViewProtocol?, mainUser: FirebaseUser, userID: String, firestoreService: any FireStoreServiceProtocol, image: UIImage, posts: [EachPost]) {
+    init(view: CreatePostViewProtocol?, mainUser: FirebaseUser, userID: String, image: UIImage, posts: [EachPost]) {
         self.mainUser = mainUser
         self.view = view
         self.userID = userID
-        self.firestoreService = firestoreService
         self.image = image
         self.posts = posts
     }
@@ -42,7 +40,7 @@ final class CreatePostPresenter: CreatePostPresenterProtocol {
         dateFormatter.dateFormat = "dd MMM"
         let stringFromDate = dateFormatter.string(from: date)
 
-        firestoreService.createPost(date: stringFromDate, text: text, image: image, for: userID) { [weak self] result in
+        FireStoreService.shared.createPost(date: stringFromDate, text: text, image: image, for: userID) { [weak self] result in
             guard let self else { return }
             switch result {
             case .success(let firestorePost):

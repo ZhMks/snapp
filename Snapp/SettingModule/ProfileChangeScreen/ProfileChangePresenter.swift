@@ -17,7 +17,7 @@ protocol ProfileChangeViewProtocol: AnyObject {
 }
 
 protocol ProfileChangePresenterProtocol: AnyObject {
-    init(view: ProfileChangeViewProtocol?, user: FirebaseUser, firestoreService: FireStoreServiceProtocol)
+    init(view: ProfileChangeViewProtocol?, user: FirebaseUser)
 }
 
 final class ProfileChangePresenter: ProfileChangePresenterProtocol {
@@ -25,12 +25,10 @@ final class ProfileChangePresenter: ProfileChangePresenterProtocol {
 
     weak var view: ProfileChangeViewProtocol?
     var user: FirebaseUser
-    var firestoreService: FireStoreServiceProtocol
 
-    init(view: ProfileChangeViewProtocol?, user: FirebaseUser, firestoreService: FireStoreServiceProtocol) {
+    init(view: ProfileChangeViewProtocol?, user: FirebaseUser) {
         self.view = view
         self.user = user
-        self.firestoreService = firestoreService
     }
 
     func goToDetailDataChangeScreen() {
@@ -55,7 +53,7 @@ final class ProfileChangePresenter: ProfileChangePresenterProtocol {
 
     func getUserData() {
         guard let userID = user.documentID else { return }
-        firestoreService.getUser(id: userID) { [weak self] result in
+        FireStoreService.shared.getUser(id: userID) { [weak self] result in
             guard let self else { return }
             switch result {
             case .success(let user):

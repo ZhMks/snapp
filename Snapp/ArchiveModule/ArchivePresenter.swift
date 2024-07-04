@@ -14,26 +14,24 @@ protocol ArchiveViewProtocol: AnyObject {
 
 
 protocol ArchivePresenterProtocol: AnyObject {
-    init(view: ArchiveViewProtocol, user: FirebaseUser, firestoreService: FireStoreServiceProtocol, mainUser: String)
+    init(view: ArchiveViewProtocol, user: FirebaseUser, mainUser: String)
 }
 
 final class ArchivePresenter: ArchivePresenterProtocol {
     weak var view: ArchiveViewProtocol?
     var posts: [EachPost]?
     let mainUser: FirebaseUser
-    let firestoreService: FireStoreServiceProtocol
     let mainUserID: String
 
-    init(view: ArchiveViewProtocol, user: FirebaseUser, firestoreService: FireStoreServiceProtocol, mainUser: String) {
+    init(view: ArchiveViewProtocol, user: FirebaseUser, mainUser: String) {
         self.view = view
         self.mainUser = user
-        self.firestoreService = firestoreService
         self.mainUserID = mainUser
     }
 
     private func fetchPosts() {
         guard let userID = mainUser.documentID else { return }
-        firestoreService.fetchArchives(user: userID) { [weak self] result in
+        FireStoreService.shared.fetchArchives(user: userID) { [weak self] result in
             guard let self else { return }
             switch result {
             case .success(let archivedPosts):

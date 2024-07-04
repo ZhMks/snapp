@@ -14,7 +14,7 @@ protocol AddProfileViewProtocol: AnyObject {
 }
 
 protocol AddProfilePresenterProtocol: AnyObject {
-    init(view: AddProfileViewProtocol, firestoreService: FireStoreServiceProtocol)
+    init(view: AddProfileViewProtocol)
 }
 
 
@@ -22,11 +22,9 @@ protocol AddProfilePresenterProtocol: AnyObject {
 final class AddProfilePresenter: AddProfilePresenterProtocol {
 
     weak var view: AddProfileViewProtocol?
-    let firestoreService: FireStoreServiceProtocol?
 
-    init(view: AddProfileViewProtocol,firestoreService: FireStoreServiceProtocol) {
+    init(view: AddProfileViewProtocol) {
         self.view = view
-        self.firestoreService = firestoreService
     }
 
     func createUser(id: String,
@@ -47,12 +45,12 @@ final class AddProfilePresenter: AddProfilePresenterProtocol {
                                         image: "",
                                         photoAlbum: [],
                                         sex: false)
-        firestoreService?.saveImageIntoStorage(urlLink: ref, photo: image) { [weak self] result in
+        FireStoreService.shared.saveImageIntoStorage(urlLink: ref, photo: image) { [weak self] result in
             guard let self = self else { return }
             switch result {
             case .success(let success):
                 firebaseUser.image = success.absoluteString
-                firestoreService?.createUser(user: firebaseUser, id: identifier)
+                FireStoreService.shared.createUser(user: firebaseUser, id: identifier)
                 completion(.success(firebaseUser))
             case .failure(let failure):
                 print(failure.localizedDescription)

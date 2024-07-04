@@ -21,7 +21,7 @@ protocol DetailPostViewProtocol: AnyObject {
 }
 
 protocol DetailPostPresenterProtocol: AnyObject {
-    init(view: DetailPostViewProtocol, user: FirebaseUser, mainUserID: String, post: EachPost, avatarImage: UIImage, firestoreService: FireStoreServiceProtocol)
+    init(view: DetailPostViewProtocol, user: FirebaseUser, mainUserID: String, post: EachPost, avatarImage: UIImage)
     func updateComments()
 }
 
@@ -32,16 +32,14 @@ final class DetailPostPresenter: DetailPostPresenterProtocol {
     var post: EachPost
     let avatarImage: UIImage
     var comments: [Comment : [Answer]?]?
-    let firestoreService: FireStoreServiceProtocol
     var likes: [Like]?
     let mainUserID: String
 
-    init(view: DetailPostViewProtocol, user: FirebaseUser, mainUserID: String, post: EachPost, avatarImage: UIImage, firestoreService: FireStoreServiceProtocol) {
+    init(view: DetailPostViewProtocol, user: FirebaseUser, mainUserID: String, post: EachPost, avatarImage: UIImage) {
         self.view = view
         self.user = user
         self.post = post
         self.avatarImage = avatarImage
-        self.firestoreService = firestoreService
         self.mainUserID = mainUserID
     }
 
@@ -66,14 +64,14 @@ final class DetailPostPresenter: DetailPostPresenterProtocol {
         comments = [:]
         guard let post = post.documentID else { return }
         guard let user = user.documentID else { return }
-        firestoreService.getComments(post: post, user: user) { [weak self] result in
+        FireStoreService.shared.getComments(post: post, user: user) { [weak self] result in
             guard let self else { return }
             switch result {
             case .success(let commentaries):
                 for comment in commentaries {
                     comments?.updateValue(nil, forKey: comment)
                     guard let documentID = comment.documentID else { return }
-                    firestoreService.getAnswers(post: post, comment: documentID, user: user) { [weak self] result in
+                    FireStoreService.shared.getAnswers(post: post, comment: documentID, user: user) { [weak self] result in
                         guard let self else { return }
                         switch result {
                         case .success(let answers):
@@ -95,7 +93,7 @@ final class DetailPostPresenter: DetailPostPresenterProtocol {
 
     func getLikes() {
         guard let user = user.documentID , let post = post.documentID  else { return }
-        firestoreService.getNumberOfLikesInpost(user: user, post: post) { [weak self] result in
+        FireStoreService.shared.getNumberOfLikesInpost(user: user, post: post) { [weak self] result in
             guard let self else { return }
             switch result {
             case .success(let success):
@@ -109,7 +107,7 @@ final class DetailPostPresenter: DetailPostPresenterProtocol {
 
     func updateData() {
         guard let user = user.documentID else { return }
-        firestoreService.getPosts(sub: user) { [weak self] result in
+        FireStoreService.shared.getPosts(sub: user) { [weak self] result in
             guard let self else { return }
             switch result {
             case .success(let success):
@@ -135,14 +133,13 @@ final class DetailPostPresenter: DetailPostPresenterProtocol {
 
     func incrementLikes() {
         guard let postID = post.documentID, let userID = user.documentID else { return }
-
-        firestoreService.incrementLikes(user: userID, mainUser: mainUserID, post: postID)
+        FireStoreService.shared.incrementLikes(user: userID, mainUser: mainUserID, post: postID)
         getLikes()
     }
 
     func decrementLikes() {
         guard let postID = post.documentID, let userID = user.documentID else { return }
-        firestoreService.decrementLikes(user: userID, mainUser: mainUserID, post: postID)
+        FireStoreService.shared.decrementLikes(user: userID, mainUser: mainUserID, post: postID)
         getLikes()
     }
 

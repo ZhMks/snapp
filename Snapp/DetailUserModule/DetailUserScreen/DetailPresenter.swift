@@ -9,7 +9,7 @@ import UIKit
 import FirebaseAuth
 
 protocol DetailViewProtocol: AnyObject {
-    func updateData(data: [EachPost])
+    func updateData()
 
     func updateAvatarImage(image: UIImage)
 
@@ -23,29 +23,33 @@ protocol DetailViewProtocol: AnyObject {
 }
 
 protocol DetailPresenterProtocol: AnyObject {
-    init(view: DetailViewProtocol, user: FirebaseUser, mainUserID: String, firestoreService: FireStoreServiceProtocol)
+    init(view: DetailViewProtocol, user: FirebaseUser, mainUserID: String)
 }
 
 final class DetailPresenter: DetailPresenterProtocol {
 
     weak var view: DetailViewProtocol?
-    let firestoreService: FireStoreServiceProtocol
     var user: FirebaseUser
     var posts: [EachPost] = []
     var avatarImage: UIImage?
     let mainUserID: String
     var photoAlbum: [UIImage]?
 
-    init(view: DetailViewProtocol, user: FirebaseUser, mainUserID: String, firestoreService: FireStoreServiceProtocol) {
+    init(view: DetailViewProtocol, user: FirebaseUser, mainUserID: String) {
         self.view = view
         self.user = user
         self.mainUserID = mainUserID
-        self.firestoreService = firestoreService
         checkSubscribers()
     }
 
     deinit {
         print("DetailUserPresenter Deinited")
+    }
+
+    func updateData() {
+        fetchPhotoAlbum()
+        fetchImage()
+        fetchPosts()
     }
 
    private func fetchImage()  {
@@ -65,12 +69,12 @@ final class DetailPresenter: DetailPresenterProtocol {
 
    private func fetchPosts() {
         guard let id = user.documentID else { return }
-        firestoreService.getPosts(sub: id) { [weak self] result in
+       FireStoreService.shared.getPosts(sub: id) { [weak self] result in
             guard let self = self else { return }
             switch result {
             case .success(let success):
-                posts = success
-                view?.updateData(data: posts)
+                self.posts = success
+                view?.updateData()
             case .failure(let failure):
                 switch failure.description {
                 case  "Ошибка сервера":
@@ -78,8 +82,7 @@ final class DetailPresenter: DetailPresenterProtocol {
                 case "Ошибка декодирования":
                     return
                 case "Посты отсутстуют":
-                    let data: [EachPost] = []
-                    view?.updateData(data: data)
+                   return
                 default: return
                 }
             }
@@ -88,7 +91,7 @@ final class DetailPresenter: DetailPresenterProtocol {
 
     func addSubscriber() {
         guard let id = user.documentID else { return }
-        firestoreService.saveSubscriber(mainUser: mainUserID, id: id)
+        FireStoreService.shared.saveSubscriber(mainUser: mainUserID, id: id)
     }
 
     func fetchPhotoAlbum() {
@@ -119,7 +122,7 @@ final class DetailPresenter: DetailPresenterProtocol {
 
     func addObserverForuser() {
         guard let id = user.documentID else { return }
-        firestoreService.addSnapshotListenerToUser(for: id) { [weak self] result in
+        FireStoreService.shared.addSnapshotListenerToUser(for: id) { [weak self] result in
             guard let self = self else { return }
             switch result {
             case .success(let user):
@@ -133,17 +136,17 @@ final class DetailPresenter: DetailPresenterProtocol {
     }
 
     func removeObserverForUser() {
-        firestoreService.removeListenerForUser()
+        FireStoreService.shared.removeListenerForUser()
     }
 
     func addObserverForPost() {
         guard let id = user.documentID else { return }
-        firestoreService.addSnapshotListenerToPosts(for: id) { [weak self] result in
+        FireStoreService.shared.addSnapshotListenerToPosts(for: id) { [weak self] result in
             guard let self = self else { return }
             switch result {
             case .success(let success):
                 self.posts = success
-                self.view?.updateData(data: self.posts)
+                self.view?.updateData()
             case .failure(_):
                 return
             }
@@ -151,7 +154,7 @@ final class DetailPresenter: DetailPresenterProtocol {
     }
 
     func removeObserverForPosts() {
-        firestoreService.removeListenerForPosts()
+        FireStoreService.shared.removeListenerForPosts()
     }
 
     func showFeedMenu(post: EachPost) {
@@ -160,12 +163,12 @@ final class DetailPresenter: DetailPresenterProtocol {
 
     func incrementLikes(post: String) {
         guard let userID = user.documentID else { return }
-        firestoreService.incrementLikes(user: userID, mainUser: mainUserID, post: post)
+        FireStoreService.shared.incrementLikes(user: userID, mainUser: mainUserID, post: post)
     }
 
     func decrementLikes(post: String) {
         guard let userID = user.documentID else { return }
-        firestoreService.decrementLikes(user: userID, mainUser: mainUserID, post: post)
+        FireStoreService.shared.decrementLikes(user: userID, mainUser: mainUserID, post: post)
     }
 
     func checkSubscribers() {

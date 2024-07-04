@@ -34,7 +34,7 @@ static let identifier = "ProfileCollectionViewCell"
     }
 
     deinit {
-        print("Cell is deallocated")
+        print("CollectionCell is deallocated")
     }
 
     // MARK: - Funcs

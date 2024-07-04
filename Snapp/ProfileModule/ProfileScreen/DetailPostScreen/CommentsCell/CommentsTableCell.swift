@@ -91,13 +91,13 @@ final class CommentsTableCell: UITableViewCell {
 
     // MARK: -Funcs
 
-    func updateView(comment: Comment, firestoreService: FireStoreServiceProtocol) {
+    func updateView(comment: Comment) {
 
         commentLabel.text = comment.text
         dateLabel.text = comment.date
         likesLabel.text = "\(comment.likes)"
 
-        firestoreService.getUser(id: comment.commentor) { [weak self] result in
+        FireStoreService.shared.getUser(id: comment.commentor) { [weak self] result in
             guard let self else { return }
             switch result {
             case .success(let user):
@@ -122,12 +122,12 @@ final class CommentsTableCell: UITableViewCell {
         }
     }
 
-    func updateAnswers(answer: Answer, user: FirebaseUser, date: String, firestoreService: FireStoreServiceProtocol) {
+    func updateAnswers(answer: Answer, user: FirebaseUser, date: String) {
         commentLabel.text = answer.text
         dateLabel.text = answer.date
         likesLabel.text = "\(answer.likes)"
 
-        firestoreService.getUser(id: answer.commentor) { [weak self] result in
+        FireStoreService.shared.getUser(id: answer.commentor) { [weak self] result in
             guard let self else { return }
             switch result {
             case .success(let user):

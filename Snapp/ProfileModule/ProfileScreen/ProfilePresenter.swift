@@ -26,14 +26,13 @@ protocol ProfileViewProtocol: AnyObject {
 }
 
 protocol ProfilePresenterProtocol: AnyObject {
-    init(view: ProfileViewProtocol, mainUser: FirebaseUser, mainUserID: String, firestoreService: FireStoreServiceProtocol)
+    init(view: ProfileViewProtocol, mainUser: FirebaseUser, mainUserID: String)
 }
 
 final class ProfilePresenter: ProfilePresenterProtocol {
 
     weak var view: ProfileViewProtocol?
     var mainUser: FirebaseUser
-    var firestoreService: FireStoreServiceProtocol
     var posts: [EachPost] = []
     var avatarImage: UIImage?
     let mainUserID: String
@@ -41,10 +40,9 @@ final class ProfilePresenter: ProfilePresenterProtocol {
     let networkService = NetworkService()
     var currentDate: String?
 
-    init(view: ProfileViewProtocol, mainUser: FirebaseUser, mainUserID: String, firestoreService: FireStoreServiceProtocol) {
+    init(view: ProfileViewProtocol, mainUser: FirebaseUser, mainUserID: String) {
         self.view = view
         self.mainUser = mainUser
-        self.firestoreService = firestoreService
         self.mainUserID = mainUserID
         addListenerForPost()
         addListenerForUser()
@@ -82,7 +80,7 @@ final class ProfilePresenter: ProfilePresenterProtocol {
 
     func addListenerForPost() {
         posts = []
-        firestoreService.addSnapshotListenerToPosts(for: mainUserID) { [weak self] result in
+        FireStoreService.shared.addSnapshotListenerToPosts(for: mainUserID) { [weak self] result in
             guard let self = self else { return }
             switch result {
             case .success(let success):
@@ -101,7 +99,7 @@ final class ProfilePresenter: ProfilePresenterProtocol {
     }
 
     func addPostToBookMarks(post: EachPost) {
-        firestoreService.saveToBookMarks(user: mainUserID, post: post) { [weak self] result in
+        FireStoreService.shared.saveToBookMarks(user: mainUserID, post: post) { [weak self] result in
             guard let self = self else { return }
             switch result {
             case .success(_):
@@ -114,12 +112,12 @@ final class ProfilePresenter: ProfilePresenterProtocol {
 
     func pinPost( docID: String) {
         guard let user = mainUser.documentID else { return }
-        firestoreService.pinPost(user: user, docID: docID)
+        FireStoreService.shared.pinPost(user: user, docID: docID)
     }
 
     func addListenerForUser() {
         guard let id = mainUser.documentID else { return }
-        firestoreService.addSnapshotListenerToUser(for: id) { [weak self] result in
+        FireStoreService.shared.addSnapshotListenerToUser(for: id) { [weak self] result in
             guard let self = self else { return }
             switch result {
             case .success(let success):
@@ -135,11 +133,11 @@ final class ProfilePresenter: ProfilePresenterProtocol {
 
     func createStorie(image: UIImage) {
         let storageLink = Storage.storage().reference().child("users").child(mainUserID).child("Stories").child(currentDate!).child(image.description)
-        firestoreService.saveImageIntoStorage(urlLink: storageLink, photo: image) { [weak self] result in
+        FireStoreService.shared.saveImageIntoStorage(urlLink: storageLink, photo: image) { [weak self] result in
             guard let self = self else { return }
             switch result {
             case .success(let success):
-                firestoreService.changeData(id: mainUser.documentID!, text: success.absoluteString, state: .storie)
+                FireStoreService.shared.changeData(id: mainUser.documentID!, text: success.absoluteString, state: .storie)
             case .failure(let failure):
                 view?.showErrorAler(error: failure.localizedDescription)
             }
@@ -152,7 +150,7 @@ final class ProfilePresenter: ProfilePresenterProtocol {
             createStorie(image: image)
         case .photoImage:
             let link = Storage.storage().reference().child("users").child(mainUserID).child("PhotoAlbum").child(currentDate!)
-            firestoreService.saveImageIntoStorage(urlLink: link, photo: image) { [weak self] result in
+            FireStoreService.shared.saveImageIntoStorage(urlLink: link, photo: image) { [weak self] result in
                 guard let self = self else { return }
                 switch result {
                 case .success(let urlLink):
@@ -168,7 +166,7 @@ final class ProfilePresenter: ProfilePresenterProtocol {
                                     photoAlbum[currentDate!] = imagesArray
                                 }
                             }
-                        case .failure(let failure):
+                        case .failure(_):
                             print()
                         }
                     }
@@ -180,7 +178,7 @@ final class ProfilePresenter: ProfilePresenterProtocol {
     }
 
     func fetchSubsribers() {
-        firestoreService.getUser(id: mainUserID) { [weak self] result in
+        FireStoreService.shared.getUser(id: mainUserID) { [weak self] result in
             guard let self = self else { return }
             switch result {
             case .success(let success):
@@ -194,24 +192,24 @@ final class ProfilePresenter: ProfilePresenterProtocol {
 
     func fetchPhotoAlbum() {
         let link = Storage.storage().reference().child("users").child(mainUserID).child("PhotoAlbum")
-        firestoreService.fetchImagesFromStorage(link: link)
+        FireStoreService.shared.fetchImagesFromStorage(link: link)
     }
 
     func removePostListener() {
-        firestoreService.removeListenerForPosts()
+        FireStoreService.shared.removeListenerForPosts()
     }
 
     func removeUserListener() {
-        firestoreService.removeListenerForUser()
+        FireStoreService.shared.removeListenerForUser()
     }
 
     func incrementLikes(post: String) {
         guard let useID = mainUser.documentID else { return }
-        firestoreService.incrementLikes(user: useID, mainUser: mainUserID, post: post)
+        FireStoreService.shared.incrementLikes(user: useID, mainUser: mainUserID, post: post)
     }
 
     func decrementLikes(post: String) {
         guard let userID = mainUser.documentID else { return }
-        firestoreService.decrementLikes(user: userID, mainUser: mainUserID, post: post)
+        FireStoreService.shared.decrementLikes(user: userID, mainUser: mainUserID, post: post)
     }
 }

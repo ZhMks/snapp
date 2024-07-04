@@ -123,7 +123,7 @@ class MenuForPostView: UIView {
     }
 
     @objc func pinButtonTapped() {
-        presenter.pinPost(post: presenter.post)
+        presenter.pinPost()
         self.removeFromSuperview()
     }
 

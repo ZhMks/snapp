@@ -187,6 +187,7 @@ class DetailUserViewController: UIViewController {
 
     private lazy var postsTableView: UITableView = {
         let postsTableView = UITableView()
+        postsTableView.register(PostTableCell.self, forCellReuseIdentifier: PostTableCell.identifier)
         postsTableView.translatesAutoresizingMaskIntoConstraints = false
         postsTableView.delegate = self
         postsTableView.dataSource = self
@@ -210,7 +211,8 @@ class DetailUserViewController: UIViewController {
         tuneNavItem()
         addSubviews()
         layout()
-        presenter.fetchPhotoAlbum()
+        tuneTableView()
+        presenter.updateData()
     }
 
     deinit {
@@ -239,7 +241,7 @@ extension DetailUserViewController: DetailViewProtocol {
 
     func showFeedMenu(post: EachPost) {
         let menuForFeedVC = MenuForFeedViewController()
-        let presenter = MenuForFeedPresenter(view: menuForFeedVC, user: self.presenter.user, firestoreService: self.presenter.firestoreService, post: post, mainUserID: self.presenter.mainUserID)
+        let presenter = MenuForFeedPresenter(view: menuForFeedVC, user: self.presenter.user, post: post, mainUserID: self.presenter.mainUserID)
         menuForFeedVC.modalPresentationStyle = .formSheet
 
         if let sheet = menuForFeedVC.sheetPresentationController {
@@ -253,22 +255,19 @@ extension DetailUserViewController: DetailViewProtocol {
         self.navigationController?.present(menuForFeedVC, animated: true)
     }
     
-
     func updateAlbum() {
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
-            self.photoCollectionView.reloadData()
+            photoCollectionView.reloadData()
         }
     }
 
-
-    func updateData(data: [EachPost]) {
+    func updateData() {
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
-            self.tuneTableView()
+            postsTableView.reloadData()
         }
     }
-
 
     func updateAvatarImage(image: UIImage) {
         DispatchQueue.main.async { [weak self] in
@@ -299,31 +298,26 @@ extension DetailUserViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: PostTableCell.identifier, for: indexPath) as? PostTableCell else { return UITableViewCell() }
         let data = presenter.posts[indexPath.row]
-        let date = presenter.posts[indexPath.row].date
         let mainUserID = self.presenter.mainUserID
-        let firestoreService = presenter.firestoreService
-        cell.updateView(post: data, user: presenter.user, date: date, firestoreService: firestoreService, state: .feedState, mainUserID: mainUserID)
+        
+        cell.updateView(post: data, user: presenter.user, state: .feedState, mainUserID: mainUserID)
 
         cell.showMenuForFeed = { [weak self] post in
-            guard let self = self else { return }
-            presenter.showFeedMenu(post: post)
+            self?.presenter.showFeedMenu(post: post)
         }
 
-        cell.incrementLikes = { [weak self] post in
-            guard let self = self else { return }
-            presenter.incrementLikes(post: post)
-            tableView.reloadRows(at: [indexPath], with: .fade)
+        cell.incrementLikes = { [weak self,weak tableView] post in
+            self?.presenter.incrementLikes(post: post)
+            tableView?.reloadRows(at: [indexPath], with: .fade)
         }
 
-        cell.decrementLikes = { [weak self] post in
-            guard let self = self else { return }
-            presenter.decrementLikes(post: post)
-            tableView.reloadRows(at: [indexPath], with: .fade)
+        cell.decrementLikes = { [weak self, weak tableView] post in
+            self?.presenter.decrementLikes(post: post)
+            tableView?.reloadRows(at: [indexPath], with: .fade)
         }
 
         return cell
     }
-
 
 }
 
@@ -337,11 +331,11 @@ extension DetailUserViewController: UITableViewDelegate {
         let detailPostVC = DetailPostViewController()
         guard let image = presenter.avatarImage  else { return }
         if data.image!.isEmpty {
-            let detailPostPresenter = DetailPostPresenter(view: detailPostVC, user: presenter.user, mainUserID: self.presenter.mainUserID, post: data, avatarImage: image, firestoreService: presenter.firestoreService)
+            let detailPostPresenter = DetailPostPresenter(view: detailPostVC, user: presenter.user, mainUserID: self.presenter.mainUserID, post: data, avatarImage: image)
             detailPostVC.presenter = detailPostPresenter
             self.navigationController?.pushViewController(detailPostVC, animated: true)
         } else {
-            let detailPostPresenter = DetailPostPresenter(view: detailPostVC, user: presenter.user, mainUserID: self.presenter.mainUserID, post: data, avatarImage: image, firestoreService: presenter.firestoreService)
+            let detailPostPresenter = DetailPostPresenter(view: detailPostVC, user: presenter.user, mainUserID: self.presenter.mainUserID, post: data, avatarImage: image)
             detailPostVC.presenter = detailPostPresenter
             self.navigationController?.pushViewController(detailPostVC, animated: true)
         }
@@ -528,11 +522,9 @@ extension DetailUserViewController {
         ])
     }
 
-    func tuneTableView() {
-        postsTableView.register(PostTableCell.self, forCellReuseIdentifier: PostTableCell.identifier)
+   private func tuneTableView() {
         postsTableView.rowHeight = UITableView.automaticDimension
         postsTableView.estimatedRowHeight = 44.0
-        postsTableView.tableHeaderView = mainContentView
         postsTableView.tableFooterView = UIView()
         postsTableView.setAndLayout(header: mainContentView)
         postsTableView.separatorStyle = .none

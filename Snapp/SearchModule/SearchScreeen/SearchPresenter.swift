@@ -16,19 +16,17 @@ protocol SearchViewProtocol: AnyObject {
 }
 
 protocol SearchPresenterProtocol: AnyObject {
-    init(view: SearchViewProtocol?, firestoreService: FireStoreServiceProtocol, mainUser: String)
+    init(view: SearchViewProtocol?, mainUser: String)
 }
 
 final class SearchPresenter: SearchPresenterProtocol {
 
     weak var view: SearchViewProtocol?
-    let firestoreService: FireStoreServiceProtocol
     var usersArray: [FirebaseUser] = []
     let mainUserID: String
 
-    init(view: SearchViewProtocol?, firestoreService: FireStoreServiceProtocol, mainUser: String) {
+    init(view: SearchViewProtocol?, mainUser: String) {
         self.view = view
-        self.firestoreService = firestoreService
         self.mainUserID = mainUser
     }
 
@@ -37,7 +35,7 @@ final class SearchPresenter: SearchPresenterProtocol {
     }
 
     func getAllUsers() {
-        firestoreService.getAllUsers { [weak self] result in
+        FireStoreService.shared.getAllUsers { [weak self] result in
             guard let self = self else { return }
             switch result {
             case .success(let firebaseUserArray):

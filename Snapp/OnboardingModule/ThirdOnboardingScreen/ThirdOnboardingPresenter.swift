@@ -15,20 +15,18 @@ protocol ThirdOnboardingViewProtocol: AnyObject {
 }
 
 protocol ThirdOnboardingPresenterProtocol: AnyObject {
-    init (view: ThirdOnboardingViewProtocol, authService: FireBaseAuthProtocol, firestoreService: FireStoreServiceProtocol)
+    init (view: ThirdOnboardingViewProtocol, authService: FireBaseAuthProtocol)
 }
 
 final class ThirdOnboardingPresenter: ThirdOnboardingPresenterProtocol {
 
     weak var view: ThirdOnboardingViewProtocol?
     let authService: FireBaseAuthProtocol
-    let firestoreService: FireStoreServiceProtocol
     var number: String?
 
-    init(view: ThirdOnboardingViewProtocol, authService: FireBaseAuthProtocol, firestoreService: FireStoreServiceProtocol) {
+    init(view: ThirdOnboardingViewProtocol, authService: FireBaseAuthProtocol) {
         self.view = view
         self.authService = authService
-        self.firestoreService = firestoreService
     }
 
     func checkCode(code: String) {
@@ -36,7 +34,7 @@ final class ThirdOnboardingPresenter: ThirdOnboardingPresenterProtocol {
             guard let self = self else { return }
             switch result {
             case .success(let success):
-                self.firestoreService.getUser(id: success.uid) { result in
+                FireStoreService.shared.getUser(id: success.uid) { result in
                     switch result {
                     case .success(let user):
                         self.view?.showUserExistAlert(id: user.documentID!)

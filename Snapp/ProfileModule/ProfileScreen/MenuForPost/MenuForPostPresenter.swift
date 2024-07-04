@@ -6,39 +6,36 @@
 //
 
 import UIKit
-import FirebaseAuth
-import Firebase
+
 
 protocol MenuForPostViewProtocol: AnyObject {
     func showError(descr error: String)
 }
 
 protocol MenuForPostPresenterProtocol: AnyObject {
-    init(view: MenuForPostViewProtocol, user: FirebaseUser, firestoreService: FireStoreServiceProtocol, post: EachPost)
+    init(view: MenuForPostViewProtocol, user: FirebaseUser, post: EachPost)
 }
 
 protocol MenuForPostDelegate: AnyObject {
-    func pinPost(post: EachPost)
+    func pinPost()
 }
 
 
 final class MenuForPostPresenter: MenuForPostPresenterProtocol {
     weak var view: MenuForPostViewProtocol?
     let user: FirebaseUser
-    let firestoreService: FireStoreServiceProtocol
     let post: EachPost
     weak var delegate: MenuForPostDelegate?
 
-    init(view: MenuForPostViewProtocol, user: FirebaseUser, firestoreService: FireStoreServiceProtocol, post: EachPost) {
+    init(view: MenuForPostViewProtocol, user: FirebaseUser, post: EachPost) {
         self.view = view
         self.user = user
-        self.firestoreService = firestoreService
         self.post = post
     }
 
     func saveIntoFavourites() {
         guard let user = user.documentID else { return }
-        firestoreService.saveIntoFavourites(post: post, for: user) { [weak self] result in
+        FireStoreService.shared.saveIntoFavourites(post: post, for: user) { [weak self] result in
             guard let self else { return }
             switch result {
             case .success(_):
@@ -52,13 +49,13 @@ final class MenuForPostPresenter: MenuForPostPresenterProtocol {
     func disableCommentaries() {
         guard let user = user.documentID else { return }
         if let documentID = post.documentID {
-            firestoreService.disableCommentaries(id: documentID, user: user)
+            FireStoreService.shared.disableCommentaries(id: documentID, user: user)
         }
     }
 
     func addPostToArchives() {
         guard let user = user.documentID else { return }
-        firestoreService.addDocToArchives(post: post, user: user) { [weak self] result in
+        FireStoreService.shared.addDocToArchives(post: post, user: user) { [weak self] result in
             guard let self else { return }
             switch result {
             case .success(_):
@@ -69,15 +66,16 @@ final class MenuForPostPresenter: MenuForPostPresenterProtocol {
         }
     }
 
-    func pinPost(post: EachPost) {
+    func pinPost() {
         guard let userID = user.documentID, let docID = post.documentID else { return }
-        firestoreService.pinPost(user: userID, docID: docID)
+        FireStoreService.shared.pinPost(user: userID, docID: docID)
+        delegate?.pinPost()
     }
 
     func copyPostLink() -> String {
         guard let user = user.documentID else { return "" }
         if let documentID = post.documentID {
-            let urlLink = firestoreService.getDocLink(for: documentID, user: user)
+            let urlLink = FireStoreService.shared.getDocLink(for: documentID, user: user)
             return urlLink
         }
         return ""
@@ -87,7 +85,7 @@ final class MenuForPostPresenter: MenuForPostPresenterProtocol {
     func deletePost() {
         guard let user = user.documentID else { return }
         guard let postID = post.documentID else { return }
-        firestoreService.deleteDocument(docID: postID, user: user) { [weak self] result in
+        FireStoreService.shared.deleteDocument(docID: postID, user: user) { [weak self] result in
             guard let self else { return }
             switch result {
             case .success(_):

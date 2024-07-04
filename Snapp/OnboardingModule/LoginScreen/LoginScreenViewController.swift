@@ -92,10 +92,8 @@ class LoginScreenViewController: UIViewController {
                         guard let self = self else { return }
                         let signInVC = SignInViewController()
                         let authService = self.loginpresenter.authService
-                        let firestoreService = FireStoreService()
                         let signInPresenter = SignInPresenter(view: signInVC,
-                                                              firebaseAuth:authService,
-                                                              firestoreService: firestoreService)
+                                                              firebaseAuth:authService)
                         signInVC.presenter = signInPresenter
                         signInVC.modalPresentationStyle = .formSheet
                         if let sheet = signInVC.sheetPresentationController {
