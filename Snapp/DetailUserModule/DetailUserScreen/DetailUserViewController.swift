@@ -204,6 +204,12 @@ class DetailUserViewController: UIViewController {
 
     // MARK: -Lifecycle
 
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        presenter.addObserverForuser()
+        presenter.addObserverForPost()
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
@@ -212,7 +218,13 @@ class DetailUserViewController: UIViewController {
         addSubviews()
         layout()
         tuneTableView()
-        presenter.updateData()
+        presenter.fetchPhotoAlbum()
+    }
+
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        presenter.removeObserverForUser()
+        presenter.removeObserverForPosts()
     }
 
     deinit {
@@ -235,8 +247,13 @@ class DetailUserViewController: UIViewController {
 extension DetailUserViewController: DetailViewProtocol {
 
     func updateSubButton() {
-        subscribeButton.backgroundColor = .systemGray3
-        subscribeButton.isEnabled = false
+        if presenter.user.subscribers.contains(presenter.mainUserID) {
+            subscribeButton.backgroundColor = .systemGray3
+            subscribeButton.isEnabled = false
+        } else {
+            subscribeButton.backgroundColor = ColorCreator.shared.createButtonColor()
+            subscribeButton.isEnabled = true
+        }
     }
 
     func showFeedMenu(post: EachPost) {
@@ -308,11 +325,13 @@ extension DetailUserViewController: UITableViewDataSource {
 
         cell.incrementLikes = { [weak self,weak tableView] post in
             self?.presenter.incrementLikes(post: post)
+            self?.presenter.saveIntoFavourites(post: post)
             tableView?.reloadRows(at: [indexPath], with: .fade)
         }
 
         cell.decrementLikes = { [weak self, weak tableView] post in
             self?.presenter.decrementLikes(post: post)
+            self?.presenter.removeFromFavourites(post: post)
             tableView?.reloadRows(at: [indexPath], with: .fade)
         }
 

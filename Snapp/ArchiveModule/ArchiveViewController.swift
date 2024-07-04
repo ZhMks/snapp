@@ -59,8 +59,7 @@ extension ArchiveViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: PostTableCell.identifier, for: indexPath) as? PostTableCell else { return UITableViewCell() }
         guard let dataforCell = presenter.posts?[indexPath.row] else { return UITableViewCell() }
-        let image = UIImage(systemName: "checkmark")
-        cell.updateView(post: dataforCell, user: self.presenter.mainUser, state: .profileState, mainUserID: self.presenter.mainUserID, image: image!)
+        cell.updateView(post: dataforCell, user: self.presenter.mainUser, state: .profileState, mainUserID: self.presenter.mainUserID)
         return cell
     }
     

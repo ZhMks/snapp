@@ -27,7 +27,7 @@ class MenuForFeedViewController: UIViewController {
         addToBookmarkButton.titleLabel?.font = UIFont(name: "Inter-Light", size: 14)
         addToBookmarkButton.setTitleColor(ColorCreator.shared.createTextColor(), for: .normal)
         addToBookmarkButton.contentHorizontalAlignment = .left
-        addToBookmarkButton.addTarget(self, action: #selector(saveIntoFavourites), for: .touchUpInside)
+        addToBookmarkButton.addTarget(self, action: #selector(saveIntoBookmarks), for: .touchUpInside)
         return addToBookmarkButton
     }()
 
@@ -71,6 +71,7 @@ class MenuForFeedViewController: UIViewController {
         reportButton.titleLabel?.font = UIFont(name: "Inter-Light", size: 14)
         reportButton.setTitleColor(ColorCreator.shared.createTextColor(), for: .normal)
         reportButton.contentHorizontalAlignment = .left
+        reportButton.addTarget(self, action: #selector(reportButtonTapped), for: .touchUpInside)
         return reportButton
     }()
 
@@ -98,22 +99,25 @@ class MenuForFeedViewController: UIViewController {
     //MARK: -Funcs
 
     @objc func enableNotificationsButtonTapped() {
-
+        dismiss(animated: true)
     }
 
-    @objc func saveIntoFavourites() {
-        presenter.saveIntoFavourites()
+    @objc func saveIntoBookmarks() {
+        presenter.saveIntoBookmarks()
+        dismiss(animated: true)
     }
 
     @objc func getDocLink() {
         let doclink =  presenter.copyPostLink()
         let updatedUrlLink = "https://console.firebase.google.com/u/1/project/snappproject-9ca98/firestore/databases/-default-/data/" + doclink
         UIPasteboard.general.url = URL(string: updatedUrlLink)
+        dismiss(animated: true)
     }
 
 
     @objc func removeSubscribtion() {
         presenter.removeSubscribtion()
+        dismiss(animated: true)
     }
 
 
@@ -122,7 +126,12 @@ class MenuForFeedViewController: UIViewController {
     }
 
     @objc func reportButtonTapped() {
+        presenter.showReportView()
+    }
 
+    @objc func infoViewButtonTapped() {
+        presenter.removeSubscribtion()
+        dismiss(animated: true)
     }
 }
 
@@ -130,19 +139,52 @@ class MenuForFeedViewController: UIViewController {
 //MARK: -Presenter Output
 
 extension MenuForFeedViewController: MenuForFeedViewProtocol {
+
+    func showInfoView() {
+        let infoView = UIView(frame: CGRect(x: 50, y: 50, width: 120, height: 120))
+        infoView.layer.cornerRadius = 10
+        infoView.backgroundColor = .systemBackground
+        infoView.layer.shadowColor = UIColor.systemGray3.cgColor
+        infoView.layer.shadowOpacity = 1.0
+        infoView.layer.shadowRadius = 3.0
+
+        let text = UILabel(frame: CGRect(x: infoView.frame.minX, y: infoView.frame.minY, width: 80, height: 80))
+        text.text = "Мы приняли к рассмотрению вашу жалобу, а также скрыли посты данного пользователя от вас"
+
+
+        let button = UIButton(frame: CGRect(x: text.frame.midX, y: text.frame.maxY, width: 80, height: 40))
+        button.setTitle("К поиску", for: .normal)
+        button.addTarget(self, action: #selector(infoViewButtonTapped), for: .touchUpInside)
+        button.backgroundColor = ColorCreator.shared.createButtonColor()
+        infoView.addSubview(text)
+        infoView.addSubview(button)
+        view.addSubview(infoView)
+    }
+
+    func showReportView() {
+        let reportAlertController = UIAlertController(title: "String", message: "String", preferredStyle: .alert)
+        reportAlertController.addTextField { textField in
+            textField.borderStyle = .roundedRect
+            textField.placeholder = "Enter Text"
+        }
+        let uiAction = UIAlertAction(title: .localized(string: "Отправить"), style: .cancel) { [weak self] _ in
+            self?.presenter.sendMail(text: reportAlertController.textFields?.first?.text)
+        }
+        reportAlertController.addAction(uiAction)
+        present(reportAlertController, animated: true)
+    }
+    
     func showActivityController() {
         let urlLink = "https://console.firebase.google.com/u/1/project/snappproject-9ca98/firestore/databases/-default-/data/" + presenter.copyPostLink()
         let activityController = UIActivityViewController(activityItems: [urlLink], applicationActivities: nil)
-        self.navigationController?.present(activityController, animated: true)
-    }
-
-    func updateViewForFeed() {
-
-
+        present(activityController, animated: true)
     }
 
     func showError(descr error: String) {
-        print(error)
+        let uiAlertController = UIAlertController(title: .localized(string: "Ошибка"), message: .localized(string: error), preferredStyle: .alert)
+        let uiAlertAction = UIAlertAction(title: .localized(string: "Отмена"), style: .cancel)
+        uiAlertController.addAction(uiAlertAction)
+        present(uiAlertController, animated: true)
     }
 }
 

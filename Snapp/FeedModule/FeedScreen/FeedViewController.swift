@@ -51,6 +51,11 @@ final class FeedViewController: UIViewController {
 
     // MARK: -Lifecycle
 
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        presenter.addUserListener()
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
@@ -58,7 +63,11 @@ final class FeedViewController: UIViewController {
         tuneTableView()
         layout()
         presenter.fetchAvatarImage()
-        presenter.fetchPosts()
+    }
+
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        presenter.removeListener()
     }
 
     // MARK: -Funcs
@@ -205,7 +214,9 @@ extension FeedViewController: UITableViewDelegate {
                     let detailPostPresenter = DetailPostPresenter(view: detailPostVC, user: user, mainUserID: self.presenter.mainUserID, post: post, avatarImage: avatarImage)
                     detailPostVC.presenter = detailPostPresenter
                     detailPostVC.postMenuState = .feedPost
-                    self.navigationController?.pushViewController(detailPostVC, animated: true)
+                    DispatchQueue.main.async { [weak self] in
+                        self?.navigationController?.pushViewController(detailPostVC, animated: true)
+                    }
                 case .failure(_):
                     return
                 }
@@ -233,8 +244,7 @@ extension FeedViewController: UITableViewDataSource {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: PostTableCell.identifier, for: indexPath) as? PostTableCell else { return UITableViewCell() }
         guard let user = user(forSection: indexPath.section) else { return UITableViewCell() }
         if let data = presenter.posts?[user]?[indexPath.row] {
-            let image = UIImage(systemName: "checkmark")
-            cell.updateView(post: data, user: user, state: .feedState, mainUserID: self.presenter.mainUserID, image: image!)
+            cell.updateView(post: data, user: user, state: .feedState, mainUserID: self.presenter.mainUserID)
         }
 
         cell.showMenuForFeed = { [weak self] post in

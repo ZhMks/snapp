@@ -44,15 +44,9 @@ final class ProfilePresenter: ProfilePresenterProtocol {
         self.view = view
         self.mainUser = mainUser
         self.mainUserID = mainUserID
-        addListenerForPost()
-        addListenerForUser()
         getCurrentDate()
         fetchPhotoAlbum()
-    }
-
-    deinit {
-        removePostListener()
-        removeUserListener()
+        fetchAvatarImage()
     }
 
     func fetchAvatarImage()  {
@@ -76,6 +70,14 @@ final class ProfilePresenter: ProfilePresenterProtocol {
         let stringFromDate = dateFormatter.string(from: date)
 
         self.currentDate = stringFromDate
+    }
+
+    func addToFavourites(post: EachPost) {
+        FireStoreService.shared.saveIntoFavourites(post: post, for: mainUserID)
+    }
+
+    func removeFromFavourites(post: EachPost) {
+        FireStoreService.shared.removeFromFavourites(user: mainUserID, post: post)
     }
 
     func addListenerForPost() {
@@ -203,13 +205,13 @@ final class ProfilePresenter: ProfilePresenterProtocol {
         FireStoreService.shared.removeListenerForUser()
     }
 
-    func incrementLikes(post: String) {
-        guard let useID = mainUser.documentID else { return }
-        FireStoreService.shared.incrementLikes(user: useID, mainUser: mainUserID, post: post)
+    func incrementLikes(post: EachPost) {
+        guard let useID = mainUser.documentID, let postID = post.documentID else { return }
+        FireStoreService.shared.incrementLikes(user: useID, mainUser: mainUserID, post: postID)
     }
 
-    func decrementLikes(post: String) {
-        guard let userID = mainUser.documentID else { return }
-        FireStoreService.shared.decrementLikes(user: userID, mainUser: mainUserID, post: post)
+    func decrementLikes(post: EachPost) {
+        guard let userID = mainUser.documentID, let postID = post.documentID else { return }
+        FireStoreService.shared.decrementLikes(user: userID, mainUser: mainUserID, post: postID)
     }
 }

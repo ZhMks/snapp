@@ -54,7 +54,7 @@ protocol FireStoreServiceProtocol {
     func getComments(post: String, user: String, completion: @escaping (Result<[Comment], Error>) -> Void)
     func addAnswerToComment(postID: String, user: String, commentID: String, answer: Answer, completion: @escaping (Result<Answer, Error>) -> Void)
     func getAnswers(post: String, comment: String, user: String, completion: @escaping (Result<[Answer], Error>) -> Void)
-    func saveIntoFavourites(post: EachPost, for user: String, completion: @escaping (Result<EachPost, Error>) -> Void)
+    func saveIntoFavourites(post: EachPost, for user: String) 
     func getDocLink(for id: String, user: String) -> String
     func disableCommentaries(id: String, user: String)
     func addDocToArchives(post: EachPost, user: String, completion: @escaping (Result<EachPost, Error>) -> Void)
@@ -74,6 +74,7 @@ protocol FireStoreServiceProtocol {
     func removeSubscribtion(sub: String, for user: String)
     func saveToBookMarks(user: String, post: EachPost, completion: @escaping (Result<EachPost, Error>) -> Void)
     func fetchBookmarkedPosts(user: String, completion: @escaping (Result<[EachPost], Error>) -> Void)
+    func removeFromFavourites(user: String, post: EachPost)
 
     // Функции для работы с изображением
     func saveImageIntoStorage(urlLink: StorageReference, photo: UIImage, completion: @escaping (Result <URL, Error>) -> Void)
@@ -671,38 +672,26 @@ final class FireStoreService: FireStoreServiceProtocol {
         }
     }
 
-    func saveIntoFavourites(post: EachPost, for user: String, completion: @escaping (Result<EachPost, Error>) -> Void) {
+    func saveIntoFavourites(post: EachPost, for user: String) {
         let docRef = Firestore.firestore().collection("Users").document(user).collection("Favourites")
+        do {
+            try docRef.addDocument(from: post)
+        } catch {
+            print(error.localizedDescription)
+        }
+    }
 
-        docRef.getDocuments {  snapshot, error in
+    func removeFromFavourites(user: String, post: EachPost) {
+        guard let docID = post.documentID else { return }
+        let docRef = Firestore.firestore().collection("Users").document(user).collection("Favourites")
+        docRef.getDocuments { snapshot, error in
             if let error = error {
-                completion(.failure(error))
+                return
             }
 
             if let snapshot = snapshot {
-                if snapshot.documents.isEmpty {
-                    do {
-                        try docRef.addDocument(from: post)
-                        completion(.success(post))
-                    } catch {
-                        print(error.localizedDescription)
-                        completion(.failure(error))
-                    }
-                } else {
-                    for document in snapshot.documents {
-                        let textInPost = document.get("text") as? String
-                        if textInPost == post.text {
-                            break
-                        } else {
-                            do {
-                                try docRef.addDocument(from: post)
-                                completion(.success(post))
-                            } catch {
-                                print(error.localizedDescription)
-                                completion(.failure(error))
-                            }
-                        }
-                    }
+                for document in snapshot.documents {
+                    
                 }
             }
         }
@@ -724,7 +713,7 @@ final class FireStoreService: FireStoreServiceProtocol {
         }
         let archiveRef = Firestore.firestore().collection("Users").document(user).collection("Archive")
         var newPost = post
-
+print(user)
         if let image = post.image {
             let networkService = NetworkService()
             networkService.fetchImage(string: image) { [weak self] result in
@@ -761,6 +750,23 @@ final class FireStoreService: FireStoreServiceProtocol {
                 }
             }
         }
+
+        self.deleteDocument(docID: documentID, user: user) { [weak self] result in
+            guard  self != nil else { return }
+            switch result {
+            case .success(_):
+                print("Successfully archived")
+                do {
+                    try archiveRef.addDocument(from: newPost)
+                    completion(.success(newPost))
+                } catch {
+                    completion(.failure(error))
+                }
+            case .failure(let failure):
+                completion(.failure(failure))
+            }
+        }
+
     }
 
     func deleteDocument(docID: String, user: String, completion: @escaping (Result<Bool, Error>) -> Void) {
@@ -777,6 +783,12 @@ final class FireStoreService: FireStoreServiceProtocol {
     func removeSubscribtion(sub: String, for user: String) {
         let docRef = Firestore.firestore().collection("Users").document(user)
         docRef.updateData(["subscribtions" : FieldValue.arrayRemove([sub])])
+        print("Successfully removed")
+    }
+
+    func removeSubscriber(sub: String, for user: String) {
+        let docRef = Firestore.firestore().collection("Users").document(user)
+        docRef.updateData(["subscribers" : FieldValue.arrayRemove([sub])])
         print("Successfully removed")
     }
 
@@ -816,7 +828,7 @@ final class FireStoreService: FireStoreServiceProtocol {
     }
 
     func saveToBookMarks(user: String, post: EachPost, completion: @escaping (Result<EachPost, Error>) -> Void) {
-        let link = Firestore.firestore().collection("users").document(user).collection("Bookmarks")
+        let link = Firestore.firestore().collection("Users").document(user).collection("Bookmarks")
         do {
          try link.addDocument(from: post)
             completion(.success(post))
@@ -826,7 +838,7 @@ final class FireStoreService: FireStoreServiceProtocol {
     }
 
     func fetchBookmarkedPosts(user: String, completion: @escaping (Result<[EachPost], Error>) -> Void) {
-        let link = Firestore.firestore().collection("users").document(user).collection("Bookmarks")
+        let link = Firestore.firestore().collection("Users").document(user).collection("Bookmarks")
         var decodedDocuments: [EachPost] = []
 
         link.getDocuments { snapshot, error in
@@ -858,6 +870,11 @@ final class FireStoreService: FireStoreServiceProtocol {
             }
             completion(.success(decodedDocuments))
         }
+    }
+
+    func addReportToUser(user: String, text: String) {
+        let refDB = Firestore.firestore().collection("Users").document(user)
+        refDB.updateData(["report" : FieldValue.arrayUnion([text])])
     }
 }
 

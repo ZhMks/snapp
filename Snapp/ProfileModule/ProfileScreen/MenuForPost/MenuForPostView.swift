@@ -20,7 +20,7 @@ class MenuForPostView: UIView {
         addToBookmarkButton.titleLabel?.font = UIFont(name: "Inter-Light", size: 14)
         addToBookmarkButton.setTitleColor(ColorCreator.shared.createTextColor(), for: .normal)
         addToBookmarkButton.contentHorizontalAlignment = .left
-        addToBookmarkButton.addTarget(self, action: #selector(saveIntoFavourites), for: .touchUpInside)
+        addToBookmarkButton.addTarget(self, action: #selector(saveIntoBookmars), for: .touchUpInside)
         return addToBookmarkButton
     }()
 
@@ -95,8 +95,8 @@ class MenuForPostView: UIView {
     
     //MARK: -Funcs
 
-    @objc func saveIntoFavourites() {
-        presenter.saveIntoFavourites()
+    @objc func saveIntoBookmars() {
+        presenter.savePostToBookmarks()
         self.removeFromSuperview()
     }
 

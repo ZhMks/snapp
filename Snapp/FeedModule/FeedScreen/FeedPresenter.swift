@@ -58,7 +58,7 @@ final class FeedPresenter: FeedPresenterProtocol {
 
     }
 
-    private func addUserListener() {
+    func addUserListener() {
         guard let userID = mainUser.documentID else { return }
         FireStoreService.shared.addSnapshotListenerToUser(for: userID) { [weak self] result in
             guard let self = self else { return }
@@ -72,7 +72,7 @@ final class FeedPresenter: FeedPresenterProtocol {
         }
     }
 
-   private func removeListener() {
+   func removeListener() {
        FireStoreService.shared.removeListenerForUser()
     }
 

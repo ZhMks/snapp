@@ -57,9 +57,8 @@ extension BookmarksViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: PostTableCell.identifier, for: indexPath) as? PostTableCell else { return UITableViewCell() }
-        let image = UIImage(systemName: "checkmark")
         guard let data = presenter.posts?[indexPath.row] else { return UITableViewCell() }
-        cell.updateView(post: data, user: presenter.user, state: .profileState, mainUserID: self.presenter.mainUserID, image: image!)
+        cell.updateView(post: data, user: presenter.user, state: .profileState, mainUserID: self.presenter.mainUserID)
         return cell
     }
 

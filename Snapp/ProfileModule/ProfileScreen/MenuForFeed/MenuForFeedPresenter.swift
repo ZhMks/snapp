@@ -11,8 +11,9 @@ import FirebaseAuth
 
 protocol MenuForFeedViewProtocol: AnyObject {
     func showError(descr: String)
-    func updateViewForFeed()
     func showActivityController()
+    func showReportView()
+    func showInfoView()
 }
 
 protocol MenuForFeedPresenterProtocol: AnyObject {
@@ -33,9 +34,8 @@ final class MenuForFeedPresenter: MenuForFeedPresenterProtocol {
         self.mainUserID = mainUserID
     }
 
-    func saveIntoFavourites() {
-        guard let user = user.documentID else { return }
-        FireStoreService.shared.saveIntoFavourites(post: post, for: user) { [weak self] result in
+    func saveIntoBookmarks() {
+        FireStoreService.shared.saveToBookMarks(user: mainUserID, post: post) { [weak self] result in
             guard let self else { return }
             switch result {
             case .success(_):
@@ -58,6 +58,7 @@ final class MenuForFeedPresenter: MenuForFeedPresenterProtocol {
     func removeSubscribtion() {
         guard let userID = user.documentID else { return }
         FireStoreService.shared.removeSubscribtion(sub: userID, for: mainUserID)
+        FireStoreService.shared.removeSubscriber(sub: mainUserID, for: userID)
     }
 
     func enableNotifications() {
@@ -65,11 +66,16 @@ final class MenuForFeedPresenter: MenuForFeedPresenterProtocol {
     }
 
     func showReportView() {
-        
+        view?.showReportView()
     }
 
     func presentActivity() {
         view?.showActivityController()
     }
 
+    func sendMail(text: String?) {
+        guard let userID = user.documentID, let text = text else { return }
+        FireStoreService.shared.addReportToUser(user: userID, text: text)
+        view?.showInfoView()
+    }
 }

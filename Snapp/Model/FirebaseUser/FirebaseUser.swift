@@ -35,6 +35,7 @@ struct FirebaseUser: Codable, Hashable {
     var interests: String?
     var career: String?
     var education: String?
+    var report: [String]?
 }
 
 struct EachPost: Codable {

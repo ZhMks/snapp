@@ -18,8 +18,8 @@ final class PostTableCell: UITableViewCell {
     static let identifier = "PostTableCell"
 
     var manuButtonTappedHandler: (() -> Void)?
-    var incrementLikes: ((_ post: String) -> Void)?
-    var decrementLikes: ((_ post: String) -> Void)?
+    var incrementLikes: ((_ post: EachPost) -> Void)?
+    var decrementLikes: ((_ post: EachPost) -> Void)?
     var showMenuForFeed: ((_ post: EachPost) -> Void)?
     var bookmarkButtonTapHandler: ((EachPost) -> Void)?
 
@@ -220,7 +220,7 @@ final class PostTableCell: UITableViewCell {
     // MARK: -Funcs
 
     @objc func likesButtonTapped() {
-        guard let post = self.post?.documentID else { return }
+        guard let post = post else { return }
         if self.likesButton.backgroundImage(for: .normal) == UIImage(systemName: "heart.fill") {
             decrementLikes?(post)
             self.likesButton.setBackgroundImage(UIImage(systemName: "heart"), for: .normal)
@@ -332,10 +332,12 @@ final class PostTableCell: UITableViewCell {
         networkService.fetchImage(string: user) { [weak self] result in
             switch result {
             case .success(let image):
-                self?.avatarImageView.image = image
-                self?.avatarImageView.clipsToBounds = true
-                self?.avatarImageView.layer.cornerRadius = (self?.avatarImageView.frame.size.width)! / 2
-            case .failure(let failure):
+                DispatchQueue.main.async { [weak self] in
+                    self?.avatarImageView.image = image
+                    self?.avatarImageView.clipsToBounds = true
+                    self?.avatarImageView.layer.cornerRadius = (self?.avatarImageView.frame.size.width)! / 2
+                }
+            case .failure(_):
                 return
             }
         }

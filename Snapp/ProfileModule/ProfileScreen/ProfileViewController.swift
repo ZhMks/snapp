@@ -255,6 +255,13 @@ class ProfileViewController: UIViewController {
 
     // MARK: -Lifecycle
 
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        presenter.addListenerForPost()
+        presenter.addListenerForUser()
+    }
+
+
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
@@ -262,6 +269,12 @@ class ProfileViewController: UIViewController {
         addSubviews()
         layout()
         tuneTableView()
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        presenter.removePostListener()
+        presenter.removeUserListener()
     }
 
     // MARK: -Funcs
@@ -419,11 +432,13 @@ extension ProfileViewController: UITableViewDataSource {
 
         cell.incrementLikes = { [weak self, weak tableView]  post in
             self?.presenter.incrementLikes(post: post)
+            self?.presenter.addToFavourites(post: post)
             tableView?.reloadRows(at: [indexPath], with: .automatic)
         }
 
         cell.decrementLikes = { [weak self, weak tableView] post in
             self?.presenter.decrementLikes(post: post)
+            self?.presenter.removeFromFavourites(post: post)
             tableView?.reloadRows(at: [indexPath], with: .automatic)
         }
 

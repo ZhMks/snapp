@@ -39,7 +39,6 @@ final class DetailPresenter: DetailPresenterProtocol {
         self.view = view
         self.user = user
         self.mainUserID = mainUserID
-        checkSubscribers()
     }
 
     deinit {
@@ -47,7 +46,6 @@ final class DetailPresenter: DetailPresenterProtocol {
     }
 
     func updateData() {
-        fetchPhotoAlbum()
         fetchImage()
         fetchPosts()
     }
@@ -129,6 +127,7 @@ final class DetailPresenter: DetailPresenterProtocol {
                 self.user = user
                 self.fetchImage()
                 self.fetchPosts()
+                self.checkSubscribers()
             case .failure(_):
                 return
             }
@@ -161,21 +160,25 @@ final class DetailPresenter: DetailPresenterProtocol {
         view?.showFeedMenu(post: post)
     }
 
-    func incrementLikes(post: String) {
-        guard let userID = user.documentID else { return }
-        FireStoreService.shared.incrementLikes(user: userID, mainUser: mainUserID, post: post)
+    func incrementLikes(post: EachPost) {
+        guard let userID = user.documentID, let postID = post.documentID else { return }
+        FireStoreService.shared.incrementLikes(user: userID, mainUser: mainUserID, post: postID)
     }
 
-    func decrementLikes(post: String) {
-        guard let userID = user.documentID else { return }
-        FireStoreService.shared.decrementLikes(user: userID, mainUser: mainUserID, post: post)
+    func decrementLikes(post: EachPost) {
+        guard let userID = user.documentID, let postID = post.documentID else { return }
+        FireStoreService.shared.decrementLikes(user: userID, mainUser: mainUserID, post: postID)
     }
 
     func checkSubscribers() {
-        for sub in user.subscribers {
-            if sub == mainUserID {
-                view?.updateSubButton()
-            }
-        }
+        view?.updateSubButton()
+    }
+
+    func saveIntoFavourites(post: EachPost) {
+        FireStoreService.shared.saveIntoFavourites(post: post, for: mainUserID)
+    }
+
+    func removeFromFavourites(post: EachPost) {
+        FireStoreService.shared.removeFromFavourites(user: mainUserID, post: post)
     }
 }
