@@ -32,6 +32,9 @@ class PhotoalbumViewController: UIViewController {
         let flowLayout = UICollectionViewFlowLayout()
         let albumCollectionView = UICollectionView(frame: .zero, collectionViewLayout: flowLayout)
         albumCollectionView.translatesAutoresizingMaskIntoConstraints = false
+        albumCollectionView.delegate = self
+        albumCollectionView.dataSource = self
+        albumCollectionView.register(AlbumCollectionViewCell.self, forCellWithReuseIdentifier: AlbumCollectionViewCell.identifier )
         return albumCollectionView
     }()
 
@@ -65,7 +68,7 @@ class PhotoalbumViewController: UIViewController {
         photoCollectionView.translatesAutoresizingMaskIntoConstraints = false
         photoCollectionView.dataSource = self
         photoCollectionView.delegate = self
-        photoCollectionView.register(ProfileCollectionViewCell.self, forCellWithReuseIdentifier: ProfileCollectionViewCell.identifier)
+        photoCollectionView.register(PhotoCollectionViewCell.self, forCellWithReuseIdentifier: PhotoCollectionViewCell.identifier)
         return photoCollectionView
     }()
 
@@ -77,6 +80,7 @@ class PhotoalbumViewController: UIViewController {
         layout()
         tuneNavItem()
         view.backgroundColor = .systemBackground
+        presenter.fetchImageFromStorage()
     }
 
     // MARK: -Funcs
@@ -96,7 +100,7 @@ class PhotoalbumViewController: UIViewController {
         leftArrowButton.addTarget(self, action: #selector(dismissController), for: .touchUpInside)
 
         let textView = UIView(frame: CGRect(x: 0, y: 0, width: 330, height: 30))
-        let title = UILabel(frame: CGRect(x: 20, y: 0, width: 250, height: 30))
+        let title = UILabel(frame: CGRect(x: 30, y: 0, width: 250, height: 30))
         title.text = .localized(string: "Фотографии")
         title.font = UIFont(name: "Inter-Medium", size: 14)
         textView.addSubview(title)
@@ -125,6 +129,7 @@ extension PhotoalbumViewController: PhotoalbumViewProtocol {
     }
     
     func updateCollectionView() {
+        albumCollectionView.reloadData()
         photoCollectionView.reloadData()
     }
 }
@@ -133,29 +138,42 @@ extension PhotoalbumViewController: PhotoalbumViewProtocol {
 //MARK: -UICollectionView Datasource
 extension PhotoalbumViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        if collectionView == albumCollectionView {
-            return 0
-        } else if collectionView == photoCollectionView {
-            let number = presenter.photoAlbum.values.count
+        if collectionView == self.albumCollectionView {
+            guard  let number = presenter.photoAlbum?.keys.count else {
+                return 0
+            }
+            print("Number of Items for ALbum: \(number)")
             return number
-        } else {
-            return 0
         }
+            guard let photoArray = presenter.photoAlbum?.values else {
+                return 0
+            }
+            guard let number = Array(photoArray)[section]?.count else {
+                return 0
+            }
+            print("Number of Items for photo: \(number)")
+            return number
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        if collectionView == albumCollectionView {
-            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ProfileCollectionViewCell.identifier, for: indexPath) as? ProfileCollectionViewCell else { return UICollectionViewCell() }
+        if collectionView == self.albumCollectionView {
+            print("Inside AlbumCollectionView Delegate")
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: AlbumCollectionViewCell .identifier, for: indexPath) as? AlbumCollectionViewCell else { return UICollectionViewCell() }
+            guard let photoAlbum = presenter.photoAlbum else { return UICollectionViewCell() }
+            let imageKey = Array(photoAlbum.keys)[indexPath.row]
+            print(imageKey)
+            guard let imageValue = photoAlbum[imageKey] else { return UICollectionViewCell() }
+            guard let image = imageValue?.last else { return UICollectionViewCell() }
+            cell.updateView(image: image)
             return cell
-        } else if collectionView == photoCollectionView {
-            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ProfileCollectionViewCell.identifier, for: indexPath) as? ProfileCollectionViewCell else { return UICollectionViewCell() }
-            guard let imageDataSet = Array(presenter.photoAlbum.values)[indexPath.row] else { return UICollectionViewCell() }
+        }
+            print("Inside photoCollectionView Delegate")
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PhotoCollectionViewCell.identifier, for: indexPath) as? PhotoCollectionViewCell else { return UICollectionViewCell() }
+            guard let photoAlbum = presenter.photoAlbum else { return UICollectionViewCell() }
+            guard let imageDataSet = Array(photoAlbum.values)[indexPath.section] else { return UICollectionViewCell() }
             let image = imageDataSet[indexPath.row]
             cell.updateView(image: image)
             return cell
-        } else {
-            return UICollectionViewCell()
-        }
     }
 }
 
@@ -164,10 +182,6 @@ extension PhotoalbumViewController: UICollectionViewDataSource {
 extension PhotoalbumViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         CGSize(width: 108, height: 80)
-    }
-
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-        UIEdgeInsets(top: 0, left: 4, bottom: 0, right: 4)
     }
 }
 
@@ -220,7 +234,7 @@ extension PhotoalbumViewController {
 
             photoCollectionView.topAnchor.constraint(equalTo: photoCollectionViewTitle.bottomAnchor, constant: 15),
             photoCollectionView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 28),
-            photoCollectionView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -80),
+            photoCollectionView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -28),
             photoCollectionView.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor)
         ])
     }

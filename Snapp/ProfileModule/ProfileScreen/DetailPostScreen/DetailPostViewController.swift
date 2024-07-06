@@ -37,7 +37,7 @@ class DetailPostViewController: UIViewController {
     private lazy var avatarImageView: UIImageView = {
         let avatarImageView = UIImageView()
         avatarImageView.translatesAutoresizingMaskIntoConstraints = false
-        avatarImageView.image = presenter.avatarImage
+        avatarImageView.image = presenter.avatarImage 
         avatarImageView.clipsToBounds = true
         print("Init of avatarImage: \(avatarImageView.frame)")
         return avatarImageView
@@ -273,6 +273,7 @@ class DetailPostViewController: UIViewController {
 
     private func tuneTableView() {
         commentsTableView.register(CommentsTableCell.self, forCellReuseIdentifier: CommentsTableCell.identifier)
+        commentsTableView.register(AnswersTableCell.self, forCellReuseIdentifier: AnswersTableCell.identifier)
         commentsTableView.rowHeight = UITableView.automaticDimension
         commentsTableView.estimatedRowHeight = 44.0
         commentsTableView.setAndLayout(header: detailPostView)
@@ -343,7 +344,6 @@ extension DetailPostViewController: DetailPostViewProtocol {
 
     }
 
-
     func updateCommentsState() {
         if !presenter.post.isCommentariesEnabled {
             guard let docID = presenter.user.documentID else { return }
@@ -366,17 +366,22 @@ extension DetailPostViewController: DetailPostViewProtocol {
         tableViewTitle.text = .localized(string: "\(presenter.post.commentaries) Комментариев")
     }
 
-    func showCommentVC(with: String, commentID: String?, state: CommentState) {
+    func showCommentVC(commentID: String?, state: CommentState) {
         let commentView = CommentViewController()
-        guard let documentID = presenter.post.documentID else { return }
-        let commentPresenter = CommentViewPresenter(view: commentView, image: presenter.avatarImage, user: with, documentID: documentID, commentor: self.presenter.mainUserID, state: state)
+        guard let documentID = presenter.post.documentID, let userID = presenter.user.documentID else { return }
+        let commentor = presenter.mainUserID
+
+        let commentPresenter = CommentViewPresenter(view: commentView, image: presenter.avatarImage, user: userID, documentID: documentID, commentor: commentor, state: state)
         commentView.presenter = commentPresenter
         commentPresenter.commentID = commentID
         commentView.modalPresentationStyle = .pageSheet
 
         if let sheet = commentView.sheetPresentationController {
-            sheet.detents = [.large()]
-            sheet.preferredCornerRadius = 15.0
+            let customHeight = UISheetPresentationController.Detent.custom(identifier: .init("customHeight")) { context in
+                return 500
+            }
+            sheet.detents = [customHeight]
+            sheet.largestUndimmedDetentIdentifier = .some(customHeight.identifier)
         }
         self.navigationController?.present(commentView, animated: true)
     }
@@ -416,7 +421,7 @@ extension DetailPostViewController: UITableViewDataSource {
         guard let commentInSection = comments(forSection: section) else { return UITableViewCell() }
         cell.updateView(comment: commentInSection)
         cell.buttonTappedHandler = { [weak self] in
-            self?.presenter.showCommetVC(with: commentInSection.commentor, commentID: commentInSection.documentID, state: .answer)
+            self?.presenter.showCommetVC(commentID: commentInSection.documentID, state: .answer)
         }
         return cell
     }
@@ -436,7 +441,7 @@ extension DetailPostViewController: UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: CommentsTableCell.identifier, for: indexPath) as? CommentsTableCell else { return UITableViewCell()  }
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: AnswersTableCell.identifier, for: indexPath) as? AnswersTableCell else { return UITableViewCell()  }
 
         guard let comment = comments(forSection: indexPath.section) else { return UITableViewCell() }
         if let answers = presenter.comments?[comment] {
@@ -448,13 +453,15 @@ extension DetailPostViewController: UITableViewDataSource {
                 case .success(let user):
                     cell.backgroundColor = .systemBackground
                     cell.updateAnswers(answer: answer, user: user, date: answer.date)
-                    guard let commentor = user.documentID else { return }
                     cell.buttonTappedHandler = { [weak self] in
-                        self?.presenter.showCommetVC(with: commentor, commentID: comment.documentID, state: .answer)
+                        self?.presenter.showCommetVC(commentID: comment.documentID, state: .answer)
                     }
                 case .failure(let failure):
                     print(failure.localizedDescription)
                 }
+            }
+            cell.buttonTappedHandler = { [weak self] in
+                self?.presenter.showCommetVC(commentID: comment.documentID, state: .answer)
             }
         }
         return cell

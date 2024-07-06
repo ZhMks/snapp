@@ -2,17 +2,17 @@
 //  CommentsTableCell.swift
 //  Snapp
 //
-//  Created by Максим Жуин on 14.05.2024.
+//  Created by Максим Жуин on 04.07.2024.
 //
 
 import UIKit
 
 
-final class CommentsTableCell: UITableViewCell {
+final class AnswersTableCell: UITableViewCell {
 
-    // MARK: -Properties
+    // MARK: - Properties
 
-    static let identifier = "CommentsTableCell"
+    static let identifier = "AnswersTableCell"
 
     var buttonTappedHandler: (()->Void)?
 
@@ -76,28 +76,25 @@ final class CommentsTableCell: UITableViewCell {
     }()
 
 
-
-    // MARK: -Lifecycle
-
+    // MARK: - Lifecycle
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: .default, reuseIdentifier: reuseIdentifier)
         addSubviews()
         layout()
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
-    // MARK: -Funcs
+    // MARK: - Funcs
 
-    func updateView(comment: Comment) {
+    func updateAnswers(answer: Answer, user: FirebaseUser, date: String) {
+        commentLabel.text = answer.text
+        dateLabel.text = answer.date
+        likesLabel.text = "\(answer.likes)"
 
-        commentLabel.text = comment.text
-        dateLabel.text = comment.date
-        likesLabel.text = "\(comment.likes)"
-
-        FireStoreService.shared.getUser(id: comment.commentor) { [weak self] result in
+        FireStoreService.shared.getUser(id: answer.commentor) { [weak self] result in
             guard let self else { return }
             switch result {
             case .success(let user):
@@ -126,7 +123,7 @@ final class CommentsTableCell: UITableViewCell {
         buttonTappedHandler?()
     }
 
-    // MARK: -Layout
+    // MARK: - Layout
 
     func addSubviews() {
         contentView.addSubview(avatarImageView)
@@ -143,7 +140,7 @@ final class CommentsTableCell: UITableViewCell {
 
             NSLayoutConstraint.activate([
                 avatarImageView.topAnchor.constraint(equalTo: safeArea.topAnchor),
-                avatarImageView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
+                avatarImageView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 20),
                 avatarImageView.heightAnchor.constraint(equalToConstant: 15),
                 avatarImageView.widthAnchor.constraint(equalToConstant: 15),
 
@@ -162,11 +159,11 @@ final class CommentsTableCell: UITableViewCell {
                 likesLabel.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor, constant: -33),
 
                 commentLabel.topAnchor.constraint(equalTo: identifierLabel.bottomAnchor, constant: 3),
-                commentLabel.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 10),
+                commentLabel.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 40),
                 commentLabel.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -80),
 
                 dateLabel.topAnchor.constraint(equalTo: commentLabel.bottomAnchor),
-                dateLabel.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 10),
+                dateLabel.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 40),
                 dateLabel.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -130),
                 dateLabel.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor),
 
@@ -176,4 +173,5 @@ final class CommentsTableCell: UITableViewCell {
                 answerButton.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor)
             ])
     }
+
 }

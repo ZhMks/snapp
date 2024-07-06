@@ -186,7 +186,7 @@ class ProfileViewController: UIViewController {
     private lazy var photogalleryLabel: UILabel = {
         let photogalleryLabel = UILabel()
         photogalleryLabel.translatesAutoresizingMaskIntoConstraints = false
-        photogalleryLabel.text = .localized(string: "Фотографии" + "  \(presenter.photoAlbum.values.count)")
+        photogalleryLabel.text = .localized(string: "Фотографии" + "  \(presenter.photoAlbum?.count)")
         photogalleryLabel.font = UIFont(name: "Inter-Medium", size: 16)
         photogalleryLabel.textColor = ColorCreator.shared.createTextColor()
         return photogalleryLabel
@@ -269,6 +269,7 @@ class ProfileViewController: UIViewController {
         addSubviews()
         layout()
         tuneTableView()
+        presenter.fetchPhotoAlbum()
     }
 
     override func viewWillDisappear(_ animated: Bool) {
@@ -319,8 +320,7 @@ class ProfileViewController: UIViewController {
 
     @objc func goToPhotoalbumScreen() {
         let photoAlbumVC = PhotoalbumViewController()
-        let uiimageTest : [UIImage: [UIImage]?] = [:]
-        let photoAlbumPresenter = PhotoalbumPresenter(view: photoAlbumVC, photoAlbum: uiimageTest)
+        let photoAlbumPresenter = PhotoalbumPresenter(view: photoAlbumVC, mainUserID: presenter.mainUserID)
         photoAlbumVC.presenter = photoAlbumPresenter
         navigationController?.pushViewController(photoAlbumVC, animated: true)
     }
@@ -370,13 +370,14 @@ extension ProfileViewController: ProfileViewProtocol {
         numberOfSubscriptions.text = .localizePlurals(key: "Subsciptions", number: presenter.mainUser.subscribers.count)
     }
 
-    func updateAlbum(photo: [UIImage]?) {
-        DispatchQueue.main.async { [weak self] in
-            guard let self else { return }
-             let number = presenter.photoAlbum.keys.count
-            photogalleryLabel.text = .localizePlurals(key: "Photo", number: number)
+    func updateAlbum() {
+        guard let number = presenter.photoAlbum?.count else {
+            photogalleryLabel.text = .localizePlurals(key: "Photo", number: 0)
             photoCollectionView.reloadData()
+            return
         }
+        photogalleryLabel.text = .localizePlurals(key: "Photo", number: number)
+        photoCollectionView.reloadData()
     }
 
     func updateData(data: [EachPost]) {
@@ -479,15 +480,15 @@ extension ProfileViewController: UITableViewDelegate {
 extension ProfileViewController: UICollectionViewDataSource {
 
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        let number = presenter.photoAlbum.keys.count
-        return number
+        guard let number = presenter.photoAlbum else { return 0 }
+        return number.count
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ProfileCollectionViewCell.identifier, for: indexPath) as? ProfileCollectionViewCell else { return UICollectionViewCell() }
-        guard let data = Array(presenter.photoAlbum.values)[indexPath.section] else { return UICollectionViewCell() }
-        let image = data[indexPath.row]
-        cell.updateView(image: image)
+        guard let photoAlbum = presenter.photoAlbum else { return UICollectionViewCell() }
+        let data = photoAlbum[indexPath.row]
+        cell.updateView(image: data)
         return cell
     }
 
@@ -509,9 +510,9 @@ extension ProfileViewController: UIImagePickerControllerDelegate, UINavigationCo
 
         switch picker.sourceType {
         case .camera:
-            presenter.addImageToPhotoAlbum(image: image, state: .storieImage)
+            presenter.saveImageIntoPhotoAlbum(image: image, state: .storieImage)
         case .photoLibrary:
-            presenter.addImageToPhotoAlbum(image: image, state: .photoImage)
+            presenter.saveImageIntoPhotoAlbum(image: image, state: .photoImage)
         default: return
         }
         self.dismiss(animated: true)

@@ -13,16 +13,33 @@ protocol PhotoalbumViewProtocol: AnyObject {
 }
 
 protocol PhotoalbumPresenterProtocol: AnyObject {
-    init(view: PhotoalbumViewProtocol, photoAlbum: [UIImage : [UIImage]?])
+    init(view: PhotoalbumViewProtocol, mainUserID: String)
 }
 
 final class PhotoalbumPresenter: PhotoalbumPresenterProtocol {
     
     weak var view: PhotoalbumViewProtocol?
-    var photoAlbum: [UIImage : [UIImage]?]
+    var photoAlbum: [String : [UIImage]?]?
+    let mainUserID: String
 
-    init(view: PhotoalbumViewProtocol, photoAlbum: [UIImage : [UIImage]?]) {
+    init(view: PhotoalbumViewProtocol, mainUserID: String) {
         self.view = view
-        self.photoAlbum = photoAlbum
+        self.mainUserID = mainUserID
+    }
+
+    func fetchImageFromStorage() {
+        FireStoreService.shared.fetchImagesFromStorage(user: mainUserID) { [weak self] result in
+            switch result {
+            case .success(let success):
+                let sortedDictionary = success.sorted { $0.key > $1.key }
+                let convertedDictionary = sortedDictionary.reduce(into: [String: [UIImage]?]()) { result, pair in
+                                result[pair.key] = pair.value
+                            }
+                self?.photoAlbum = convertedDictionary
+                self?.view?.updateCollectionView()
+            case .failure(let failure):
+                self?.view?.showError(error: failure.localizedDescription)
+            }
+        }
     }
 }

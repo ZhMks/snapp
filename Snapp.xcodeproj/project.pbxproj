@@ -75,6 +75,9 @@
 		B2B902732C2EA8920043FCCC /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = B2B902722C2EA8920043FCCC /* FirebaseAuth */; };
 		B2B902752C2EA8920043FCCC /* FirebaseFirestoreSwift in Frameworks */ = {isa = PBXBuildFile; productRef = B2B902742C2EA8920043FCCC /* FirebaseFirestoreSwift */; };
 		B2B902772C2EA8920043FCCC /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = B2B902762C2EA8920043FCCC /* FirebaseStorage */; };
+		B2E441EF2C36F34D0098AFEA /* AnswersTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2E441EE2C36F34D0098AFEA /* AnswersTableCell.swift */; };
+		B2E441F12C3929AE0098AFEA /* AlbumCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2E441F02C3929AE0098AFEA /* AlbumCollectionViewCell.swift */; };
+		B2E441F32C3929B80098AFEA /* PhotoCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2E441F22C3929B80098AFEA /* PhotoCollectionViewCell.swift */; };
 		B2E51C712BF3880E00DE6102 /* DetailPostViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2E51C702BF3880E00DE6102 /* DetailPostViewController.swift */; };
 		B2E51C732BF3881900DE6102 /* DetailPostPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2E51C722BF3881900DE6102 /* DetailPostPresenter.swift */; };
 		B2E51C762BF38CC500DE6102 /* CommentsTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2E51C752BF38CC500DE6102 /* CommentsTableCell.swift */; };
@@ -175,6 +178,9 @@
 		B29D0AE92BD680BE00101029 /* DetailPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailPresenter.swift; sourceTree = "<group>"; };
 		B2B9026D2C21A7DA0043FCCC /* DetailUserInformationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailUserInformationViewController.swift; sourceTree = "<group>"; };
 		B2B9026F2C21A7EE0043FCCC /* DetailUserInformationPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailUserInformationPresenter.swift; sourceTree = "<group>"; };
+		B2E441EE2C36F34D0098AFEA /* AnswersTableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnswersTableCell.swift; sourceTree = "<group>"; };
+		B2E441F02C3929AE0098AFEA /* AlbumCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumCollectionViewCell.swift; sourceTree = "<group>"; };
+		B2E441F22C3929B80098AFEA /* PhotoCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoCollectionViewCell.swift; sourceTree = "<group>"; };
 		B2E51C702BF3880E00DE6102 /* DetailPostViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailPostViewController.swift; sourceTree = "<group>"; };
 		B2E51C722BF3881900DE6102 /* DetailPostPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailPostPresenter.swift; sourceTree = "<group>"; };
 		B2E51C752BF38CC500DE6102 /* CommentsTableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentsTableCell.swift; sourceTree = "<group>"; };
@@ -597,6 +603,8 @@
 			children = (
 				B27E1C722BFB940900E1DEF9 /* PhotoalbumPresenter.swift */,
 				B27E1C742BFB942000E1DEF9 /* PhotoalbumViewController.swift */,
+				B2E441F02C3929AE0098AFEA /* AlbumCollectionViewCell.swift */,
+				B2E441F22C3929B80098AFEA /* PhotoCollectionViewCell.swift */,
 			);
 			path = PhotoalbumScreen;
 			sourceTree = "<group>";
@@ -692,6 +700,7 @@
 		B2E51C742BF38CB400DE6102 /* CommentsCell */ = {
 			isa = PBXGroup;
 			children = (
+				B2E441EE2C36F34D0098AFEA /* AnswersTableCell.swift */,
 				B2E51C752BF38CC500DE6102 /* CommentsTableCell.swift */,
 			);
 			path = CommentsCell;
@@ -884,6 +893,7 @@
 				B209E6512BC95E930067D751 /* SignInViewController.swift in Sources */,
 				B27E1C702BFB4D4400E1DEF9 /* MenuForPostPresenter.swift in Sources */,
 				B26804B22BE4E63700DE74A4 /* PostTableCell.swift in Sources */,
+				B2E441F12C3929AE0098AFEA /* AlbumCollectionViewCell.swift in Sources */,
 				B209E64F2BC95E850067D751 /* SignInPresenter.swift in Sources */,
 				B211C1E82BBB3C2900C073EE /* AppDelegate.swift in Sources */,
 				B29D0AE82BD680B100101029 /* DetailUserViewController.swift in Sources */,
@@ -902,6 +912,7 @@
 				B2F0041D2C1AF49800991CF5 /* MenuForFeedViewController.swift in Sources */,
 				B211C2832BBD48EA00C073EE /* FireBaseAuthService.swift in Sources */,
 				B211C2802BBD3B2F00C073EE /* Extension+UIColor.swift in Sources */,
+				B2E441EF2C36F34D0098AFEA /* AnswersTableCell.swift in Sources */,
 				B209E6192BC138790067D751 /* FeedPresenter.swift in Sources */,
 				B2F004222C1DA9C100991CF5 /* ArchivePresenter.swift in Sources */,
 				B211C27D2BBD321C00C073EE /* Validator.swift in Sources */,
@@ -921,6 +932,7 @@
 				B297FB542BFCBDDA00A8C463 /* DataChangeViewController.swift in Sources */,
 				B211C2742BBC6A1000C073EE /* LoginScreenViewController.swift in Sources */,
 				B2F0041B2C1AF47D00991CF5 /* MenuForFeedPresenter.swift in Sources */,
+				B2E441F32C3929B80098AFEA /* PhotoCollectionViewCell.swift in Sources */,
 				B209E6332BC3FEBE0067D751 /* ProfileChangePresenter.swift in Sources */,
 				B27E1C6E2BFB4D3A00E1DEF9 /* MenuForPostView.swift in Sources */,
 				B29D0ADF2BD63AD000101029 /* SearchViewController.swift in Sources */,

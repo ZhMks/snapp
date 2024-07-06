@@ -12,7 +12,7 @@ protocol DetailPostViewProtocol: AnyObject {
     func updateImageView(image: UIImage)
     func showError(descr: String)
     func updateCommentsTableView()
-    func showCommentVC(with: String, commentID: String?, state: CommentState)
+    func showCommentVC(commentID: String?, state: CommentState)
     func updateCommentsNumber()
     func updateCommentsState()
     func updateLikes()
@@ -45,18 +45,21 @@ final class DetailPostPresenter: DetailPostPresenterProtocol {
 
     func fetchPostImage() {
         if let image = post.image {
-            let networkService = NetworkService()
-            networkService.fetchImage(string: image) { [weak self] result in
-                guard let self = self else { return }
-                switch result {
-                case .success(let image):
-                    self.view?.updateImageView(image: image)
-                case .failure(_):
-                    return
+            if image.isEmpty {
+                view?.showViewControllerWithoutImage()
+            } else {
+                let networkService = NetworkService()
+                networkService.fetchImage(string: image) { [weak self] result in
+                    guard let self = self else { return }
+                    switch result {
+                    case .success(let image):
+                        self.view?.updateImageView(image: image)
+                    case .failure(_):
+                        return
+                    }
                 }
             }
         }
-        view?.showViewControllerWithoutImage()
     }
 
     func fetchComments() {
@@ -84,7 +87,7 @@ final class DetailPostPresenter: DetailPostPresenterProtocol {
             case .failure(let failure):
                 view?.showError(descr: failure.localizedDescription)
             }
-            DispatchQueue.main.asyncAfter(deadline: .now() + 2) { [weak self] in
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak self] in
                 guard let self else { return }
                 view?.updateCommentsTableView()
             }
@@ -123,8 +126,8 @@ final class DetailPostPresenter: DetailPostPresenterProtocol {
         }
     }
 
-    func showCommetVC(with user: String, commentID: String?, state: CommentState) {
-        view?.showCommentVC(with: user, commentID: commentID, state: state)
+    func showCommetVC(commentID: String?, state: CommentState) {
+        view?.showCommentVC(commentID: commentID, state: state)
     }
 
     func updateComments() {

@@ -79,7 +79,7 @@ protocol FireStoreServiceProtocol {
     // Функции для работы с изображением
     func saveImageIntoStorage(urlLink: StorageReference, photo: UIImage, completion: @escaping (Result <URL, Error>) -> Void)
     func saveImageIntoPhotoAlbum(image: String, user: String)
-    func fetchImagesFromStorage(link: StorageReference)
+    func fetchImagesFromStorage(user: String, completion: @escaping (Result <[String:[UIImage]], Error>) -> Void)
 }
 
 
@@ -473,32 +473,59 @@ final class FireStoreService: FireStoreServiceProtocol {
         }
     }
 
-    func fetchImagesFromStorage(link: StorageReference) {
+    func fetchImagesFromStorage(user: String, completion: @escaping (Result<[String: [UIImage]], Error>) -> Void) {
+        let link = Storage.storage().reference().child("users").child(user).child("PhotoAlbum")
+        var testDictionary: [String: [UIImage]] = [:]
+
         link.listAll { storageList, error in
-            if error != nil {
+            if let error = error {
+                completion(.failure(error))
                 return
             }
-            guard let storageList = storageList else { return }
-            for prefix in storageList.prefixes {
-                prefix.listAll { storageResultList, error in
-                    if let storageResultList = storageResultList {
-                        for document in storageResultList.prefixes {
-                            document.listAll { imageItems, error in
-                                if let imageItems = imageItems {
-                                    for item in imageItems.items {
-                                        item.getData(maxSize: 1 * 1024 * 1024) { data, error in
-                                            if let data = data {
-                                                DispatchQueue.main.async {
-                                                    print(data)
-                                                }
-                                            }
-                                        }
+
+            guard let storageList = storageList else {
+                completion(.success(testDictionary))
+                return
+            }
+
+            let dispatchGroup = DispatchGroup()
+
+            for folder in storageList.prefixes {
+                dispatchGroup.enter()
+
+                folder.listAll { folderStorageList, error in
+                    if let folderStorageList = folderStorageList {
+                        for document in folderStorageList.items {
+                            dispatchGroup.enter()
+
+                            document.getData(maxSize: 1 * 1024 * 1024) { data, error in
+                                defer {
+                                    dispatchGroup.leave()
+                                }
+
+                                if let error = error {
+                                    completion(.failure(error))
+                                    return
+                                }
+
+                                if let data = data, let decodedImage = UIImage(data: data) {
+                                    if var existingImages = testDictionary[folder.name] {
+                                        existingImages.append(decodedImage)
+                                        testDictionary[folder.name] = existingImages
+                                    } else {
+                                        testDictionary[folder.name] = [decodedImage]
                                     }
                                 }
                             }
                         }
                     }
+
+                    dispatchGroup.leave()
                 }
+            }
+
+            dispatchGroup.notify(queue: .main) {
+                completion(.success(testDictionary))
             }
         }
     }
@@ -558,7 +585,6 @@ final class FireStoreService: FireStoreServiceProtocol {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "dd MMM"
         let stringFromDate = dateFormatter.string(from: date)
-
 
         let likes = 0
         let commentRef = Firestore.firestore().collection("Users").document(mainUser).collection("posts").document(documentID).collection("comments")
@@ -682,16 +708,20 @@ final class FireStoreService: FireStoreServiceProtocol {
     }
 
     func removeFromFavourites(user: String, post: EachPost) {
-        guard let docID = post.documentID else { return }
         let docRef = Firestore.firestore().collection("Users").document(user).collection("Favourites")
         docRef.getDocuments { snapshot, error in
-            if let error = error {
+            if error != nil {
                 return
             }
 
             if let snapshot = snapshot {
                 for document in snapshot.documents {
-                    
+                    let documentText = document.data()["text"] as? String ?? "Cannot get Value"
+                    print(documentText)
+                    if documentText == post.text {
+                        let documentRef = Firestore.firestore().collection("Users").document(user).collection("Favourites").document(document.documentID)
+                        documentRef.delete()
+                    }
                 }
             }
         }

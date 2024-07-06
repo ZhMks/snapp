@@ -60,6 +60,7 @@ final class CommentViewPresenter: CommentPresenterProtocol {
         let stringFromDate = dateFormatter.string(from: date)
 
         let answer = Answer(text: text, commentor: commentor, date: stringFromDate, likes: 0)
+        print("User holding post: \(user), commentor: \(commentor), commentID: \(commentID)") 
         FireStoreService.shared.addAnswerToComment(postID: documentID, user: user, commentID: commentID, answer: answer) { [weak self] result in
             guard let self else { return }
             switch result {
