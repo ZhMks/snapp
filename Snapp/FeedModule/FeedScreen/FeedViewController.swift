@@ -163,7 +163,7 @@ extension FeedViewController {
             storiesCollection.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: 20),
             storiesCollection.leadingAnchor.constraint(equalTo: currentUserStorie.trailingAnchor, constant: 16),
             storiesCollection.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
-            storiesCollection.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor, constant: -550),
+            storiesCollection.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor, constant: -560),
 
             feedTableView.topAnchor.constraint(equalTo: currentUserStorie.bottomAnchor, constant: 22),
             feedTableView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),

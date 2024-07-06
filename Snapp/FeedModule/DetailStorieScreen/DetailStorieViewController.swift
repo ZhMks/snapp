@@ -16,7 +16,7 @@ class DetailStorieViewController: UIViewController {
         let storiesSCrollView = UIScrollView()
         storiesSCrollView.translatesAutoresizingMaskIntoConstraints = false
         storiesSCrollView.isPagingEnabled = true
-        storiesSCrollView.backgroundColor = .systemGray6
+        storiesSCrollView.showsHorizontalScrollIndicator = false
         storiesSCrollView.contentSize = CGSize(width: storiesSCrollView.frame.size.width, height: storiesSCrollView.frame.size.height)
         storiesSCrollView.delegate = self
         return storiesSCrollView
@@ -25,20 +25,28 @@ class DetailStorieViewController: UIViewController {
     private lazy var storiesPageControle: UIPageControl = {
         let storiesPageControle = UIPageControl()
         storiesPageControle.translatesAutoresizingMaskIntoConstraints = false
-        storiesPageControle.backgroundStyle = .automatic
-        storiesPageControle.pageIndicatorTintColor = .systemBackground
-        storiesPageControle.currentPageIndicatorTintColor = .systemRed
+        storiesPageControle.pageIndicatorTintColor = .lightGray
+        storiesPageControle.currentPageIndicatorTintColor = .white
         return storiesPageControle
     }()
 
 
     // MARK: - Lifecycle
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        tuneNavItem()
+    }
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
         addSubviews()
         layout()
         presenter.fetchSubscribersStorie()
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        self.navigationController?.navigationBar.isHidden = false
     }
 
     // MARK: - Funcs
@@ -63,6 +71,14 @@ extension DetailStorieViewController: DetailStorieViewProtocol {
             storiesPageControle.currentPage = 0
             storiesScrollView.addSubview(imageView)
         }
+        storiesScrollView.contentSize = CGSize(width: view.bounds.width * CGFloat(images.count), height: view.bounds.height)
+
+        storiesPageControle.numberOfPages = images.count
+        storiesPageControle.currentPage = 0
+    }
+
+    func tuneNavItem() {
+        self.navigationController?.navigationBar.isHidden = true
     }
 
 
@@ -70,9 +86,9 @@ extension DetailStorieViewController: DetailStorieViewProtocol {
 
 // MARK: - ScrollView Delegate
 extension DetailStorieViewController: UIScrollViewDelegate {
-    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
-        let pageNumber = round(scrollView.contentOffset.x / scrollView.frame.size.width)
-        storiesPageControle.currentPage = Int(pageNumber)
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        let pageIndex = round(scrollView.contentOffset.x / view.bounds.width)
+        storiesPageControle.currentPage = Int(pageIndex)
     }
 }
 
