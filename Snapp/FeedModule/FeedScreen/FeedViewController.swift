@@ -54,6 +54,7 @@ final class FeedViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         presenter.addUserListener()
+        presenter.fetchSubscribersStorie()
     }
 
     override func viewDidLoad() {
@@ -162,7 +163,7 @@ extension FeedViewController {
             storiesCollection.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: 20),
             storiesCollection.leadingAnchor.constraint(equalTo: currentUserStorie.trailingAnchor, constant: 16),
             storiesCollection.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
-            storiesCollection.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor, constant: -590),
+            storiesCollection.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor, constant: -550),
 
             feedTableView.topAnchor.constraint(equalTo: currentUserStorie.bottomAnchor, constant: 22),
             feedTableView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
@@ -178,7 +179,16 @@ extension FeedViewController {
 // MARK: -CollectionView Delegate
 extension FeedViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        CGSize(width: 80, height: 40)
+        CGSize(width: 80, height: 80)
+    }
+
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        guard let data = presenter.userStories else { return }
+        let user = Array(data.keys)[indexPath.row]
+        let detailStorieScreen = DetailStorieViewController()
+        let detailStoriePresenter = DetailStoriePresenter(view: detailStorieScreen, mainUser: user)
+        detailStorieScreen.presenter = detailStoriePresenter
+        self.navigationController?.pushViewController(detailStorieScreen, animated: true)
     }
 }
 
@@ -186,14 +196,16 @@ extension FeedViewController: UICollectionViewDelegateFlowLayout {
 extension FeedViewController: UICollectionViewDataSource {
 
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        guard let number = presenter.userStories?.count else { return 0 }
+        guard let number = presenter.userStories?.keys.count else { return 0 }
         return number
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: FeedCollectionViewCell.identifier, for: indexPath) as? FeedCollectionViewCell else { return UICollectionViewCell() }
-        guard let data = presenter.userStories?[indexPath.row] else { return  UICollectionViewCell() }
-        cell.updateCell(image: data)
+        guard let data = presenter.userStories else { return  UICollectionViewCell() }
+        let key = Array(data.keys)[indexPath.row]
+        guard let image = data[key] else { return UICollectionViewCell() }
+        cell.updateCell(image: image)
         return cell
     }
 }

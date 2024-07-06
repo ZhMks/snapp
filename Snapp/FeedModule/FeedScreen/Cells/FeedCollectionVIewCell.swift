@@ -25,7 +25,12 @@ final class FeedCollectionViewCell: UICollectionViewCell {
         addSubviews()
         layout()
     }
-    
+
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        storieImage.image = nil
+    }
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -46,5 +51,9 @@ final class FeedCollectionViewCell: UICollectionViewCell {
 
     func updateCell(image: UIImage) {
         self.storieImage.image = image
+        self.storieImage.clipsToBounds = true
+        self.storieImage.contentMode = .scaleAspectFill
+        self.storieImage.layer.masksToBounds = true
+        self.storieImage.layer.cornerRadius = self.storieImage.frame.size.width / 2.0
     }
 }

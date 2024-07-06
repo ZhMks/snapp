@@ -25,8 +25,8 @@ protocol FeedPresenterProtocol: AnyObject {
 final class FeedPresenter: FeedPresenterProtocol {
 
     weak var view: FeedViewProtocol?
-    var stories: UIImage?
-    var userStories: [UIImage]?
+    var mainUserStorie: UIImage?
+    var userStories: [FirebaseUser: UIImage]?
     var mainUser: FirebaseUser
     var posts: [FirebaseUser : [EachPost]]?
     let mainUserID: String
@@ -44,8 +44,7 @@ final class FeedPresenter: FeedPresenterProtocol {
                 networkService.fetchImage(string: storie) { [weak self] result in
                     switch result {
                     case .success(let success):
-                        self?.userStories?.append(success)
-                        self?.view?.updateStorieView()
+                        self?.mainUserStorie = success
                     case .failure(let failure):
                         print(failure)
                     }
@@ -55,7 +54,34 @@ final class FeedPresenter: FeedPresenterProtocol {
     }
 
     func fetchSubscribersStorie() {
-
+        let networkService = NetworkService()
+        let dispatchGroup = DispatchGroup()
+        userStories = [:]
+        for subscriber in mainUser.subscribtions {
+            dispatchGroup.enter()
+            FireStoreService.shared.getUser(id: subscriber) { [weak self] result in
+                switch result {
+                case .success(let user):
+                    if let userImageURL = user.image {
+                        networkService.fetchImage(string: userImageURL) { [weak self] result in
+                            switch result {
+                            case .success(let image):
+                                self?.userStories?.updateValue(image, forKey: user)
+                            case .failure(let failure):
+                                self?.view?.showError(descr: failure.localizedDescription)
+                            }
+                            dispatchGroup.leave()
+                        }
+                    }
+                case .failure(let failure):
+                    self?.view?.showError(descr: failure.localizedDescription)
+                }
+            }
+        }
+        dispatchGroup.notify(queue: .main) { [weak self] in
+            print("Subscriber stories: \(self?.userStories)")
+            self?.view?.updateStorieView()
+        }
     }
 
     func addUserListener() {
@@ -118,47 +144,6 @@ final class FeedPresenter: FeedPresenterProtocol {
             }
         }
     }
-
-//   func fetchPosts() {
-//        posts = [:]
-//        let dispatchGroup = DispatchGroup()
-//        for sub in mainUser.subscribtions {
-//            firestoreService.getUser(id: sub) { [weak self] result in
-//                guard let self = self else {
-//                    dispatchGroup.leave()
-//                    return
-//                }
-//                switch result {
-//                case .success(let firebaseUser):
-//                    dispatchGroup.enter()
-//                    print("Sub inside getUSER: \(firebaseUser.name)")
-//                    self.firestoreService.getPosts(sub: firebaseUser.documentID!) { [weak self] result in
-//                        guard let self = self else {
-//                            dispatchGroup.leave()
-//                            return
-//                        }
-//                        defer {
-//                            dispatchGroup.leave()
-//                        }
-//                        switch result {
-//                        case .success(let postArray):
-//                            print("Posts for SUB: \(sub): \(postArray)")
-//                            self.posts?.updateValue(postArray, forKey: firebaseUser)
-//                        case .failure(let failure):
-//                            self.view?.showError(descr: failure.localizedDescription)
-//                        }
-//                    }
-//                case .failure(let error):
-//                    self.view?.showError(descr: error.localizedDescription)
-//                    dispatchGroup.leave()
-//                }
-//            }
-//        }
-//        dispatchGroup.notify(queue: .main) { [weak self] in
-//            guard let self = self else { return }
-//            self.view?.updateViewTable()
-//        }
-//    }
 
     func fetchAvatarImage() {
         let networkService = NetworkService()
