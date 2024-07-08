@@ -35,15 +35,7 @@ final class MenuForPostPresenter: MenuForPostPresenterProtocol {
 
     func savePostToBookmarks() {
         guard let user = user.documentID else { return }
-        FireStoreService.shared.saveToBookMarks(user: user, post: post) { [weak self] result in
-            guard let self else { return }
-            switch result {
-            case .success(_):
-                return
-            case .failure(let failure):
-                view?.showError(descr: failure.localizedDescription)
-            }
-        }
+        FireStoreService.shared.saveToBookMarks(mainUser: user, user: user, post: post)
     }
 
     func disableCommentaries() {

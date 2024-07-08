@@ -24,7 +24,7 @@ final class FeedViewController: UIViewController {
     private lazy var currentUserStorie: UIImageView = {
         let currentUserStorie = UIImageView()
         currentUserStorie.translatesAutoresizingMaskIntoConstraints = false
-        currentUserStorie.backgroundColor = ColorCreator.shared.createTextColor()
+        currentUserStorie.isUserInteractionEnabled = true
         return currentUserStorie
     }()
 
@@ -54,7 +54,6 @@ final class FeedViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         presenter.addUserListener()
-        presenter.fetchSubscribersStorie()
     }
 
     override func viewDidLoad() {
@@ -64,6 +63,7 @@ final class FeedViewController: UIViewController {
         tuneTableView()
         layout()
         presenter.fetchAvatarImage()
+        addTargetToMainStorie()
     }
 
     override func viewDidDisappear(_ animated: Bool) {
@@ -73,7 +73,7 @@ final class FeedViewController: UIViewController {
 
     // MARK: -Funcs
 
-    func tuneTableView() {
+   private func tuneTableView() {
         feedTableView.register(PostTableCell.self, forCellReuseIdentifier: PostTableCell.identifier)
         feedTableView.rowHeight = UITableView.automaticDimension
         feedTableView.estimatedRowHeight = 44.0
@@ -82,21 +82,40 @@ final class FeedViewController: UIViewController {
         self.feedTableView.reloadData()
     }
 
-    func tuneNavItem() {
+   private func tuneNavItem() {
         self.navigationItem.title = .localized(string: "Главная")
     }
 
-    func user(forSection: Int) -> FirebaseUser? {
+   private func user(forSection: Int) -> FirebaseUser? {
         guard let user = presenter.posts?.keys else {
             return nil
         }
         return Array(user)[forSection]
     }
 
+    @objc func tapOnMainStorieView() {
+        let detailStorieVC = DetailStorieViewController()
+        let detailStoriePresenter = DetailStoriePresenter(view: detailStorieVC, mainUser: self.presenter.mainUser)
+        detailStorieVC.presenter = detailStoriePresenter
+        self.navigationController?.pushViewController(detailStorieVC, animated: true)
+    }
+
+    private func addTargetToMainStorie() {
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(tapOnMainStorieView))
+        tapGesture.numberOfTapsRequired = 1
+        currentUserStorie.addGestureRecognizer(tapGesture)
+    }
+
 }
 
 // MARK: -Presenter Output
 extension FeedViewController: FeedViewProtocol {
+
+    func updateMainStorie() {
+        self.currentUserStorie.layer.borderColor = UIColor.systemOrange.cgColor
+        self.currentUserStorie.layer.borderWidth = 1.0
+    }
+    
     func showError(descr: String) {
         print(descr)
     }
@@ -128,7 +147,7 @@ extension FeedViewController: FeedViewProtocol {
     }
 
     func updateStorieView() {
-        self.storiesCollection.reloadData()
+        storiesCollection.reloadData()
     }
 
     func updateViewTable() {
@@ -138,42 +157,6 @@ extension FeedViewController: FeedViewProtocol {
     func showEmptyScreen() {
         print("SHOWFEEDEMPTYSCREEN")
     }
-}
-
-// MARK: -LAYOUT
-
-extension FeedViewController {
-
-    private func addSubviews() {
-        view.addSubview(feedTableView)
-        view.addSubview(currentUserStorie)
-        view.addSubview(storiesCollection)
-    }
-
-    private func layout() {
-
-        let safeArea = view.safeAreaLayoutGuide
-
-        NSLayoutConstraint.activate([
-            currentUserStorie.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: 40),
-            currentUserStorie.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 16),
-            currentUserStorie.heightAnchor.constraint(equalToConstant: 69),
-            currentUserStorie.widthAnchor.constraint(equalToConstant: 69),
-
-            storiesCollection.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: 20),
-            storiesCollection.leadingAnchor.constraint(equalTo: currentUserStorie.trailingAnchor, constant: 16),
-            storiesCollection.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
-            storiesCollection.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor, constant: -560),
-
-            feedTableView.topAnchor.constraint(equalTo: currentUserStorie.bottomAnchor, constant: 22),
-            feedTableView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
-            feedTableView.trailingAnchor.constraint(equalTo: feedTableView.trailingAnchor),
-            feedTableView.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor),
-            feedTableView.widthAnchor.constraint(equalTo: safeArea.widthAnchor)
-        ])
-
-    }
-
 }
 
 // MARK: -CollectionView Delegate
@@ -205,6 +188,7 @@ extension FeedViewController: UICollectionViewDataSource {
         guard let data = presenter.userStories else { return  UICollectionViewCell() }
         let key = Array(data.keys)[indexPath.row]
         guard let image = data[key] else { return UICollectionViewCell() }
+        print("InfoData in collectionViewCell: \(data.count), KEY FOR CELL: \(key.name), imageForCELL: \(image)")
         cell.updateCell(image: image)
         return cell
     }
@@ -267,5 +251,42 @@ extension FeedViewController: UITableViewDataSource {
         return cell
     }
 
+
+}
+
+
+// MARK: -LAYOUT
+
+extension FeedViewController {
+
+    private func addSubviews() {
+        view.addSubview(feedTableView)
+        view.addSubview(currentUserStorie)
+        view.addSubview(storiesCollection)
+    }
+
+    private func layout() {
+
+        let safeArea = view.safeAreaLayoutGuide
+
+        NSLayoutConstraint.activate([
+            currentUserStorie.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: 20),
+            currentUserStorie.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 16),
+            currentUserStorie.heightAnchor.constraint(equalToConstant: 80),
+            currentUserStorie.widthAnchor.constraint(equalToConstant: 80),
+
+            storiesCollection.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: 20),
+            storiesCollection.leadingAnchor.constraint(equalTo: currentUserStorie.trailingAnchor, constant: 16),
+            storiesCollection.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
+            storiesCollection.heightAnchor.constraint(equalToConstant: 80),
+
+            feedTableView.topAnchor.constraint(equalTo: currentUserStorie.bottomAnchor, constant: 22),
+            feedTableView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
+            feedTableView.trailingAnchor.constraint(equalTo: feedTableView.trailingAnchor),
+            feedTableView.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor),
+            feedTableView.widthAnchor.constraint(equalTo: safeArea.widthAnchor)
+        ])
+
+    }
 
 }

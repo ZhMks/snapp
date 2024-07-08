@@ -29,7 +29,7 @@ final class ArchivePresenter: ArchivePresenterProtocol {
         self.mainUserID = mainUser
     }
 
-    private func fetchPosts() {
+    func fetchPosts() {
         guard let userID = mainUser.documentID else { return }
         FireStoreService.shared.fetchArchives(user: userID) { [weak self] result in
             guard let self else { return }

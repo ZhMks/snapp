@@ -96,6 +96,7 @@ final class DetailPresenter: DetailPresenterProtocol {
         self.photoAlbum = []
         let networkService = NetworkService()
         let dispatchGroup = DispatchGroup()
+        print("User that stored images: \(user), images links: \(user.photoAlbum)")
         for link in user.photoAlbum {
             dispatchGroup.enter()
             networkService.fetchImage(string: link) { [weak self] result in

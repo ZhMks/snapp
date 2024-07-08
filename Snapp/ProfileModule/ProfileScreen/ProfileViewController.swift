@@ -269,7 +269,6 @@ class ProfileViewController: UIViewController {
         addSubviews()
         layout()
         tuneTableView()
-        presenter.fetchPhotoAlbum()
     }
 
     override func viewWillDisappear(_ animated: Bool) {
@@ -292,14 +291,16 @@ class ProfileViewController: UIViewController {
         let settingsVC = SettingsViewController()
         let settingsPresenter = SettingPresenter(view: settingsVC, user: presenter.mainUser)
         settingsVC.presenter = settingsPresenter
-        settingsVC.modalPresentationStyle = .overFullScreen
+        settingsVC.delegate = self
+        let settingsNavigationController = UINavigationController(rootViewController: settingsVC)
+        settingsNavigationController.modalPresentationStyle = .overFullScreen
         let transition = CATransition()
         transition.duration = 0.5
         transition.type = CATransitionType.moveIn
         transition.subtype = CATransitionSubtype.fromRight
         transition.timingFunction = CAMediaTimingFunction(name:CAMediaTimingFunctionName.easeIn)
         view.window!.layer.add(transition, forKey: kCATransition)
-        navigationController?.present(settingsVC, animated: true)
+        navigationController?.present(settingsNavigationController, animated: true)
     }
 
     @objc func createStorieButtonTapped() {
@@ -521,6 +522,15 @@ extension ProfileViewController: UIImagePickerControllerDelegate, UINavigationCo
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
         dismiss(animated: true, completion: nil)
     }
+}
+
+// MARK: - SwitchControllersDelegate
+extension ProfileViewController: SwitchViewControllerDelegate {
+    func switchToFavourites() {
+        self.tabBarController?.selectedIndex = 3
+    }
+    
+
 }
 
 // MARK: -Layout

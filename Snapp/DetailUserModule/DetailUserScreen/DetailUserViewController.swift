@@ -129,7 +129,7 @@ class DetailUserViewController: UIViewController {
     private lazy var photogalleryLabel: UILabel = {
         let photogalleryLabel = UILabel()
         photogalleryLabel.translatesAutoresizingMaskIntoConstraints = false
-        photogalleryLabel.text = .localized(string: "Фотографии" + "  \(presenter.user.stories.count)")
+        photogalleryLabel.text = .localized(string: "Фотографии" + "  \(presenter.user.photoAlbum.count)")
         photogalleryLabel.font = UIFont(name: "Inter-Medium", size: 16)
         photogalleryLabel.textColor = ColorCreator.shared.createTextColor()
         return photogalleryLabel
@@ -247,6 +247,7 @@ class DetailUserViewController: UIViewController {
 extension DetailUserViewController: DetailViewProtocol {
 
     func updateSubButton() {
+        print(presenter.user.subscribers)
         if presenter.user.subscribers.contains(presenter.mainUserID) {
             subscribeButton.backgroundColor = .systemGray3
             subscribeButton.isEnabled = false
@@ -531,7 +532,7 @@ extension DetailUserViewController {
 
             tableViewTitle.topAnchor.constraint(equalTo: viewForTableTitle.topAnchor, constant: 5),
             tableViewTitle.leadingAnchor.constraint(equalTo: viewForTableTitle.leadingAnchor, constant: 16),
-            tableViewTitle.trailingAnchor.constraint(equalTo: viewForTableTitle.trailingAnchor, constant: -265),
+            tableViewTitle.trailingAnchor.constraint(equalTo: viewForTableTitle.trailingAnchor, constant: -205),
             tableViewTitle.bottomAnchor.constraint(equalTo: viewForTableTitle.bottomAnchor, constant: -5),
 
             searchButton.centerYAnchor.constraint(equalTo: tableViewTitle.centerYAnchor),

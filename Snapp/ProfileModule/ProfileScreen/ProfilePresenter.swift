@@ -100,15 +100,7 @@ final class ProfilePresenter: ProfilePresenterProtocol {
     }
 
     func addPostToBookMarks(post: EachPost) {
-        FireStoreService.shared.saveToBookMarks(user: mainUserID, post: post) { [weak self] result in
-            guard let self = self else { return }
-            switch result {
-            case .success(_):
-                return
-            case .failure(let error):
-                view?.showErrorAler(error: error.localizedDescription)
-            }
-        }
+        FireStoreService.shared.saveToBookMarks(mainUser: mainUserID, user: mainUserID, post: post)
     }
 
     func pinPost( docID: String) {
@@ -123,6 +115,7 @@ final class ProfilePresenter: ProfilePresenterProtocol {
             switch result {
             case .success(let success):
                 mainUser = success
+                fetchPhotoAlbum()
                 view?.updateSubsribers()
                 view?.updateSubscriptions()
                 view?.updateTextData(user: self.mainUser)

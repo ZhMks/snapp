@@ -35,15 +35,8 @@ final class MenuForFeedPresenter: MenuForFeedPresenterProtocol {
     }
 
     func saveIntoBookmarks() {
-        FireStoreService.shared.saveToBookMarks(user: mainUserID, post: post) { [weak self] result in
-            guard let self else { return }
-            switch result {
-            case .success(_):
-                return
-            case .failure(let failure):
-                view?.showError(descr: failure.localizedDescription)
-            }
-        }
+        guard let userID = user.documentID else { return }
+        FireStoreService.shared.saveToBookMarks(mainUser: mainUserID, user: userID, post: post) 
     }
 
     func copyPostLink() -> String {

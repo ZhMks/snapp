@@ -63,7 +63,7 @@ final class DataChangePresenter: DataChangePresenterProtocol {
         }
     }
 
-    func changeCity(text: String)  {
+    func changeIdentifier(text: String)  {
         guard let id = user.documentID else { return }
         FireStoreService.shared.changeData(id: id, text: text, state: .identifier)
     }
@@ -74,7 +74,7 @@ final class DataChangePresenter: DataChangePresenterProtocol {
         NotificationCenter.default.post(name: Notification.Name("DataChanged"), object: nil)
     }
 
-    func changeSurnamet(text: String)  {
+    func changeSurname(text: String)  {
         guard let id = user.documentID else { return }
         FireStoreService.shared.changeData(id: id, text: text, state: .surname)
         NotificationCenter.default.post(name: Notification.Name("DataChanged"), object: nil)
@@ -82,6 +82,8 @@ final class DataChangePresenter: DataChangePresenterProtocol {
 
     func changeDateOfBirth(text: String)  {
         guard let id = user.documentID else { return }
-        FireStoreService.shared.changeData(id: id, text: text, state: .job)
+        FireStoreService.shared.changeData(id: id, text: text, state: .dateOfBirth)
     }
+
+
 }

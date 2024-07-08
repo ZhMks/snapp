@@ -46,7 +46,6 @@ final class DetailStoriePresenter: DetailStoriePresenterProtocol {
             }
         }
         dispatchGroup.notify(queue: .main) { [weak self] in
-            print("user Stories: \(self?.storieImages)")
             guard let imagesArray = self?.storieImages else { return }
             self?.view?.updateView(images: imagesArray)
         }

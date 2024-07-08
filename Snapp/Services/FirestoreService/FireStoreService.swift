@@ -18,6 +18,7 @@ enum ChangeStates {
     case contacts
     case surname
     case storie
+    case dateOfBirth
 }
 
 enum PostErrors: Error {
@@ -72,8 +73,8 @@ protocol FireStoreServiceProtocol {
     func fetchArchives(user: String, completion: @escaping(Result<[EachPost], Error>) -> Void)
     func deleteDocument(docID: String, user: String, completion: @escaping (Result<Bool, Error>) -> Void)
     func removeSubscribtion(sub: String, for user: String)
-    func saveToBookMarks(user: String, post: EachPost, completion: @escaping (Result<EachPost, Error>) -> Void)
-    func fetchBookmarkedPosts(user: String, completion: @escaping (Result<[EachPost], Error>) -> Void)
+    func saveToBookMarks(mainUser: String, user: String, post: EachPost)
+    func fetchBookmarkedPosts(user: String, completion: @escaping (Result<[BookmarkedPost], Error>) -> Void)
     func removeFromFavourites(user: String, post: EachPost)
 
     // Функции для работы с изображением
@@ -348,7 +349,6 @@ final class FireStoreService: FireStoreServiceProtocol {
                     }
                 }
             }
-            // If no document matched
             completion(.failure(.invalidCredential))
         }
     }
@@ -405,6 +405,8 @@ final class FireStoreService: FireStoreServiceProtocol {
             ref.updateData(["surname" : text])
         case .storie:
             ref.updateData(["stories": FieldValue.arrayUnion([text])])
+        case .dateOfBirth:
+            ref.updateData(["dateOfBirth" : text])
         }
     }
 
@@ -857,19 +859,19 @@ print(user)
         }
     }
 
-    func saveToBookMarks(user: String, post: EachPost, completion: @escaping (Result<EachPost, Error>) -> Void) {
-        let link = Firestore.firestore().collection("Users").document(user).collection("Bookmarks")
+    func saveToBookMarks(mainUser: String, user: String, post: EachPost) {
+        let bookmarkedPost = BookmarkedPost(text: post.text, likes: post.likes, commentaries: post.commentaries, date: post.date, userHoldingPost: user)
+        let link = Firestore.firestore().collection("Users").document(mainUser).collection("Bookmarks")
         do {
-         try link.addDocument(from: post)
-            completion(.success(post))
+         try link.addDocument(from: bookmarkedPost)
         } catch {
-            completion(.failure(error))
+            print(error.localizedDescription)
         }
     }
 
-    func fetchBookmarkedPosts(user: String, completion: @escaping (Result<[EachPost], Error>) -> Void) {
+    func fetchBookmarkedPosts(user: String, completion: @escaping (Result<[BookmarkedPost], Error>) -> Void) {
         let link = Firestore.firestore().collection("Users").document(user).collection("Bookmarks")
-        var decodedDocuments: [EachPost] = []
+        var decodedDocuments: [BookmarkedPost] = []
 
         link.getDocuments { snapshot, error in
             if let error = error {
@@ -879,7 +881,7 @@ print(user)
             if let snapshot = snapshot {
                 for document in snapshot.documents {
                     do {
-                        let decodedDoc = try document.data(as: EachPost.self)
+                        let decodedDoc = try document.data(as: BookmarkedPost.self)
                         decodedDocuments.append(decodedDoc)
                     } catch let DecodingError.dataCorrupted(context) {
                         print(context)

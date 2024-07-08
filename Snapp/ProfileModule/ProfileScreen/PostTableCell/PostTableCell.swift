@@ -209,6 +209,11 @@ final class PostTableCell: UITableViewCell {
         layout()
     }
 
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        self.postImage.image = nil
+    }
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }

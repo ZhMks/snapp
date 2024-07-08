@@ -26,9 +26,9 @@
             filePath = "Snapp/ProfileModule/ProfileScreen/MenuForPost/MenuForPostPresenter.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "62"
-            endingLineNumber = "62"
-            landmarkName = "addPostToArchives()"
+            startingLineNumber = "54"
+            endingLineNumber = "54"
+            landmarkName = "disableCommentaries()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

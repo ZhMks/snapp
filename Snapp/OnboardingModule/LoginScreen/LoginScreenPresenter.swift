@@ -9,6 +9,7 @@ import Foundation
 
 
 protocol LoginViewProtocol: AnyObject {
+    func showError(error: String)
 func showAlert()
 }
 
@@ -30,7 +31,6 @@ final class LoginPresenter: LoginPresenterProtocol {
         if Validator.shared.validatePhone(string: number) {
                 return true
         }
-        view?.showAlert()
         return false
     }
 
@@ -41,8 +41,8 @@ final class LoginPresenter: LoginPresenterProtocol {
             switch success {
             case .success(_):
                 completions(true)
-            case .failure(_):
-                self.view?.showAlert()
+            case .failure(let error):
+                self.view?.showError(error: error.localizedDescription)
                 completions(false)
             }
         })

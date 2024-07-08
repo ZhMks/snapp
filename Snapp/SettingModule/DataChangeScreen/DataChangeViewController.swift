@@ -67,6 +67,9 @@ class DataChangeViewController: UIViewController {
         let maleButton = UIButton(type: .system)
         maleButton.translatesAutoresizingMaskIntoConstraints = false
         maleButton.clipsToBounds = true
+        maleButton.layer.cornerRadius = 10
+        maleButton.layer.borderWidth = 1.0
+        maleButton.layer.borderColor = ColorCreator.shared.createButtonColor().cgColor
         return maleButton
     }()
 
@@ -82,6 +85,9 @@ class DataChangeViewController: UIViewController {
         let femaleButton = UIButton(type: .system)
         femaleButton.translatesAutoresizingMaskIntoConstraints = false
         femaleButton.clipsToBounds = true
+        femaleButton.layer.cornerRadius = 10
+        femaleButton.layer.borderWidth = 1.0
+        femaleButton.layer.borderColor = ColorCreator.shared.createButtonColor().cgColor
         return femaleButton
     }()
 
@@ -157,7 +163,7 @@ class DataChangeViewController: UIViewController {
         leftArrowButton.addTarget(self, action: #selector(cancelButtonTapped), for: .touchUpInside)
 
         let textView = UIView(frame: CGRect(x: 0, y: 0, width: 250, height: 30))
-        let title = UILabel(frame: CGRect(x: 40, y: 0, width: 150, height: 30))
+        let title = UILabel(frame: CGRect(x: 40, y: 0, width: 180, height: 30))
         title.text = .localized(string: "Основная информация")
         title.font = UIFont(name: "Inter-Medium", size: 14)
         textView.addSubview(title)
@@ -170,9 +176,9 @@ class DataChangeViewController: UIViewController {
         
         let textFieldsToUpdate: [UITextField: (String)  -> Void] = [
             firstTextField: {  self.presenter.changeName(text: $0) },
-            secondTextField: {  self.presenter.changeSurnamet(text: $0) },
-            fourthTextField: {  self.presenter.changeSurnamet(text: $0) },
-            fifthTextField: {  self.presenter.changeCity(text: $0) }
+            secondTextField: {  self.presenter.changeSurname(text: $0) },
+            fourthTextField: {  self.presenter.changeDateOfBirth(text: $0) },
+            fifthTextField: {  self.presenter.changeIdentifier(text: $0) }
             ]
 
             let nonEmptyFields = textFieldsToUpdate.filter { !$0.key.text!.isEmpty }
@@ -203,15 +209,6 @@ class DataChangeViewController: UIViewController {
         view.addGestureRecognizer(tapGesture)
     }
 
-    func updateButtonView() {
-        femaleButton.layer.cornerRadius = 10
-        femaleButton.layer.borderWidth = 1.0
-        femaleButton.layer.borderColor = ColorCreator.shared.createButtonColor().cgColor
-
-        maleButton.layer.cornerRadius = 10
-        maleButton.layer.borderWidth = 1.0
-        maleButton.layer.borderColor = ColorCreator.shared.createButtonColor().cgColor
-    }
 }
 
 
@@ -221,7 +218,6 @@ extension DataChangeViewController: DataChangeViewProtocol {
     func layoutForInformationView() {
         addSubviewsForInformation()
         layoutForInformation()
-        updateButtonView()
     }
     
     func layoutForContactsView() {
@@ -282,27 +278,27 @@ extension DataChangeViewController {
             firstLabel.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: 15),
             firstLabel.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 24),
             firstLabel.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -300),
-            firstLabel.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor, constant: -640),
+            firstLabel.heightAnchor.constraint(equalToConstant: 44),
 
             firstTextField.topAnchor.constraint(equalTo: firstLabel.bottomAnchor, constant: 6),
             firstTextField.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 24),
             firstTextField.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -16),
-            firstTextField.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor, constant: -580),
+            firstTextField.heightAnchor.constraint(equalToConstant: 40),
 
             secondLabel.topAnchor.constraint(equalTo: firstTextField.bottomAnchor, constant: 14),
             secondLabel.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 24),
             secondLabel.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -298),
-            secondLabel.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor, constant: -556),
+            secondLabel.heightAnchor.constraint(equalToConstant: 44),
 
             secondTextField.topAnchor.constraint(equalTo: secondLabel.bottomAnchor, constant: 6),
             secondTextField.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 24),
             secondTextField.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -16),
-            secondTextField.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor, constant: -509),
+            secondTextField.heightAnchor.constraint(equalToConstant: 40),
 
             thirdLabel.topAnchor.constraint(equalTo: secondTextField.bottomAnchor, constant: 15),
             thirdLabel.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 24),
             thirdLabel.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -298),
-            thirdLabel.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor, constant: -517),
+            thirdLabel.heightAnchor.constraint(equalToConstant: 44),
 
             maleButton.topAnchor.constraint(equalTo: thirdLabel.bottomAnchor, constant: 15),
             maleButton.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 24),
@@ -312,7 +308,7 @@ extension DataChangeViewController {
             maleLabel.centerYAnchor.constraint(equalTo: maleButton.centerYAnchor),
             maleLabel.leadingAnchor.constraint(equalTo: maleButton.trailingAnchor, constant: 14),
             maleLabel.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -180),
-            maleLabel.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor, constant: -450),
+            maleLabel.heightAnchor.constraint(equalToConstant: 20),
 
             femaleButton.topAnchor.constraint(equalTo: maleButton.bottomAnchor, constant: 16),
             femaleButton.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 24),
@@ -322,27 +318,27 @@ extension DataChangeViewController {
             femaleLabel.centerYAnchor.constraint(equalTo: femaleButton.centerYAnchor),
             femaleLabel.leadingAnchor.constraint(equalTo: femaleButton.trailingAnchor, constant: 14),
             femaleLabel.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -180),
-            femaleLabel.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor, constant: -420),
+            femaleLabel.heightAnchor.constraint(equalToConstant: 20),
 
             fourthLabel.topAnchor.constraint(equalTo: femaleButton.bottomAnchor, constant: 15),
             fourthLabel.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 24),
             fourthLabel.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -218),
-            fourthLabel.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor, constant: -408),
+            fourthLabel.heightAnchor.constraint(equalToConstant: 44),
 
             fourthTextField.topAnchor.constraint(equalTo: fourthLabel.bottomAnchor, constant: 6),
             fourthTextField.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 24),
             fourthTextField.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -16),
-            fourthTextField.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor, constant: -362),
+            fourthTextField.heightAnchor.constraint(equalToConstant: 40),
 
             fifthLabel.topAnchor.constraint(equalTo: fourthTextField.bottomAnchor, constant: 15),
             fifthLabel.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 24),
             fifthLabel.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -218),
-            fifthLabel.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor, constant: -332),
+            fifthLabel.heightAnchor.constraint(equalToConstant: 44),
 
             fifthTextField.topAnchor.constraint(equalTo: fifthLabel.bottomAnchor, constant: 6),
             fifthTextField.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 24),
             fifthTextField.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -16),
-            fifthTextField.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor, constant: -260)
+            fifthTextField.heightAnchor.constraint(equalToConstant: 40)
         ])
     }
 
@@ -377,6 +373,9 @@ extension DataChangeViewController {
             secondTextField.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -60),
             secondTextField.heightAnchor.constraint(equalToConstant: 50)
         ])
+
+        firstTextField.placeholder = .localized(string: "Контакты")
+        secondTextField.placeholder = .localized(string: "Контакты")
     }
 
     private func addSubviewsForInterests() {
@@ -398,6 +397,8 @@ extension DataChangeViewController {
             firstTextField.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -60),
             firstTextField.heightAnchor.constraint(equalToConstant: 50)
         ])
+
+        firstTextField.placeholder = .localized(string: "Поделитесь интересами")
     }
 
     private func addSubViewsForEducation() {
@@ -419,6 +420,8 @@ extension DataChangeViewController {
             firstTextField.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -60),
             firstTextField.heightAnchor.constraint(equalToConstant: 50)
         ])
+
+        firstTextField.placeholder = .localized(string: "Образование")
     }
 
 
@@ -441,5 +444,7 @@ extension DataChangeViewController {
             firstTextField.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -60),
             firstTextField.heightAnchor.constraint(equalToConstant: 50)
         ])
+
+        firstTextField.placeholder = .localized(string: "Карьера")
     }
 }

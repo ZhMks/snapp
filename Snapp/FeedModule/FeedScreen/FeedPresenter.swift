@@ -15,6 +15,7 @@ protocol FeedViewProtocol: AnyObject {
     func updateAvatarImage(image: UIImage)
     func showMenuForFeed(post: EachPost)
     func showError(descr: String)
+    func updateMainStorie()
 }
 
 protocol FeedPresenterProtocol: AnyObject {
@@ -38,9 +39,12 @@ final class FeedPresenter: FeedPresenterProtocol {
     }
 
     func fetchMainUserStorie() {
+        let dispatchGroup = DispatchGroup()
+
         let networkService = NetworkService()
         if !mainUser.stories.isEmpty {
             mainUser.stories.forEach { storie in
+                dispatchGroup.enter()
                 networkService.fetchImage(string: storie) { [weak self] result in
                     switch result {
                     case .success(let success):
@@ -48,7 +52,11 @@ final class FeedPresenter: FeedPresenterProtocol {
                     case .failure(let failure):
                         print(failure)
                     }
+                    dispatchGroup.leave()
                 }
+            }
+            dispatchGroup.notify(queue: .main) { [weak self] in
+                self?.view?.updateMainStorie()
             }
         }
     }
@@ -59,6 +67,7 @@ final class FeedPresenter: FeedPresenterProtocol {
         userStories = [:]
         for subscriber in mainUser.subscribtions {
             dispatchGroup.enter()
+            print("Entered group for uesr: \(subscriber)")
             FireStoreService.shared.getUser(id: subscriber) { [weak self] result in
                 switch result {
                 case .success(let user):
@@ -66,10 +75,12 @@ final class FeedPresenter: FeedPresenterProtocol {
                         networkService.fetchImage(string: userImageURL) { [weak self] result in
                             switch result {
                             case .success(let image):
+                                print("Fetched images: \(image)")
                                 self?.userStories?.updateValue(image, forKey: user)
                             case .failure(let failure):
                                 self?.view?.showError(descr: failure.localizedDescription)
                             }
+                            print("Leaved group for user: \(subscriber)")
                             dispatchGroup.leave()
                         }
                     }
@@ -79,7 +90,6 @@ final class FeedPresenter: FeedPresenterProtocol {
             }
         }
         dispatchGroup.notify(queue: .main) { [weak self] in
-            print("Subscriber stories: \(self?.userStories)")
             self?.view?.updateStorieView()
         }
     }
@@ -92,6 +102,8 @@ final class FeedPresenter: FeedPresenterProtocol {
             case .success(let success):
                 self.mainUser = success
                 self.fetchPosts()
+                self.fetchSubscribersStorie()
+                self.fetchMainUserStorie()
             case .failure(_):
                 self.view?.showEmptyScreen()
             }
@@ -146,6 +158,7 @@ final class FeedPresenter: FeedPresenterProtocol {
     }
 
     func fetchAvatarImage() {
+        self.mainUserStorie = nil
         let networkService = NetworkService()
         if let userImage = mainUser.image {
             networkService.fetchImage(string: userImage) { [weak self] result in

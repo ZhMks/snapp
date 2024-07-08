@@ -7,10 +7,15 @@
 
 import UIKit
 
+protocol SwitchViewControllerDelegate: AnyObject {
+    func switchToFavourites()
+}
+
 class SettingsViewController: UIViewController {
 
     //MARK: -PROPERTIES
     var presenter: SettingPresenter!
+    weak var delegate: SwitchViewControllerDelegate?
 
     override var prefersStatusBarHidden: Bool {
         return true
@@ -62,6 +67,7 @@ class SettingsViewController: UIViewController {
         bookmarks.setTitle(.localized(string: "Закладки"), for: .normal)
         bookmarks.contentHorizontalAlignment = .left
         bookmarks.setTitleColor(ColorCreator.shared.createTextColor(), for: .normal)
+        bookmarks.addTarget(self, action: #selector(bookmarksButtonTapped), for: .touchUpInside)
         return bookmarks
     }()
 
@@ -73,12 +79,13 @@ class SettingsViewController: UIViewController {
         return heartImageView
     }()
 
-    private lazy var likedButton: UIButton = {
+    private lazy var favouritesButton: UIButton = {
         let likedButton = UIButton(type: .system)
         likedButton.translatesAutoresizingMaskIntoConstraints = false
         likedButton.setTitle(.localized(string: "Понравилось"), for: .normal)
         likedButton.contentHorizontalAlignment = .left
         likedButton.setTitleColor(ColorCreator.shared.createTextColor(), for: .normal)
+        likedButton.addTarget(self, action: #selector(favouritesButtonTapped), for: .touchUpInside)
         return likedButton
     }()
 
@@ -113,6 +120,7 @@ class SettingsViewController: UIViewController {
         archiveButton.contentHorizontalAlignment = .left
         archiveButton.setTitleColor(ColorCreator.shared.createTextColor(), for: .normal)
         archiveButton.translatesAutoresizingMaskIntoConstraints = false
+        archiveButton.addTarget(self, action: #selector(archiveButtonTapped), for: .touchUpInside)
         return archiveButton
     }()
 
@@ -171,6 +179,29 @@ class SettingsViewController: UIViewController {
        dismiss(animated: true)
     }
 
+    @objc func bookmarksButtonTapped() {
+        guard let user = self.presenter.user.documentID else { return }
+        let bookmarkedVC = BookmarksViewController()
+        let bookmarkedPresenter = BookmarksPresenter(view: bookmarkedVC, user: self.presenter.user, mainUser: user)
+        bookmarkedVC.presenter = bookmarkedPresenter
+
+        self.navigationController?.pushViewController(bookmarkedVC, animated: true)
+    }
+
+    @objc func favouritesButtonTapped() {
+        self.dismiss(animated: true) { [weak self] in
+            self?.delegate?.switchToFavourites()
+        }
+    }
+
+    @objc func archiveButtonTapped() {
+        guard let mainUserID = presenter.user.documentID else { return }
+        let archiveVC = ArchiveViewController()
+        let archivePresenter = ArchivePresenter(view: archiveVC, user: presenter.user, mainUser: mainUserID)
+        archiveVC.presenter = archivePresenter
+        self.navigationController?.pushViewController(archiveVC, animated: true)
+    }
+
 }
 
 // MARK: -OUTPUTPRESENTER
@@ -190,7 +221,7 @@ extension SettingsViewController {
         mainView.addSubview(starImageView)
         mainView.addSubview(bookmarksButton)
         mainView.addSubview(heartImageView)
-        mainView.addSubview(likedButton)
+        mainView.addSubview(favouritesButton)
         mainView.addSubview(uploadImageView)
         mainView.addSubview(uploadButton)
         mainView.addSubview(archiveImageView)
@@ -240,10 +271,10 @@ extension SettingsViewController {
             heartImageView.heightAnchor.constraint(equalToConstant: 15),
             heartImageView.widthAnchor.constraint(equalToConstant: 15),
 
-            likedButton.centerYAnchor.constraint(equalTo: heartImageView.centerYAnchor),
-            likedButton.leadingAnchor.constraint(equalTo: heartImageView.trailingAnchor, constant: 14),
-            likedButton.trailingAnchor.constraint(equalTo: mainView.trailingAnchor, constant: -110),
-            likedButton.heightAnchor.constraint(equalToConstant: 22),
+            favouritesButton.centerYAnchor.constraint(equalTo: heartImageView.centerYAnchor),
+            favouritesButton.leadingAnchor.constraint(equalTo: heartImageView.trailingAnchor, constant: 14),
+            favouritesButton.trailingAnchor.constraint(equalTo: mainView.trailingAnchor, constant: -110),
+            favouritesButton.heightAnchor.constraint(equalToConstant: 22),
 
             uploadImageView.topAnchor.constraint(equalTo: heartImageView.bottomAnchor, constant: 18),
             uploadImageView.centerXAnchor.constraint(equalTo: heartImageView.centerXAnchor),

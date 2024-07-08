@@ -122,9 +122,14 @@ class LoginScreenViewController: UIViewController {
 // MARK: -Presenter Output
 
 extension LoginScreenViewController: LoginViewProtocol {
+
     func showAlert() {
+        print("Alert")
+    }
+    
+    func showError(error: String) {
         let alertController = UIAlertController(title: .localized(string: "Ошибка"),
-                                                message: .localized(string: "Пожалуйста, введите номер в формате +7 ХХХ ХХХ ХХ ХХ"),
+                                                message: .localized(string: error),
                                                 preferredStyle: .alert)
         let alertAction = UIAlertAction(title: .localized(string: "Отмена"), style: .cancel)
         alertController.addAction(alertAction)

@@ -27,12 +27,22 @@ class DetailStorieViewController: UIViewController {
         storiesPageControle.translatesAutoresizingMaskIntoConstraints = false
         storiesPageControle.pageIndicatorTintColor = .lightGray
         storiesPageControle.currentPageIndicatorTintColor = .white
+        storiesPageControle.backgroundStyle = .prominent
         return storiesPageControle
+    }()
+
+    private lazy var backButton: UIButton = {
+        let backButton = UIButton(type: .system)
+        backButton.translatesAutoresizingMaskIntoConstraints = false
+        backButton.setBackgroundImage(UIImage(systemName: "arrow.left"), for: .normal)
+        backButton.tintColor = .systemOrange
+        backButton.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
+        return backButton
     }()
 
 
     // MARK: - Lifecycle
-    override func viewDidAppear(_ animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         tuneNavItem()
     }
@@ -50,7 +60,9 @@ class DetailStorieViewController: UIViewController {
     }
 
     // MARK: - Funcs
-
+    @objc func backButtonTapped() {
+        self.navigationController?.popViewController(animated: true)
+    }
 }
 
 // MARK: - Presenter Output
@@ -97,8 +109,9 @@ extension DetailStorieViewController: UIScrollViewDelegate {
 
 extension DetailStorieViewController {
     private func addSubviews() {
-        view.addSubview(storiesPageControle)
         view.addSubview(storiesScrollView)
+        view.addSubview(storiesPageControle)
+        view.addSubview(backButton)
     }
 
     private func layout() {
@@ -109,10 +122,14 @@ extension DetailStorieViewController {
             storiesPageControle.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 20),
             storiesPageControle.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -20),
 
-            storiesScrollView.topAnchor.constraint(equalTo: safeArea.topAnchor),
+            storiesScrollView.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: 15),
             storiesScrollView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
             storiesScrollView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
-            storiesScrollView.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor)
+            storiesScrollView.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor),
+
+            backButton.centerYAnchor.constraint(equalTo: storiesPageControle.centerYAnchor),
+            backButton.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
+            backButton.widthAnchor.constraint(equalToConstant: 30)
         ])
     }
 }

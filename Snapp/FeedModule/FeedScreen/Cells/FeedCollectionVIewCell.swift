@@ -9,6 +9,8 @@ import UIKit
 
 final class FeedCollectionViewCell: UICollectionViewCell {
 
+    // MARK - Properties
+
     static let identifier = "FeedCollectionViewCell"
 
     private lazy var storieImage: UIImageView = {
@@ -16,10 +18,16 @@ final class FeedCollectionViewCell: UICollectionViewCell {
         storieImage.translatesAutoresizingMaskIntoConstraints = false
         storieImage.layer.cornerRadius = 12.0
         storieImage.layer.borderWidth = 1.0
-        storieImage.layer.borderColor = ColorCreator.shared.createButtonColor().cgColor
+        storieImage.layer.borderColor = UIColor.systemOrange.cgColor
+        storieImage.clipsToBounds = true
+        storieImage.contentMode = .scaleAspectFill
+        storieImage.layer.masksToBounds = true
+        storieImage.layer.cornerRadius = self.storieImage.frame.size.width / 2.0
         return storieImage
     }()
 
+
+    // MARK: - Lifecycle
     override init(frame: CGRect) {
         super.init(frame: frame)
         addSubviews()
@@ -34,6 +42,9 @@ final class FeedCollectionViewCell: UICollectionViewCell {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+
+    // MARK: - Funcs
+
     func addSubviews() {
         contentView.addSubview(storieImage)
     }
@@ -51,9 +62,5 @@ final class FeedCollectionViewCell: UICollectionViewCell {
 
     func updateCell(image: UIImage) {
         self.storieImage.image = image
-        self.storieImage.clipsToBounds = true
-        self.storieImage.contentMode = .scaleAspectFill
-        self.storieImage.layer.masksToBounds = true
-        self.storieImage.layer.cornerRadius = self.storieImage.frame.size.width / 2.0
     }
 }
