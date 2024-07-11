@@ -11,7 +11,7 @@ import UserNotifications
 
 protocol NotificationManagerProtocol: AnyObject {
    func registerNotificationCenter(completion: @escaping (Result<Bool, Error>) -> Void)
-   func postNotification()
+   func postNotification(title: String, body: String)
 }
 
 class NotificationsService: NotificationManagerProtocol {
@@ -35,10 +35,10 @@ class NotificationsService: NotificationManagerProtocol {
         }
     }
 
-    func postNotification() {
+    func postNotification(title: String, body: String) {
         let content = UNMutableNotificationContent()
-        content.title = "Test Title for Notification"
-        content.body = "Test Body For Notifications"
+        content.title = title
+        content.body = body
         content.sound = .default
         content.badge = 1
         let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 5, repeats: false)

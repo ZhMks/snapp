@@ -55,11 +55,14 @@ final class MenuForFeedPresenter: MenuForFeedPresenterProtocol {
     }
 
     func enableNotifications() {
-        NotificationsService.shared.registerNotificationCenter { result in
+        NotificationsService.shared.registerNotificationCenter {[weak self] result in
+            guard let self = self else { return }
             switch result {
-            case .success(let success):
-                NotificationsService.shared.postNotification()
-            case .failure(let failure):
+            case .success(_):
+                let title = "Вы попдписались на пользователя"
+                let body = "\(user.name)" + " \(user.surname)"
+                NotificationsService.shared.postNotification(title: title, body: body)
+            case .failure(_):
                 return
             }
         }

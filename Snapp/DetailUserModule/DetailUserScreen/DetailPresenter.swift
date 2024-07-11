@@ -196,10 +196,13 @@ final class DetailPresenter: DetailPresenterProtocol {
     }
 
     func registerNotifications() {
-        NotificationsService.shared.registerNotificationCenter { result in
+        NotificationsService.shared.registerNotificationCenter { [weak self] result in
+            guard let self = self else { return }
             switch result {
             case .success(_):
-                NotificationsService.shared.postNotification()
+                let body = "\(self.user.name)" + " \(self.user.surname)"
+                let title = "Вы подписались на пользователя"
+                NotificationsService.shared.postNotification(title: title, body: body)
             case .failure(_):
                 return
             }
