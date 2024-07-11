@@ -219,6 +219,7 @@ class DetailUserViewController: UIViewController {
         layout()
         tuneTableView()
         presenter.fetchPhotoAlbum()
+        presenter.checkSubscribers()
     }
 
     override func viewDidDisappear(_ animated: Bool) {
@@ -234,8 +235,14 @@ class DetailUserViewController: UIViewController {
     // MARK: -Funcs
 
     @objc func addToSubscribers() {
-        presenter.addSubscriber()
-        presenter.registerNotifications()
+        if presenter.user.subscribers.contains(presenter.mainUserID) {
+            presenter.removeSubscribtion()
+            presenter.checkSubscribers()
+        } else {
+            presenter.addSubscriber()
+            presenter.registerNotifications()
+            presenter.checkSubscribers()
+        }
     }
 
     @objc func dismissViewController() {
@@ -248,12 +255,11 @@ class DetailUserViewController: UIViewController {
 extension DetailUserViewController: DetailViewProtocol {
    
     func updateSubButton() {
+        print(presenter.user.subscribers)
         if presenter.user.subscribers.contains(presenter.mainUserID) {
-            subscribeButton.backgroundColor = .systemGray3
-            subscribeButton.isEnabled = false
+            subscribeButton.setTitle(.localized(string: "Отписаться"), for: .normal)
         } else {
-            subscribeButton.backgroundColor = ColorCreator.shared.createButtonColor()
-            subscribeButton.isEnabled = true
+            subscribeButton.setTitle(.localized(string: "Подписаться"), for: .normal)
         }
     }
 

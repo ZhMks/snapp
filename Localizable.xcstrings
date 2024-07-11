@@ -596,6 +596,23 @@
         }
       }
     },
+    "Отписаться" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unsubsribe"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Отписаться"
+          }
+        }
+      }
+    },
     "Ошибка" : {
       "extractionState" : "manual",
       "localizations" : {

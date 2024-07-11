@@ -102,7 +102,6 @@ final class DetailPresenter: DetailPresenterProtocol {
         self.photoAlbum = []
         let networkService = NetworkService()
         let dispatchGroup = DispatchGroup()
-        print("User that stored images: \(user), images links: \(user.photoAlbum)")
         for link in user.photoAlbum {
             dispatchGroup.enter()
             networkService.fetchImage(string: link) { [weak self] result in
@@ -138,7 +137,6 @@ final class DetailPresenter: DetailPresenterProtocol {
                 self.nsLock.unlock()
                 self.fetchImage()
                 self.fetchPosts()
-                self.checkSubscribers()
             case .failure(_):
                 return
             }
@@ -207,5 +205,11 @@ final class DetailPresenter: DetailPresenterProtocol {
                 return
             }
         }
+    }
+
+    func removeSubscribtion() {
+        guard let userID = user.documentID else { return }
+        FireStoreService.shared.removeSubscribtion(sub: userID, for: mainUserID)
+        FireStoreService.shared.removeSubscriber(sub: mainUserID, for: userID)
     }
 }

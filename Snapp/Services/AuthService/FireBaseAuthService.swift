@@ -31,8 +31,20 @@ enum AuthorisationErrors: Error {
 
 protocol FireBaseAuthProtocol {
     var verificationID: String? { get set }
+    /// Функция для создания пользователя в БД.
+    /// - Parameters:
+    ///   - phone: Телефон по которому будут отправляться проверочные коды.
+    ///   - completion: Возвращает либо успех, либо ошибку.
     func signUpUser(phone: String, completion: @escaping (Result<Bool, Error>) -> Void)
+    
+    /// Функция для получения авторизованного пользователя.
+    /// - Parameters:
+    ///   - code: Проверочный код
+    ///   - completion: Возвращает либо структуру User, которую создает сам Firebase, либо одну из ошибок.
     func verifyCode(code: String, completion: @escaping (Result<User, AuthorisationErrors>) -> Void)
+    
+    /// Функция для выхода авторизованного пользователя.
+    /// - Parameter completion: возвращает либо успех, либо ошибку.
     func logOut(completion: @escaping (Result<Void, Error>) -> Void)
 }
 
