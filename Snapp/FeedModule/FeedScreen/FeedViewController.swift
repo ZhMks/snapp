@@ -155,7 +155,10 @@ extension FeedViewController: FeedViewProtocol {
     }
 
     func showEmptyScreen() {
-        print("SHOWFEEDEMPTYSCREEN")
+        let uiAlert = UIAlertController(title: .localized(string: "Пусто"), message: .localized(string: "Пока здесь пусто, но вы можете подписаться на других пользователей, чтобы видеть их посты"), preferredStyle: .actionSheet)
+        let uiAlertAction = UIAlertAction(title: .localized(string: "Понятно"), style: .cancel)
+        uiAlert.addAction(uiAlertAction)
+        present(uiAlert, animated: true)
     }
 }
 
@@ -189,7 +192,7 @@ extension FeedViewController: UICollectionViewDataSource {
         let key = Array(data.keys)[indexPath.row]
         guard let image = data[key] else { return UICollectionViewCell() }
         print("InfoData in collectionViewCell: \(data.count), KEY FOR CELL: \(key.name), imageForCELL: \(image)")
-        cell.updateCell(image: image)
+      //  cell.updateCell(image: image)
         return cell
     }
 }

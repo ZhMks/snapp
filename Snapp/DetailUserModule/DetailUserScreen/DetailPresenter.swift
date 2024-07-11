@@ -34,6 +34,7 @@ final class DetailPresenter: DetailPresenterProtocol {
     var avatarImage: UIImage?
     let mainUserID: String
     var photoAlbum: [UIImage]?
+    let nsLock = NSLock()
 
     init(view: DetailViewProtocol, user: FirebaseUser, mainUserID: String) {
         self.view = view
@@ -57,7 +58,9 @@ final class DetailPresenter: DetailPresenterProtocol {
             guard let self = self else { return }
             switch result {
             case .success(let image):
+                self.nsLock.lock()
                 self.avatarImage = image
+                self.nsLock.unlock()
                 view?.updateAvatarImage(image: image)
             case .failure(let failure):
                 view?.showErrorAler(error: failure.localizedDescription)
@@ -71,7 +74,9 @@ final class DetailPresenter: DetailPresenterProtocol {
             guard let self = self else { return }
             switch result {
             case .success(let success):
+                self.nsLock.lock()
                 self.posts = success
+                self.nsLock.unlock()
                 view?.updateData()
             case .failure(let failure):
                 switch failure.description {
@@ -106,7 +111,9 @@ final class DetailPresenter: DetailPresenterProtocol {
                 }
                 switch result {
                 case .success(let image):
+                    self.nsLock.lock()
                     self.photoAlbum?.append(image)
+                    self.nsLock.unlock()
                 case .failure(let failure):
                     self.view?.showErrorAler(error: failure.localizedDescription)
                 }
@@ -125,7 +132,9 @@ final class DetailPresenter: DetailPresenterProtocol {
             guard let self = self else { return }
             switch result {
             case .success(let user):
+                self.nsLock.lock()
                 self.user = user
+                self.nsLock.unlock()
                 self.fetchImage()
                 self.fetchPosts()
                 self.checkSubscribers()
@@ -145,7 +154,9 @@ final class DetailPresenter: DetailPresenterProtocol {
             guard let self = self else { return }
             switch result {
             case .success(let success):
+                self.nsLock.lock()
                 self.posts = success
+                self.nsLock.unlock()
                 self.view?.updateData()
             case .failure(_):
                 return

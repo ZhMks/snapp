@@ -24,6 +24,7 @@ final class CreatePostPresenter: CreatePostPresenterProtocol {
     let userID: String
     let image: UIImage
     var posts: [EachPost]
+    let nsLock = NSLock()
 
 
     init(view: CreatePostViewProtocol?, mainUser: FirebaseUser, userID: String, image: UIImage, posts: [EachPost]) {
@@ -49,7 +50,9 @@ final class CreatePostPresenter: CreatePostPresenterProtocol {
                                         likes: firestorePost.likes,
                                         commentaries: firestorePost.commentaries,
                                         date: firestorePost.date, isCommentariesEnabled: true, isPinned: false)
+                nsLock.lock()
                 posts.append(eachPost)
+                nsLock.unlock()
                 completion(.success(posts))
             case .failure(let error):
                 view?.showErrorAlert(error: error.localizedDescription)

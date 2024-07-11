@@ -19,7 +19,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let window = UIWindow(windowScene: windowScene)
 
         let controller = FirstBoardingVC()
-        let presenter = Presenter(view: controller)
+        let presenter = FirstOnBoardingPresenter(view: controller)
         controller.presener = presenter
 
         let navigationController = UINavigationController(rootViewController: controller)
@@ -60,7 +60,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // Save changes in the application's managed object context when the application transitions to the background.
     }
 
-    func changeRootViewController(_ vc: UIViewController, user: FirebaseUser, mainUserID: String) {
+    func setTabBarController(_ vc: UIViewController, user: FirebaseUser, mainUserID: String) {
 
         guard let window = self.window else {
             return
@@ -95,6 +95,14 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         tabBarController.tabBar.tintColor = .systemOrange
 
         window.rootViewController = tabBarController
+    }
+
+    func changeRootViewController(_ vc: UIViewController) {
+        guard let window = self.window else {
+            return
+        }
+        let uiNavigatioNController = UINavigationController(rootViewController: vc)
+        window.rootViewController = uiNavigatioNController
     }
 
 }

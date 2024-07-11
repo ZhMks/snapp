@@ -288,8 +288,8 @@ class ProfileViewController: UIViewController {
     }
 
     @objc func showSettingsVC() {
-        let settingsVC = SettingsViewController()
-        let settingsPresenter = SettingPresenter(view: settingsVC, user: presenter.mainUser)
+        let settingsVC = MainSettingsViewController()
+        let settingsPresenter = MainSettingsPresenter(view: settingsVC, user: presenter.mainUser)
         settingsVC.presenter = settingsPresenter
         settingsVC.delegate = self
         let settingsNavigationController = UINavigationController(rootViewController: settingsVC)
@@ -356,6 +356,11 @@ class ProfileViewController: UIViewController {
 
 // MARK: -Output Presenter
 extension ProfileViewController: ProfileViewProtocol {
+
+    func updateBookmarkButton() {
+        print("Contains")
+    }
+    
 
     func updateTextData(user: FirebaseUser) {
         jobLabel.text = user.job

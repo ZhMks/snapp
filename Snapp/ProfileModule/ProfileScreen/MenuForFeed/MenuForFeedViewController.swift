@@ -141,14 +141,14 @@ class MenuForFeedViewController: UIViewController {
 extension MenuForFeedViewController: MenuForFeedViewProtocol {
 
     func showInfoView() {
-        let infoView = UIView(frame: CGRect(x: 50, y: 50, width: 120, height: 120))
+        let infoView = UIView(frame: CGRect(x: view.frame.origin.x, y: view.frame.origin.y, width: 120, height: 120))
         infoView.layer.cornerRadius = 10
         infoView.backgroundColor = .systemBackground
         infoView.layer.shadowColor = UIColor.systemGray3.cgColor
         infoView.layer.shadowOpacity = 1.0
         infoView.layer.shadowRadius = 3.0
 
-        let text = UILabel(frame: CGRect(x: infoView.frame.minX, y: infoView.frame.minY, width: 80, height: 80))
+        let text = UILabel(frame: CGRect(x: infoView.frame.minX, y: infoView.frame.minY, width: 160, height: 50))
         text.text = "Мы приняли к рассмотрению вашу жалобу, а также скрыли посты данного пользователя от вас"
 
 
@@ -156,8 +156,11 @@ extension MenuForFeedViewController: MenuForFeedViewProtocol {
         button.setTitle("К поиску", for: .normal)
         button.addTarget(self, action: #selector(infoViewButtonTapped), for: .touchUpInside)
         button.backgroundColor = ColorCreator.shared.createButtonColor()
+        button.layer.cornerRadius = 10.0
+
         infoView.addSubview(text)
         infoView.addSubview(button)
+
         view.addSubview(infoView)
     }
 

@@ -860,7 +860,8 @@ print(user)
     }
 
     func saveToBookMarks(mainUser: String, user: String, post: EachPost) {
-        let bookmarkedPost = BookmarkedPost(text: post.text, likes: post.likes, commentaries: post.commentaries, date: post.date, userHoldingPost: user)
+        guard let originalPostID = post.documentID else { return }
+        let bookmarkedPost = BookmarkedPost(text: post.text, likes: post.likes, commentaries: post.commentaries, date: post.date, userHoldingPost: user, originaPostID: originalPostID)
         let link = Firestore.firestore().collection("Users").document(mainUser).collection("Bookmarks")
         do {
          try link.addDocument(from: bookmarkedPost)
@@ -879,6 +880,7 @@ print(user)
             }
 
             if let snapshot = snapshot {
+                print("Count: \(snapshot.documents.count)")
                 for document in snapshot.documents {
                     do {
                         let decodedDoc = try document.data(as: BookmarkedPost.self)

@@ -164,7 +164,7 @@ final class AddProfileVc: UIViewController {
         let presenter = ProfilePresenter(view: profileVC, mainUser: user, mainUserID: id)
         profileVC.presenter = presenter
 
-        (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootViewController(profileVC, user: user, mainUserID: id)
+        (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.setTabBarController(profileVC, user: user, mainUserID: id)
     }
 
    @objc private func pickAvatar() {

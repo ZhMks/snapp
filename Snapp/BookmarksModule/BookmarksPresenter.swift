@@ -8,7 +8,7 @@
 import UIKit
 
 protocol BookmarksViewProtocol: AnyObject {
-func showError()
+    func showError()
     func updateTableView()
     func showError(error: String)
 }
@@ -21,8 +21,9 @@ protocol BookmarksPresenterProtocol: AnyObject {
 final class BookmarksPresenter: BookmarksPresenterProtocol {
     weak var view: BookmarksViewProtocol?
     let user: FirebaseUser
-    var posts: [BookmarkedPost]?
+    var posts: [[FirebaseUser: BookmarkedPost]]?
     let mainUserID: String
+   
 
     init(view: BookmarksViewProtocol, user: FirebaseUser, mainUser: String) {
         self.view = view
@@ -32,33 +33,50 @@ final class BookmarksPresenter: BookmarksPresenterProtocol {
     }
 
     func fetchBookmarkedPosts() {
+        let dispatchGroup = DispatchGroup()
+        let lock = NSLock()
+        posts = []
         guard let id = user.documentID else { return }
         FireStoreService.shared.fetchBookmarkedPosts(user: id) { [weak self] result in
             guard let self else { return }
             switch result {
             case .success(let bookmarkedPosts):
-                self.posts = bookmarkedPosts
-                fetchUserData()
-            case .failure(_):
-                view?.showError()
+                for post in bookmarkedPosts {
+                    dispatchGroup.enter()
+                    fetchUserData(id: post.userHoldingPost) { [weak self] result in
+                        switch result {
+                        case .success(let user):
+                            let dict = [user: post]
+                            lock.lock()
+                            self?.posts?.append(dict)
+                            lock.unlock()
+                        case .failure(let failure):
+                            return
+                        }
+                    }
+                    dispatchGroup.leave()
+                }
+            case .failure(let error):
+                view?.showError(error: error.localizedDescription)
             }
         }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2) { [weak self] in
+            print("Final posts count: \(self?.posts?.count)")
+            self?.view?.updateTableView()
+        }
+//        dispatchGroup.notify(queue: .main) { [weak self] in
+//            print("Final posts: \(self?.posts)")
+//            self?.view?.updateTableView()
+//        }
     }
 
-    private func fetchUserData() {
-        let dispatchGroup = DispatchGroup()
-        guard let posts = posts else { return }
-        for post in posts {
-            if !post.userHoldingPost.isEmpty {
-                let link = post.userHoldingPost
-                FireStoreService.shared.getUser(id: link) { [weak self] result in
-                    switch result {
-                    case .success(let firebaseUser):
-                        self?.view?.updateTableView()
-                    case .failure(let failure):
-                        self?.view?.showError(error: failure.localizedDescription)
-                    }
-                }
+    private func fetchUserData(id: String, completion: @escaping (Result<FirebaseUser, Error>) -> Void) {
+        FireStoreService.shared.getUser(id: id) { result in
+            switch result {
+            case .success(let user):
+                completion(.success(user))
+            case .failure(let failure):
+                completion(.failure(failure))
             }
         }
     }

@@ -17,7 +17,7 @@ class BookmarksViewController: UIViewController {
         bookmarksTableView.translatesAutoresizingMaskIntoConstraints = false
         bookmarksTableView.delegate = self
         bookmarksTableView.dataSource = self
-        bookmarksTableView.register(PostTableCell.self, forCellReuseIdentifier: PostTableCell.identifier)
+        bookmarksTableView.register(BookmarkedPostCell.self, forCellReuseIdentifier: BookmarkedPostCell.identifier)
         return bookmarksTableView
     }()
 
@@ -27,7 +27,6 @@ class BookmarksViewController: UIViewController {
         view.backgroundColor = .systemBackground
         addSubviews()
         layoutSubviews()
-        presenter.fetchBookmarkedPosts()
         tuneNavItems()
     }
 
@@ -69,12 +68,7 @@ extension BookmarksViewController: BookmarksViewProtocol {
     
 
     func updateTableView() {
-        DispatchQueue.main.async { [weak self] in
-            guard let self else { return }
-            addSubviews()
-            layoutSubviews()
-            bookmarksTableView.reloadData()
-        }
+        bookmarksTableView.reloadData()
     }
 
 }
@@ -90,8 +84,11 @@ extension BookmarksViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: BookmarkedPostCell.identifier, for: indexPath) as? BookmarkedPostCell else { return UITableViewCell() }
-        guard let data = presenter.posts?[indexPath.row] else { return UITableViewCell() }
-        cell.updateView(post: data, user: presenter.user, state: .profileState, mainUserID: self.presenter.mainUserID)
+        if let userPosts = self.presenter.posts?[indexPath.row] {
+                for (user, bookmarkedPosts) in userPosts {
+                    cell.updateView(post: bookmarkedPosts, user: user, state: .profileState, mainUserID: presenter.mainUserID)
+                }
+            }
         return cell
     }
 

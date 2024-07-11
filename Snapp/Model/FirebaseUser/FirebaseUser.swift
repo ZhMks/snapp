@@ -58,6 +58,7 @@ struct BookmarkedPost: Codable {
     var commentaries: Int
     var date: String
     var userHoldingPost: String
+    var originaPostID: String
 }
 
 struct Comment: CommentOrAnswer {

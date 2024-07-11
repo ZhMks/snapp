@@ -18,8 +18,8 @@
 		B209E6212BC3FC320067D751 /* ProfilePresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B209E6202BC3FC320067D751 /* ProfilePresenter.swift */; };
 		B209E6252BC3FD450067D751 /* FavouritesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B209E6242BC3FD450067D751 /* FavouritesViewController.swift */; };
 		B209E6272BC3FD5B0067D751 /* FavouritesPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B209E6262BC3FD5B0067D751 /* FavouritesPresenter.swift */; };
-		B209E62B2BC3FDDB0067D751 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B209E62A2BC3FDDB0067D751 /* SettingsViewController.swift */; };
-		B209E62E2BC3FDEC0067D751 /* SettingPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B209E62D2BC3FDEC0067D751 /* SettingPresenter.swift */; };
+		B209E62B2BC3FDDB0067D751 /* MainSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B209E62A2BC3FDDB0067D751 /* MainSettingsViewController.swift */; };
+		B209E62E2BC3FDEC0067D751 /* MainSettingsPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B209E62D2BC3FDEC0067D751 /* MainSettingsPresenter.swift */; };
 		B209E6312BC3FEB10067D751 /* ProfileChangeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B209E6302BC3FEB10067D751 /* ProfileChangeViewController.swift */; };
 		B209E6332BC3FEBE0067D751 /* ProfileChangePresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B209E6322BC3FEBE0067D751 /* ProfileChangePresenter.swift */; };
 		B209E6362BC430FC0067D751 /* FeedCollectionVIewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B209E6352BC430FC0067D751 /* FeedCollectionVIewCell.swift */; };
@@ -81,6 +81,9 @@
 		B2E441F62C39625A0098AFEA /* DetailStoriePresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2E441F52C39625A0098AFEA /* DetailStoriePresenter.swift */; };
 		B2E441F82C3962650098AFEA /* DetailStorieViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2E441F72C3962650098AFEA /* DetailStorieViewController.swift */; };
 		B2E441FB2C3A930F0098AFEA /* BookmarkedPost.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2E441FA2C3A930F0098AFEA /* BookmarkedPost.swift */; };
+		B2E441FE2C3FB21C0098AFEA /* KeychainAccess in Frameworks */ = {isa = PBXBuildFile; productRef = B2E441FD2C3FB21C0098AFEA /* KeychainAccess */; };
+		B2E442012C3FB94D0098AFEA /* SettingChangePresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2E442002C3FB94D0098AFEA /* SettingChangePresenter.swift */; };
+		B2E442032C3FB9580098AFEA /* SettingChangeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2E442022C3FB9580098AFEA /* SettingChangeViewController.swift */; };
 		B2E51C712BF3880E00DE6102 /* DetailPostViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2E51C702BF3880E00DE6102 /* DetailPostViewController.swift */; };
 		B2E51C732BF3881900DE6102 /* DetailPostPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2E51C722BF3881900DE6102 /* DetailPostPresenter.swift */; };
 		B2E51C762BF38CC500DE6102 /* CommentsTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2E51C752BF38CC500DE6102 /* CommentsTableCell.swift */; };
@@ -122,8 +125,8 @@
 		B209E6202BC3FC320067D751 /* ProfilePresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfilePresenter.swift; sourceTree = "<group>"; };
 		B209E6242BC3FD450067D751 /* FavouritesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavouritesViewController.swift; sourceTree = "<group>"; };
 		B209E6262BC3FD5B0067D751 /* FavouritesPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavouritesPresenter.swift; sourceTree = "<group>"; };
-		B209E62A2BC3FDDB0067D751 /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
-		B209E62D2BC3FDEC0067D751 /* SettingPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingPresenter.swift; sourceTree = "<group>"; };
+		B209E62A2BC3FDDB0067D751 /* MainSettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainSettingsViewController.swift; sourceTree = "<group>"; };
+		B209E62D2BC3FDEC0067D751 /* MainSettingsPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainSettingsPresenter.swift; sourceTree = "<group>"; };
 		B209E6302BC3FEB10067D751 /* ProfileChangeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileChangeViewController.swift; sourceTree = "<group>"; };
 		B209E6322BC3FEBE0067D751 /* ProfileChangePresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileChangePresenter.swift; sourceTree = "<group>"; };
 		B209E6352BC430FC0067D751 /* FeedCollectionVIewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedCollectionVIewCell.swift; sourceTree = "<group>"; };
@@ -187,6 +190,8 @@
 		B2E441F52C39625A0098AFEA /* DetailStoriePresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailStoriePresenter.swift; sourceTree = "<group>"; };
 		B2E441F72C3962650098AFEA /* DetailStorieViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailStorieViewController.swift; sourceTree = "<group>"; };
 		B2E441FA2C3A930F0098AFEA /* BookmarkedPost.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkedPost.swift; sourceTree = "<group>"; };
+		B2E442002C3FB94D0098AFEA /* SettingChangePresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingChangePresenter.swift; sourceTree = "<group>"; };
+		B2E442022C3FB9580098AFEA /* SettingChangeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingChangeViewController.swift; sourceTree = "<group>"; };
 		B2E51C702BF3880E00DE6102 /* DetailPostViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailPostViewController.swift; sourceTree = "<group>"; };
 		B2E51C722BF3881900DE6102 /* DetailPostPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailPostPresenter.swift; sourceTree = "<group>"; };
 		B2E51C752BF38CC500DE6102 /* CommentsTableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentsTableCell.swift; sourceTree = "<group>"; };
@@ -204,6 +209,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B2E441FE2C3FB21C0098AFEA /* KeychainAccess in Frameworks */,
 				B2B902732C2EA8920043FCCC /* FirebaseAuth in Frameworks */,
 				B2B902752C2EA8920043FCCC /* FirebaseFirestoreSwift in Frameworks */,
 				B2B902772C2EA8920043FCCC /* FirebaseStorage in Frameworks */,
@@ -319,20 +325,21 @@
 		B209E6282BC3FDBE0067D751 /* SettingModule */ = {
 			isa = PBXGroup;
 			children = (
+				B2E441FF2C3FB93A0098AFEA /* SettingChangeScreen */,
 				B297FB522BFCBDC500A8C463 /* DataChangeScreen */,
 				B209E62F2BC3FEA10067D751 /* ProfileChangeScreen */,
-				B209E6292BC3FDCB0067D751 /* SettingsScreen */,
+				B209E6292BC3FDCB0067D751 /* MainSettingsScreen */,
 			);
 			path = SettingModule;
 			sourceTree = "<group>";
 		};
-		B209E6292BC3FDCB0067D751 /* SettingsScreen */ = {
+		B209E6292BC3FDCB0067D751 /* MainSettingsScreen */ = {
 			isa = PBXGroup;
 			children = (
-				B209E62A2BC3FDDB0067D751 /* SettingsViewController.swift */,
-				B209E62D2BC3FDEC0067D751 /* SettingPresenter.swift */,
+				B209E62A2BC3FDDB0067D751 /* MainSettingsViewController.swift */,
+				B209E62D2BC3FDEC0067D751 /* MainSettingsPresenter.swift */,
 			);
-			path = SettingsScreen;
+			path = MainSettingsScreen;
 			sourceTree = "<group>";
 		};
 		B209E62F2BC3FEA10067D751 /* ProfileChangeScreen */ = {
@@ -710,6 +717,15 @@
 			path = BookmarkedPostCell;
 			sourceTree = "<group>";
 		};
+		B2E441FF2C3FB93A0098AFEA /* SettingChangeScreen */ = {
+			isa = PBXGroup;
+			children = (
+				B2E442002C3FB94D0098AFEA /* SettingChangePresenter.swift */,
+				B2E442022C3FB9580098AFEA /* SettingChangeViewController.swift */,
+			);
+			path = SettingChangeScreen;
+			sourceTree = "<group>";
+		};
 		B2E51C6F2BF387FB00DE6102 /* DetailPostScreen */ = {
 			isa = PBXGroup;
 			children = (
@@ -778,6 +794,7 @@
 				B2B902722C2EA8920043FCCC /* FirebaseAuth */,
 				B2B902742C2EA8920043FCCC /* FirebaseFirestoreSwift */,
 				B2B902762C2EA8920043FCCC /* FirebaseStorage */,
+				B2E441FD2C3FB21C0098AFEA /* KeychainAccess */,
 			);
 			productName = Snapp;
 			productReference = B211C1E42BBB3C2900C073EE /* Snapp.app */;
@@ -854,6 +871,7 @@
 			mainGroup = B211C1DB2BBB3C2900C073EE;
 			packageReferences = (
 				B2B902712C2EA8920043FCCC /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+				B2E441FC2C3FB21C0098AFEA /* XCRemoteSwiftPackageReference "KeychainAccess" */,
 			);
 			productRefGroup = B211C1E52BBB3C2900C073EE /* Products */;
 			projectDirPath = "";
@@ -917,6 +935,7 @@
 				B27E1C752BFB942000E1DEF9 /* PhotoalbumViewController.swift in Sources */,
 				B209E6512BC95E930067D751 /* SignInViewController.swift in Sources */,
 				B27E1C702BFB4D4400E1DEF9 /* MenuForPostPresenter.swift in Sources */,
+				B2E442032C3FB9580098AFEA /* SettingChangeViewController.swift in Sources */,
 				B26804B22BE4E63700DE74A4 /* PostTableCell.swift in Sources */,
 				B2E441F12C3929AE0098AFEA /* AlbumCollectionViewCell.swift in Sources */,
 				B209E64F2BC95E850067D751 /* SignInPresenter.swift in Sources */,
@@ -932,7 +951,7 @@
 				B2E441F62C39625A0098AFEA /* DetailStoriePresenter.swift in Sources */,
 				B211C1EA2BBB3C2900C073EE /* SceneDelegate.swift in Sources */,
 				B209E6142BBFD6DA0067D751 /* FireStoreService.swift in Sources */,
-				B209E62B2BC3FDDB0067D751 /* SettingsViewController.swift in Sources */,
+				B209E62B2BC3FDDB0067D751 /* MainSettingsViewController.swift in Sources */,
 				B27E1C6B2BF8A25A00E1DEF9 /* CommentViewController.swift in Sources */,
 				B27E1C732BFB940A00E1DEF9 /* PhotoalbumPresenter.swift in Sources */,
 				B211C2692BBC2F0200C073EE /* SecondOnboardingPresenter.swift in Sources */,
@@ -951,6 +970,7 @@
 				B211C2712BBC4C1700C073EE /* StringFormatter.swift in Sources */,
 				B209E64C2BC7C8DE0067D751 /* AddProfileVc.swift in Sources */,
 				B209E61B2BC139000067D751 /* FeedViewController.swift in Sources */,
+				B2E442012C3FB94D0098AFEA /* SettingChangePresenter.swift in Sources */,
 				B2E51C762BF38CC500DE6102 /* CommentsTableCell.swift in Sources */,
 				B26517BA2C076F770026A299 /* FavouriteTableViewCell.swift in Sources */,
 				B29D0AEA2BD680BE00101029 /* DetailPresenter.swift in Sources */,
@@ -965,7 +985,7 @@
 				B27E1C6E2BFB4D3A00E1DEF9 /* MenuForPostView.swift in Sources */,
 				B29D0ADF2BD63AD000101029 /* SearchViewController.swift in Sources */,
 				B2B902702C21A7EE0043FCCC /* DetailUserInformationPresenter.swift in Sources */,
-				B209E62E2BC3FDEC0067D751 /* SettingPresenter.swift in Sources */,
+				B209E62E2BC3FDEC0067D751 /* MainSettingsPresenter.swift in Sources */,
 				B2B9026E2C21A7DA0043FCCC /* DetailUserInformationViewController.swift in Sources */,
 				B209E6272BC3FD5B0067D751 /* FavouritesPresenter.swift in Sources */,
 				B209E61F2BC3FC290067D751 /* ProfileViewController.swift in Sources */,
@@ -1338,6 +1358,14 @@
 				minimumVersion = 10.28.1;
 			};
 		};
+		B2E441FC2C3FB21C0098AFEA /* XCRemoteSwiftPackageReference "KeychainAccess" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/kishikawakatsumi/KeychainAccess";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -1355,6 +1383,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = B2B902712C2EA8920043FCCC /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseStorage;
+		};
+		B2E441FD2C3FB21C0098AFEA /* KeychainAccess */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = B2E441FC2C3FB21C0098AFEA /* XCRemoteSwiftPackageReference "KeychainAccess" */;
+			productName = KeychainAccess;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

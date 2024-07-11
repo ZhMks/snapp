@@ -20,6 +20,7 @@ final class FavouritesPresenter: FavouritesPresenterProtocol {
    weak var view: FavouritesViewProtocol?
     var user: FirebaseUser
     var posts: [EachPost]?
+    let nsLock = NSLock()
 
     init(view: FavouritesViewProtocol?, user: FirebaseUser) {
         self.view = view
@@ -27,13 +28,15 @@ final class FavouritesPresenter: FavouritesPresenterProtocol {
         fetchPosts()
     }
 
-    func fetchPosts() {
+   private func fetchPosts() {
         guard let userID = user.documentID else { return }
         FireStoreService.shared.fetchFavourites(user: userID) { [weak self] result in
             guard let self else { return }
             switch result {
             case .success(let success):
+                nsLock.lock()
                 self.posts = success
+                nsLock.unlock()
                 view?.updateData()
             case .failure(_):
                 return
@@ -47,7 +50,9 @@ final class FavouritesPresenter: FavouritesPresenterProtocol {
             guard let self else { return }
             switch result {
             case .success(let success):
+                nsLock.lock()
                 self.posts = success
+                nsLock.unlock()
                 view?.updateData()
             case .failure(_):
                 return

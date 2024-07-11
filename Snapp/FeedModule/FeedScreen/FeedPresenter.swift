@@ -31,6 +31,7 @@ final class FeedPresenter: FeedPresenterProtocol {
     var mainUser: FirebaseUser
     var posts: [FirebaseUser : [EachPost]]?
     let mainUserID: String
+    let nsLock = NSLock()
 
     init(view: FeedViewProtocol, user: FirebaseUser, mainUser: String) {
         self.view = view
@@ -40,7 +41,6 @@ final class FeedPresenter: FeedPresenterProtocol {
 
     func fetchMainUserStorie() {
         let dispatchGroup = DispatchGroup()
-
         let networkService = NetworkService()
         if !mainUser.stories.isEmpty {
             mainUser.stories.forEach { storie in
@@ -48,7 +48,9 @@ final class FeedPresenter: FeedPresenterProtocol {
                 networkService.fetchImage(string: storie) { [weak self] result in
                     switch result {
                     case .success(let success):
+                        self?.nsLock.lock()
                         self?.mainUserStorie = success
+                        self?.nsLock.unlock()
                     case .failure(let failure):
                         print(failure)
                     }
@@ -76,7 +78,9 @@ final class FeedPresenter: FeedPresenterProtocol {
                             switch result {
                             case .success(let image):
                                 print("Fetched images: \(image)")
+                                self?.nsLock.lock()
                                 self?.userStories?.updateValue(image, forKey: user)
+                                self?.nsLock.unlock()
                             case .failure(let failure):
                                 self?.view?.showError(descr: failure.localizedDescription)
                             }
@@ -90,6 +94,7 @@ final class FeedPresenter: FeedPresenterProtocol {
             }
         }
         dispatchGroup.notify(queue: .main) { [weak self] in
+            print("Users stories: \(self?.userStories?.keys.count)")
             self?.view?.updateStorieView()
         }
     }
@@ -136,7 +141,9 @@ final class FeedPresenter: FeedPresenterProtocol {
                             }
                             switch result {
                             case .success(let postArray):
+                                nsLock.lock()
                                 self.posts?.updateValue(postArray, forKey: firebaseUser)
+                                nsLock.unlock()
                             case .failure(let failure):
                                 self.view?.showError(descr: failure.localizedDescription)
                             }

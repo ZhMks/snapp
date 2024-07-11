@@ -13,17 +13,17 @@ final class FeedCollectionViewCell: UICollectionViewCell {
 
     static let identifier = "FeedCollectionViewCell"
 
-    private lazy var storieImage: UIImageView = {
-        let storieImage = UIImageView()
-        storieImage.translatesAutoresizingMaskIntoConstraints = false
-        storieImage.layer.cornerRadius = 12.0
-        storieImage.layer.borderWidth = 1.0
-        storieImage.layer.borderColor = UIColor.systemOrange.cgColor
-        storieImage.clipsToBounds = true
-        storieImage.contentMode = .scaleAspectFill
-        storieImage.layer.masksToBounds = true
-        storieImage.layer.cornerRadius = self.storieImage.frame.size.width / 2.0
-        return storieImage
+    private lazy var storieImageView: UIImageView = {
+        let storieImageView = UIImageView()
+        storieImageView.translatesAutoresizingMaskIntoConstraints = false
+        storieImageView.layer.cornerRadius = 12.0
+        storieImageView.layer.borderWidth = 1.0
+        storieImageView.layer.borderColor = UIColor.systemOrange.cgColor
+        storieImageView.clipsToBounds = true
+        storieImageView.contentMode = .scaleAspectFill
+        storieImageView.layer.masksToBounds = true
+        storieImageView.layer.cornerRadius = self.storieImageView.frame.size.width / 2.0
+        return storieImageView
     }()
 
 
@@ -36,7 +36,7 @@ final class FeedCollectionViewCell: UICollectionViewCell {
 
     override func prepareForReuse() {
         super.prepareForReuse()
-        storieImage.image = nil
+        storieImageView.image = nil
     }
 
     required init?(coder: NSCoder) {
@@ -46,21 +46,21 @@ final class FeedCollectionViewCell: UICollectionViewCell {
     // MARK: - Funcs
 
     func addSubviews() {
-        contentView.addSubview(storieImage)
+        contentView.addSubview(storieImageView)
     }
 
     func layout() {
         let safeArea = contentView.safeAreaLayoutGuide
 
         NSLayoutConstraint.activate([
-            storieImage.topAnchor.constraint(equalTo: safeArea.topAnchor),
-            storieImage.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
-            storieImage.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
-            storieImage.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor)
+            storieImageView.topAnchor.constraint(equalTo: safeArea.topAnchor),
+            storieImageView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
+            storieImageView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
+            storieImageView.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor)
         ])
     }
 
     func updateCell(image: UIImage) {
-        self.storieImage.image = image
+        storieImageView.image = image
     }
 }

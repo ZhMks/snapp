@@ -8,6 +8,7 @@
 import UIKit
 import FirebaseAuth
 
+
 class SignInViewController: UIViewController {
 
     // MARK: -PROPERTIES
@@ -59,7 +60,11 @@ class SignInViewController: UIViewController {
 
 //MARK: -FUNCS
     @objc func verifyCodeButtonTapped() {
+
+        
         guard let code = acceptCodeTextField.text else { return }
+
+
         presenter.checkCode(code: code) { [weak self] result in
             guard self != nil else { return }
             switch result {
@@ -68,7 +73,7 @@ class SignInViewController: UIViewController {
                 guard let userID = Auth.auth().currentUser?.uid else { return }
                 let presenter = ProfilePresenter(view: profileVC, mainUser: user, mainUserID: userID)
                 profileVC.presenter = presenter
-                (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootViewController(profileVC, user: user, mainUserID: userID)
+                (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.setTabBarController(profileVC, user: user, mainUserID: userID)
             case .failure(let error):
                 print(error.localizedDescription)
             }

@@ -21,6 +21,7 @@ final class PhotoalbumPresenter: PhotoalbumPresenterProtocol {
     weak var view: PhotoalbumViewProtocol?
     var photoAlbum: [String : [UIImage]?]?
     let mainUserID: String
+    let nsLock = NSLock()
 
     init(view: PhotoalbumViewProtocol, mainUserID: String) {
         self.view = view
@@ -35,7 +36,9 @@ final class PhotoalbumPresenter: PhotoalbumPresenterProtocol {
                 let convertedDictionary = sortedDictionary.reduce(into: [String: [UIImage]?]()) { result, pair in
                                 result[pair.key] = pair.value
                             }
+                self?.nsLock.lock()
                 self?.photoAlbum = convertedDictionary
+                self?.nsLock.unlock()
                 self?.view?.updateCollectionView()
             case .failure(let failure):
                 self?.view?.showError(error: failure.localizedDescription)

@@ -34,6 +34,7 @@ final class DetailPostPresenter: DetailPostPresenterProtocol {
     var comments: [Comment : [Answer]?]?
     var likes: [Like]?
     let mainUserID: String
+    let nsLock = NSLock()
 
     init(view: DetailPostViewProtocol, user: FirebaseUser, mainUserID: String, post: EachPost, avatarImage: UIImage) {
         self.view = view
@@ -72,13 +73,17 @@ final class DetailPostPresenter: DetailPostPresenterProtocol {
             switch result {
             case .success(let commentaries):
                 for comment in commentaries {
+                    nsLock.lock()
                     comments?.updateValue(nil, forKey: comment)
+                    nsLock.unlock()
                     guard let documentID = comment.documentID else { return }
                     FireStoreService.shared.getAnswers(post: post, comment: documentID, user: user) { [weak self] result in
                         guard let self else { return }
                         switch result {
                         case .success(let answers):
+                            nsLock.lock()
                             comments?.updateValue(answers, forKey: comment)
+                            nsLock.unlock()
                         case .failure(let failure):
                             view?.showError(descr: failure.localizedDescription)
                         }
@@ -100,7 +105,9 @@ final class DetailPostPresenter: DetailPostPresenterProtocol {
             guard let self else { return }
             switch result {
             case .success(let success):
+                nsLock.lock()
                 self.likes = success
+                nsLock.unlock()
                 view?.updateLikes()
             case .failure(let failure):
                 print(failure.localizedDescription)
@@ -116,7 +123,9 @@ final class DetailPostPresenter: DetailPostPresenterProtocol {
             case .success(let success):
                 for eachpost in success {
                     if eachpost.documentID! == post.documentID! {
+                        nsLock.lock()
                         self.post = eachpost
+                        nsLock.unlock()
                         view?.updateCommentsNumber()
                     }
                 }

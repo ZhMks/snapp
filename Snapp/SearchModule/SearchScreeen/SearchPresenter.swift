@@ -24,6 +24,7 @@ final class SearchPresenter: SearchPresenterProtocol {
     weak var view: SearchViewProtocol?
     var usersArray: [FirebaseUser] = []
     let mainUserID: String
+    let nsLock = NSLock()
 
     init(view: SearchViewProtocol?, mainUser: String) {
         self.view = view
@@ -45,8 +46,10 @@ final class SearchPresenter: SearchPresenterProtocol {
                     guard let documentID = firebaseUser.documentID, documentID != mainUserID else { continue }
 
                     if !userIDSet.contains(documentID) {
+                        nsLock.lock()
                         usersArray.append(firebaseUser)
                         userIDSet.insert(documentID)
+                        nsLock.unlock()
                     }
                 }
                 self.view?.updateTableView()

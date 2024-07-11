@@ -11,10 +11,10 @@ protocol SwitchViewControllerDelegate: AnyObject {
     func switchToFavourites()
 }
 
-class SettingsViewController: UIViewController {
+class MainSettingsViewController: UIViewController {
 
     //MARK: -PROPERTIES
-    var presenter: SettingPresenter!
+    var presenter: MainSettingsPresenter!
     weak var delegate: SwitchViewControllerDelegate?
 
     override var prefersStatusBarHidden: Bool {
@@ -145,6 +145,7 @@ class SettingsViewController: UIViewController {
         settingsButton.contentHorizontalAlignment = .left
         settingsButton.setTitleColor(ColorCreator.shared.createTextColor(), for: .normal)
         settingsButton.translatesAutoresizingMaskIntoConstraints = false
+        settingsButton.addTarget(self, action: #selector(settingsButtonTapped), for: .touchUpInside)
         return settingsButton
     }()
 
@@ -202,16 +203,23 @@ class SettingsViewController: UIViewController {
         self.navigationController?.pushViewController(archiveVC, animated: true)
     }
 
+    @objc func settingsButtonTapped() {
+        let settingsChangeScreen = SettingChangeViewController()
+        let settingChangePresenter = SettingChangePresenter(view: settingsChangeScreen)
+        settingsChangeScreen.presenter = settingChangePresenter
+        self.navigationController?.pushViewController(settingsChangeScreen, animated: true)
+    }
+
 }
 
 // MARK: -OUTPUTPRESENTER
-extension SettingsViewController: SettingsViewProtocol {
+extension MainSettingsViewController: MainSettingsViewProtocol {
 
 }
 
 
 // MARK: -LAYOUT
-extension SettingsViewController {
+extension MainSettingsViewController {
 
     func addSubviews() {
         view.addSubview(mainView)

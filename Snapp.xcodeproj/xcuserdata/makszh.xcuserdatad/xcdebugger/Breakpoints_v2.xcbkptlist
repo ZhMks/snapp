@@ -28,8 +28,54 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "54"
             endingLineNumber = "54"
-            landmarkName = "disableCommentaries()"
+            landmarkName = "addPostToArchives()"
             landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "026DADCE-4CDE-445A-A733-ED8CA89811A0"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Snapp/BookmarksModule/BookmarkedPostCell/BookmarkedPost.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "288"
+            endingLineNumber = "288"
+            landmarkName = "fetchLikes(for:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "026DADCE-4CDE-445A-A733-ED8CA89811A0 - 463843eed3d77837"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (Swift.Result&lt;Swift.Array&lt;Snapp.Like&gt;, Swift.Error&gt;) -&gt; () in Snapp.BookmarkedPostCell.fetchLikes(for: Snapp.BookmarkedPost) -&gt; ()"
+                  moduleName = "Snapp"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/makszh/Desktop/Snapp/Snapp/BookmarksModule/BookmarkedPostCell/BookmarkedPost.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "288"
+                  endingLineNumber = "288">
+               </Location>
+               <Location
+                  uuid = "026DADCE-4CDE-445A-A733-ED8CA89811A0 - 463843eed3d77837"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (Swift.Result&lt;Swift.Array&lt;Snapp.Like&gt;, Swift.Error&gt;) -&gt; () in Snapp.BookmarkedPostCell.fetchLikes(for: Snapp.BookmarkedPost) -&gt; ()"
+                  moduleName = "Snapp"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/makszh/Desktop/Snapp/Snapp/BookmarksModule/BookmarkedPostCell/BookmarkedPost.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "288"
+                  endingLineNumber = "288">
+               </Location>
+            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

@@ -22,6 +22,7 @@ final class ArchivePresenter: ArchivePresenterProtocol {
     var posts: [EachPost]?
     let mainUser: FirebaseUser
     let mainUserID: String
+    let nsLock = NSLock()
 
     init(view: ArchiveViewProtocol, user: FirebaseUser, mainUser: String) {
         self.view = view
@@ -35,7 +36,9 @@ final class ArchivePresenter: ArchivePresenterProtocol {
             guard let self else { return }
             switch result {
             case .success(let archivedPosts):
+                self.nsLock.lock()
                 self.posts = archivedPosts
+                self.nsLock.unlock()
                 view?.updateDataView()
             case .failure(let failure):
                 view?.showError(error: failure.localizedDescription)

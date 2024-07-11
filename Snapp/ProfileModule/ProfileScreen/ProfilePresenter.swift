@@ -23,6 +23,7 @@ protocol ProfileViewProtocol: AnyObject {
     func updateSubsribers()
     func updateSubscriptions()
     func updateTextData(user: FirebaseUser)
+    func updateBookmarkButton()
 }
 
 protocol ProfilePresenterProtocol: AnyObject {
@@ -40,6 +41,7 @@ final class ProfilePresenter: ProfilePresenterProtocol {
     let networkService = NetworkService()
     var currentDate: String?
     var photoAlbumDictionary: [String: [UIImage]?]?
+    let nsLock = NSLock()
 
     init(view: ProfileViewProtocol, mainUser: FirebaseUser, mainUserID: String) {
         self.view = view
@@ -85,14 +87,20 @@ final class ProfilePresenter: ProfilePresenterProtocol {
             guard let self = self else { return }
             switch result {
             case .success(let success):
-                posts = success
+                let convertedPosts = success.sorted { $0.date > $1.date }
+                posts = convertedPosts
                 if let index = self.posts.firstIndex(where: { $0.isPinned == true }) {
+                    nsLock.lock()
                     let pinnedPost = self.posts[index]
                     posts.remove(at: index)
                     posts.insert(pinnedPost, at: 0)
+                    nsLock.unlock()
                     view?.updateData(data: self.posts)
                 }
+                nsLock.lock()
                 self.view?.updateData(data: self.posts)
+                nsLock.unlock()
+                self.checkBookmarkedPost(mainUser: mainUserID)
             case .failure(let failure):
                 view?.showErrorAler(error: failure.localizedDescription)
             }
@@ -101,6 +109,17 @@ final class ProfilePresenter: ProfilePresenterProtocol {
 
     func addPostToBookMarks(post: EachPost) {
         FireStoreService.shared.saveToBookMarks(mainUser: mainUserID, user: mainUserID, post: post)
+    }
+
+    func checkBookmarkedPost(mainUser: String) {
+        FireStoreService.shared.fetchBookmarkedPosts(user: mainUser) { [weak self] result in
+            switch result {
+            case .success(let bookmarkedPosts):
+               print()
+            case .failure(let failure):
+                self?.view?.showErrorAler(error: failure.localizedDescription)
+            }
+        }
     }
 
     func pinPost( docID: String) {
@@ -189,7 +208,9 @@ final class ProfilePresenter: ProfilePresenterProtocol {
             guard let self = self else { return }
             switch result {
             case .success(let success):
+                nsLock.lock()
                 mainUser = success
+                nsLock.unlock()
                 view?.updateSubsribers()
             case .failure(let failure):
                 view?.showErrorAler(error: failure.localizedDescription)

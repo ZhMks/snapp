@@ -11,7 +11,8 @@ class FirstBoardingVC: UIViewController {
 
     // MARK: -Properties
 
-    var presener: MainPresenterProtocol!
+    var presener: FirstOnBoardingPresenterProtocol!
+    let authService = FireBaseAuthService()
 
     private lazy var onboardingImage: UIImageView = {
         let onboardingImage = UIImageView(image: UIImage(named: "OnboardingImage"))
@@ -48,6 +49,7 @@ class FirstBoardingVC: UIViewController {
         view.backgroundColor = .systemBackground
         addSubviews()
         layout()
+        authService.reloadUser()
     }
 
     // MARK: -Funcs
@@ -70,7 +72,7 @@ class FirstBoardingVC: UIViewController {
 }
 
 // MARK: -Presenter Output
-extension FirstBoardingVC: MainViewProtocol {
+extension FirstBoardingVC: FirstOnBoardingViewProtocol {
 
 }
 
@@ -100,7 +102,6 @@ extension FirstBoardingVC {
             authorizeButton.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -124),
             authorizeButton.topAnchor.constraint(equalTo: registerButton.bottomAnchor, constant: 30),
             authorizeButton.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor, constant: -164)
-
         ])
     }
 }

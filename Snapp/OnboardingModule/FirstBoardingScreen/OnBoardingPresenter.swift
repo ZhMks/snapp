@@ -7,19 +7,19 @@
 
 import UIKit
 
-protocol MainViewProtocol: AnyObject {
+protocol FirstOnBoardingViewProtocol: AnyObject {
     
 }
 
-protocol MainPresenterProtocol: AnyObject {
-    init (view: MainViewProtocol)
+protocol FirstOnBoardingPresenterProtocol: AnyObject {
+    init (view: FirstOnBoardingViewProtocol)
 }
 
-final class Presenter: MainPresenterProtocol {
+final class FirstOnBoardingPresenter: FirstOnBoardingPresenterProtocol {
 
-    weak var view: MainViewProtocol?
+    weak var view: FirstOnBoardingViewProtocol?
 
-    init(view: any MainViewProtocol) {
+    init(view: any FirstOnBoardingViewProtocol) {
         self.view = view
     }
 }
