@@ -357,11 +357,6 @@ class ProfileViewController: UIViewController {
 // MARK: -Output Presenter
 extension ProfileViewController: ProfileViewProtocol {
 
-    func updateBookmarkButton() {
-        print("Contains")
-    }
-    
-
     func updateTextData(user: FirebaseUser) {
         jobLabel.text = user.job
         nameAndSurnameLabel.text = "\(user.name)" + " \(user.surname)"

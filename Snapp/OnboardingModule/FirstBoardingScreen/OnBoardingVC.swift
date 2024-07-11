@@ -11,7 +11,7 @@ class FirstBoardingVC: UIViewController {
 
     // MARK: -Properties
 
-    var presener: FirstOnBoardingPresenterProtocol!
+    var presener: FirstOnBoardingPresenter!
     let authService = FireBaseAuthService()
 
     private lazy var onboardingImage: UIImageView = {
@@ -49,7 +49,7 @@ class FirstBoardingVC: UIViewController {
         view.backgroundColor = .systemBackground
         addSubviews()
         layout()
-        authService.reloadUser()
+        reloadUser()
     }
 
     // MARK: -Funcs
@@ -69,10 +69,41 @@ class FirstBoardingVC: UIViewController {
         loginScreenVC.loginpresenter = presenter
         navigationController?.pushViewController(loginScreenVC, animated: true)
     }
+
+   private func reloadUser() {
+       let activityIndicator = UIActivityIndicatorView(frame: CGRect(x: 150, y: 300, width: 80, height: 80))
+       activityIndicator.style = .large
+       activityIndicator.color = .white
+        view.addSubview(activityIndicator)
+        activityIndicator.startAnimating()
+        authService.reloadUser { user in
+            FireStoreService.shared.getUser(id: user.uid) { [weak self] result in
+                switch result {
+                case .success(let firebaseUser):
+                    activityIndicator.stopAnimating()
+                    activityIndicator.removeFromSuperview()
+                    let profileVc = ProfileViewController()
+                    guard let mainUserID = firebaseUser.documentID else { return }
+                    let profilePresenter = ProfilePresenter(view: profileVc, mainUser: firebaseUser, mainUserID: mainUserID)
+                    profileVc.presenter = profilePresenter
+                    (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.setTabBarController(profileVc, user: firebaseUser, mainUserID: mainUserID)
+                case .failure(let failure):
+                    self?.presener.showError(error: failure.localizedDescription)
+                }
+            }
+        }
+    }
 }
 
 // MARK: -Presenter Output
 extension FirstBoardingVC: FirstOnBoardingViewProtocol {
+    func showError(error: String) {
+        let uiAlertController = UIAlertController(title: .localized(string: "Ошибка"), message: .localized(string: "\(error)"), preferredStyle: .alert)
+        let uiAlertAction = UIAlertAction(title: .localized(string: "Отмена"), style: .cancel)
+        uiAlertController.addAction(uiAlertAction)
+        present(uiAlertController, animated: true)
+    }
+    
 
 }
 

@@ -277,7 +277,7 @@ final class BookmarkedPostCell: UITableViewCell {
     }
 
     private func fetchLikes(for post: BookmarkedPost) {
-        guard let postID = post.documentID else { return }
+      let postID = post.originaPostID
 
         print(postID, post.userHoldingPost)
 
@@ -288,7 +288,6 @@ final class BookmarkedPostCell: UITableViewCell {
             case .success(let likes):
                 if likes.isEmpty {
                     self.likes = likes
-                    print("Fetched likes: \(likes), self likes: \(self.likes)")
                     self.likesLabel.text = "\(likes.count)"
                     likesButton.setBackgroundImage(UIImage(systemName: "heart"), for: .normal)
                 } else {

@@ -271,6 +271,7 @@ final class FireStoreService: FireStoreServiceProtocol {
     }
 
     func getNumberOfLikesInpost(user: String, post: String, completion: @escaping (Result <[Like], Error>) -> Void) {
+        print("User that stored post: \(user), post: \(post)")
         let dbRef = Firestore.firestore().collection("Users").document(user).collection("posts").document(post).collection("likes")
         var likes: [Like] = []
 
@@ -861,7 +862,7 @@ print(user)
 
     func saveToBookMarks(mainUser: String, user: String, post: EachPost) {
         guard let originalPostID = post.documentID else { return }
-        let bookmarkedPost = BookmarkedPost(text: post.text, likes: post.likes, commentaries: post.commentaries, date: post.date, userHoldingPost: user, originaPostID: originalPostID)
+        let bookmarkedPost = BookmarkedPost(text: post.text, image: post.image, likes: post.likes, commentaries: post.commentaries, date: post.date, userHoldingPost: user, originaPostID: originalPostID)
         let link = Firestore.firestore().collection("Users").document(mainUser).collection("Bookmarks")
         do {
          try link.addDocument(from: bookmarkedPost)

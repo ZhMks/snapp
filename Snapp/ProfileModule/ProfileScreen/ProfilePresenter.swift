@@ -23,7 +23,6 @@ protocol ProfileViewProtocol: AnyObject {
     func updateSubsribers()
     func updateSubscriptions()
     func updateTextData(user: FirebaseUser)
-    func updateBookmarkButton()
 }
 
 protocol ProfilePresenterProtocol: AnyObject {
@@ -100,7 +99,6 @@ final class ProfilePresenter: ProfilePresenterProtocol {
                 nsLock.lock()
                 self.view?.updateData(data: self.posts)
                 nsLock.unlock()
-                self.checkBookmarkedPost(mainUser: mainUserID)
             case .failure(let failure):
                 view?.showErrorAler(error: failure.localizedDescription)
             }
@@ -109,17 +107,6 @@ final class ProfilePresenter: ProfilePresenterProtocol {
 
     func addPostToBookMarks(post: EachPost) {
         FireStoreService.shared.saveToBookMarks(mainUser: mainUserID, user: mainUserID, post: post)
-    }
-
-    func checkBookmarkedPost(mainUser: String) {
-        FireStoreService.shared.fetchBookmarkedPosts(user: mainUser) { [weak self] result in
-            switch result {
-            case .success(let bookmarkedPosts):
-               print()
-            case .failure(let failure):
-                self?.view?.showErrorAler(error: failure.localizedDescription)
-            }
-        }
     }
 
     func pinPost( docID: String) {

@@ -248,6 +248,7 @@ final class PostTableCell: UITableViewCell {
         fetchComments(for: post, user: user)
         fetchPostImage(for: post)
         fetchLikes(for: post, user: user)
+        checkBookmarkedPost(mainUser: mainUserID)
 
         if let avatarImageURL = user.image {
             fetchAvatarImage(user: avatarImageURL)
@@ -343,6 +344,20 @@ final class PostTableCell: UITableViewCell {
                     self?.avatarImageView.layer.cornerRadius = (self?.avatarImageView.frame.size.width)! / 2
                 }
             case .failure(_):
+                return
+            }
+        }
+    }
+
+    private  func checkBookmarkedPost(mainUser: String) {
+        FireStoreService.shared.fetchBookmarkedPosts(user: mainUser) { [weak self] result in
+            switch result {
+            case .success(let bookmarkedPosts):
+                print(bookmarkedPosts)
+                if bookmarkedPosts.contains(where: { $0.text == self?.post!.text }) {
+                    self?.bookmarkButton.tintColor = .systemOrange
+                }
+            case .failure(let failure):
                 return
             }
         }

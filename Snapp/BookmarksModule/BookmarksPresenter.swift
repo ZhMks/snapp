@@ -60,14 +60,10 @@ final class BookmarksPresenter: BookmarksPresenterProtocol {
                 view?.showError(error: error.localizedDescription)
             }
         }
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2) { [weak self] in
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak self] in
             print("Final posts count: \(self?.posts?.count)")
             self?.view?.updateTableView()
         }
-//        dispatchGroup.notify(queue: .main) { [weak self] in
-//            print("Final posts: \(self?.posts)")
-//            self?.view?.updateTableView()
-//        }
     }
 
     private func fetchUserData(id: String, completion: @escaping (Result<FirebaseUser, Error>) -> Void) {

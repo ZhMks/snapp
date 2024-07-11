@@ -89,26 +89,13 @@ final class FireBaseAuthService: FireBaseAuthProtocol {
     }
 
 
-    func reloadUser() {
+    func reloadUser(completion: @escaping (User) -> Void) {
         Auth.auth().currentUser?.reload(completion: { error in
             if error != nil {
                 print("Error in reloading user: \(error?.localizedDescription)")
             }
-            let currentUser = Auth.auth().currentUser
-            guard let uid = currentUser?.uid else { return }
-            FireStoreService.shared.getUser(id: uid) { result in
-                switch result {
-                case .success(let user):
-                    print("Fetched user: \(user)")
-                    let profileVC = ProfileViewController()
-                    guard let mainUserID = user.documentID else { return }
-                    let profilePresenter = ProfilePresenter(view: profileVC, mainUser: user, mainUserID: mainUserID)
-                    profileVC.presenter = profilePresenter
-                    (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.setTabBarController(profileVC, user: user, mainUserID: mainUserID)
-                case .failure(let failure):
-                    print("Error in fetching user: \(failure.localizedDescription)")
-                }
-            }
+            guard let currentUser = Auth.auth().currentUser else { return }
+            completion(currentUser)
         })
     }
 }

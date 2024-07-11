@@ -8,7 +8,7 @@
 import UIKit
 
 protocol FirstOnBoardingViewProtocol: AnyObject {
-    
+    func showError(error: String)
 }
 
 protocol FirstOnBoardingPresenterProtocol: AnyObject {
@@ -21,5 +21,9 @@ final class FirstOnBoardingPresenter: FirstOnBoardingPresenterProtocol {
 
     init(view: any FirstOnBoardingViewProtocol) {
         self.view = view
+    }
+
+    func showError(error: String) {
+        view?.showError(error: error)
     }
 }
