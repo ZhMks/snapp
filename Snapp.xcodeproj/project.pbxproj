@@ -62,6 +62,7 @@
 		B27E1C702BFB4D4400E1DEF9 /* MenuForPostPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B27E1C6F2BFB4D4400E1DEF9 /* MenuForPostPresenter.swift */; };
 		B27E1C732BFB940A00E1DEF9 /* PhotoalbumPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B27E1C722BFB940900E1DEF9 /* PhotoalbumPresenter.swift */; };
 		B27E1C752BFB942000E1DEF9 /* PhotoalbumViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B27E1C742BFB942000E1DEF9 /* PhotoalbumViewController.swift */; };
+		B28A7D2A2C3FF47F00FD5260 /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B28A7D292C3FF47F00FD5260 /* NotificationService.swift */; };
 		B297FB542BFCBDDA00A8C463 /* DataChangeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B297FB532BFCBDDA00A8C463 /* DataChangeViewController.swift */; };
 		B297FB562BFCBDE500A8C463 /* DataChangePresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B297FB552BFCBDE500A8C463 /* DataChangePresenter.swift */; };
 		B29D0AD72BCEB17B00101029 /* NetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B29D0AD62BCEB17B00101029 /* NetworkService.swift */; };
@@ -81,7 +82,6 @@
 		B2E441F62C39625A0098AFEA /* DetailStoriePresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2E441F52C39625A0098AFEA /* DetailStoriePresenter.swift */; };
 		B2E441F82C3962650098AFEA /* DetailStorieViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2E441F72C3962650098AFEA /* DetailStorieViewController.swift */; };
 		B2E441FB2C3A930F0098AFEA /* BookmarkedPost.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2E441FA2C3A930F0098AFEA /* BookmarkedPost.swift */; };
-		B2E441FE2C3FB21C0098AFEA /* KeychainAccess in Frameworks */ = {isa = PBXBuildFile; productRef = B2E441FD2C3FB21C0098AFEA /* KeychainAccess */; };
 		B2E442012C3FB94D0098AFEA /* SettingChangePresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2E442002C3FB94D0098AFEA /* SettingChangePresenter.swift */; };
 		B2E442032C3FB9580098AFEA /* SettingChangeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2E442022C3FB9580098AFEA /* SettingChangeViewController.swift */; };
 		B2E51C712BF3880E00DE6102 /* DetailPostViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2E51C702BF3880E00DE6102 /* DetailPostViewController.swift */; };
@@ -174,6 +174,7 @@
 		B27E1C6F2BFB4D4400E1DEF9 /* MenuForPostPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuForPostPresenter.swift; sourceTree = "<group>"; };
 		B27E1C722BFB940900E1DEF9 /* PhotoalbumPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoalbumPresenter.swift; sourceTree = "<group>"; };
 		B27E1C742BFB942000E1DEF9 /* PhotoalbumViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoalbumViewController.swift; sourceTree = "<group>"; };
+		B28A7D292C3FF47F00FD5260 /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
 		B297FB532BFCBDDA00A8C463 /* DataChangeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataChangeViewController.swift; sourceTree = "<group>"; };
 		B297FB552BFCBDE500A8C463 /* DataChangePresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataChangePresenter.swift; sourceTree = "<group>"; };
 		B29D0AD62BCEB17B00101029 /* NetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkService.swift; sourceTree = "<group>"; };
@@ -209,7 +210,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B2E441FE2C3FB21C0098AFEA /* KeychainAccess in Frameworks */,
 				B2B902732C2EA8920043FCCC /* FirebaseAuth in Frameworks */,
 				B2B902752C2EA8920043FCCC /* FirebaseFirestoreSwift in Frameworks */,
 				B2B902772C2EA8920043FCCC /* FirebaseStorage in Frameworks */,
@@ -510,6 +510,7 @@
 		B211C27A2BBD320900C073EE /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				B28A7D282C3FF47000FD5260 /* NotificationService */,
 				B29D0AD52BCEB16C00101029 /* NetworkService */,
 				B209E6122BBFD6C80067D751 /* FirestoreService */,
 				B209E6092BBEBCB20067D751 /* Fonts */,
@@ -621,6 +622,14 @@
 				B2E441F22C3929B80098AFEA /* PhotoCollectionViewCell.swift */,
 			);
 			path = PhotoalbumScreen;
+			sourceTree = "<group>";
+		};
+		B28A7D282C3FF47000FD5260 /* NotificationService */ = {
+			isa = PBXGroup;
+			children = (
+				B28A7D292C3FF47F00FD5260 /* NotificationService.swift */,
+			);
+			path = NotificationService;
 			sourceTree = "<group>";
 		};
 		B297FB522BFCBDC500A8C463 /* DataChangeScreen */ = {
@@ -794,7 +803,6 @@
 				B2B902722C2EA8920043FCCC /* FirebaseAuth */,
 				B2B902742C2EA8920043FCCC /* FirebaseFirestoreSwift */,
 				B2B902762C2EA8920043FCCC /* FirebaseStorage */,
-				B2E441FD2C3FB21C0098AFEA /* KeychainAccess */,
 			);
 			productName = Snapp;
 			productReference = B211C1E42BBB3C2900C073EE /* Snapp.app */;
@@ -871,7 +879,6 @@
 			mainGroup = B211C1DB2BBB3C2900C073EE;
 			packageReferences = (
 				B2B902712C2EA8920043FCCC /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
-				B2E441FC2C3FB21C0098AFEA /* XCRemoteSwiftPackageReference "KeychainAccess" */,
 			);
 			productRefGroup = B211C1E52BBB3C2900C073EE /* Products */;
 			projectDirPath = "";
@@ -926,6 +933,7 @@
 				B209E6212BC3FC320067D751 /* ProfilePresenter.swift in Sources */,
 				B211C2642BBC17B900C073EE /* Extension+String.swift in Sources */,
 				B2E51C712BF3880E00DE6102 /* DetailPostViewController.swift in Sources */,
+				B28A7D2A2C3FF47F00FD5260 /* NotificationService.swift in Sources */,
 				B2E51C732BF3881900DE6102 /* DetailPostPresenter.swift in Sources */,
 				B211C1EC2BBB3C2900C073EE /* OnBoardingVC.swift in Sources */,
 				B29D0AE12BD63AE200101029 /* SearchPresenter.swift in Sources */,
@@ -1183,6 +1191,7 @@
 				INFOPLIST_KEY_NSCameraUsageDescription = "Разрешите приложению доступ к камере.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1214,6 +1223,7 @@
 				INFOPLIST_KEY_NSCameraUsageDescription = "Разрешите приложению доступ к камере.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1358,14 +1368,6 @@
 				minimumVersion = 10.28.1;
 			};
 		};
-		B2E441FC2C3FB21C0098AFEA /* XCRemoteSwiftPackageReference "KeychainAccess" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/kishikawakatsumi/KeychainAccess";
-			requirement = {
-				branch = master;
-				kind = branch;
-			};
-		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -1383,11 +1385,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = B2B902712C2EA8920043FCCC /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseStorage;
-		};
-		B2E441FD2C3FB21C0098AFEA /* KeychainAccess */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = B2E441FC2C3FB21C0098AFEA /* XCRemoteSwiftPackageReference "KeychainAccess" */;
-			productName = KeychainAccess;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

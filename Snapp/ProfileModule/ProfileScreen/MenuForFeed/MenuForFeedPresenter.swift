@@ -55,7 +55,14 @@ final class MenuForFeedPresenter: MenuForFeedPresenterProtocol {
     }
 
     func enableNotifications() {
-
+        NotificationsService.shared.registerNotificationCenter { result in
+            switch result {
+            case .success(let success):
+                NotificationsService.shared.postNotification()
+            case .failure(let failure):
+                return
+            }
+        }
     }
 
     func showReportView() {

@@ -20,6 +20,7 @@ protocol DetailViewProtocol: AnyObject {
     func showFeedMenu(post: EachPost)
 
     func updateSubButton()
+
 }
 
 protocol DetailPresenterProtocol: AnyObject {
@@ -192,5 +193,16 @@ final class DetailPresenter: DetailPresenterProtocol {
 
     func removeFromFavourites(post: EachPost) {
         FireStoreService.shared.removeFromFavourites(user: mainUserID, post: post)
+    }
+
+    func registerNotifications() {
+        NotificationsService.shared.registerNotificationCenter { result in
+            switch result {
+            case .success(_):
+                NotificationsService.shared.postNotification()
+            case .failure(_):
+                return
+            }
+        }
     }
 }

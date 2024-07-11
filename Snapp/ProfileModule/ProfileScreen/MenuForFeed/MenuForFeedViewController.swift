@@ -99,7 +99,7 @@ class MenuForFeedViewController: UIViewController {
     //MARK: -Funcs
 
     @objc func enableNotificationsButtonTapped() {
-        dismiss(animated: true)
+        presenter.enableNotifications()
     }
 
     @objc func saveIntoBookmarks() {

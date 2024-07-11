@@ -235,6 +235,7 @@ class DetailUserViewController: UIViewController {
 
     @objc func addToSubscribers() {
         presenter.addSubscriber()
+        presenter.registerNotifications()
     }
 
     @objc func dismissViewController() {
@@ -245,9 +246,8 @@ class DetailUserViewController: UIViewController {
 
 // MARK: -Presenter Output
 extension DetailUserViewController: DetailViewProtocol {
-
+   
     func updateSubButton() {
-        print(presenter.user.subscribers)
         if presenter.user.subscribers.contains(presenter.mainUserID) {
             subscribeButton.backgroundColor = .systemGray3
             subscribeButton.isEnabled = false
