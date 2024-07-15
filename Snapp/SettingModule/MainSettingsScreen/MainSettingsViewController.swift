@@ -103,6 +103,7 @@ class MainSettingsViewController: UIViewController {
         uploadButton.contentHorizontalAlignment = .left
         uploadButton.setTitleColor(ColorCreator.shared.createTextColor(), for: .normal)
         uploadButton.translatesAutoresizingMaskIntoConstraints = false
+        uploadButton.addTarget(self, action: #selector(uploadButtonTapped), for: .touchUpInside)
         return uploadButton
     }()
 
@@ -208,6 +209,14 @@ class MainSettingsViewController: UIViewController {
         let settingChangePresenter = SettingChangePresenter(view: settingsChangeScreen)
         settingsChangeScreen.presenter = settingChangePresenter
         self.navigationController?.pushViewController(settingsChangeScreen, animated: true)
+    }
+
+    @objc func uploadButtonTapped() {
+        let filesViewController = FilesViewController()
+        guard let mainUserID = presenter.user.documentID else { return }
+        let filesPresenter = FilesPresenter(view: filesViewController, mainUser: presenter.user)
+        filesViewController.presenter = filesPresenter
+        self.navigationController?.pushViewController(filesViewController, animated: true)
     }
 
 }

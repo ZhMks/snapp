@@ -63,6 +63,11 @@
 		B27E1C732BFB940A00E1DEF9 /* PhotoalbumPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B27E1C722BFB940900E1DEF9 /* PhotoalbumPresenter.swift */; };
 		B27E1C752BFB942000E1DEF9 /* PhotoalbumViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B27E1C742BFB942000E1DEF9 /* PhotoalbumViewController.swift */; };
 		B28A7D2A2C3FF47F00FD5260 /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B28A7D292C3FF47F00FD5260 /* NotificationService.swift */; };
+		B28A7D2D2C41101800FD5260 /* FilesPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B28A7D2C2C41101800FD5260 /* FilesPresenter.swift */; };
+		B28A7D2F2C41102300FD5260 /* FilesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B28A7D2E2C41102300FD5260 /* FilesViewController.swift */; };
+		B28A7D322C413CB400FD5260 /* DecoderService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B28A7D312C413CB400FD5260 /* DecoderService.swift */; };
+		B28A7D352C414BDA00FD5260 /* FilesCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B28A7D342C414BDA00FD5260 /* FilesCollectionViewCell.swift */; };
+		B28A7D382C45199E00FD5260 /* FileManagerService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B28A7D372C45199E00FD5260 /* FileManagerService.swift */; };
 		B297FB542BFCBDDA00A8C463 /* DataChangeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B297FB532BFCBDDA00A8C463 /* DataChangeViewController.swift */; };
 		B297FB562BFCBDE500A8C463 /* DataChangePresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B297FB552BFCBDE500A8C463 /* DataChangePresenter.swift */; };
 		B29D0AD72BCEB17B00101029 /* NetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B29D0AD62BCEB17B00101029 /* NetworkService.swift */; };
@@ -175,6 +180,11 @@
 		B27E1C722BFB940900E1DEF9 /* PhotoalbumPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoalbumPresenter.swift; sourceTree = "<group>"; };
 		B27E1C742BFB942000E1DEF9 /* PhotoalbumViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoalbumViewController.swift; sourceTree = "<group>"; };
 		B28A7D292C3FF47F00FD5260 /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
+		B28A7D2C2C41101800FD5260 /* FilesPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilesPresenter.swift; sourceTree = "<group>"; };
+		B28A7D2E2C41102300FD5260 /* FilesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilesViewController.swift; sourceTree = "<group>"; };
+		B28A7D312C413CB400FD5260 /* DecoderService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DecoderService.swift; sourceTree = "<group>"; };
+		B28A7D342C414BDA00FD5260 /* FilesCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilesCollectionViewCell.swift; sourceTree = "<group>"; };
+		B28A7D372C45199E00FD5260 /* FileManagerService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileManagerService.swift; sourceTree = "<group>"; };
 		B297FB532BFCBDDA00A8C463 /* DataChangeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataChangeViewController.swift; sourceTree = "<group>"; };
 		B297FB552BFCBDE500A8C463 /* DataChangePresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataChangePresenter.swift; sourceTree = "<group>"; };
 		B29D0AD62BCEB17B00101029 /* NetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkService.swift; sourceTree = "<group>"; };
@@ -325,6 +335,9 @@
 		B209E6282BC3FDBE0067D751 /* SettingModule */ = {
 			isa = PBXGroup;
 			children = (
+				B28A7D2B2C410FFE00FD5260 /* FilesModule */,
+				B2F004232C1DAA8500991CF5 /* BookmarksModule */,
+				B2F0041E2C1DA97900991CF5 /* ArchiveModule */,
 				B2E441FF2C3FB93A0098AFEA /* SettingChangeScreen */,
 				B297FB522BFCBDC500A8C463 /* DataChangeScreen */,
 				B209E62F2BC3FEA10067D751 /* ProfileChangeScreen */,
@@ -404,8 +417,6 @@
 			isa = PBXGroup;
 			children = (
 				B2B9026B2C21A7B40043FCCC /* DetailUserInformationModule */,
-				B2F004232C1DAA8500991CF5 /* BookmarksModule */,
-				B2F0041E2C1DA97900991CF5 /* ArchiveModule */,
 				B209E6162BC1384F0067D751 /* FeedModule */,
 				B29D0AE52BD6809300101029 /* DetailUserModule */,
 				B29D0ADC2BD63AAE00101029 /* SearchModule */,
@@ -510,6 +521,8 @@
 		B211C27A2BBD320900C073EE /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				B28A7D362C45199400FD5260 /* FileManagerService */,
+				B28A7D302C413CA100FD5260 /* DecoderService */,
 				B28A7D282C3FF47000FD5260 /* NotificationService */,
 				B29D0AD52BCEB16C00101029 /* NetworkService */,
 				B209E6122BBFD6C80067D751 /* FirestoreService */,
@@ -630,6 +643,40 @@
 				B28A7D292C3FF47F00FD5260 /* NotificationService.swift */,
 			);
 			path = NotificationService;
+			sourceTree = "<group>";
+		};
+		B28A7D2B2C410FFE00FD5260 /* FilesModule */ = {
+			isa = PBXGroup;
+			children = (
+				B28A7D332C414BCC00FD5260 /* FilesCell */,
+				B28A7D2C2C41101800FD5260 /* FilesPresenter.swift */,
+				B28A7D2E2C41102300FD5260 /* FilesViewController.swift */,
+			);
+			path = FilesModule;
+			sourceTree = "<group>";
+		};
+		B28A7D302C413CA100FD5260 /* DecoderService */ = {
+			isa = PBXGroup;
+			children = (
+				B28A7D312C413CB400FD5260 /* DecoderService.swift */,
+			);
+			path = DecoderService;
+			sourceTree = "<group>";
+		};
+		B28A7D332C414BCC00FD5260 /* FilesCell */ = {
+			isa = PBXGroup;
+			children = (
+				B28A7D342C414BDA00FD5260 /* FilesCollectionViewCell.swift */,
+			);
+			path = FilesCell;
+			sourceTree = "<group>";
+		};
+		B28A7D362C45199400FD5260 /* FileManagerService */ = {
+			isa = PBXGroup;
+			children = (
+				B28A7D372C45199E00FD5260 /* FileManagerService.swift */,
+			);
+			path = FileManagerService;
 			sourceTree = "<group>";
 		};
 		B297FB522BFCBDC500A8C463 /* DataChangeScreen */ = {
@@ -938,6 +985,7 @@
 				B211C1EC2BBB3C2900C073EE /* OnBoardingVC.swift in Sources */,
 				B29D0AE12BD63AE200101029 /* SearchPresenter.swift in Sources */,
 				B29D0AD72BCEB17B00101029 /* NetworkService.swift in Sources */,
+				B28A7D382C45199E00FD5260 /* FileManagerService.swift in Sources */,
 				B211C2672BBC2EF700C073EE /* SecondOnboardingVC.swift in Sources */,
 				B2F004272C1DAAAD00991CF5 /* BookmarksViewController.swift in Sources */,
 				B27E1C752BFB942000E1DEF9 /* PhotoalbumViewController.swift in Sources */,
@@ -957,6 +1005,7 @@
 				B26804C42BEE148600DE74A4 /* CreatePostPresenter.swift in Sources */,
 				B209E64A2BC7C8D70067D751 /* AddProfilePresenter.swift in Sources */,
 				B2E441F62C39625A0098AFEA /* DetailStoriePresenter.swift in Sources */,
+				B28A7D322C413CB400FD5260 /* DecoderService.swift in Sources */,
 				B211C1EA2BBB3C2900C073EE /* SceneDelegate.swift in Sources */,
 				B209E6142BBFD6DA0067D751 /* FireStoreService.swift in Sources */,
 				B209E62B2BC3FDDB0067D751 /* MainSettingsViewController.swift in Sources */,
@@ -965,9 +1014,11 @@
 				B211C2692BBC2F0200C073EE /* SecondOnboardingPresenter.swift in Sources */,
 				B2F0041D2C1AF49800991CF5 /* MenuForFeedViewController.swift in Sources */,
 				B211C2832BBD48EA00C073EE /* FireBaseAuthService.swift in Sources */,
+				B28A7D2D2C41101800FD5260 /* FilesPresenter.swift in Sources */,
 				B211C2802BBD3B2F00C073EE /* Extension+UIColor.swift in Sources */,
 				B2E441EF2C36F34D0098AFEA /* AnswersTableCell.swift in Sources */,
 				B209E6192BC138790067D751 /* FeedPresenter.swift in Sources */,
+				B28A7D2F2C41102300FD5260 /* FilesViewController.swift in Sources */,
 				B2F004222C1DA9C100991CF5 /* ArchivePresenter.swift in Sources */,
 				B211C27D2BBD321C00C073EE /* Validator.swift in Sources */,
 				B2E441F82C3962650098AFEA /* DetailStorieViewController.swift in Sources */,
@@ -996,6 +1047,7 @@
 				B209E62E2BC3FDEC0067D751 /* MainSettingsPresenter.swift in Sources */,
 				B2B9026E2C21A7DA0043FCCC /* DetailUserInformationViewController.swift in Sources */,
 				B209E6272BC3FD5B0067D751 /* FavouritesPresenter.swift in Sources */,
+				B28A7D352C414BDA00FD5260 /* FilesCollectionViewCell.swift in Sources */,
 				B209E61F2BC3FC290067D751 /* ProfileViewController.swift in Sources */,
 				B26804B52BE6229600DE74A4 /* ExtensionTableVIew.swift in Sources */,
 				B211C26C2BBC404C00C073EE /* ThirdOnboardingViewController.swift in Sources */,

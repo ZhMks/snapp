@@ -81,9 +81,8 @@ final class FeedViewController: UIViewController {
         feedTableView.separatorStyle = .none
         self.feedTableView.reloadData()
     }
-
    private func tuneNavItem() {
-        self.navigationItem.title = .localized(string: "Главная")
+       self.navigationItem.title = .localized(string: "Главная")
     }
 
    private func user(forSection: Int) -> FirebaseUser? {

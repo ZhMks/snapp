@@ -63,6 +63,34 @@ final class NetworkService: INetworkService {
         .resume()
     }
 
-
+    func fetchFileFrom(urlString: String, completion: @escaping (Result<(Data, DecodingType, String), InternetErrors>) -> Void) {
+        guard let url = URL.init(string: urlString) else { return }
+        let request = URLRequest(url: url)
+        URLSession.shared.dataTask(with: request) { data, response, error in
+            if let _ = error {
+                completion(.failure(.badRequest))
+            }
+            if let response = response as? HTTPURLResponse {
+                switch response.statusCode {
+                case 500:
+                    completion(.failure(.badRequest))
+                case 502:
+                    completion(.failure(.internalServerError))
+                case 404:
+                    completion(.failure(.pageNotFound))
+                default: break
+                }
+            }
+            if let data = data {
+                if urlString.contains("txt") || urlString.contains("pdf") || urlString.contains("doc") || urlString.contains("docx") || urlString.contains("pages") {
+                    completion(.success((data, .text, url.lastPathComponent)))
+                }
+                if urlString.contains("jpeg") || urlString.contains("png") {
+                    completion(.success((data, .image, url.lastPathComponent)))
+                }
+            }
+        }
+        .resume()
+    }
 
 }

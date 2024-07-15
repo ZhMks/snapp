@@ -37,6 +37,7 @@ struct FirebaseUser: Codable, Hashable {
     var education: String?
     var report: [String]?
     var dateOfBirth: String?
+    var files: [String]?
 }
 
 struct EachPost: Codable {
@@ -80,4 +81,14 @@ struct Answer: CommentOrAnswer {
     var commentor: String
     var date: String
     var likes: Int
+}
+
+class Files<T: Codable>: Codable {
+    var name: String
+    var object: T
+
+    init(name: String, object: T) {
+        self.name = name
+        self.object = object
+    }
 }

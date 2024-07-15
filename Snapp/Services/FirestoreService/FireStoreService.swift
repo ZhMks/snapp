@@ -19,6 +19,7 @@ enum ChangeStates {
     case surname
     case storie
     case dateOfBirth
+    case files
 }
 
 enum PostErrors: Error {
@@ -39,7 +40,8 @@ enum PostErrors: Error {
 }
 
 protocol FireStoreServiceProtocol {
-    // Функции для работы с пользователем
+    // MARK: - Функции для работы с пользователем
+
     /// Возвращает все пользователей из папки "Users" из БД Firebase
     /// - Parameter completion: -
     func getAllUsers(completion: @escaping (Result<[FirebaseUser], Error>) -> Void)
@@ -78,7 +80,8 @@ protocol FireStoreServiceProtocol {
     ///   - state: Указываем к какому из полей отностится обновление.
     func changeData(id: String, text: String, state: ChangeStates)
 
-    // Функции для работы с постом
+    // MARK: - Функции для работы с постом
+
     /// Получаем все посты из папки "Posts" для конкретного пользователя.
     /// - Parameters:
     ///   - sub: uid пользователя в БД.
@@ -252,7 +255,8 @@ protocol FireStoreServiceProtocol {
     ///   - post: структура, которую удаляем.
     func removeFromFavourites(user: String, post: EachPost)
 
-    // Функции для работы с изображением
+    // MARK: -  Функции для работы с изображением
+
     /// Функция для добавления изображения в папку Photoalbum в Firebase Storage.
     /// - Parameters:
     ///   - urlLink: Sotrage Reference. (Ссылка на папку в БД, куда кладем изображения)
@@ -273,6 +277,9 @@ protocol FireStoreServiceProtocol {
     ///   - user: uid пользователя из БД.
     ///   - completion: Возвращает либо массив изображений, либо ошибку.
     func fetchImagesFromStorage(user: String, completion: @escaping (Result <[String:[UIImage]], Error>) -> Void)
+
+    // MARK: - Функции для работы с файлами
+    func saveFileIntoStorage(fileURL: URL, user: String, completion: @escaping (Result<URL, any Error>) -> Void)
 }
 
 
@@ -600,6 +607,8 @@ final class FireStoreService: FireStoreServiceProtocol {
             ref.updateData(["stories": FieldValue.arrayUnion([text])])
         case .dateOfBirth:
             ref.updateData(["dateOfBirth" : text])
+        case .files:
+            ref.updateData(["files" : FieldValue.arrayUnion([text])])
         }
     }
 
@@ -1102,6 +1111,25 @@ print(user)
     func addReportToUser(user: String, text: String) {
         let refDB = Firestore.firestore().collection("Users").document(user)
         refDB.updateData(["report" : FieldValue.arrayUnion([text])])
+    }
+
+    func saveFileIntoStorage(fileURL: URL, user: String, completion: @escaping (Result<URL, any Error>) -> Void) {
+        let storageRef = Storage.storage().reference().child("users").child(user).child("Files").child(fileURL.lastPathComponent)
+        storageRef.putFile(from: fileURL, metadata: nil) { metaData, error in
+            if let error = error {
+                completion(.failure(error))
+            }
+
+            storageRef.downloadURL { url, error in
+                if let error = error {
+                    completion(.failure(error))
+                }
+
+                if let url = url {
+                    completion(.success(url))
+                }
+            }
+        }
     }
 }
 
