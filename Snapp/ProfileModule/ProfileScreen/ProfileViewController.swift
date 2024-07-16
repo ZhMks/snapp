@@ -399,10 +399,12 @@ extension ProfileViewController: ProfileViewProtocol {
     }
 
     func showErrorAler(error: String) {
-        let uialert = UIAlertController(title: error, message: error, preferredStyle: .alert)
-        let action = UIAlertAction(title: .localized(string: "Отмена"), style: .cancel)
-        uialert.addAction(action)
-        navigationController?.present(uialert, animated: true)
+        DispatchQueue.main.async { [weak self] in
+            let uialert = UIAlertController(title: error, message: error, preferredStyle: .alert)
+            let action = UIAlertAction(title: .localized(string: "Отмена"), style: .cancel)
+            uialert.addAction(action)
+            self?.navigationController?.present(uialert, animated: true)
+        }
     }
 }
 

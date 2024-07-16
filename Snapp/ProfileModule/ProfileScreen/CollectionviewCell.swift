@@ -11,7 +11,7 @@ final class ProfileCollectionViewCell: UICollectionViewCell {
 
     // MARK: - Properties
 
-static let identifier = "ProfileCollectionViewCell"
+    static let identifier = "ProfileCollectionViewCell"
 
     private lazy var photoImageView: UIImageView = {
         let photoImageView = UIImageView()
@@ -39,11 +39,11 @@ static let identifier = "ProfileCollectionViewCell"
 
     // MARK: - Funcs
 
-  private  func addSubviews() {
+    private  func addSubviews() {
         contentView.addSubview(photoImageView)
     }
 
-   private func layoutViews() {
+    private func layoutViews() {
         let safeArea = contentView.safeAreaLayoutGuide
 
         NSLayoutConstraint.activate([

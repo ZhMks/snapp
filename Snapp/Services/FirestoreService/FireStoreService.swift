@@ -1082,7 +1082,6 @@ print(user)
             }
 
             if let snapshot = snapshot {
-                print("Count: \(snapshot.documents.count)")
                 for document in snapshot.documents {
                     do {
                         let decodedDoc = try document.data(as: BookmarkedPost.self)

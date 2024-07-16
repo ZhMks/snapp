@@ -121,47 +121,33 @@ final class FeedPresenter: FeedPresenterProtocol {
 
    func fetchPosts() {
         posts = [:]
-        let semaphore = DispatchSemaphore(value: 0)
-        let queue = DispatchQueue.global(qos: .background)
-
-        queue.async { [weak self] in
-            guard let self = self else { return }
+        let dispatchGroup = DispatchGroup()
             for sub in mainUser.subscribtions {
+                dispatchGroup.enter()
                 FireStoreService.shared.getUser(id: sub) { [weak self] result in
-                    guard let self = self else {
-                        semaphore.signal()
-                        return
-                    }
                     switch result {
                     case .success(let firebaseUser):
                         FireStoreService.shared.getPosts(sub: firebaseUser.documentID!) { [weak self] result in
-                            guard let self = self else {
-                                semaphore.signal()
-                                return
+                            defer {
+                                dispatchGroup.leave()
                             }
                             switch result {
                             case .success(let postArray):
-                                nsLock.lock()
-                                self.posts?.updateValue(postArray, forKey: firebaseUser)
-                                nsLock.unlock()
+                                self?.nsLock.lock()
+                                self?.posts?.updateValue(postArray, forKey: firebaseUser)
+                                self?.nsLock.unlock()
                             case .failure(let failure):
-                                self.view?.showError(descr: failure.localizedDescription)
+                                self?.view?.showError(descr: failure.localizedDescription)
                             }
-                            semaphore.signal()
                         }
                     case .failure(let error):
-                        self.view?.showError(descr: error.localizedDescription)
-                        semaphore.signal()
+                        self?.view?.showError(descr: error.localizedDescription)
                     }
                 }
-                semaphore.wait()
             }
-
-            DispatchQueue.main.async { [weak self] in
-                guard let self = self else { return }
-                self.view?.updateViewTable()
-            }
-        }
+       dispatchGroup.notify(queue: .main) { [weak self] in
+           self?.view?.updateViewTable()
+       }
     }
 
     func fetchAvatarImage() {

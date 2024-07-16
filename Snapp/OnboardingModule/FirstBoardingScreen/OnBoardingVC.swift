@@ -60,7 +60,7 @@ class FirstBoardingVC: UIViewController {
         let presenter = SecondOnboardingPresenter(view: secondController, authService: authService)
         secondController.presenter = presenter
         navigationController?.pushViewController(secondController, animated: true)
-     }
+    }
 
     @objc func showLoginScreen() {
         let authService = FireBaseAuthService()
@@ -70,18 +70,15 @@ class FirstBoardingVC: UIViewController {
         navigationController?.pushViewController(loginScreenVC, animated: true)
     }
 
-   private func reloadUser() {
-       let activityIndicator = UIActivityIndicatorView(frame: CGRect(x: 150, y: 300, width: 80, height: 80))
-       activityIndicator.style = .large
-       activityIndicator.color = .white
-        view.addSubview(activityIndicator)
-        activityIndicator.startAnimating()
-        authService.reloadUser { user in
+    private func reloadUser() {
+        let activityView = UIView(frame: CGRect(origin: CGPoint(x: 143, y: 430), size: CGSize(width: 100, height: 100)))
+        let activityIndicator = UIActivityIndicatorView(frame: CGRect(x: 10, y: 10, width: 80, height: 80))
+        authService.reloadUser { [weak self] user in
+            self?.addActivityIndicator(view: activityView, indicator: activityIndicator)
             FireStoreService.shared.getUser(id: user.uid) { [weak self] result in
                 switch result {
                 case .success(let firebaseUser):
-                    activityIndicator.stopAnimating()
-                    activityIndicator.removeFromSuperview()
+                    self?.remove(view: activityView, indicator: activityIndicator)
                     let profileVc = ProfileViewController()
                     guard let mainUserID = firebaseUser.documentID else { return }
                     let profilePresenter = ProfilePresenter(view: profileVc, mainUser: firebaseUser, mainUserID: mainUserID)
@@ -93,17 +90,41 @@ class FirstBoardingVC: UIViewController {
             }
         }
     }
+
+    private func addActivityIndicator(view: UIView, indicator: UIActivityIndicatorView) {
+        view.backgroundColor = .systemBackground
+        view.layer.shadowOffset = CGSize(width: 1.5, height: 1.5)
+        view.layer.shadowRadius = 2.0
+        view.layer.shadowOpacity = 1.0
+        view.layer.shadowColor = UIColor.systemGray5.cgColor
+        view.layer.cornerRadius = 10.0
+
+        indicator.style = .large
+        indicator.color = .black
+        indicator.startAnimating()
+
+        view.addSubview(indicator)
+        self.view.addSubview(view)
+    }
+
+    private func remove(view: UIView, indicator: UIActivityIndicatorView) {
+        indicator.stopAnimating()
+        view.removeFromSuperview()
+        indicator.removeFromSuperview()
+    }
 }
 
 // MARK: -Presenter Output
 extension FirstBoardingVC: FirstOnBoardingViewProtocol {
     func showError(error: String) {
-        let uiAlertController = UIAlertController(title: .localized(string: "Ошибка"), message: .localized(string: "\(error)"), preferredStyle: .alert)
-        let uiAlertAction = UIAlertAction(title: .localized(string: "Отмена"), style: .cancel)
-        uiAlertController.addAction(uiAlertAction)
-        present(uiAlertController, animated: true)
+        DispatchQueue.main.async { [weak self] in
+            let uiAlertController = UIAlertController(title: .localized(string: "Ошибка"), message: .localized(string: "\(error)"), preferredStyle: .alert)
+            let uiAlertAction = UIAlertAction(title: .localized(string: "Отмена"), style: .cancel)
+            uiAlertController.addAction(uiAlertAction)
+            self?.present(uiAlertController, animated: true)
+        }
     }
-    
+
 
 }
 

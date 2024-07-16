@@ -34,9 +34,8 @@ final class FeedViewController: UIViewController {
         let storiesCollection = UICollectionView(frame: .zero, collectionViewLayout: flow)
         storiesCollection.dataSource = self
         storiesCollection.delegate = self
+        storiesCollection.register(StoriesCollectionCell.self, forCellWithReuseIdentifier: StoriesCollectionCell.id)
         storiesCollection.translatesAutoresizingMaskIntoConstraints = false
-        storiesCollection.backgroundColor = .systemBackground
-        storiesCollection.register(FeedCollectionViewCell.self, forCellWithReuseIdentifier: FeedCollectionViewCell.identifier)
         return storiesCollection
     }()
 
@@ -64,6 +63,7 @@ final class FeedViewController: UIViewController {
         layout()
         presenter.fetchAvatarImage()
         addTargetToMainStorie()
+        tuneNavItem()
     }
 
     override func viewDidDisappear(_ animated: Bool) {
@@ -79,8 +79,8 @@ final class FeedViewController: UIViewController {
         feedTableView.estimatedRowHeight = 44.0
         feedTableView.tableFooterView = UIView()
         feedTableView.separatorStyle = .none
-        self.feedTableView.reloadData()
     }
+
    private func tuneNavItem() {
        self.navigationItem.title = .localized(string: "Главная")
     }
@@ -154,10 +154,12 @@ extension FeedViewController: FeedViewProtocol {
     }
 
     func showEmptyScreen() {
-        let uiAlert = UIAlertController(title: .localized(string: "Пусто"), message: .localized(string: "Пока здесь пусто, но вы можете подписаться на других пользователей, чтобы видеть их посты"), preferredStyle: .actionSheet)
-        let uiAlertAction = UIAlertAction(title: .localized(string: "Понятно"), style: .cancel)
-        uiAlert.addAction(uiAlertAction)
-        present(uiAlert, animated: true)
+        DispatchQueue.main.async { [weak self] in
+            let uiAlert = UIAlertController(title: .localized(string: "Пусто"), message: .localized(string: "Пока здесь пусто, но вы можете подписаться на других пользователей, чтобы видеть их посты"), preferredStyle: .actionSheet)
+            let uiAlertAction = UIAlertAction(title: .localized(string: "Понятно"), style: .cancel)
+            uiAlert.addAction(uiAlertAction)
+            self?.present(uiAlert, animated: true)
+        }
     }
 }
 
@@ -181,17 +183,18 @@ extension FeedViewController: UICollectionViewDelegateFlowLayout {
 extension FeedViewController: UICollectionViewDataSource {
 
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        guard let number = presenter.userStories?.keys.count else { return 0 }
+        guard let number = presenter.userStories?.keys.count else { return 2 }
+        print(number)
         return number
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: FeedCollectionViewCell.identifier, for: indexPath) as? FeedCollectionViewCell else { return UICollectionViewCell() }
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: StoriesCollectionCell.id, for: indexPath) as? StoriesCollectionCell else { return UICollectionViewCell() }
         guard let data = presenter.userStories else { return  UICollectionViewCell() }
         let key = Array(data.keys)[indexPath.row]
         guard let image = data[key] else { return UICollectionViewCell() }
         print("InfoData in collectionViewCell: \(data.count), KEY FOR CELL: \(key.name), imageForCELL: \(image)")
-      //  cell.updateCell(image: image)
+        cell.updateCellData(image: image)
         return cell
     }
 }

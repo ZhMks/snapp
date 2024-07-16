@@ -92,7 +92,7 @@ final class FilesCollectionViewCell: UICollectionViewCell {
 
             fileName.topAnchor.constraint(equalTo: button.bottomAnchor, constant: 5),
             fileName.heightAnchor.constraint(equalToConstant: 44),
-            fileName.widthAnchor.constraint(equalToConstant: 60)
+            fileName.widthAnchor.constraint(equalToConstant: 80)
         ])
     }
 }

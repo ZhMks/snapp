@@ -22,7 +22,6 @@
 		B209E62E2BC3FDEC0067D751 /* MainSettingsPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B209E62D2BC3FDEC0067D751 /* MainSettingsPresenter.swift */; };
 		B209E6312BC3FEB10067D751 /* ProfileChangeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B209E6302BC3FEB10067D751 /* ProfileChangeViewController.swift */; };
 		B209E6332BC3FEBE0067D751 /* ProfileChangePresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B209E6322BC3FEBE0067D751 /* ProfileChangePresenter.swift */; };
-		B209E6362BC430FC0067D751 /* FeedCollectionVIewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B209E6352BC430FC0067D751 /* FeedCollectionVIewCell.swift */; };
 		B209E64A2BC7C8D70067D751 /* AddProfilePresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B209E6492BC7C8D70067D751 /* AddProfilePresenter.swift */; };
 		B209E64C2BC7C8DE0067D751 /* AddProfileVc.swift in Sources */ = {isa = PBXBuildFile; fileRef = B209E64B2BC7C8DE0067D751 /* AddProfileVc.swift */; };
 		B209E64F2BC95E850067D751 /* SignInPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B209E64E2BC95E850067D751 /* SignInPresenter.swift */; };
@@ -68,6 +67,7 @@
 		B28A7D322C413CB400FD5260 /* DecoderService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B28A7D312C413CB400FD5260 /* DecoderService.swift */; };
 		B28A7D352C414BDA00FD5260 /* FilesCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B28A7D342C414BDA00FD5260 /* FilesCollectionViewCell.swift */; };
 		B28A7D382C45199E00FD5260 /* FileManagerService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B28A7D372C45199E00FD5260 /* FileManagerService.swift */; };
+		B28A7D3A2C465F1800FD5260 /* StoriesCollectionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B28A7D392C465F1800FD5260 /* StoriesCollectionCell.swift */; };
 		B297FB542BFCBDDA00A8C463 /* DataChangeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B297FB532BFCBDDA00A8C463 /* DataChangeViewController.swift */; };
 		B297FB562BFCBDE500A8C463 /* DataChangePresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B297FB552BFCBDE500A8C463 /* DataChangePresenter.swift */; };
 		B29D0AD72BCEB17B00101029 /* NetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B29D0AD62BCEB17B00101029 /* NetworkService.swift */; };
@@ -134,7 +134,6 @@
 		B209E62D2BC3FDEC0067D751 /* MainSettingsPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainSettingsPresenter.swift; sourceTree = "<group>"; };
 		B209E6302BC3FEB10067D751 /* ProfileChangeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileChangeViewController.swift; sourceTree = "<group>"; };
 		B209E6322BC3FEBE0067D751 /* ProfileChangePresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileChangePresenter.swift; sourceTree = "<group>"; };
-		B209E6352BC430FC0067D751 /* FeedCollectionVIewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedCollectionVIewCell.swift; sourceTree = "<group>"; };
 		B209E6492BC7C8D70067D751 /* AddProfilePresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddProfilePresenter.swift; sourceTree = "<group>"; };
 		B209E64B2BC7C8DE0067D751 /* AddProfileVc.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddProfileVc.swift; sourceTree = "<group>"; };
 		B209E64E2BC95E850067D751 /* SignInPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInPresenter.swift; sourceTree = "<group>"; };
@@ -185,6 +184,7 @@
 		B28A7D312C413CB400FD5260 /* DecoderService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DecoderService.swift; sourceTree = "<group>"; };
 		B28A7D342C414BDA00FD5260 /* FilesCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilesCollectionViewCell.swift; sourceTree = "<group>"; };
 		B28A7D372C45199E00FD5260 /* FileManagerService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileManagerService.swift; sourceTree = "<group>"; };
+		B28A7D392C465F1800FD5260 /* StoriesCollectionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = StoriesCollectionCell.swift; path = ../../../../../Documents/StoriesCollectionCell.swift; sourceTree = "<group>"; };
 		B297FB532BFCBDDA00A8C463 /* DataChangeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataChangeViewController.swift; sourceTree = "<group>"; };
 		B297FB552BFCBDE500A8C463 /* DataChangePresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataChangePresenter.swift; sourceTree = "<group>"; };
 		B29D0AD62BCEB17B00101029 /* NetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkService.swift; sourceTree = "<group>"; };
@@ -283,9 +283,9 @@
 		B209E6172BC1386C0067D751 /* FeedScreen */ = {
 			isa = PBXGroup;
 			children = (
-				B209E6342BC430ED0067D751 /* Cells */,
 				B209E6182BC138790067D751 /* FeedPresenter.swift */,
 				B209E61A2BC139000067D751 /* FeedViewController.swift */,
+				B28A7D392C465F1800FD5260 /* StoriesCollectionCell.swift */,
 			);
 			path = FeedScreen;
 			sourceTree = "<group>";
@@ -362,14 +362,6 @@
 				B209E6322BC3FEBE0067D751 /* ProfileChangePresenter.swift */,
 			);
 			path = ProfileChangeScreen;
-			sourceTree = "<group>";
-		};
-		B209E6342BC430ED0067D751 /* Cells */ = {
-			isa = PBXGroup;
-			children = (
-				B209E6352BC430FC0067D751 /* FeedCollectionVIewCell.swift */,
-			);
-			path = Cells;
 			sourceTree = "<group>";
 		};
 		B209E6482BC7C8C60067D751 /* AddProfileScreen */ = {
@@ -1001,7 +993,6 @@
 				B2F004252C1DAAA000991CF5 /* BookmarksPresenter.swift in Sources */,
 				B209E6312BC3FEB10067D751 /* ProfileChangeViewController.swift in Sources */,
 				B2F004202C1DA9B500991CF5 /* ArchiveViewController.swift in Sources */,
-				B209E6362BC430FC0067D751 /* FeedCollectionVIewCell.swift in Sources */,
 				B26804C42BEE148600DE74A4 /* CreatePostPresenter.swift in Sources */,
 				B209E64A2BC7C8D70067D751 /* AddProfilePresenter.swift in Sources */,
 				B2E441F62C39625A0098AFEA /* DetailStoriePresenter.swift in Sources */,
@@ -1015,6 +1006,7 @@
 				B2F0041D2C1AF49800991CF5 /* MenuForFeedViewController.swift in Sources */,
 				B211C2832BBD48EA00C073EE /* FireBaseAuthService.swift in Sources */,
 				B28A7D2D2C41101800FD5260 /* FilesPresenter.swift in Sources */,
+				B28A7D3A2C465F1800FD5260 /* StoriesCollectionCell.swift in Sources */,
 				B211C2802BBD3B2F00C073EE /* Extension+UIColor.swift in Sources */,
 				B2E441EF2C36F34D0098AFEA /* AnswersTableCell.swift in Sources */,
 				B209E6192BC138790067D751 /* FeedPresenter.swift in Sources */,
@@ -1114,6 +1106,8 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ADDRESS_SANITIZER_CONTAINER_OVERFLOW = YES;
+				"CLANG_ADDRESS_SANITIZER_CONTAINER_OVERFLOW[sdk=iphonesimulator*]" = YES;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
@@ -1178,6 +1172,8 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ADDRESS_SANITIZER_CONTAINER_OVERFLOW = YES;
+				"CLANG_ADDRESS_SANITIZER_CONTAINER_OVERFLOW[sdk=iphonesimulator*]" = YES;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
@@ -1235,6 +1231,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ADDRESS_SANITIZER_CONTAINER_OVERFLOW = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = Y6VX64W3KZ;
@@ -1267,6 +1264,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ADDRESS_SANITIZER_CONTAINER_OVERFLOW = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = Y6VX64W3KZ;

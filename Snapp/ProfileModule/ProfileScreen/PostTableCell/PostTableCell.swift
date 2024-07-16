@@ -353,7 +353,6 @@ final class PostTableCell: UITableViewCell {
         FireStoreService.shared.fetchBookmarkedPosts(user: mainUser) { [weak self] result in
             switch result {
             case .success(let bookmarkedPosts):
-                print(bookmarkedPosts)
                 if bookmarkedPosts.contains(where: { $0.text == self?.post!.text }) {
                     self?.bookmarkButton.tintColor = .systemOrange
                 }
