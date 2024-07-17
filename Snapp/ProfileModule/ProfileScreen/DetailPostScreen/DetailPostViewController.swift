@@ -510,7 +510,7 @@ extension DetailPostViewController {
             commentsTableView.widthAnchor.constraint(equalTo: safeArea.widthAnchor),
             commentsTableView.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor),
 
-            addCommentView.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: 630),
+            addCommentView.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: 660),
             addCommentView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
             addCommentView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
             addCommentView.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor),
@@ -521,6 +521,7 @@ extension DetailPostViewController {
             addCommentImage.widthAnchor.constraint(equalToConstant: 15),
 
             addCommentLabel.centerYAnchor.constraint(equalTo: addCommentImage.centerYAnchor),
+            addCommentLabel.topAnchor.constraint(equalTo: addCommentView.topAnchor, constant: 10),
             addCommentLabel.leadingAnchor.constraint(equalTo: addCommentImage.trailingAnchor, constant: 10),
             addCommentLabel.trailingAnchor.constraint(equalTo: addCommentView.trailingAnchor, constant: -190),
             addCommentLabel.bottomAnchor.constraint(equalTo: addCommentView.bottomAnchor, constant: -14)
@@ -560,17 +561,17 @@ extension DetailPostViewController {
 
             likeButton.topAnchor.constraint(equalTo: postTextLabel.bottomAnchor, constant: 16),
             likeButton.leadingAnchor.constraint(equalTo: detailPostView.leadingAnchor, constant: 17),
-            likeButton.trailingAnchor.constraint(equalTo: detailPostView.trailingAnchor, constant: -350),
+            likeButton.trailingAnchor.constraint(equalTo: detailPostView.trailingAnchor, constant: -385),
             likeButton.bottomAnchor.constraint(equalTo: separatorView.topAnchor, constant: -5),
 
             likesLabel.topAnchor.constraint(equalTo: postTextLabel.bottomAnchor, constant: 16),
             likesLabel.leadingAnchor.constraint(equalTo: likeButton.trailingAnchor, constant: 5),
-            likesLabel.trailingAnchor.constraint(equalTo: detailPostView.trailingAnchor, constant: -307),
+            likesLabel.trailingAnchor.constraint(equalTo: detailPostView.trailingAnchor, constant: -330),
             likesLabel.bottomAnchor.constraint(equalTo: separatorView.topAnchor, constant: -5),
 
             commentsButton.topAnchor.constraint(equalTo: postTextLabel.bottomAnchor, constant: 16),
             commentsButton.leadingAnchor.constraint(equalTo: likesLabel.trailingAnchor, constant: 24),
-            commentsButton.trailingAnchor.constraint(equalTo: detailPostView.trailingAnchor, constant: -264),
+            commentsButton.trailingAnchor.constraint(equalTo: detailPostView.trailingAnchor, constant: -274),
             commentsButton.bottomAnchor.constraint(equalTo: separatorView.topAnchor, constant: -5),
 
             commentsLabel.topAnchor.constraint(equalTo: postTextLabel.bottomAnchor, constant: 16),

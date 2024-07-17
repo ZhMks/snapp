@@ -41,14 +41,18 @@ final class CommentViewPresenter: CommentPresenterProtocol {
     }
     
     func addComment(text: String) {
-        FireStoreService.shared.addComment(mainUser: user, text: text, documentID: documentID, commentor: commentor) { [weak self] result in
-            guard let self else { return }
-            switch result {
-            case .success(_):
-                NotificationCenter.default.post(name: Notification.Name("commentAdded"), object: nil)
-            case .failure(let failure):
-                view?.showError(error: failure.localizedDescription)
+        if !text.isEmpty {
+            FireStoreService.shared.addComment(mainUser: user, text: text, documentID: documentID, commentor: commentor) { [weak self] result in
+                guard let self else { return }
+                switch result {
+                case .success(_):
+                    NotificationCenter.default.post(name: Notification.Name("commentAdded"), object: nil)
+                case .failure(let failure):
+                    view?.showError(error: failure.localizedDescription)
+                }
             }
+        } else {
+            return
         }
     }
 

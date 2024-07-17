@@ -128,11 +128,6 @@ class MenuForFeedViewController: UIViewController {
     @objc func reportButtonTapped() {
         presenter.showReportView()
     }
-
-    @objc func infoViewButtonTapped() {
-        presenter.removeSubscribtion()
-        dismiss(animated: true)
-    }
 }
 
 
@@ -140,38 +135,15 @@ class MenuForFeedViewController: UIViewController {
 
 extension MenuForFeedViewController: MenuForFeedViewProtocol {
 
-    func showInfoView() {
-        let infoView = UIView(frame: CGRect(x: view.frame.origin.x, y: view.frame.origin.y, width: 120, height: 120))
-        infoView.layer.cornerRadius = 10
-        infoView.backgroundColor = .systemBackground
-        infoView.layer.shadowColor = UIColor.systemGray3.cgColor
-        infoView.layer.shadowOpacity = 1.0
-        infoView.layer.shadowRadius = 3.0
-
-        let text = UILabel(frame: CGRect(x: infoView.frame.minX, y: infoView.frame.minY, width: 160, height: 50))
-        text.text = "Мы приняли к рассмотрению вашу жалобу, а также скрыли посты данного пользователя от вас"
-
-
-        let button = UIButton(frame: CGRect(x: text.frame.midX, y: text.frame.maxY, width: 80, height: 40))
-        button.setTitle("К поиску", for: .normal)
-        button.addTarget(self, action: #selector(infoViewButtonTapped), for: .touchUpInside)
-        button.backgroundColor = ColorCreator.shared.createButtonColor()
-        button.layer.cornerRadius = 10.0
-
-        infoView.addSubview(text)
-        infoView.addSubview(button)
-
-        view.addSubview(infoView)
-    }
-
     func showReportView() {
-        let reportAlertController = UIAlertController(title: "String", message: "String", preferredStyle: .alert)
+        let reportAlertController = UIAlertController(title: "Жалоба", message: "Опишите причину", preferredStyle: .alert)
         reportAlertController.addTextField { textField in
             textField.borderStyle = .roundedRect
             textField.placeholder = "Enter Text"
         }
         let uiAction = UIAlertAction(title: .localized(string: "Отправить"), style: .cancel) { [weak self] _ in
             self?.presenter.sendMail(text: reportAlertController.textFields?.first?.text)
+            self?.dismiss(animated: true)
         }
         reportAlertController.addAction(uiAction)
         present(reportAlertController, animated: true)
@@ -196,7 +168,7 @@ extension MenuForFeedViewController: MenuForFeedViewProtocol {
 
 extension MenuForFeedViewController {
 
-    func addSubviews() {
+    private func addSubviews() {
         view.addSubview(topSeparatorView)
         view.addSubview(addToBookmarkButton)
         view.addSubview(enableNotificationButton)
@@ -206,7 +178,7 @@ extension MenuForFeedViewController {
         view.addSubview(reportButton)
     }
 
-    func layout() {
+   private func layout() {
         let safeArea = view.safeAreaLayoutGuide
 
         NSLayoutConstraint.activate([

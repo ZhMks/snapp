@@ -190,11 +190,11 @@ extension FeedViewController: UICollectionViewDataSource {
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: StoriesCollectionCell.id, for: indexPath) as? StoriesCollectionCell else { return UICollectionViewCell() }
-        guard let data = presenter.userStories else { return  UICollectionViewCell() }
-        let key = Array(data.keys)[indexPath.row]
-        guard let image = data[key] else { return UICollectionViewCell() }
-        print("InfoData in collectionViewCell: \(data.count), KEY FOR CELL: \(key.name), imageForCELL: \(image)")
-        cell.updateCellData(image: image)
+        if let data = presenter.userStories {
+            let key = Array(data.keys)[indexPath.row]
+            guard let image = data[key] else { return UICollectionViewCell() }
+            cell.updateCellData(image: image)
+        }
         return cell
     }
 }

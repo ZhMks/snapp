@@ -13,7 +13,6 @@ protocol MenuForFeedViewProtocol: AnyObject {
     func showError(descr: String)
     func showActivityController()
     func showReportView()
-    func showInfoView()
 }
 
 protocol MenuForFeedPresenterProtocol: AnyObject {
@@ -79,6 +78,5 @@ final class MenuForFeedPresenter: MenuForFeedPresenterProtocol {
     func sendMail(text: String?) {
         guard let userID = user.documentID, let text = text else { return }
         FireStoreService.shared.addReportToUser(user: userID, text: text)
-        view?.showInfoView()
     }
 }

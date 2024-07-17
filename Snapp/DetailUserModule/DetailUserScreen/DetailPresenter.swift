@@ -137,6 +137,8 @@ final class DetailPresenter: DetailPresenterProtocol {
                 self.nsLock.unlock()
                 self.fetchImage()
                 self.fetchPosts()
+                checkSubscribers()
+                print("Subscribers inside addObserver: \(user.subscribers)")
             case .failure(_):
                 return
             }

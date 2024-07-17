@@ -164,8 +164,6 @@ final class ProfilePresenter: ProfilePresenterProtocol {
     }
 
     func fetchPhotoAlbum() {
-        print(mainUser.photoAlbum.count)
-        
         self.photoAlbum = []
         let dispatchGroup = DispatchGroup()
         let networkService = NetworkService()

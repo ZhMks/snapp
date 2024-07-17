@@ -154,7 +154,7 @@ extension CommentViewController {
             separatorView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -15),
             separatorView.heightAnchor.constraint(equalToConstant: 1),
 
-            commentTextField.topAnchor.constraint(equalTo: separatorView.bottomAnchor, constant: 15),
+            commentTextField.topAnchor.constraint(equalTo: separatorView.bottomAnchor, constant: 5),
             commentTextField.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
             commentTextField.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
             commentTextField.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor)

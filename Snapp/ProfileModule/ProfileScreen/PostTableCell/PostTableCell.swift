@@ -457,7 +457,7 @@ final class PostTableCell: UITableViewCell {
             jobLabel.bottomAnchor.constraint(equalTo: headerView.bottomAnchor, constant: -25),
 
             menuButton.topAnchor.constraint(equalTo: headerView.topAnchor, constant: 38),
-            menuButton.leadingAnchor.constraint(equalTo: headerView.leadingAnchor, constant: 350),
+            menuButton.trailingAnchor.constraint(equalTo: headerView.trailingAnchor, constant: -35),
             menuButton.widthAnchor.constraint(equalToConstant: 12),
             menuButton.bottomAnchor.constraint(equalTo: headerView.bottomAnchor, constant: -23),
 
@@ -517,13 +517,13 @@ final class PostTableCell: UITableViewCell {
             footerView.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor),
 
             leftSeparatorView.centerYAnchor.constraint(equalTo: dateLabel.centerYAnchor),
-            leftSeparatorView.leadingAnchor.constraint(equalTo: footerView.leadingAnchor, constant: 18),
-            leftSeparatorView.trailingAnchor.constraint(equalTo: footerView.trailingAnchor, constant: -248),
+            leftSeparatorView.leadingAnchor.constraint(equalTo: footerView.leadingAnchor, constant: 10),
+            leftSeparatorView.trailingAnchor.constraint(equalTo: ellipseView.leadingAnchor, constant: -10),
             leftSeparatorView.heightAnchor.constraint(equalToConstant: 1),
 
             ellipseView.topAnchor.constraint(equalTo: footerView.topAnchor, constant: 10),
-            ellipseView.leadingAnchor.constraint(equalTo: leftSeparatorView.trailingAnchor, constant: 10),
-            ellipseView.trailingAnchor.constraint(equalTo: footerView.trailingAnchor, constant: -138),
+            ellipseView.widthAnchor.constraint(equalToConstant: 100),
+            ellipseView.centerXAnchor.constraint(equalTo: footerView.centerXAnchor),
             ellipseView.bottomAnchor.constraint(equalTo: footerView.bottomAnchor, constant: -10),
 
             dateLabel.topAnchor.constraint(equalTo: ellipseView.topAnchor, constant: 3),

@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import FirebaseStorage
 
 protocol PhotoalbumViewProtocol: AnyObject {
     func showError(error: String)
@@ -35,6 +36,8 @@ final class PhotoalbumPresenter: PhotoalbumPresenterProtocol {
                 let sortedDictionary = success.sorted { $0.key > $1.key }
                 let convertedDictionary = sortedDictionary.reduce(into: [String: [UIImage]?]()) { result, pair in
                                 result[pair.key] = pair.value
+                    print("Result: \(result)")
+                    print("Pair: \(pair)")
                             }
                 self?.nsLock.lock()
                 self?.photoAlbum = convertedDictionary
@@ -42,6 +45,24 @@ final class PhotoalbumPresenter: PhotoalbumPresenterProtocol {
                 self?.view?.updateCollectionView()
             case .failure(let failure):
                 self?.view?.showError(error: failure.localizedDescription)
+            }
+        }
+    }
+
+    func addImageToPhotoAlbum(image: UIImage) {
+        let currentDate = Date()
+        let dateFromatter = DateFormatter()
+        dateFromatter.dateFormat = "dd MMM"
+        let stringFromDate = dateFromatter.string(from: currentDate)
+        let urlLink = Storage.storage().reference().child("users").child(mainUserID).child("PhotoAlbum").child(stringFromDate).child(image.description)
+        FireStoreService.shared.saveImageIntoStorage(urlLink: urlLink, photo: image) { [weak self] result in
+            guard let self = self else { return }
+            switch result {
+            case .success(let success):
+                FireStoreService.shared.saveImageIntoPhotoAlbum(image: success.absoluteString, user: self.mainUserID)
+                self.fetchImageFromStorage()
+            case .failure(let failure):
+                self.view?.showError(error: failure.localizedDescription)
             }
         }
     }

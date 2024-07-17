@@ -702,7 +702,7 @@ final class FireStoreService: FireStoreServiceProtocol {
                         for document in folderStorageList.items {
                             dispatchGroup.enter()
 
-                            document.getData(maxSize: 1 * 1024 * 1024) { data, error in
+                            document.getData(maxSize: 1 * 2048 * 2048) { data, error in
                                 defer {
                                     dispatchGroup.leave()
                                 }

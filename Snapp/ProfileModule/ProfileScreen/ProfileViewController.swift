@@ -11,7 +11,8 @@ class ProfileViewController: UIViewController {
     // MARK: -Properties
     var presenter: ProfilePresenter!
 
-    var titleLabel = UILabel(frame: CGRect(x: 0, y: 0, width: 150, height: 30))
+    private var titleLabel = UILabel(frame: CGRect(x: 0, y: 0, width: 150, height: 30))
+    private var filteredArray: [EachPost] = []
 
     private lazy var avatarImageView: UIImageView = {
         let avatarImageView = UIImageView()
@@ -234,6 +235,7 @@ class ProfileViewController: UIViewController {
         searchButton.translatesAutoresizingMaskIntoConstraints = false
         searchButton.setBackgroundImage(UIImage(systemName: "magnifyingglass"), for: .normal)
         searchButton.tintColor = ColorCreator.shared.createButtonColor()
+        searchButton.addTarget(self, action: #selector(searchButtonTapped), for: .touchUpInside)
         return searchButton
     }()
 
@@ -250,6 +252,15 @@ class ProfileViewController: UIViewController {
         postsTableView.delegate = self
         postsTableView.dataSource = self
         return postsTableView
+    }()
+
+    private lazy var searchTextField: UITextField = {
+        let searchTextField = UITextField()
+        searchTextField.delegate = self
+        searchTextField.translatesAutoresizingMaskIntoConstraints = false
+        searchTextField.layer.cornerRadius = 8.0
+        searchTextField.backgroundColor = .systemBackground
+        return searchTextField
     }()
 
 
@@ -269,6 +280,7 @@ class ProfileViewController: UIViewController {
         addSubviews()
         layout()
         tuneTableView()
+        addTargetToview()
     }
 
     override func viewWillDisappear(_ animated: Bool) {
@@ -352,6 +364,41 @@ class ProfileViewController: UIViewController {
 
         self.navigationController?.present(detailUserInfoVC, animated: true)
     }
+
+    @objc func searchButtonTapped() {
+        filteredArray = []
+
+        postsTableView.reloadData()
+
+        viewForTableTitle.addSubview(searchTextField)
+        searchButton.isHidden = true
+
+        NSLayoutConstraint.activate([
+            searchTextField.topAnchor.constraint(equalTo: viewForTableTitle.topAnchor),
+            searchTextField.trailingAnchor.constraint(equalTo: viewForTableTitle.trailingAnchor, constant: -10),
+            searchTextField.bottomAnchor.constraint(equalToSystemSpacingBelow: viewForTableTitle.bottomAnchor, multiplier: -5),
+            searchTextField.widthAnchor.constraint(equalToConstant: 180)
+        ])
+
+        searchTextField.becomeFirstResponder()
+    }
+
+    private func filterArrayWithText(text: String) {
+        guard let text = searchTextField.text else { return }
+        print(text)
+        self.filteredArray = self.presenter.posts.filter { $0.text.lowercased().contains(text.lowercased()) }
+        postsTableView.reloadData()
+    }
+
+    @objc func removeSearchTextField() {
+        searchTextField.removeFromSuperview()
+    }
+
+    @objc func addTargetToview() {
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(removeSearchTextField))
+        tapGesture.numberOfTapsRequired = 1
+        view.addGestureRecognizer(tapGesture)
+    }
 }
 
 // MARK: -Output Presenter
@@ -414,20 +461,30 @@ extension ProfileViewController: ProfileViewProtocol {
 extension ProfileViewController: UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if !filteredArray.isEmpty {
+            return filteredArray.count
+        }
         return  presenter.posts.count
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: PostTableCell.identifier, for: indexPath) as? PostTableCell else { return UITableViewCell() }
 
-        let data = presenter.posts[indexPath.row]
+        print("Filtered Array inside indexPath: \(filteredArray)")
 
+        let data = presenter.posts[indexPath.row]
         guard let docID = data.documentID else { return UITableViewCell() }
 
-        cell.updateView(post: data, user: presenter.mainUser, state: .profileState, mainUserID: self.presenter.mainUserID)
+        if !filteredArray.isEmpty {
+            let data = filteredArray[indexPath.row]
+            print("Data inside not empty indexPath: \(data)")
+            cell.updateView(post: data, user: presenter.mainUser, state: .profileState, mainUserID: self.presenter.mainUserID)
+        } else {
+            cell.updateView(post: data, user: presenter.mainUser, state: .profileState, mainUserID: self.presenter.mainUserID)
+        }
 
         cell.manuButtonTappedHandler = { [weak self] in
-            guard let index = self?.presenter.posts.firstIndex(where: { $0.documentID == data.documentID }) else { return }
+            guard let index = self?.presenter.posts.firstIndex(where: { $0.documentID == docID }) else { return }
             self?.presenter.posts.remove(at: index)
             self?.presenter.posts.insert(data, at: 0)
             self?.presenter.pinPost(docID: docID)
@@ -526,13 +583,26 @@ extension ProfileViewController: UIImagePickerControllerDelegate, UINavigationCo
     }
 }
 
+// MARK: - UITextField Delegate
+extension ProfileViewController: UITextFieldDelegate {
+
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+    }
+
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        filterArrayWithText(text: textField.text!)
+        textField.text = ""
+        searchTextField.removeFromSuperview()
+        searchButton.isHidden = false
+    }
+}
+
 // MARK: - SwitchControllersDelegate
 extension ProfileViewController: SwitchViewControllerDelegate {
     func switchToFavourites() {
         self.tabBarController?.selectedIndex = 3
     }
-    
-
 }
 
 // MARK: -Layout
@@ -630,12 +700,12 @@ extension ProfileViewController {
 
             numberOfPosts.topAnchor.constraint(equalTo: editButton.bottomAnchor, constant: 20),
             numberOfPosts.leadingAnchor.constraint(equalTo: mainContentView.leadingAnchor, constant: 5),
-            numberOfPosts.trailingAnchor.constraint(equalTo: mainContentView.trailingAnchor, constant: -240),
+            numberOfPosts.trailingAnchor.constraint(equalTo: mainContentView.trailingAnchor, constant: -250),
             numberOfPosts.bottomAnchor.constraint(equalTo: mainContentView.bottomAnchor, constant: -254),
 
             numberOfSubscriptions.topAnchor.constraint(equalTo: editButton.bottomAnchor, constant: 20),
             numberOfSubscriptions.leadingAnchor.constraint(equalTo: numberOfPosts.trailingAnchor, constant: 10),
-            numberOfSubscriptions.trailingAnchor.constraint(equalTo: mainContentView.trailingAnchor, constant: -140),
+            numberOfSubscriptions.trailingAnchor.constraint(equalTo: mainContentView.trailingAnchor, constant: -150),
             numberOfSubscriptions.bottomAnchor.constraint(equalTo: mainContentView.bottomAnchor, constant: -254),
 
             numberOfSubscribers.topAnchor.constraint(equalTo: editButton.bottomAnchor, constant: 20),
@@ -716,8 +786,9 @@ extension ProfileViewController {
             tableViewTitle.bottomAnchor.constraint(equalTo: viewForTableTitle.bottomAnchor, constant: -5),
 
             searchButton.centerYAnchor.constraint(equalTo: tableViewTitle.centerYAnchor),
-            searchButton.leadingAnchor.constraint(equalTo: viewForTableTitle.leadingAnchor, constant: 360),
-            searchButton.trailingAnchor.constraint(equalTo: viewForTableTitle.trailingAnchor, constant: -8),
+            searchButton.widthAnchor.constraint(equalToConstant: 45),
+            searchButton.heightAnchor.constraint(equalToConstant: 30),
+            searchButton.trailingAnchor.constraint(equalTo: viewForTableTitle.trailingAnchor, constant: -18),
         ])
 
         signalImage.layer.cornerRadius = signalImage.frame.size.width / 2

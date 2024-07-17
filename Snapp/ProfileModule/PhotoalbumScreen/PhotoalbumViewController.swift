@@ -7,11 +7,13 @@
 
 import UIKit
 
+
 class PhotoalbumViewController: UIViewController {
 
     // MARK: -Properties
 
     var presenter: PhotoalbumPresenter!
+    private var selectedAlbumIndex: Int = 0
 
     private lazy var topSeparatorView: UIView = {
         let topSeparatorView = UIView()
@@ -109,8 +111,10 @@ class PhotoalbumViewController: UIViewController {
         self.navigationItem.leftBarButtonItem = leftButton
     }
 
-    @objc func addImageToAlbum() {
-
+    @objc func addImageToAlbum(image: UIImage) {
+       let uiimagePicker = UIImagePickerController()
+        uiimagePicker.delegate = self
+        present(uiimagePicker, animated: true)
     }
 
     @objc func dismissController() {
@@ -142,36 +146,30 @@ extension PhotoalbumViewController: UICollectionViewDataSource {
             guard  let number = presenter.photoAlbum?.keys.count else {
                 return 0
             }
-            print("Number of Items for ALbum: \(number)")
             return number
+        } else if collectionView == photoCollectionView {
+            guard let photoAlbum = self.presenter.photoAlbum else { return 0 }
+            let selectedAlbum = Array(photoAlbum.keys)[selectedAlbumIndex]
+            return photoAlbum[selectedAlbum]??.count ?? 0
         }
-            guard let photoArray = presenter.photoAlbum?.values else {
-                return 0
-            }
-            guard let number = Array(photoArray)[section]?.count else {
-                return 0
-            }
-            print("Number of Items for photo: \(number)")
-            return number
+        return 0
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         if collectionView == self.albumCollectionView {
-            print("Inside AlbumCollectionView Delegate")
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: AlbumCollectionViewCell .identifier, for: indexPath) as? AlbumCollectionViewCell else { return UICollectionViewCell() }
             guard let photoAlbum = presenter.photoAlbum else { return UICollectionViewCell() }
             let imageKey = Array(photoAlbum.keys)[indexPath.row]
-            print(imageKey)
             guard let imageValue = photoAlbum[imageKey] else { return UICollectionViewCell() }
             guard let image = imageValue?.last else { return UICollectionViewCell() }
             cell.updateView(image: image)
             return cell
         }
-            print("Inside photoCollectionView Delegate")
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PhotoCollectionViewCell.identifier, for: indexPath) as? PhotoCollectionViewCell else { return UICollectionViewCell() }
             guard let photoAlbum = presenter.photoAlbum else { return UICollectionViewCell() }
-            guard let imageDataSet = Array(photoAlbum.values)[indexPath.section] else { return UICollectionViewCell() }
-            let image = imageDataSet[indexPath.row]
+            let arraySet = Array(photoAlbum.keys)[selectedAlbumIndex]
+            guard let images = photoAlbum[arraySet] else { return UICollectionViewCell() }
+            guard let image = images?[indexPath.row] else { return UICollectionViewCell() }
             cell.updateView(image: image)
             return cell
     }
@@ -182,6 +180,22 @@ extension PhotoalbumViewController: UICollectionViewDataSource {
 extension PhotoalbumViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         CGSize(width: 108, height: 80)
+    }
+
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        if collectionView == self.albumCollectionView {
+            self.selectedAlbumIndex = indexPath.row
+        }
+        photoCollectionView.reloadData()
+    }
+}
+
+// MARK: - UIImagePicker Delegate
+extension PhotoalbumViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        guard let image = info[.originalImage] as? UIImage else { return }
+        presenter.addImageToPhotoAlbum(image: image)
+        self.dismiss(animated: true)
     }
 }
 

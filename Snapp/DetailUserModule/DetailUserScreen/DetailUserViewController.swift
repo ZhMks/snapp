@@ -12,6 +12,7 @@ class DetailUserViewController: UIViewController {
     //MARK: -Properties
 
     var presenter: DetailPresenter!
+    private var filteredArray: [EachPost] = []
 
     private lazy var topSeparatorView: UIView = {
         let topSeparatorView = UIView()
@@ -176,6 +177,7 @@ class DetailUserViewController: UIViewController {
         searchButton.translatesAutoresizingMaskIntoConstraints = false
         searchButton.setBackgroundImage(UIImage(systemName: "magnifyingglass"), for: .normal)
         searchButton.tintColor = ColorCreator.shared.createButtonColor()
+        searchButton.addTarget(self, action: #selector(searchButtonTapped), for: .touchUpInside)
         return searchButton
     }()
 
@@ -201,6 +203,15 @@ class DetailUserViewController: UIViewController {
         return separatorView
     }()
 
+    private lazy var searchTextField: UITextField = {
+        let searchTextField = UITextField()
+        searchTextField.delegate = self
+        searchTextField.translatesAutoresizingMaskIntoConstraints = false
+        searchTextField.layer.cornerRadius = 8.0
+        searchTextField.backgroundColor = .systemBackground
+        return searchTextField
+    }()
+
 
     // MARK: -Lifecycle
 
@@ -219,7 +230,6 @@ class DetailUserViewController: UIViewController {
         layout()
         tuneTableView()
         presenter.fetchPhotoAlbum()
-        presenter.checkSubscribers()
     }
 
     override func viewDidDisappear(_ animated: Bool) {
@@ -249,13 +259,48 @@ class DetailUserViewController: UIViewController {
         navigationController?.popViewController(animated: true)
     }
 
+    @objc func removeSearchTextField() {
+        searchTextField.removeFromSuperview()
+    }
+
+    @objc func addGestureRecognizerToView() {
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(removeSearchTextField))
+        tapGesture.numberOfTapsRequired = 1
+        view.addGestureRecognizer(tapGesture)
+    }
+
+    @objc func searchButtonTapped() {
+        filteredArray = []
+
+        postsTableView.reloadData()
+
+        viewForTableTitle.addSubview(searchTextField)
+        searchButton.isHidden = true
+
+        NSLayoutConstraint.activate([
+            searchTextField.topAnchor.constraint(equalTo: viewForTableTitle.topAnchor),
+            searchTextField.trailingAnchor.constraint(equalTo: viewForTableTitle.trailingAnchor, constant: -10),
+            searchTextField.bottomAnchor.constraint(equalToSystemSpacingBelow: viewForTableTitle.bottomAnchor, multiplier: -5),
+            searchTextField.widthAnchor.constraint(equalToConstant: 180)
+        ])
+
+        searchTextField.becomeFirstResponder()
+    }
+
+    private func filterArrayWithText(text: String) {
+        guard let text = searchTextField.text else { return }
+        print(text)
+        self.filteredArray = self.presenter.posts.filter { $0.text.lowercased().contains(text.lowercased()) }
+        print("Filterd array: \(filteredArray)")
+        postsTableView.reloadData()
+    }
 }
 
 // MARK: -Presenter Output
 extension DetailUserViewController: DetailViewProtocol {
    
     func updateSubButton() {
-        print(presenter.user.subscribers)
+        print("Subscribers inside updateSUbBUtton: \(presenter.user.subscribers)")
         if presenter.user.subscribers.contains(presenter.mainUserID) {
             subscribeButton.setTitle(.localized(string: "Отписаться"), for: .normal)
         } else {
@@ -316,15 +361,24 @@ extension DetailUserViewController: DetailViewProtocol {
 extension DetailUserViewController: UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        presenter.posts.count
+        if !filteredArray.isEmpty {
+            return filteredArray.count
+        }
+        return  presenter.posts.count
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: PostTableCell.identifier, for: indexPath) as? PostTableCell else { return UITableViewCell() }
         let data = presenter.posts[indexPath.row]
         let mainUserID = self.presenter.mainUserID
-        
-        cell.updateView(post: data, user: presenter.user, state: .feedState, mainUserID: mainUserID)
+
+        if !filteredArray.isEmpty {
+            let data = filteredArray[indexPath.row]
+            print("Data inside not empty indexPath: \(data)")
+            cell.updateView(post: data, user: presenter.user, state: .feedState, mainUserID: mainUserID)
+        } else {
+            cell.updateView(post: data, user: presenter.user, state: .feedState, mainUserID: mainUserID)
+        }
 
         cell.showMenuForFeed = { [weak self] post in
             self?.presenter.showFeedMenu(post: post)
@@ -390,6 +444,20 @@ extension DetailUserViewController: UICollectionViewDataSource {
 extension DetailUserViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         CGSize(width: 72, height: 68)
+    }
+}
+
+// MARK: - UITextFieldDelegate
+extension DetailUserViewController: UITextFieldDelegate {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+    }
+
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        filterArrayWithText(text: textField.text!)
+        textField.text = ""
+        searchTextField.removeFromSuperview()
+        searchButton.isHidden = false
     }
 }
 

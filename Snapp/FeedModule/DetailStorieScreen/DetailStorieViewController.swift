@@ -34,7 +34,7 @@ class DetailStorieViewController: UIViewController {
     private lazy var backButton: UIButton = {
         let backButton = UIButton(type: .system)
         backButton.translatesAutoresizingMaskIntoConstraints = false
-        backButton.setBackgroundImage(UIImage(systemName: "arrow.left"), for: .normal)
+        backButton.setBackgroundImage(UIImage(systemName: "xmark"), for: .normal)
         backButton.tintColor = .systemOrange
         backButton.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
         return backButton
@@ -118,18 +118,19 @@ extension DetailStorieViewController {
         let safeArea = view.safeAreaLayoutGuide
 
         NSLayoutConstraint.activate([
-            storiesPageControle.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: 5),
-            storiesPageControle.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 20),
-            storiesPageControle.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -20),
-
             storiesScrollView.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: 15),
             storiesScrollView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
             storiesScrollView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
             storiesScrollView.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor),
 
-            backButton.centerYAnchor.constraint(equalTo: storiesPageControle.centerYAnchor),
-            backButton.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
-            backButton.widthAnchor.constraint(equalToConstant: 30)
+            storiesPageControle.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor, constant: -10),
+            storiesPageControle.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 20),
+            storiesPageControle.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -20),
+
+            backButton.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: 10),
+            backButton.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -10),
+            backButton.widthAnchor.constraint(equalToConstant: 30),
+            backButton.heightAnchor.constraint(equalToConstant: 30)
         ])
     }
 }
