@@ -18,7 +18,7 @@ protocol PhotoalbumPresenterProtocol: AnyObject {
 }
 
 final class PhotoalbumPresenter: PhotoalbumPresenterProtocol {
-    
+
     weak var view: PhotoalbumViewProtocol?
     var photoAlbum: [String : [UIImage]?]?
     let mainUserID: String
@@ -35,10 +35,10 @@ final class PhotoalbumPresenter: PhotoalbumPresenterProtocol {
             case .success(let success):
                 let sortedDictionary = success.sorted { $0.key > $1.key }
                 let convertedDictionary = sortedDictionary.reduce(into: [String: [UIImage]?]()) { result, pair in
-                                result[pair.key] = pair.value
+                    result[pair.key] = pair.value
                     print("Result: \(result)")
                     print("Pair: \(pair)")
-                            }
+                }
                 self?.nsLock.lock()
                 self?.photoAlbum = convertedDictionary
                 self?.nsLock.unlock()

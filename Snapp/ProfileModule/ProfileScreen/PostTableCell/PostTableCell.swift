@@ -127,7 +127,7 @@ final class PostTableCell: UITableViewCell {
         let likesLabel = UILabel()
         likesLabel.translatesAutoresizingMaskIntoConstraints = false
         likesLabel.font = UIFont(name: "Inter-Light", size: 14)
-        likesLabel.text = "22"
+        likesLabel.text = "0"
         likesLabel.textColor = ColorCreator.shared.createTextColor()
         return likesLabel
     }()
@@ -144,7 +144,7 @@ final class PostTableCell: UITableViewCell {
         let commentsLabel = UILabel()
         commentsLabel.translatesAutoresizingMaskIntoConstraints = false
         commentsLabel.font = UIFont(name: "Inter-Light", size: 14)
-        commentsLabel.text = "24"
+        commentsLabel.text = "0"
         commentsLabel.textColor = ColorCreator.shared.createTextColor()
         return commentsLabel
     }()
@@ -178,7 +178,7 @@ final class PostTableCell: UITableViewCell {
         let dateLabel = UILabel()
         dateLabel.translatesAutoresizingMaskIntoConstraints = false
         dateLabel.font = UIFont(name: "Inter-Light", size: 14)
-        dateLabel.text = "04 июля"
+        dateLabel.text = "0"
         dateLabel.textColor = ColorCreator.shared.createTextColor()
         return dateLabel
     }()
@@ -212,6 +212,7 @@ final class PostTableCell: UITableViewCell {
     override func prepareForReuse() {
         super.prepareForReuse()
         self.postImage.image = nil
+        self.bookmarkButton.tintColor = nil
     }
 
     required init?(coder: NSCoder) {
@@ -356,7 +357,7 @@ final class PostTableCell: UITableViewCell {
                 if bookmarkedPosts.contains(where: { $0.text == self?.post!.text }) {
                     self?.bookmarkButton.tintColor = .systemOrange
                 }
-            case .failure(let failure):
+            case .failure(_):
                 return
             }
         }
@@ -367,7 +368,7 @@ final class PostTableCell: UITableViewCell {
         let menuForPost = MenuForPostView()
         menuForPost.translatesAutoresizingMaskIntoConstraints = false
         guard let user = self.user, let post = self.post else { return }
-        let presenter = MenuForPostPresenter(view: menuForPost, user: user, post: post)
+        let presenter = MenuForPostPresenter(view: menuForPost, user: user, post: post, mainUserID: mainUserID!)
         menuForPost.presenter = presenter
         presenter.delegate = self
 
@@ -401,6 +402,7 @@ final class PostTableCell: UITableViewCell {
     @objc func bookmarkButtonTapped() {
         guard let post = self.post else { return }
         bookmarkButtonTapHandler?(post)
+        self.bookmarkButton.tintColor = .systemOrange
         print("Bookmark")
     }
 
@@ -473,7 +475,7 @@ final class PostTableCell: UITableViewCell {
 
             postTextLabel.topAnchor.constraint(equalTo: mainPostView.topAnchor, constant:  5),
             postTextLabel.leadingAnchor.constraint(equalTo: mainPostView.leadingAnchor, constant: 52),
-            postTextLabel.trailingAnchor.constraint(equalTo: mainPostView.trailingAnchor, constant: -15),
+            postTextLabel.trailingAnchor.constraint(equalTo: mainPostView.trailingAnchor, constant: -20),
             postTextLabel.heightAnchor.constraint(equalToConstant: 100),
 
             postImage.topAnchor.constraint(equalTo: postTextLabel.bottomAnchor, constant: 5),
@@ -522,8 +524,8 @@ final class PostTableCell: UITableViewCell {
             leftSeparatorView.heightAnchor.constraint(equalToConstant: 1),
 
             ellipseView.topAnchor.constraint(equalTo: footerView.topAnchor, constant: 10),
-            ellipseView.widthAnchor.constraint(equalToConstant: 100),
             ellipseView.centerXAnchor.constraint(equalTo: footerView.centerXAnchor),
+            ellipseView.widthAnchor.constraint(equalToConstant: 100),
             ellipseView.bottomAnchor.constraint(equalTo: footerView.bottomAnchor, constant: -10),
 
             dateLabel.topAnchor.constraint(equalTo: ellipseView.topAnchor, constant: 3),

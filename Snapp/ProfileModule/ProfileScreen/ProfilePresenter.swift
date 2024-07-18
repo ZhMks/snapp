@@ -106,17 +106,26 @@ final class ProfilePresenter: ProfilePresenterProtocol {
     }
 
     func addPostToBookMarks(post: EachPost) {
-        FireStoreService.shared.saveToBookMarks(mainUser: mainUserID, user: mainUserID, post: post)
+        FireStoreService.shared.saveToBookMarks(mainUser: mainUserID, user: mainUserID, post: post) { [weak self] result in
+            switch result {
+            case .success(let success):
+                if success {
+                    return
+                } else {
+                    self?.view?.showErrorAler(error: "Пост уже существует")
+                }
+            case .failure(let failure):
+                self?.view?.showErrorAler(error: failure.localizedDescription)
+            }
+        }
     }
 
     func pinPost( docID: String) {
-        guard let user = mainUser.documentID else { return }
-        FireStoreService.shared.pinPost(user: user, docID: docID)
+        FireStoreService.shared.pinPost(user: mainUserID, docID: docID)
     }
 
     func addListenerForUser() {
-        guard let id = mainUser.documentID else { return }
-        FireStoreService.shared.addSnapshotListenerToUser(for: id) { [weak self] result in
+        FireStoreService.shared.addSnapshotListenerToUser(for: mainUserID) { [weak self] result in
             guard let self = self else { return }
             switch result {
             case .success(let success):
@@ -125,6 +134,7 @@ final class ProfilePresenter: ProfilePresenterProtocol {
                 view?.updateSubsribers()
                 view?.updateSubscriptions()
                 view?.updateTextData(user: self.mainUser)
+                print(posts)
             case .failure(let failure):
                 view?.showErrorAler(error: failure.localizedDescription)
             }
@@ -137,7 +147,7 @@ final class ProfilePresenter: ProfilePresenterProtocol {
             guard let self = self else { return }
             switch result {
             case .success(let success):
-                FireStoreService.shared.changeData(id: mainUser.documentID!, text: success.absoluteString, state: .storie)
+                FireStoreService.shared.changeData(id: mainUserID, text: success.absoluteString, state: .storie)
             case .failure(let failure):
                 view?.showErrorAler(error: failure.localizedDescription)
             }
@@ -182,7 +192,6 @@ final class ProfilePresenter: ProfilePresenterProtocol {
         }
 
         dispatchGroup.notify(queue: .main) { [weak self] in
-            print("Entering group with imageCOunt: \(self?.photoAlbum?.count)")
             self?.view?.updateAlbum()
         }
 
@@ -212,12 +221,12 @@ final class ProfilePresenter: ProfilePresenterProtocol {
     }
 
     func incrementLikes(post: EachPost) {
-        guard let useID = mainUser.documentID, let postID = post.documentID else { return }
-        FireStoreService.shared.incrementLikes(user: useID, mainUser: mainUserID, post: postID)
+        guard let postID = post.documentID else { return }
+        FireStoreService.shared.incrementLikesForPost(user: mainUserID, mainUser: mainUserID, post: postID)
     }
 
     func decrementLikes(post: EachPost) {
-        guard let userID = mainUser.documentID, let postID = post.documentID else { return }
-        FireStoreService.shared.decrementLikes(user: userID, mainUser: mainUserID, post: postID)
+        guard let postID = post.documentID else { return }
+        FireStoreService.shared.decrementLikesForPost(user: mainUserID, mainUser: mainUserID, post: postID)
     }
 }

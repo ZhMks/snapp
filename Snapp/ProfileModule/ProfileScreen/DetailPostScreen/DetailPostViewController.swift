@@ -23,23 +23,23 @@ class DetailPostViewController: UIViewController {
     private lazy var detailPostView: UIView = {
         let detailPostView = UIView()
         detailPostView.backgroundColor = .systemBackground
-        print("Init of detailPostVIew: \(detailPostView.frame)")
+
         return detailPostView
     }()
     private lazy var topSeparatorView: UIView = {
         let topSeparatorView = UIView()
         topSeparatorView.translatesAutoresizingMaskIntoConstraints = false
         topSeparatorView.backgroundColor = .systemGray4
-        print("Init of topSeparator: \(topSeparatorView.frame)")
+
         return topSeparatorView
     }()
 
     private lazy var avatarImageView: UIImageView = {
         let avatarImageView = UIImageView()
         avatarImageView.translatesAutoresizingMaskIntoConstraints = false
-        avatarImageView.image = presenter.avatarImage 
+        avatarImageView.image = presenter.avatarImage
         avatarImageView.clipsToBounds = true
-        print("Init of avatarImage: \(avatarImageView.frame)")
+
         return avatarImageView
     }()
 
@@ -49,7 +49,7 @@ class DetailPostViewController: UIViewController {
         identifierLabel.font = UIFont(name: "Inter-Light", size: 12)
         identifierLabel.textColor = .systemOrange
         identifierLabel.text = presenter.user.identifier
-        print("Init of identifierLab: \(identifierLabel.frame)")
+
         return identifierLabel
     }()
 
@@ -59,7 +59,7 @@ class DetailPostViewController: UIViewController {
         jobLabel.textColor = .systemGray3
         jobLabel.font = UIFont(name: "Inter-Light", size: 12)
         jobLabel.text = presenter.user.job
-        print("Init of jobLab: \(jobLabel.frame)")
+
         return jobLabel
     }()
 
@@ -78,7 +78,7 @@ class DetailPostViewController: UIViewController {
         postTextLabel.numberOfLines = 0
         postTextLabel.textAlignment = .left
         postTextLabel.sizeToFit()
-        print("Init of postText: \(postTextLabel.frame)")
+
         return postTextLabel
     }()
 
@@ -89,7 +89,7 @@ class DetailPostViewController: UIViewController {
         likeButton.clipsToBounds = true
         likeButton.tintColor = ColorCreator.shared.createButtonColor()
         likeButton.addTarget(self, action: #selector(likeButtonTapped), for: .touchUpInside)
-        print("Init of likeBut: \(likeButton.frame)")
+
         return likeButton
     }()
 
@@ -99,7 +99,7 @@ class DetailPostViewController: UIViewController {
         likesLabel.font = UIFont(name: "Inter-Light", size: 14)
         likesLabel.textColor = ColorCreator.shared.createTextColor()
         likesLabel.text = .localized(string: "\(presenter.post.likes)")
-        print("Init of likesLabel: \(likesLabel.frame)")
+
         return likesLabel
     }()
 
@@ -108,7 +108,7 @@ class DetailPostViewController: UIViewController {
         commentsButton.translatesAutoresizingMaskIntoConstraints = false
         commentsButton.setBackgroundImage(UIImage(systemName: "bubble"), for: .normal)
         commentsButton.tintColor = ColorCreator.shared.createButtonColor()
-        print("Init of commentsBut: \(commentsButton.frame)")
+
         return commentsButton
     }()
 
@@ -118,7 +118,7 @@ class DetailPostViewController: UIViewController {
         commentsLabel.font = UIFont(name: "Inter-Light", size: 14)
         commentsLabel.textColor = ColorCreator.shared.createTextColor()
         commentsLabel.text = .localized(string: "\(presenter.post.commentaries)")
-        print("Init of commentsLabel: \(commentsLabel.frame)")
+
         return commentsLabel
     }()
 
@@ -127,7 +127,7 @@ class DetailPostViewController: UIViewController {
         bookmarkButton.translatesAutoresizingMaskIntoConstraints = false
         bookmarkButton.setBackgroundImage(UIImage(systemName: "bookmark"), for: .normal)
         bookmarkButton.tintColor = ColorCreator.shared.createButtonColor()
-        print("Init of bookmarkBut: \(bookmarkButton.frame)")
+        bookmarkButton.addTarget(self, action: #selector(bookmarkButtonTapped), for: .touchUpInside)
         return bookmarkButton
     }()
 
@@ -135,7 +135,6 @@ class DetailPostViewController: UIViewController {
         let separatorView = UIView()
         separatorView.translatesAutoresizingMaskIntoConstraints = false
         separatorView.backgroundColor = .systemGray5
-        print("Init of separatorView: \(separatorView.frame)")
         return separatorView
     }()
 
@@ -147,7 +146,6 @@ class DetailPostViewController: UIViewController {
         tableViewTitle.text = .localized(string: "Комментарии \(presenter.post.commentaries)")
         tableViewTitle.sizeToFit()
         tableViewTitle.numberOfLines = 0
-        print("Init of tableViewTitle: \(tableViewTitle.frame)")
         return tableViewTitle
     }()
 
@@ -156,7 +154,6 @@ class DetailPostViewController: UIViewController {
         commentsTableView.translatesAutoresizingMaskIntoConstraints = false
         commentsTableView.delegate = self
         commentsTableView.dataSource = self
-        print("Init of commentsTableView: \(commentsTableView.frame)")
         return commentsTableView
     }()
 
@@ -167,7 +164,6 @@ class DetailPostViewController: UIViewController {
         let tapgesture = UITapGestureRecognizer(target: self, action: #selector(addCommentTapped))
         tapgesture.numberOfTapsRequired = 1
         addCommentView.addGestureRecognizer(tapgesture)
-        print("Init of addcomment: \(addCommentView.frame)")
         return addCommentView
     }()
 
@@ -176,7 +172,6 @@ class DetailPostViewController: UIViewController {
         addCommentImage.translatesAutoresizingMaskIntoConstraints = false
         addCommentImage.image = UIImage(systemName: "paperclip")
         addCommentImage.tintColor = ColorCreator.shared.createButtonColor()
-        print("Init of addcommentimg: \(addCommentImage.frame)")
         return addCommentImage
     }()
 
@@ -186,7 +181,6 @@ class DetailPostViewController: UIViewController {
         addCommentLabel.font = UIFont(name: "Inter-Light", size: 12)
         addCommentLabel.textColor = .systemGray4
         addCommentLabel.text = .localized(string: "Оставить комментарий")
-        print("Init of addcommentlabel: \(addCommentLabel.frame)")
         return addCommentLabel
     }()
 
@@ -196,6 +190,7 @@ class DetailPostViewController: UIViewController {
         super.viewDidAppear(animated)
         presenter.fetchComments()
         presenter.getLikes()
+        presenter.checkBookmarkedPost()
     }
 
     override func viewDidLoad() {
@@ -236,11 +231,11 @@ class DetailPostViewController: UIViewController {
     @objc func likeButtonTapped() {
 
         if self.likeButton.backgroundImage(for: .normal) == UIImage(systemName: "heart.fill") {
-            presenter.decrementLikes()
+            presenter.decrementLikesForPost()
             self.likeButton.setBackgroundImage(UIImage(systemName: "heart"), for: .normal)
         }
         else {
-            presenter.incrementLikes()
+            presenter.incrementLikesForPost()
             self.likeButton.setBackgroundImage(UIImage(systemName: "heart.fill"), for: .normal)
         }
     }
@@ -290,11 +285,19 @@ class DetailPostViewController: UIViewController {
     @objc func addCommentTapped() {
         let commentView = CommentViewController()
         guard let documentID = presenter.post.documentID else { return }
-        guard let user = presenter.user.documentID else { return }
-        let commentPresenter = CommentViewPresenter(view: commentView, image: presenter.avatarImage, user: user, documentID: documentID, commentor: self.presenter.mainUserID, state: .comment)
-        commentView.presenter = commentPresenter
-        commentView.modalPresentationStyle = .fullScreen
-        present(commentView, animated: true)
+        switch self.presenter.userState {
+        case .mainUser:
+            let commentPresenter = CommentViewPresenter(view: commentView, image: presenter.avatarImage, user: self.presenter.mainUserID, documentID: documentID, commentor: self.presenter.mainUserID, state: .comment, userState: self.presenter.userState)
+            commentView.presenter = commentPresenter
+            commentView.modalPresentationStyle = .fullScreen
+            present(commentView, animated: true)
+        case .notMainUser:
+            guard let user = presenter.user.documentID else { return }
+            let commentPresenter = CommentViewPresenter(view: commentView, image: presenter.avatarImage, user: user, documentID: documentID, commentor: self.presenter.mainUserID, state: .comment, userState: self.presenter.userState)
+            commentView.presenter = commentPresenter
+            commentView.modalPresentationStyle = .fullScreen
+            present(commentView, animated: true)
+        }
     }
 
     private func addTapGesture() {
@@ -306,11 +309,20 @@ class DetailPostViewController: UIViewController {
     @objc func removeMenuView() {
         menuForPost.removeFromSuperview()
     }
+
+    @objc func bookmarkButtonTapped() {
+        presenter.addPostToBookmarks()
+    }
 }
 
 
 // MARK: -Output Presenter
 extension DetailPostViewController: DetailPostViewProtocol {
+    
+    func updateBookmarkButton() {
+        self.bookmarkButton.tintColor = .systemOrange
+    }
+    
 
     func showViewControllerWithoutImage() {
         addSubviewsWithoutImage()
@@ -320,7 +332,7 @@ extension DetailPostViewController: DetailPostViewProtocol {
     }
 
     func showMenuForPost() {
-        let menuForPostPresenter = MenuForPostPresenter(view: menuForPost, user: self.presenter.user, post: self.presenter.post)
+        let menuForPostPresenter = MenuForPostPresenter(view: menuForPost, user: self.presenter.user, post: self.presenter.post, mainUserID: self.presenter.mainUserID)
         menuForPost.presenter = menuForPostPresenter
         menuForPost.translatesAutoresizingMaskIntoConstraints = false
         menuForPost.isHidden = false
@@ -368,14 +380,20 @@ extension DetailPostViewController: DetailPostViewProtocol {
 
     func showCommentVC(commentID: String?, state: CommentState) {
         let commentView = CommentViewController()
-        guard let documentID = presenter.post.documentID, let userID = presenter.user.documentID else { return }
+        guard let documentID = presenter.post.documentID else { return }
         let commentor = presenter.mainUserID
-
-        let commentPresenter = CommentViewPresenter(view: commentView, image: presenter.avatarImage, user: userID, documentID: documentID, commentor: commentor, state: state)
-        commentView.presenter = commentPresenter
-        commentPresenter.commentID = commentID
+        switch self.presenter.userState {
+        case .mainUser:
+            let commentPresenter = CommentViewPresenter(view: commentView, image: presenter.avatarImage, user: self.presenter.mainUserID, documentID: documentID, commentor: commentor, state: state, userState: self.presenter.userState)
+            commentView.presenter = commentPresenter
+            commentPresenter.commentID = commentID
+        case .notMainUser:
+            guard let userID = presenter.user.documentID else { return }
+            let commentPresenter = CommentViewPresenter(view: commentView, image: presenter.avatarImage, user: userID, documentID: documentID, commentor: commentor, state: state, userState: self.presenter.userState)
+            commentView.presenter = commentPresenter
+            commentPresenter.commentID = commentID
+        }
         commentView.modalPresentationStyle = .pageSheet
-
         if let sheet = commentView.sheetPresentationController {
             let customHeight = UISheetPresentationController.Detent.custom(identifier: .init("customHeight")) { context in
                 return 500
@@ -419,10 +437,20 @@ extension DetailPostViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: CommentsTableCell.identifier) as? CommentsTableCell else { return UIView() }
         guard let commentInSection = comments(forSection: section) else { return UITableViewCell() }
-        cell.updateView(comment: commentInSection)
+        cell.updateView(comment: commentInSection, mainUser: self.presenter.mainUserID)
         cell.buttonTappedHandler = { [weak self] in
             self?.presenter.showCommetVC(commentID: commentInSection.documentID, state: .answer)
         }
+        cell.incrementLikes = { [weak self] comment in
+            guard let commentID = comment.documentID else { return }
+            self?.presenter.incrementLikesForComment(commentID: commentID)
+        }
+
+        cell.decrementLikes = { [weak self] comment in
+            guard let commentID = comment.documentID else { return }
+            self?.presenter.decrementLikesForComment(commentID: commentID)
+        }
+        
         return cell
     }
 
@@ -452,7 +480,7 @@ extension DetailPostViewController: UITableViewDataSource {
                 switch result {
                 case .success(let user):
                     cell.backgroundColor = .systemBackground
-                    cell.updateAnswers(answer: answer, user: user, date: answer.date)
+                    cell.updateAnswers(answer: answer, user: user, date: answer.date, mainUser: self.presenter.mainUserID)
                     cell.buttonTappedHandler = { [weak self] in
                         self?.presenter.showCommetVC(commentID: comment.documentID, state: .answer)
                     }
@@ -462,6 +490,16 @@ extension DetailPostViewController: UITableViewDataSource {
             }
             cell.buttonTappedHandler = { [weak self] in
                 self?.presenter.showCommetVC(commentID: comment.documentID, state: .answer)
+            }
+
+            cell.incrementLikes = { [weak self] answer in
+                guard let answerID = answer.documentID, let commentID = comment.documentID else { return }
+                self?.presenter.incrementLikesForAnswer(answerID: answerID, commentID: commentID)
+            }
+
+            cell.decrementLikes = { [weak self] answer in
+                guard let answerID = answer.documentID, let commentID = comment.documentID else { return }
+                self?.presenter.decrementLikesForAnswer(answerID: answerID, commentID: commentID)
             }
         }
         return cell
@@ -520,7 +558,6 @@ extension DetailPostViewController {
             addCommentImage.heightAnchor.constraint(equalToConstant: 15),
             addCommentImage.widthAnchor.constraint(equalToConstant: 15),
 
-            addCommentLabel.centerYAnchor.constraint(equalTo: addCommentImage.centerYAnchor),
             addCommentLabel.topAnchor.constraint(equalTo: addCommentView.topAnchor, constant: 10),
             addCommentLabel.leadingAnchor.constraint(equalTo: addCommentImage.trailingAnchor, constant: 10),
             addCommentLabel.trailingAnchor.constraint(equalTo: addCommentView.trailingAnchor, constant: -190),
@@ -561,22 +598,22 @@ extension DetailPostViewController {
 
             likeButton.topAnchor.constraint(equalTo: postTextLabel.bottomAnchor, constant: 16),
             likeButton.leadingAnchor.constraint(equalTo: detailPostView.leadingAnchor, constant: 17),
-            likeButton.trailingAnchor.constraint(equalTo: detailPostView.trailingAnchor, constant: -385),
+            likeButton.trailingAnchor.constraint(equalTo: detailPostView.trailingAnchor, constant: -395),
             likeButton.bottomAnchor.constraint(equalTo: separatorView.topAnchor, constant: -5),
 
             likesLabel.topAnchor.constraint(equalTo: postTextLabel.bottomAnchor, constant: 16),
             likesLabel.leadingAnchor.constraint(equalTo: likeButton.trailingAnchor, constant: 5),
-            likesLabel.trailingAnchor.constraint(equalTo: detailPostView.trailingAnchor, constant: -330),
+            likesLabel.trailingAnchor.constraint(equalTo: detailPostView.trailingAnchor, constant: -340),
             likesLabel.bottomAnchor.constraint(equalTo: separatorView.topAnchor, constant: -5),
 
             commentsButton.topAnchor.constraint(equalTo: postTextLabel.bottomAnchor, constant: 16),
             commentsButton.leadingAnchor.constraint(equalTo: likesLabel.trailingAnchor, constant: 24),
-            commentsButton.trailingAnchor.constraint(equalTo: detailPostView.trailingAnchor, constant: -274),
+            commentsButton.trailingAnchor.constraint(equalTo: detailPostView.trailingAnchor, constant: -284),
             commentsButton.bottomAnchor.constraint(equalTo: separatorView.topAnchor, constant: -5),
 
             commentsLabel.topAnchor.constraint(equalTo: postTextLabel.bottomAnchor, constant: 16),
             commentsLabel.leadingAnchor.constraint(equalTo: commentsButton.trailingAnchor, constant: 5),
-            commentsLabel.trailingAnchor.constraint(equalTo: detailPostView.trailingAnchor, constant: -231),
+            commentsLabel.trailingAnchor.constraint(equalTo: detailPostView.trailingAnchor, constant: -241),
             commentsLabel.bottomAnchor.constraint(equalTo: separatorView.topAnchor, constant: -5),
 
             bookmarkButton.topAnchor.constraint(equalTo: postTextLabel.bottomAnchor, constant: 16),
@@ -627,12 +664,12 @@ extension DetailPostViewController {
             commentsTableView.widthAnchor.constraint(equalTo: safeArea.widthAnchor),
             commentsTableView.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor),
 
-            addCommentView.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: 630),
+            addCommentView.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: 670),
             addCommentView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
             addCommentView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
             addCommentView.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor),
 
-            addCommentImage.topAnchor.constraint(equalTo: addCommentView.topAnchor, constant: 14),
+            addCommentImage.topAnchor.constraint(equalTo: addCommentView.topAnchor, constant: 25),
             addCommentImage.leadingAnchor.constraint(equalTo: addCommentView.leadingAnchor, constant: 16),
             addCommentImage.heightAnchor.constraint(equalToConstant: 15),
             addCommentImage.widthAnchor.constraint(equalToConstant: 15),
@@ -640,7 +677,7 @@ extension DetailPostViewController {
             addCommentLabel.centerYAnchor.constraint(equalTo: addCommentImage.centerYAnchor),
             addCommentLabel.leadingAnchor.constraint(equalTo: addCommentImage.trailingAnchor, constant: 10),
             addCommentLabel.trailingAnchor.constraint(equalTo: addCommentView.trailingAnchor, constant: -190),
-            addCommentLabel.bottomAnchor.constraint(equalTo: addCommentView.bottomAnchor, constant: -14)
+            addCommentLabel.heightAnchor.constraint(equalToConstant: 50)
         ])
 
         NSLayoutConstraint.activate([
@@ -671,26 +708,26 @@ extension DetailPostViewController {
 
             likeButton.topAnchor.constraint(equalTo: postTextLabel.bottomAnchor, constant: 16),
             likeButton.leadingAnchor.constraint(equalTo: detailPostView.leadingAnchor, constant: 17),
-            likeButton.trailingAnchor.constraint(equalTo: detailPostView.trailingAnchor, constant: -350),
+            likeButton.trailingAnchor.constraint(equalTo: detailPostView.trailingAnchor, constant: -380),
             likeButton.bottomAnchor.constraint(equalTo: separatorView.topAnchor, constant: -5),
 
             likesLabel.topAnchor.constraint(equalTo: postTextLabel.bottomAnchor, constant: 16),
             likesLabel.leadingAnchor.constraint(equalTo: likeButton.trailingAnchor, constant: 5),
-            likesLabel.trailingAnchor.constraint(equalTo: detailPostView.trailingAnchor, constant: -307),
+            likesLabel.trailingAnchor.constraint(equalTo: detailPostView.trailingAnchor, constant: -337),
             likesLabel.bottomAnchor.constraint(equalTo: separatorView.topAnchor, constant: -5),
 
             commentsButton.topAnchor.constraint(equalTo: postTextLabel.bottomAnchor, constant: 16),
             commentsButton.leadingAnchor.constraint(equalTo: likesLabel.trailingAnchor, constant: 24),
-            commentsButton.trailingAnchor.constraint(equalTo: detailPostView.trailingAnchor, constant: -264),
+            commentsButton.trailingAnchor.constraint(equalTo: detailPostView.trailingAnchor, constant: -294),
             commentsButton.bottomAnchor.constraint(equalTo: separatorView.topAnchor, constant: -5),
 
             commentsLabel.topAnchor.constraint(equalTo: postTextLabel.bottomAnchor, constant: 16),
             commentsLabel.leadingAnchor.constraint(equalTo: commentsButton.trailingAnchor, constant: 5),
-            commentsLabel.trailingAnchor.constraint(equalTo: detailPostView.trailingAnchor, constant: -231),
+            commentsLabel.trailingAnchor.constraint(equalTo: detailPostView.trailingAnchor, constant: -251),
             commentsLabel.bottomAnchor.constraint(equalTo: separatorView.topAnchor, constant: -5),
 
             bookmarkButton.topAnchor.constraint(equalTo: postTextLabel.bottomAnchor, constant: 16),
-            bookmarkButton.leadingAnchor.constraint(equalTo: commentsLabel.trailingAnchor, constant: 183),
+            bookmarkButton.leadingAnchor.constraint(equalTo: commentsLabel.trailingAnchor, constant: 193),
             bookmarkButton.trailingAnchor.constraint(equalTo: detailPostView.trailingAnchor, constant: -30),
             bookmarkButton.bottomAnchor.constraint(equalTo: separatorView.topAnchor, constant: -5),
 

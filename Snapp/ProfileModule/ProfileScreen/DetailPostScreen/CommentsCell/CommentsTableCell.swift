@@ -15,6 +15,9 @@ final class CommentsTableCell: UITableViewCell {
     static let identifier = "CommentsTableCell"
 
     var buttonTappedHandler: (()->Void)?
+    var incrementLikes: ((Comment) -> Void)?
+    var decrementLikes: ((Comment) -> Void)?
+    var comment: Comment?
 
     let networkService = NetworkService()
 
@@ -38,6 +41,7 @@ final class CommentsTableCell: UITableViewCell {
         likesButton.translatesAutoresizingMaskIntoConstraints = false
         likesButton.setBackgroundImage(UIImage(systemName: "heart"), for: .normal)
         likesButton.tintColor = ColorCreator.shared.createButtonColor()
+        likesButton.addTarget(self, action: #selector(likeButtonTapped), for: .touchUpInside)
         return likesButton
     }()
 
@@ -91,11 +95,19 @@ final class CommentsTableCell: UITableViewCell {
 
     // MARK: -Funcs
 
-    func updateView(comment: Comment) {
-
+    func updateView(comment: Comment, mainUser: String) {
+        self.comment = comment
         commentLabel.text = comment.text
         dateLabel.text = comment.date
-        likesLabel.text = "\(comment.likes)"
+        likesLabel.text = "\(comment.likes?.count ?? 0)"
+
+        if let commentLikesArray = comment.likes {
+            if commentLikesArray.contains(mainUser) {
+                self.likesButton.setBackgroundImage(UIImage(systemName: "heart.fill"), for: .normal)
+            } else {
+                self.likesButton.setBackgroundImage(UIImage(systemName: "heart"), for: .normal)
+            }
+        }
 
         FireStoreService.shared.getUser(id: comment.commentor) { [weak self] result in
             guard let self else { return }
@@ -124,6 +136,18 @@ final class CommentsTableCell: UITableViewCell {
 
     @objc func answerButtonTapped(_ sender: UIButton) {
         buttonTappedHandler?()
+    }
+
+    @objc func likeButtonTapped() {
+        guard let comment = self.comment else { return }
+        if self.likesButton.backgroundImage(for: .normal) == UIImage(systemName: "heart.fill") {
+            decrementLikes?(comment)
+            self.likesButton.setBackgroundImage(UIImage(systemName: "heart"), for: .normal)
+        }
+        else {
+            incrementLikes?(comment)
+            self.likesButton.setBackgroundImage(UIImage(systemName: "heart.fill"), for: .normal)
+        }
     }
 
     // MARK: -Layout

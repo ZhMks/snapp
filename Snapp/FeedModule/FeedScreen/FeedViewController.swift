@@ -212,7 +212,7 @@ extension FeedViewController: UITableViewDelegate {
                 guard let self else { return }
                 switch result {
                 case .success(let avatarImage):
-                    let detailPostPresenter = DetailPostPresenter(view: detailPostVC, user: user, mainUserID: self.presenter.mainUserID, post: post, avatarImage: avatarImage)
+                    let detailPostPresenter = DetailPostPresenter(view: detailPostVC, user: user, mainUserID: self.presenter.mainUserID, post: post, avatarImage: avatarImage, userState: .notMainUser)
                     detailPostVC.presenter = detailPostPresenter
                     detailPostVC.postMenuState = .feedPost
                     DispatchQueue.main.async { [weak self] in

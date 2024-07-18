@@ -27,7 +27,7 @@ class ThirdOnboardingViewController: UIViewController {
     private lazy var informationText: UILabel = {
         let informationText = UILabel()
         informationText.translatesAutoresizingMaskIntoConstraints = false
-        informationText.text = .localized(string: "Мы отправили SMS с кодом на номер") + "     \(presenter.number!)"
+        informationText.text = .localized(string: "Мы отправили SMS с кодом на номер") + "\n\(presenter.number!)"
         informationText.font = UIFont(name: "Inter-Medium", size: 14)
         informationText.textColor = ColorCreator.shared.createTextColor()
         informationText.textAlignment = .center

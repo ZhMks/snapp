@@ -141,7 +141,10 @@ class MenuForPostView: UIView {
 //MARK: -Presenter Output
 
 extension MenuForPostView: MenuForPostViewProtocol {
-
+    func removeMenu() {
+        self.removeFromSuperview()
+    }
+    
     func showError(descr error: String) {
         print(error)
     }

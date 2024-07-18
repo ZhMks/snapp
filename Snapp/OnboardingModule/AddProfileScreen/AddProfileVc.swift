@@ -210,8 +210,8 @@ extension AddProfileVc {
             avatarImage.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor, constant: -240),
 
             scrollView.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: 290),
-            scrollView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 50),
-            scrollView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -50),
+            scrollView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 20),
+            scrollView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -20),
             scrollView.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor, constant: -30),
 
             profileView.topAnchor.constraint(equalTo: scrollView.topAnchor),
@@ -249,8 +249,8 @@ extension AddProfileVc {
             identifierTextField.trailingAnchor.constraint(equalTo: profileView.trailingAnchor, constant: -50),
             identifierTextField.bottomAnchor.constraint(equalTo: profileView.bottomAnchor, constant: -120),
 
-            submitButton.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 80),
-            submitButton.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -80),
+            submitButton.leadingAnchor.constraint(equalTo: profileView.leadingAnchor, constant: 15),
+            submitButton.trailingAnchor.constraint(equalTo: profileView.trailingAnchor, constant: -15),
             submitButton.topAnchor.constraint(equalTo: identifierTextField.bottomAnchor, constant: 35),
             submitButton.bottomAnchor.constraint(equalTo: profileView.bottomAnchor, constant: -50)
         ])

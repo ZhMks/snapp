@@ -149,6 +149,9 @@ extension PhotoalbumViewController: UICollectionViewDataSource {
             return number
         } else if collectionView == photoCollectionView {
             guard let photoAlbum = self.presenter.photoAlbum else { return 0 }
+            if photoAlbum.isEmpty {
+                return 0 
+            }
             let selectedAlbum = Array(photoAlbum.keys)[selectedAlbumIndex]
             return photoAlbum[selectedAlbum]??.count ?? 0
         }

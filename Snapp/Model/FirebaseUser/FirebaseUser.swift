@@ -15,7 +15,7 @@ protocol CommentOrAnswer: Codable, Hashable {
     var text: String { get set }
     var commentor: String { get set }
     var date: String { get set }
-    var likes: Int { get set }
+    var likes: [String]? { get set }
 }
 
 struct FirebaseUser: Codable, Hashable {
@@ -67,7 +67,7 @@ struct Comment: CommentOrAnswer {
     var text: String
     var commentor: String
     var date: String
-    var likes: Int
+    var likes: [String]?
 }
 
 struct Like: Codable {
@@ -80,15 +80,6 @@ struct Answer: CommentOrAnswer {
     var text: String
     var commentor: String
     var date: String
-    var likes: Int
+    var likes: [String]?
 }
 
-class Files<T: Codable>: Codable {
-    var name: String
-    var object: T
-
-    init(name: String, object: T) {
-        self.name = name
-        self.object = object
-    }
-}

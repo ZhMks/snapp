@@ -15,6 +15,9 @@ final class AnswersTableCell: UITableViewCell {
     static let identifier = "AnswersTableCell"
 
     var buttonTappedHandler: (()->Void)?
+    var incrementLikes: ((Answer) -> Void)?
+    var decrementLikes: ((Answer) -> Void)?
+    var answer: Answer?
 
     let networkService = NetworkService()
 
@@ -37,6 +40,7 @@ final class AnswersTableCell: UITableViewCell {
         let likesButton = UIButton(type: .system)
         likesButton.translatesAutoresizingMaskIntoConstraints = false
         likesButton.setBackgroundImage(UIImage(systemName: "heart"), for: .normal)
+        likesButton.addTarget(self, action: #selector(likeButtonTapped), for: .touchUpInside)
         likesButton.tintColor = ColorCreator.shared.createButtonColor()
         return likesButton
     }()
@@ -89,10 +93,19 @@ final class AnswersTableCell: UITableViewCell {
 
     // MARK: - Funcs
 
-    func updateAnswers(answer: Answer, user: FirebaseUser, date: String) {
+    func updateAnswers(answer: Answer, user: FirebaseUser, date: String, mainUser: String) {
+        self.answer = answer
         commentLabel.text = answer.text
         dateLabel.text = answer.date
-        likesLabel.text = "\(answer.likes)"
+        likesLabel.text = "\(answer.likes?.count ?? 0)"
+
+        if let answerLikesArray = answer.likes {
+            if answerLikesArray.contains(mainUser) {
+                self.likesButton.setBackgroundImage(UIImage(systemName: "heart.fill"), for: .normal)
+            } else {
+                self.likesButton.setBackgroundImage(UIImage(systemName: "heart"), for: .normal)
+            }
+        }
 
         FireStoreService.shared.getUser(id: answer.commentor) { [weak self] result in
             guard let self else { return }
@@ -121,6 +134,18 @@ final class AnswersTableCell: UITableViewCell {
 
     @objc func answerButtonTapped(_ sender: UIButton) {
         buttonTappedHandler?()
+    }
+
+    @objc func likeButtonTapped() {
+        guard let answer = self.answer else { return }
+        if self.likesButton.backgroundImage(for: .normal) == UIImage(systemName: "heart.fill") {
+            decrementLikes?(answer)
+            self.likesButton.setBackgroundImage(UIImage(systemName: "heart"), for: .normal)
+        }
+        else {
+            incrementLikes?(answer)
+            self.likesButton.setBackgroundImage(UIImage(systemName: "heart.fill"), for: .normal)
+        }
     }
 
     // MARK: - Layout

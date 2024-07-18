@@ -374,7 +374,6 @@ extension DetailUserViewController: UITableViewDataSource {
 
         if !filteredArray.isEmpty {
             let data = filteredArray[indexPath.row]
-            print("Data inside not empty indexPath: \(data)")
             cell.updateView(post: data, user: presenter.user, state: .feedState, mainUserID: mainUserID)
         } else {
             cell.updateView(post: data, user: presenter.user, state: .feedState, mainUserID: mainUserID)
@@ -384,7 +383,7 @@ extension DetailUserViewController: UITableViewDataSource {
             self?.presenter.showFeedMenu(post: post)
         }
 
-        cell.incrementLikes = { [weak self,weak tableView] post in
+        cell.incrementLikes = { [weak self, weak tableView] post in
             self?.presenter.incrementLikes(post: post)
             self?.presenter.saveIntoFavourites(post: post)
             tableView?.reloadRows(at: [indexPath], with: .fade)
@@ -411,12 +410,24 @@ extension DetailUserViewController: UITableViewDelegate {
         let detailPostVC = DetailPostViewController()
         guard let image = presenter.avatarImage  else { return }
         if data.image!.isEmpty {
-            let detailPostPresenter = DetailPostPresenter(view: detailPostVC, user: presenter.user, mainUserID: self.presenter.mainUserID, post: data, avatarImage: image)
+            let detailPostPresenter = DetailPostPresenter(view: detailPostVC,
+                                                          user: presenter.user,
+                                                          mainUserID: self.presenter.mainUserID,
+                                                          post: data,
+                                                          avatarImage: image,
+                                                          userState: .notMainUser)
             detailPostVC.presenter = detailPostPresenter
+            detailPostVC.postMenuState = .feedPost
             self.navigationController?.pushViewController(detailPostVC, animated: true)
         } else {
-            let detailPostPresenter = DetailPostPresenter(view: detailPostVC, user: presenter.user, mainUserID: self.presenter.mainUserID, post: data, avatarImage: image)
+            let detailPostPresenter = DetailPostPresenter(view: detailPostVC,
+                                                          user: presenter.user,
+                                                          mainUserID: self.presenter.mainUserID,
+                                                          post: data,
+                                                          avatarImage: image,
+                                                          userState: .notMainUser)
             detailPostVC.presenter = detailPostPresenter
+            detailPostVC.postMenuState = .feedPost
             self.navigationController?.pushViewController(detailPostVC, animated: true)
         }
     }

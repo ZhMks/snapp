@@ -175,12 +175,12 @@ final class DetailPresenter: DetailPresenterProtocol {
 
     func incrementLikes(post: EachPost) {
         guard let userID = user.documentID, let postID = post.documentID else { return }
-        FireStoreService.shared.incrementLikes(user: userID, mainUser: mainUserID, post: postID)
+        FireStoreService.shared.incrementLikesForPost(user: userID, mainUser: mainUserID, post: postID)
     }
 
     func decrementLikes(post: EachPost) {
         guard let userID = user.documentID, let postID = post.documentID else { return }
-        FireStoreService.shared.decrementLikes(user: userID, mainUser: mainUserID, post: postID)
+        FireStoreService.shared.decrementLikesForPost(user: userID, mainUser: mainUserID, post: postID)
     }
 
     func checkSubscribers() {

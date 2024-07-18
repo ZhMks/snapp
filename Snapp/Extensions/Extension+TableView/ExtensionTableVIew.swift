@@ -22,6 +22,7 @@ extension UITableView {
         ])
 
         header.layoutIfNeeded()
+        header.setNeedsLayout()
 
         header.frame.size = header.systemLayoutSizeFitting(UIView.layoutFittingExpandedSize)
         tableHeaderView = header

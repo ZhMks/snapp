@@ -187,7 +187,8 @@ class ProfileViewController: UIViewController {
     private lazy var photogalleryLabel: UILabel = {
         let photogalleryLabel = UILabel()
         photogalleryLabel.translatesAutoresizingMaskIntoConstraints = false
-        photogalleryLabel.text = .localized(string: "Фотографии" + "  \(presenter.photoAlbum?.count)")
+        let text: String = .localized(string: "Фотографии") + " \(presenter.photoAlbum?.count ?? 0)"
+        photogalleryLabel.text = text
         photogalleryLabel.font = UIFont(name: "Inter-Medium", size: 16)
         photogalleryLabel.textColor = ColorCreator.shared.createTextColor()
         return photogalleryLabel
@@ -260,6 +261,7 @@ class ProfileViewController: UIViewController {
         searchTextField.translatesAutoresizingMaskIntoConstraints = false
         searchTextField.layer.cornerRadius = 8.0
         searchTextField.backgroundColor = .systemBackground
+        print("searchField initiated")
         return searchTextField
     }()
 
@@ -280,7 +282,7 @@ class ProfileViewController: UIViewController {
         addSubviews()
         layout()
         tuneTableView()
-        addTargetToview()
+    //    addTargetToview()
     }
 
     override func viewWillDisappear(_ animated: Bool) {
@@ -371,6 +373,7 @@ class ProfileViewController: UIViewController {
         postsTableView.reloadData()
 
         viewForTableTitle.addSubview(searchTextField)
+
         searchButton.isHidden = true
 
         NSLayoutConstraint.activate([
@@ -391,10 +394,10 @@ class ProfileViewController: UIViewController {
     }
 
     @objc func removeSearchTextField() {
-        searchTextField.removeFromSuperview()
+       searchTextField.removeFromSuperview()
     }
 
-    @objc func addTargetToview() {
+    private func addTargetToview() {
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(removeSearchTextField))
         tapGesture.numberOfTapsRequired = 1
         view.addGestureRecognizer(tapGesture)
@@ -470,16 +473,15 @@ extension ProfileViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: PostTableCell.identifier, for: indexPath) as? PostTableCell else { return UITableViewCell() }
 
-        print("Filtered Array inside indexPath: \(filteredArray)")
-
         let data = presenter.posts[indexPath.row]
         guard let docID = data.documentID else { return UITableViewCell() }
 
         if !filteredArray.isEmpty {
             let data = filteredArray[indexPath.row]
-            print("Data inside not empty indexPath: \(data)")
+            print("Data inside filter: \(data)")
             cell.updateView(post: data, user: presenter.mainUser, state: .profileState, mainUserID: self.presenter.mainUserID)
         } else {
+            print("Data not inside filter: \(data)")
             cell.updateView(post: data, user: presenter.mainUser, state: .profileState, mainUserID: self.presenter.mainUserID)
         }
 
@@ -527,7 +529,8 @@ extension ProfileViewController: UITableViewDelegate {
         let detailPostPresenter = DetailPostPresenter(view: detailPostVC,
                                                       user: self.presenter.mainUser, mainUserID: self.presenter.mainUserID,
                                                       post: data,
-                                                      avatarImage: image)
+                                                      avatarImage: image,
+                                                      userState: .mainUser)
         detailPostVC.presenter = detailPostPresenter
         detailPostVC.postMenuState = .detailPost
         self.navigationController?.pushViewController(detailPostVC, animated: true)
@@ -593,7 +596,7 @@ extension ProfileViewController: UITextFieldDelegate {
     func textFieldDidEndEditing(_ textField: UITextField) {
         filterArrayWithText(text: textField.text!)
         textField.text = ""
-        searchTextField.removeFromSuperview()
+      //  searchTextField.removeFromSuperview()
         searchButton.isHidden = false
     }
 }
@@ -786,9 +789,9 @@ extension ProfileViewController {
             tableViewTitle.bottomAnchor.constraint(equalTo: viewForTableTitle.bottomAnchor, constant: -5),
 
             searchButton.centerYAnchor.constraint(equalTo: tableViewTitle.centerYAnchor),
-            searchButton.widthAnchor.constraint(equalToConstant: 45),
-            searchButton.heightAnchor.constraint(equalToConstant: 30),
-            searchButton.trailingAnchor.constraint(equalTo: viewForTableTitle.trailingAnchor, constant: -18),
+            searchButton.heightAnchor.constraint(equalToConstant: 25),
+            searchButton.widthAnchor.constraint(equalToConstant: 25),
+            searchButton.trailingAnchor.constraint(equalTo: viewForTableTitle.trailingAnchor, constant: -15)
         ])
 
         signalImage.layer.cornerRadius = signalImage.frame.size.width / 2

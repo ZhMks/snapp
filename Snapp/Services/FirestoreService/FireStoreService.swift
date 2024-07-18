@@ -45,26 +45,26 @@ protocol FireStoreServiceProtocol {
     /// Возвращает все пользователей из папки "Users" из БД Firebase
     /// - Parameter completion: -
     func getAllUsers(completion: @escaping (Result<[FirebaseUser], Error>) -> Void)
-    
+
     /// Возвращает определенного пользователя по его id из БД.
     /// - Parameters:
     ///   - id: id пользователя. В БД - это documentID.
     ///   - completion: Возвращает либо пользователя, либо ошибку.
     func getUser(id: String, completion: @escaping (Result<FirebaseUser, AuthorisationErrors>) -> Void)
-    
+
     /// Создает пользователя в БД из структуры FirebaseUser.
     /// - Parameters:
     ///   - user: Структура FirebaseUser
     ///   - id: uid Который мы получаем после авторизации в Firebase.
     func createUser(user: FirebaseUser, id: String)
 
-    
+
     /// Сохраняем подписчика для пользователя.
     /// - Parameters:
     ///   - mainUser: uid Основного пользователя, который был авторизован в Firebase
     ///   - id: uid пользователя, которому записывается подписчик.
     func saveSubscriber(mainUser: String, id: String)
-    
+
     /// Добавляет обсервера для конкретного пользователя. Позволяет обновлять данные в режиме реального времени.
     /// - Parameters:
     ///   - user: uid пользователя, которому добавляем обсервера.
@@ -72,7 +72,7 @@ protocol FireStoreServiceProtocol {
     func addSnapshotListenerToUser(for user: String, completion: @escaping (Result<FirebaseUser, Error>) -> Void)
     func removeListenerForUser()
 
-    
+
     /// Функция для обновления полей в документе пользователя в БД.
     /// - Parameters:
     ///   - id: uid пользователя, которому обновляем данные в БД.
@@ -87,7 +87,7 @@ protocol FireStoreServiceProtocol {
     ///   - sub: uid пользователя в БД.
     ///   - completion: Возвращает либо массив постов, либо ошибку.
     func getPosts(sub: String, completion: @escaping (Result<[EachPost], PostErrors>) -> Void)
-    
+
     /// Функция для создания поста.
     /// - Parameters:
     ///   - date: Дата создания поста
@@ -97,7 +97,7 @@ protocol FireStoreServiceProtocol {
     ///   - completion: Возвращет либо созданный пост из БД, либо ошибку.
     func createPost(date: String, text: String, image: UIImage?, for user: String, completion: @escaping (Result<EachPost, Error>) -> Void)
 
-    
+
     /// Функция для добавления комментариев к посту.
     /// - Parameters:
     ///   - mainUser: uid пользователя для которого оставляется комментарий.
@@ -106,14 +106,14 @@ protocol FireStoreServiceProtocol {
     ///   - commentor: uid пользователя, который оставляет комментарий.
     ///   - completion: Возвращает либо комментарий, либо ошибку.
     func addComment(mainUser: String, text: String, documentID: String, commentor: String, completion: @escaping (Result<Comment, Error>) -> Void)
-    
+
     /// Получаем все комментарии для определенного поста.
     /// - Parameters:
     ///   - post: documentID поста из БД.
     ///   - user: uid пользователя, который содержит пост.
     ///   - completion: Возвращает либо комментарии, либо ошибку.
     func getComments(post: String, user: String, completion: @escaping (Result<[Comment], Error>) -> Void)
-    
+
     /// Добавляем ответы на комментарии.
     /// - Parameters:
     ///   - postID: docuemntID поста в БД Firebase.
@@ -122,7 +122,7 @@ protocol FireStoreServiceProtocol {
     ///   - answer: сруктура ответ, которую записываем в БД.
     ///   - completion: Возвращает либо ответ, либо ошибку.
     func addAnswerToComment(postID: String, user: String, commentID: String, answer: Answer, completion: @escaping (Result<Answer, Error>) -> Void)
-    
+
     /// Получаем ответы на комментарии.Тк в Firebase все лежит по принципу: document > collection > document. То просто так добраться до ответов через комментарии нельзя. Нужна новая ссылка.
     /// - Parameters:
     ///   - post: documentID поста в БД Firebase.
@@ -130,40 +130,40 @@ protocol FireStoreServiceProtocol {
     ///   - user: uid пользователя в БД.
     ///   - completion: Возвращает либо ответы, либо ошибку.
     func getAnswers(post: String, comment: String, user: String, completion: @escaping (Result<[Answer], Error>) -> Void)
-    
+
     /// Добавляем пост в "Любимое"
     /// - Parameters:
     ///   - post: documentID поста в БД.
     ///   - user: uid пользователя в БД.
     func saveIntoFavourites(post: EachPost, for user: String)
-    
+
     /// Функция для получения ссылки на пост из БД.
     /// - Parameters:
     ///   - id: documentID поста в БД.
     ///   - user: uid пользователя в БД.
     /// - Returns: Возвращает ссылку.
     func getDocLink(for id: String, user: String) -> String
-    
+
     /// Функция для отключения возможности комментирования поста. Меняем параметр в БД с true на false.
     /// - Parameters:
     ///   - id: documentID поста.
     ///   - user: uid авторизованного пользователя.
     func disableCommentaries(id: String, user: String)
-    
+
     /// Функция для добавления поста в папку Archives.
     /// - Parameters:
     ///   - post: documentID поста в БД.
     ///   - user: uid авторизованного пользователя.
     ///   - completion: Возвращает либо пост, либо ошибку.
     func addDocToArchives(post: EachPost, user: String, completion: @escaping (Result<EachPost, Error>) -> Void)
-    
+
     /// Функция для добавления обсервера к постам.
     /// - Parameters:
     ///   - user: uid пользователя из БД.
     ///   - completion: возвращает либо массив постов, либо ошибку.
     func addSnapshotListenerToPosts(for user: String, completion: @escaping (Result<[EachPost], Error>) -> Void)
     func removeListenerForPosts()
-    
+
     /// Функция для добавления обсервера к определенному посту. Тк у нас есть детальная страница поста, то использовать общую функцию постов не представляется возможным, тк нужна определенная ссылка, чтобы получить документ.
     /// - Parameters:
     ///   - docID: documentID поста из БД.
@@ -171,84 +171,92 @@ protocol FireStoreServiceProtocol {
     ///   - completion: Возвращает обновленный пост или ошибку декодирования.
     func addSnapshotListenerToCurrentPost(docID: String, userID: String, completion: @escaping (Result<EachPost, Error>) -> Void)
     func removeListenerForCurrentPost()
-    
+
     /// Функция для получения постов из папки "Любимое".
     /// - Parameters:
     ///   - user: uid пользователя из БД.
     ///   - completion: возвращает либо массив постов, либо ошибку.
     func fetchFavourites(user: String, completion: @escaping (Result<[EachPost], Error>) -> Void)
-    
+
     /// Функция для изменения поля isPinned в БД.
     /// - Parameters:
     ///   - user: uid авторизованного пользователя.
     ///   - docID: documentID поста из БД.
     func pinPost(user: String, docID: String)
 
-    
+
     /// Функция для добавления лайков к посту.
     /// - Parameters:
     ///   - user: uid пользователя из БД.
     ///   - mainUser: uid текущего авторизованного пользователя.
     ///   - post: documentID поста из БД.
-    func incrementLikes(user: String, mainUser: String, post: String)
+    func incrementLikesForPost(user: String, mainUser: String, post: String)
 
-    
+
     /// Функция для удаления лайков у поста.
     /// - Parameters:
     ///   - user: uid пользователя из БД.
     ///   - mainUser: uid текущего авторизованного пользователя.
     ///   - post: documentID поста из БД.
-    func decrementLikes(user: String, mainUser: String, post: String)
-    
+    func decrementLikesForPost(user: String, mainUser: String, post: String)
+
+    func incrementLikesForAnswer(answerID: String, user: String, postID: String, commentID: String, mainUserID: String)
+
+    func incrementLikesForComment(commentID: String, user: String, postID: String, mainUserID: String)
+
+    func decrementLikesForAnswer(answerID: String, user: String, postID: String, commentID: String, mainUserID: String)
+
+    func decrementLikesForComment(commentID: String, user: String, postID: String, mainUserID: String)
+
     /// Функция для получения массива лайкнувших пост пользователей.
     /// - Parameters:
     ///   - user: uid пользователя в БД.
     ///   - post: documentID поста в БД.
     ///   - completion: возвращает либо массив лайков, либо ошибку.
     func getNumberOfLikesInpost(user: String, post: String, completion: @escaping (Result <[Like], Error>) -> Void)
-    
+
     /// Функция для получения массива постов из папки Archives.
     /// - Parameters:
     ///   - user: uid пользователя в БД.
     ///   - completion: возвращает либо массив постов, либо ошибку.
     func fetchArchives(user: String, completion: @escaping(Result<[EachPost], Error>) -> Void)
-    
+
     /// Функция  для удаления поста.
     /// - Parameters:
     ///   - docID: documentID поста, который собираемся удалить.
     ///   - user: uid авторизованного пользователя.
     ///   - completion: возвращает либо успех, либо ошибку.
     func deleteDocument(docID: String, user: String, completion: @escaping (Result<Bool, Error>) -> Void)
-    
+
     /// Функция для удаления подписки на пользователя.
     /// - Parameters:
     ///   - sub: uid пользователя из БД.
     ///   - user: uid авторизованного пользователя.
     func removeSubscribtion(sub: String, for user: String)
 
-    
+
     /// Функция для удаления подписчика у пользователя.
     /// - Parameters:
     ///   - sub: uid пользователя из БД.
     ///   - user: uid авторизованного пользователя.
     func removeSubscriber(sub: String, for user: String)
 
-    
+
     /// Функция для добавления поста в Закладки.
     /// - Parameters:
     ///   - mainUser: uid текщуего авторизованного пользователя.
     ///   - user: uid пользователя из БД.
     ///   - post: структура post, которую добавляем в БД.
-    func saveToBookMarks(mainUser: String, user: String, post: EachPost)
+    func saveToBookMarks(mainUser: String, user: String, post: EachPost, completion: @escaping(Result<Bool, Error>) -> Void)
 
-    
+
     /// Функция для получения постов из папки "Закладки"
     /// - Parameters:
     ///   - user: uid текущего авторизованного пользователя.
     ///   - completion: возвращает либо массив постов, либо ошибку.
     func fetchBookmarkedPosts(user: String, completion: @escaping (Result<[BookmarkedPost], Error>) -> Void)
 
-    
+
     /// Функция для удаления поста из папки "Закладки"
     /// - Parameters:
     ///   - user: uid текущего авторизованного пользователя.
@@ -264,14 +272,14 @@ protocol FireStoreServiceProtocol {
     ///   - completion: Возвращает либо ссылку на загруженное изображение в Storage для последующего сохранения в БД Firestore, либо ошибку.
     func saveImageIntoStorage(urlLink: StorageReference, photo: UIImage, completion: @escaping (Result <URL, Error>) -> Void)
 
-    
+
     /// Функция для сохранения URL изображения из Storage в Firestore.
     /// - Parameters:
     ///   - image: URL изображения.
     ///   - user: uid текущего атворизованного пользователя.
     func saveImageIntoPhotoAlbum(image: String, user: String)
 
-    
+
     /// Функция для загрузки изображений из Firestore.
     /// - Parameters:
     ///   - user: uid пользователя из БД.
@@ -304,7 +312,7 @@ final class FireStoreService: FireStoreServiceProtocol {
             if let error = error {
                 completion(.failure(error))
             }
-            
+
             if let snapshot = snapshot {
                 do {
                     let user = try snapshot.data(as: FirebaseUser.self)
@@ -452,7 +460,7 @@ final class FireStoreService: FireStoreServiceProtocol {
         }
     }
 
-    func incrementLikes(user: String, mainUser: String, post: String) {
+    func incrementLikesForPost(user: String, mainUser: String, post: String) {
         let date = Date.now
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "dd-MM-YYYY"
@@ -464,13 +472,32 @@ final class FireStoreService: FireStoreServiceProtocol {
                             ])
     }
 
-    func decrementLikes(user: String, mainUser: String, post: String) {
+    func incrementLikesForAnswer(answerID: String, user: String, postID: String, commentID: String, mainUserID: String) {
+        let docRef = Firestore.firestore().collection("Users").document(user).collection("posts").document(postID).collection("comments").document(commentID).collection("answers").document(answerID)
+        docRef.updateData(["likes" : FieldValue.arrayUnion([mainUserID])])
+    }
+
+    func incrementLikesForComment(commentID: String, user: String, postID: String, mainUserID: String) {
+        let commentRef = Firestore.firestore().collection("Users").document(user).collection("posts").document(postID).collection("comments").document(commentID)
+        commentRef.updateData(["likes": FieldValue.arrayUnion([mainUserID])])
+    }
+
+    func decrementLikesForAnswer(answerID: String, user: String, postID: String, commentID: String, mainUserID: String) {
+        let docRef = Firestore.firestore().collection("Users").document(user).collection("posts").document(postID).collection("comments").document(commentID).collection("answers").document(answerID)
+        docRef.updateData(["likes" : FieldValue.arrayRemove([mainUserID])])
+    }
+
+    func decrementLikesForComment(commentID: String, user: String, postID: String, mainUserID: String) {
+        let commentRef = Firestore.firestore().collection("Users").document(user).collection("posts").document(postID).collection("comments").document(commentID)
+        commentRef.updateData(["likes" : FieldValue.arrayRemove([mainUserID])])
+    }
+
+    func decrementLikesForPost(user: String, mainUser: String, post: String) {
         let dbReference = Firestore.firestore().collection("Users").document(user).collection("posts").document(post).collection("likes").document(mainUser)
         dbReference.delete()
     }
 
     func getNumberOfLikesInpost(user: String, post: String, completion: @escaping (Result <[Like], Error>) -> Void) {
-        print("User that stored post: \(user), post: \(post)")
         let dbRef = Firestore.firestore().collection("Users").document(user).collection("posts").document(post).collection("likes")
         var likes: [Like] = []
 
@@ -790,11 +817,10 @@ final class FireStoreService: FireStoreServiceProtocol {
         dateFormatter.dateFormat = "dd MMM"
         let stringFromDate = dateFormatter.string(from: date)
 
-        let likes = 0
         let commentRef = Firestore.firestore().collection("Users").document(mainUser).collection("posts").document(documentID).collection("comments")
         let docRef = Firestore.firestore().collection("Users").document(mainUser).collection("posts").document(documentID)
 
-        let comment = Comment(text: text, commentor: commentor, date: stringFromDate, likes: likes)
+        let comment = Comment(text: text, commentor: commentor, date: stringFromDate)
         do {
             try commentRef.addDocument(from: comment)
             completion(.success(comment))
@@ -947,7 +973,7 @@ final class FireStoreService: FireStoreServiceProtocol {
         }
         let archiveRef = Firestore.firestore().collection("Users").document(user).collection("Archive")
         var newPost = post
-print(user)
+
         if let image = post.image {
             let networkService = NetworkService()
             networkService.fetchImage(string: image) { [weak self] result in
@@ -1061,14 +1087,30 @@ print(user)
         }
     }
 
-    func saveToBookMarks(mainUser: String, user: String, post: EachPost) {
+    func saveToBookMarks(mainUser: String, user: String, post: EachPost, completion: @escaping(Result<Bool, Error>) -> Void) {
         guard let originalPostID = post.documentID else { return }
         let bookmarkedPost = BookmarkedPost(text: post.text, image: post.image, likes: post.likes, commentaries: post.commentaries, date: post.date, userHoldingPost: user, originaPostID: originalPostID)
         let link = Firestore.firestore().collection("Users").document(mainUser).collection("Bookmarks")
-        do {
-         try link.addDocument(from: bookmarkedPost)
-        } catch {
-            print(error.localizedDescription)
+        link.getDocuments { snapshot, error in
+            if let error = error {
+                return
+            }
+
+            if let snapshot = snapshot {
+                for document in snapshot.documents {
+                    let documentText = document.data()["text"] as? String
+                    if documentText == bookmarkedPost.text {
+                        completion(.success(false))
+                    } else {
+                        do {
+                            try link.addDocument(from: bookmarkedPost)
+                            completion(.success(true))
+                        } catch {
+                            completion(.failure(error))
+                        }
+                    }
+                }
+            }
         }
     }
 

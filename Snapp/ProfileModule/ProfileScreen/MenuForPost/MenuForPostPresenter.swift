@@ -10,10 +10,11 @@ import UIKit
 
 protocol MenuForPostViewProtocol: AnyObject {
     func showError(descr error: String)
+    func removeMenu()
 }
 
 protocol MenuForPostPresenterProtocol: AnyObject {
-    init(view: MenuForPostViewProtocol, user: FirebaseUser, post: EachPost)
+    init(view: MenuForPostViewProtocol, user: FirebaseUser, post: EachPost, mainUserID: String)
 }
 
 protocol MenuForPostDelegate: AnyObject {
@@ -26,32 +27,43 @@ final class MenuForPostPresenter: MenuForPostPresenterProtocol {
     let user: FirebaseUser
     let post: EachPost
     weak var delegate: MenuForPostDelegate?
+    let mainUserID: String
 
-    init(view: MenuForPostViewProtocol, user: FirebaseUser, post: EachPost) {
+    init(view: MenuForPostViewProtocol, user: FirebaseUser, post: EachPost, mainUserID: String) {
         self.view = view
         self.user = user
         self.post = post
+        self.mainUserID = mainUserID
     }
 
     func savePostToBookmarks() {
         guard let user = user.documentID else { return }
-        FireStoreService.shared.saveToBookMarks(mainUser: user, user: user, post: post)
+        FireStoreService.shared.saveToBookMarks(mainUser: user, user: user, post: post) { [weak self] result in
+            switch result {
+            case .success(let success):
+                if success {
+                    return
+                } else {
+                    self?.view?.showError(descr: "Пост уже существует")
+                }
+            case .failure(let failure):
+                self?.view?.showError(descr: failure.localizedDescription)
+            }
+        }
     }
 
     func disableCommentaries() {
-        guard let user = user.documentID else { return }
         if let documentID = post.documentID {
-            FireStoreService.shared.disableCommentaries(id: documentID, user: user)
+            FireStoreService.shared.disableCommentaries(id: documentID, user: mainUserID)
         }
     }
 
     func addPostToArchives() {
-        guard let user = user.documentID else { return }
-        FireStoreService.shared.addDocToArchives(post: post, user: user) { [weak self] result in
+        FireStoreService.shared.addDocToArchives(post: post, user: mainUserID) { [weak self] result in
             guard let self else { return }
             switch result {
             case .success(_):
-                return
+                self.view?.removeMenu()
             case .failure(let failure):
                 view?.showError(descr: failure.localizedDescription)
             }
@@ -59,15 +71,14 @@ final class MenuForPostPresenter: MenuForPostPresenterProtocol {
     }
 
     func pinPost() {
-        guard let userID = user.documentID, let docID = post.documentID else { return }
-        FireStoreService.shared.pinPost(user: userID, docID: docID)
+        guard let docID = post.documentID else { return }
+        FireStoreService.shared.pinPost(user: mainUserID, docID: docID)
         delegate?.pinPost()
     }
 
     func copyPostLink() -> String {
-        guard let user = user.documentID else { return "" }
         if let documentID = post.documentID {
-            let urlLink = FireStoreService.shared.getDocLink(for: documentID, user: user)
+            let urlLink = FireStoreService.shared.getDocLink(for: documentID, user: mainUserID)
             return urlLink
         }
         return ""
@@ -75,13 +86,12 @@ final class MenuForPostPresenter: MenuForPostPresenterProtocol {
 
 
     func deletePost() {
-        guard let user = user.documentID else { return }
         guard let postID = post.documentID else { return }
-        FireStoreService.shared.deleteDocument(docID: postID, user: user) { [weak self] result in
+        FireStoreService.shared.deleteDocument(docID: postID, user: mainUserID) { [weak self] result in
             guard let self else { return }
             switch result {
             case .success(_):
-                return
+                self.view?.removeMenu()
             case .failure(let failure):
                 view?.showError(descr: failure.localizedDescription)
             }
