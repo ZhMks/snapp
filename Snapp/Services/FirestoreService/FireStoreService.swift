@@ -20,6 +20,7 @@ enum ChangeStates {
     case storie
     case dateOfBirth
     case files
+    case education
 }
 
 enum PostErrors: Error {
@@ -636,6 +637,8 @@ final class FireStoreService: FireStoreServiceProtocol {
             ref.updateData(["dateOfBirth" : text])
         case .files:
             ref.updateData(["files" : FieldValue.arrayUnion([text])])
+        case .education:
+            ref.updateData(["education": text])
         }
     }
 

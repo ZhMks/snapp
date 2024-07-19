@@ -166,7 +166,9 @@ extension ProfileChangeViewController: ProfileChangeViewProtocol {
     func presentDataChangeScreen() {
         let datachangeViewController = DataChangeViewController()
         let navigationController = UINavigationController(rootViewController: datachangeViewController)
-        let datachangePresenter = DataChangePresenter(view: datachangeViewController, user: presenter.user, state: .mainInformation)
+        let datachangePresenter = DataChangePresenter(view: datachangeViewController,
+                                                      mainUserID: self.presenter.mainUserID,
+                                                      state: .mainInformation)
         datachangeViewController.presenter = datachangePresenter
         navigationController.modalPresentationStyle = .overCurrentContext
         present(navigationController, animated: true)
@@ -175,7 +177,9 @@ extension ProfileChangeViewController: ProfileChangeViewProtocol {
     func presentContactsChangeScreen() {
         let dataChangeViewController = DataChangeViewController()
         let navigationController = UINavigationController(rootViewController: dataChangeViewController)
-        let dataChangePresenter = DataChangePresenter(view: dataChangeViewController, user: self.presenter.user, state: .contacts)
+        let dataChangePresenter = DataChangePresenter(view: dataChangeViewController,
+                                                      mainUserID: self.presenter.mainUserID,
+                                                      state: .contacts)
         dataChangeViewController.presenter = dataChangePresenter
         navigationController.modalPresentationStyle = .overCurrentContext
         present(navigationController, animated: true)
@@ -184,7 +188,9 @@ extension ProfileChangeViewController: ProfileChangeViewProtocol {
     func presentInterestChangeScreen() {
         let dataChangeViewController = DataChangeViewController()
         let navigationController = UINavigationController(rootViewController: dataChangeViewController)
-        let dataChangePresenter = DataChangePresenter(view: dataChangeViewController, user: self.presenter.user, state: .interests)
+        let dataChangePresenter = DataChangePresenter(view: dataChangeViewController,
+                                                      mainUserID: self.presenter.mainUserID,
+                                                      state: .interests)
         dataChangeViewController.presenter = dataChangePresenter
         navigationController.modalPresentationStyle = .overCurrentContext
         present(navigationController, animated: true)
@@ -193,7 +199,9 @@ extension ProfileChangeViewController: ProfileChangeViewProtocol {
     func presentEducationChangeScreen() {
         let dataChangeViewController = DataChangeViewController()
         let navigationController = UINavigationController(rootViewController: dataChangeViewController)
-        let dataChangePresenter = DataChangePresenter(view: dataChangeViewController, user: self.presenter.user, state: .education)
+        let dataChangePresenter = DataChangePresenter(view: dataChangeViewController,
+                                                      mainUserID: self.presenter.mainUserID,
+                                                      state: .education)
         dataChangeViewController.presenter = dataChangePresenter
         navigationController.modalPresentationStyle = .overCurrentContext
         present(navigationController, animated: true)
@@ -202,7 +210,9 @@ extension ProfileChangeViewController: ProfileChangeViewProtocol {
     func presentCareerChangeScreen() {
         let dataChangeViewController = DataChangeViewController()
         let navigationController = UINavigationController(rootViewController: dataChangeViewController)
-        let dataChangePresenter = DataChangePresenter(view: dataChangeViewController, user: self.presenter.user, state: .career)
+        let dataChangePresenter = DataChangePresenter(view: dataChangeViewController,
+                                                      mainUserID: self.presenter.mainUserID,
+                                                      state: .career)
         dataChangeViewController.presenter = dataChangePresenter
         navigationController.modalPresentationStyle = .overCurrentContext
         present(navigationController, animated: true)

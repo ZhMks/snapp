@@ -618,9 +618,9 @@ extension DetailUserViewController {
             tableViewTitle.bottomAnchor.constraint(equalTo: viewForTableTitle.bottomAnchor, constant: -5),
 
             searchButton.centerYAnchor.constraint(equalTo: tableViewTitle.centerYAnchor),
-            searchButton.leadingAnchor.constraint(equalTo: viewForTableTitle.leadingAnchor, constant: 360),
-            searchButton.trailingAnchor.constraint(equalTo: viewForTableTitle.trailingAnchor, constant: -8),
-            searchButton.bottomAnchor.constraint(equalTo: viewForTableTitle.bottomAnchor, constant: -5)
+            searchButton.heightAnchor.constraint(equalToConstant: 25),
+            searchButton.widthAnchor.constraint(equalToConstant: 25),
+            searchButton.trailingAnchor.constraint(equalTo: viewForTableTitle.trailingAnchor, constant: -15)
         ])
     }
 

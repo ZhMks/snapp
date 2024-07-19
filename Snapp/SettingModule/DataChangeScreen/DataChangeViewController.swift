@@ -16,7 +16,7 @@ class DataChangeViewController: UIViewController {
         return true
     }
 
-    private lazy var firstLabel: UILabel = {
+    private lazy var nameLabel: UILabel = {
         let firstLabel = UILabel()
         firstLabel.translatesAutoresizingMaskIntoConstraints = false
         firstLabel.font = UIFont(name: "Inter-Medium", size: 12)
@@ -25,7 +25,7 @@ class DataChangeViewController: UIViewController {
         return firstLabel
     }()
 
-    private lazy var firstTextField: UITextField = {
+    private lazy var nameLabelTextField: UITextField = {
         let firstTextField = UITextField()
         firstTextField.translatesAutoresizingMaskIntoConstraints = false
         firstTextField.placeholder = .localized(string: "Имя")
@@ -35,7 +35,7 @@ class DataChangeViewController: UIViewController {
         return firstTextField
     }()
 
-    private lazy var secondLabel: UILabel = {
+    private lazy var surnameLabel: UILabel = {
         let secondLabel = UILabel()
         secondLabel.translatesAutoresizingMaskIntoConstraints = false
         secondLabel.font = UIFont(name: "Inter-Medium", size: 12)
@@ -44,7 +44,7 @@ class DataChangeViewController: UIViewController {
         return secondLabel
     }()
 
-    private lazy var secondTextField: UITextField = {
+    private lazy var surnameLabelTextField: UITextField = {
         let secondTextField = UITextField()
         secondTextField.translatesAutoresizingMaskIntoConstraints = false
         secondTextField.placeholder = .localized(string: "Фамилия")
@@ -54,7 +54,7 @@ class DataChangeViewController: UIViewController {
         return secondTextField
     }()
 
-    private lazy var thirdLabel: UILabel = {
+    private lazy var genderLabel: UILabel = {
         let thirdLabel = UILabel()
         thirdLabel.translatesAutoresizingMaskIntoConstraints = false
         thirdLabel.font = UIFont(name: "Inter-Medium", size: 12)
@@ -99,7 +99,7 @@ class DataChangeViewController: UIViewController {
         return femaleLabel
     }()
 
-    private lazy var fourthLabel: UILabel = {
+    private lazy var dateOfBirthLabel: UILabel = {
         let fourthLabel = UILabel()
         fourthLabel.translatesAutoresizingMaskIntoConstraints = false
         fourthLabel.font = UIFont(name: "Inter-Medium", size: 12)
@@ -108,7 +108,7 @@ class DataChangeViewController: UIViewController {
         return fourthLabel
     }()
 
-    private lazy var fourthTextField: UITextField = {
+    private lazy var dateOfBirthLabelTextField: UITextField = {
         let fourthTextField = UITextField()
         fourthTextField.translatesAutoresizingMaskIntoConstraints = false
         fourthTextField.placeholder = .localized(string: "Дата рождения")
@@ -118,7 +118,7 @@ class DataChangeViewController: UIViewController {
         return fourthTextField
     }()
 
-    private lazy var fifthLabel: UILabel = {
+    private lazy var idenTifierLabel: UILabel = {
         let fifthLabel = UILabel()
         fifthLabel.translatesAutoresizingMaskIntoConstraints = false
         fifthLabel.font = UIFont(name: "Inter-Medium", size: 12)
@@ -127,10 +127,86 @@ class DataChangeViewController: UIViewController {
         return fifthLabel
     }()
 
-    private lazy var fifthTextField: UITextField = {
+    private lazy var identifierLabelTextField: UITextField = {
         let fifthTextField = UITextField()
         fifthTextField.translatesAutoresizingMaskIntoConstraints = false
         fifthTextField.placeholder = .localized(string: "Идентификатор")
+        fifthTextField.textColor = ColorCreator.shared.createTextColor()
+        fifthTextField.layer.cornerRadius = 8
+        fifthTextField.backgroundColor = ColorCreator.shared.createPostBackgroundColor()
+        return fifthTextField
+    }()
+
+    private lazy var contactsLabel: UILabel = {
+        let fifthLabel = UILabel()
+        fifthLabel.translatesAutoresizingMaskIntoConstraints = false
+        fifthLabel.font = UIFont(name: "Inter-Medium", size: 12)
+        fifthLabel.text = .localized(string: "Контакты")
+        fifthLabel.textColor = ColorCreator.shared.createTextColor()
+        return fifthLabel
+    }()
+
+    private lazy var contactsLabelTextField: UITextField = {
+        let fifthTextField = UITextField()
+        fifthTextField.translatesAutoresizingMaskIntoConstraints = false
+        fifthTextField.placeholder = .localized(string: "Контактная информация")
+        fifthTextField.textColor = ColorCreator.shared.createTextColor()
+        fifthTextField.layer.cornerRadius = 8
+        fifthTextField.backgroundColor = ColorCreator.shared.createPostBackgroundColor()
+        return fifthTextField
+    }()
+
+    private lazy var interestLabel: UILabel = {
+        let fifthLabel = UILabel()
+        fifthLabel.translatesAutoresizingMaskIntoConstraints = false
+        fifthLabel.font = UIFont(name: "Inter-Medium", size: 12)
+        fifthLabel.text = .localized(string: "Интересы")
+        fifthLabel.textColor = ColorCreator.shared.createTextColor()
+        return fifthLabel
+    }()
+
+    private lazy var interestLabelTextField: UITextField = {
+        let fifthTextField = UITextField()
+        fifthTextField.translatesAutoresizingMaskIntoConstraints = false
+        fifthTextField.placeholder = .localized(string: "Интересы")
+        fifthTextField.textColor = ColorCreator.shared.createTextColor()
+        fifthTextField.layer.cornerRadius = 8
+        fifthTextField.backgroundColor = ColorCreator.shared.createPostBackgroundColor()
+        return fifthTextField
+    }()
+
+    private lazy var jobLabel: UILabel = {
+        let fifthLabel = UILabel()
+        fifthLabel.translatesAutoresizingMaskIntoConstraints = false
+        fifthLabel.font = UIFont(name: "Inter-Medium", size: 12)
+        fifthLabel.text = .localized(string: "Работа")
+        fifthLabel.textColor = ColorCreator.shared.createTextColor()
+        return fifthLabel
+    }()
+
+    private lazy var jobLabelTextField: UITextField = {
+        let fifthTextField = UITextField()
+        fifthTextField.translatesAutoresizingMaskIntoConstraints = false
+        fifthTextField.placeholder = .localized(string: "Ключевые обязанности")
+        fifthTextField.textColor = ColorCreator.shared.createTextColor()
+        fifthTextField.layer.cornerRadius = 8
+        fifthTextField.backgroundColor = ColorCreator.shared.createPostBackgroundColor()
+        return fifthTextField
+    }()
+
+    private lazy var educationLabel: UILabel = {
+        let fifthLabel = UILabel()
+        fifthLabel.translatesAutoresizingMaskIntoConstraints = false
+        fifthLabel.font = UIFont(name: "Inter-Medium", size: 12)
+        fifthLabel.text = .localized(string: "Образование")
+        fifthLabel.textColor = ColorCreator.shared.createTextColor()
+        return fifthLabel
+    }()
+
+    private lazy var educationLabelTextField: UITextField = {
+        let fifthTextField = UITextField()
+        fifthTextField.translatesAutoresizingMaskIntoConstraints = false
+        fifthTextField.placeholder = .localized(string: "Образование")
         fifthTextField.textColor = ColorCreator.shared.createTextColor()
         fifthTextField.layer.cornerRadius = 8
         fifthTextField.backgroundColor = ColorCreator.shared.createPostBackgroundColor()
@@ -175,10 +251,14 @@ class DataChangeViewController: UIViewController {
     @objc func acceptButtonTapped()  {
         
         let textFieldsToUpdate: [UITextField: (String)  -> Void] = [
-            firstTextField: {  self.presenter.changeName(text: $0) },
-            secondTextField: {  self.presenter.changeSurname(text: $0) },
-            fourthTextField: {  self.presenter.changeDateOfBirth(text: $0) },
-            fifthTextField: {  self.presenter.changeIdentifier(text: $0) }
+            nameLabelTextField: {  self.presenter.changeName(text: $0) },
+            surnameLabelTextField: {  self.presenter.changeSurname(text: $0) },
+            dateOfBirthLabelTextField: {  self.presenter.changeDateOfBirth(text: $0) },
+            identifierLabelTextField: {  self.presenter.changeIdentifier(text: $0) },
+            educationLabelTextField: {  self.presenter.changeEducation(text: $0) },
+            jobLabelTextField: {  self.presenter.changeJob(text: $0) },
+            interestLabelTextField: { self.presenter.changeInterests(text: $0) },
+            contactsLabelTextField: {  self.presenter.changeContacts(text: $0) }
             ]
 
             let nonEmptyFields = textFieldsToUpdate.filter { !$0.key.text!.isEmpty }
@@ -221,29 +301,29 @@ extension DataChangeViewController: DataChangeViewProtocol {
     }
     
     func layoutForContactsView() {
-        firstLabel.text = "Контактная информация"
-        firstLabel.font = UIFont(name: "Inter-Medium", size: 18)
+        nameLabel.text = "Контактная информация"
+        nameLabel.font = UIFont(name: "Inter-Medium", size: 18)
         addSubviewsForContactsView()
         layoutForContacts()
     }
     
     func layoutForInterestsView() {
-        firstLabel.text = "Интересы"
-        firstLabel.font = UIFont(name: "Inter-Medium", size: 18)
+        nameLabel.text = "Интересы"
+        nameLabel.font = UIFont(name: "Inter-Medium", size: 18)
         addSubviewsForInterests()
         layoutForInterests()
     }
     
     func layoutForEducationView() {
-        firstLabel.text = "Образование"
-        firstLabel.font = UIFont(name: "Inter-Medium", size: 18)
+        nameLabel.text = "Образование"
+        nameLabel.font = UIFont(name: "Inter-Medium", size: 18)
         addSubViewsForEducation()
         layoutForEducation()
     }
     
     func layoutForCareerView() {
-        firstLabel.text = "Карьера"
-        firstLabel.font = UIFont(name: "Inter-Medium", size: 18)
+        nameLabel.text = "Карьера"
+        nameLabel.font = UIFont(name: "Inter-Medium", size: 18)
         addSubviewsForCareer()
         layoutForCareer()
     }
@@ -256,51 +336,51 @@ extension DataChangeViewController: DataChangeViewProtocol {
 extension DataChangeViewController {
 
     private func addSubviewsForInformation() {
-        view.addSubview(firstLabel)
-        view.addSubview(firstTextField)
-        view.addSubview(secondLabel)
-        view.addSubview(secondTextField)
-        view.addSubview(thirdLabel)
+        view.addSubview(nameLabel)
+        view.addSubview(nameLabelTextField)
+        view.addSubview(surnameLabel)
+        view.addSubview(surnameLabelTextField)
+        view.addSubview(genderLabel)
         view.addSubview(maleLabel)
         view.addSubview(maleButton)
         view.addSubview(femaleLabel)
         view.addSubview(femaleButton)
-        view.addSubview(fourthLabel)
-        view.addSubview(fourthTextField)
-        view.addSubview(fifthLabel)
-        view.addSubview(fifthTextField)
+        view.addSubview(dateOfBirthLabel)
+        view.addSubview(dateOfBirthLabelTextField)
+        view.addSubview(idenTifierLabel)
+        view.addSubview(identifierLabelTextField)
     }
 
     private func layoutForInformation() {
         let safeArea = view.safeAreaLayoutGuide
 
         NSLayoutConstraint.activate([
-            firstLabel.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: 15),
-            firstLabel.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 24),
-            firstLabel.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -300),
-            firstLabel.heightAnchor.constraint(equalToConstant: 44),
+            nameLabel.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: 15),
+            nameLabel.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 24),
+            nameLabel.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -300),
+            nameLabel.heightAnchor.constraint(equalToConstant: 44),
 
-            firstTextField.topAnchor.constraint(equalTo: firstLabel.bottomAnchor, constant: 6),
-            firstTextField.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 24),
-            firstTextField.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -16),
-            firstTextField.heightAnchor.constraint(equalToConstant: 40),
+            nameLabelTextField.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 6),
+            nameLabelTextField.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 24),
+            nameLabelTextField.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -16),
+            nameLabelTextField.heightAnchor.constraint(equalToConstant: 40),
 
-            secondLabel.topAnchor.constraint(equalTo: firstTextField.bottomAnchor, constant: 14),
-            secondLabel.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 24),
-            secondLabel.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -298),
-            secondLabel.heightAnchor.constraint(equalToConstant: 44),
+            surnameLabel.topAnchor.constraint(equalTo: nameLabelTextField.bottomAnchor, constant: 14),
+            surnameLabel.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 24),
+            surnameLabel.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -298),
+            surnameLabel.heightAnchor.constraint(equalToConstant: 44),
 
-            secondTextField.topAnchor.constraint(equalTo: secondLabel.bottomAnchor, constant: 6),
-            secondTextField.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 24),
-            secondTextField.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -16),
-            secondTextField.heightAnchor.constraint(equalToConstant: 40),
+            surnameLabelTextField.topAnchor.constraint(equalTo: surnameLabel.bottomAnchor, constant: 6),
+            surnameLabelTextField.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 24),
+            surnameLabelTextField.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -16),
+            surnameLabelTextField.heightAnchor.constraint(equalToConstant: 40),
 
-            thirdLabel.topAnchor.constraint(equalTo: secondTextField.bottomAnchor, constant: 15),
-            thirdLabel.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 24),
-            thirdLabel.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -298),
-            thirdLabel.heightAnchor.constraint(equalToConstant: 44),
+            genderLabel.topAnchor.constraint(equalTo: surnameLabelTextField.bottomAnchor, constant: 15),
+            genderLabel.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 24),
+            genderLabel.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -298),
+            genderLabel.heightAnchor.constraint(equalToConstant: 44),
 
-            maleButton.topAnchor.constraint(equalTo: thirdLabel.bottomAnchor, constant: 15),
+            maleButton.topAnchor.constraint(equalTo: genderLabel.bottomAnchor, constant: 15),
             maleButton.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 24),
             maleButton.heightAnchor.constraint(equalToConstant: 16),
             maleButton.widthAnchor.constraint(equalToConstant: 16),
@@ -320,131 +400,110 @@ extension DataChangeViewController {
             femaleLabel.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -180),
             femaleLabel.heightAnchor.constraint(equalToConstant: 20),
 
-            fourthLabel.topAnchor.constraint(equalTo: femaleButton.bottomAnchor, constant: 15),
-            fourthLabel.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 24),
-            fourthLabel.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -218),
-            fourthLabel.heightAnchor.constraint(equalToConstant: 44),
+            dateOfBirthLabel.topAnchor.constraint(equalTo: femaleButton.bottomAnchor, constant: 15),
+            dateOfBirthLabel.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 24),
+            dateOfBirthLabel.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -218),
+            dateOfBirthLabel.heightAnchor.constraint(equalToConstant: 44),
 
-            fourthTextField.topAnchor.constraint(equalTo: fourthLabel.bottomAnchor, constant: 6),
-            fourthTextField.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 24),
-            fourthTextField.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -16),
-            fourthTextField.heightAnchor.constraint(equalToConstant: 40),
+            dateOfBirthLabelTextField.topAnchor.constraint(equalTo: dateOfBirthLabel.bottomAnchor, constant: 6),
+            dateOfBirthLabelTextField.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 24),
+            dateOfBirthLabelTextField.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -16),
+            dateOfBirthLabelTextField.heightAnchor.constraint(equalToConstant: 40),
 
-            fifthLabel.topAnchor.constraint(equalTo: fourthTextField.bottomAnchor, constant: 15),
-            fifthLabel.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 24),
-            fifthLabel.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -218),
-            fifthLabel.heightAnchor.constraint(equalToConstant: 44),
+            idenTifierLabel.topAnchor.constraint(equalTo: dateOfBirthLabelTextField.bottomAnchor, constant: 15),
+            idenTifierLabel.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 24),
+            idenTifierLabel.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -218),
+            idenTifierLabel.heightAnchor.constraint(equalToConstant: 44),
 
-            fifthTextField.topAnchor.constraint(equalTo: fifthLabel.bottomAnchor, constant: 6),
-            fifthTextField.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 24),
-            fifthTextField.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -16),
-            fifthTextField.heightAnchor.constraint(equalToConstant: 40)
+            identifierLabelTextField.topAnchor.constraint(equalTo: idenTifierLabel.bottomAnchor, constant: 6),
+            identifierLabelTextField.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 24),
+            identifierLabelTextField.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -16),
+            identifierLabelTextField.heightAnchor.constraint(equalToConstant: 40)
         ])
     }
 
     private func addSubviewsForContactsView() {
-        view.addSubview(firstLabel)
-        view.addSubview(firstTextField)
-        view.addSubview(secondLabel)
-        view.addSubview(secondTextField)
+        view.addSubview(contactsLabel)
+        view.addSubview(contactsLabelTextField)
     }
 
     private func layoutForContacts() {
         let safeArea = view.safeAreaLayoutGuide
 
         NSLayoutConstraint.activate([
-            firstLabel.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: 20),
-            firstLabel.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 20),
-            firstLabel.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -110),
-            firstLabel.heightAnchor.constraint(equalToConstant: 30),
+            contactsLabel.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: 20),
+            contactsLabel.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 20),
+            contactsLabel.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -110),
+            contactsLabel.heightAnchor.constraint(equalToConstant: 30),
 
-            firstTextField.topAnchor.constraint(equalTo: firstLabel.bottomAnchor, constant: 15),
-            firstTextField.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 20),
-            firstTextField.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -60),
-            firstTextField.heightAnchor.constraint(equalToConstant: 50),
-
-            secondLabel.topAnchor.constraint(equalTo: safeArea.bottomAnchor, constant: 30),
-            secondLabel.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 20),
-            secondLabel.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -110),
-            secondLabel.heightAnchor.constraint(equalToConstant: 30),
-
-            secondTextField.topAnchor.constraint(equalTo: secondLabel.bottomAnchor, constant: 15),
-            secondTextField.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 20),
-            secondTextField.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -60),
-            secondTextField.heightAnchor.constraint(equalToConstant: 50)
+            contactsLabelTextField.topAnchor.constraint(equalTo: contactsLabel.bottomAnchor, constant: 15),
+            contactsLabelTextField.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 20),
+            contactsLabelTextField.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -60),
+            contactsLabelTextField.heightAnchor.constraint(equalToConstant: 50),
         ])
-
-        firstTextField.placeholder = .localized(string: "Контакты")
-        secondTextField.placeholder = .localized(string: "Контакты")
     }
 
     private func addSubviewsForInterests() {
-        view.addSubview(firstLabel)
-        view.addSubview(firstTextField)
+        view.addSubview(interestLabel)
+        view.addSubview(interestLabelTextField)
     }
 
     private func layoutForInterests() {
         let safeArea = view.safeAreaLayoutGuide
 
         NSLayoutConstraint.activate([
-            firstLabel.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: 20),
-            firstLabel.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 20),
-            firstLabel.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -110),
-            firstLabel.heightAnchor.constraint(equalToConstant: 30),
+            interestLabel.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: 20),
+            interestLabel.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 20),
+            interestLabel.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -110),
+            interestLabel.heightAnchor.constraint(equalToConstant: 30),
 
-            firstTextField.topAnchor.constraint(equalTo: firstLabel.bottomAnchor, constant: 15),
-            firstTextField.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 20),
-            firstTextField.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -60),
-            firstTextField.heightAnchor.constraint(equalToConstant: 50)
+            interestLabelTextField.topAnchor.constraint(equalTo: interestLabel.bottomAnchor, constant: 15),
+            interestLabelTextField.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 20),
+            interestLabelTextField.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -60),
+            interestLabelTextField.heightAnchor.constraint(equalToConstant: 50)
         ])
-
-        firstTextField.placeholder = .localized(string: "Поделитесь интересами")
     }
 
     private func addSubViewsForEducation() {
-        view.addSubview(firstLabel)
-        view.addSubview(firstTextField)
+        view.addSubview(educationLabel)
+        view.addSubview(educationLabelTextField)
     }
 
     private func layoutForEducation() {
         let safeArea = view.safeAreaLayoutGuide
 
         NSLayoutConstraint.activate([
-            firstLabel.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: 20),
-            firstLabel.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 20),
-            firstLabel.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -110),
-            firstLabel.heightAnchor.constraint(equalToConstant: 30),
+            educationLabel.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: 20),
+            educationLabel.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 20),
+            educationLabel.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -110),
+            educationLabel.heightAnchor.constraint(equalToConstant: 30),
 
-            firstTextField.topAnchor.constraint(equalTo: firstLabel.bottomAnchor, constant: 15),
-            firstTextField.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 20),
-            firstTextField.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -60),
-            firstTextField.heightAnchor.constraint(equalToConstant: 50)
+            educationLabelTextField.topAnchor.constraint(equalTo: educationLabel.bottomAnchor, constant: 15),
+            educationLabelTextField.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 20),
+            educationLabelTextField.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -60),
+            educationLabelTextField.heightAnchor.constraint(equalToConstant: 50)
         ])
-
-        firstTextField.placeholder = .localized(string: "Образование")
     }
 
 
     private func addSubviewsForCareer() {
-        view.addSubview(firstLabel)
-        view.addSubview(firstTextField)
+        view.addSubview(jobLabel)
+        view.addSubview(jobLabelTextField)
     }
 
     private func layoutForCareer() {
         let safeArea = view.safeAreaLayoutGuide
 
         NSLayoutConstraint.activate([
-            firstLabel.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: 20),
-            firstLabel.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 20),
-            firstLabel.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -110),
-            firstLabel.heightAnchor.constraint(equalToConstant: 30),
+            jobLabel.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: 20),
+            jobLabel.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 20),
+            jobLabel.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -110),
+            jobLabel.heightAnchor.constraint(equalToConstant: 30),
 
-            firstTextField.topAnchor.constraint(equalTo: firstLabel.bottomAnchor, constant: 15),
-            firstTextField.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 20),
-            firstTextField.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -60),
-            firstTextField.heightAnchor.constraint(equalToConstant: 50)
+            jobLabelTextField.topAnchor.constraint(equalTo: jobLabel.bottomAnchor, constant: 15),
+            jobLabelTextField.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 20),
+            jobLabelTextField.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -60),
+            jobLabelTextField.heightAnchor.constraint(equalToConstant: 50)
         ])
-
-        firstTextField.placeholder = .localized(string: "Карьера")
     }
 }

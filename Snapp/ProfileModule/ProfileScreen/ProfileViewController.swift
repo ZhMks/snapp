@@ -341,7 +341,9 @@ class ProfileViewController: UIViewController {
 
     @objc func editProfileButtonTapped() {
         let profileChangeController = ProfileChangeViewController()
-        let profileChangePresenter = ProfileChangePresenter(view: profileChangeController, user: presenter.mainUser)
+        let profileChangePresenter = ProfileChangePresenter(view: profileChangeController,
+                                                            user: presenter.mainUser,
+                                                            mainUserID: self.presenter.mainUserID)
         profileChangeController.presenter = profileChangePresenter
         profileChangeController.modalPresentationStyle = .overFullScreen
         let transition = CATransition()
@@ -360,7 +362,7 @@ class ProfileViewController: UIViewController {
         detailUserInfoVC.modalPresentationStyle = .formSheet
 
         if let sheet = detailUserInfoVC.sheetPresentationController {
-            sheet.detents = [.medium()]
+            sheet.detents = [.large()]
         }
 
         self.navigationController?.present(detailUserInfoVC, animated: true)
