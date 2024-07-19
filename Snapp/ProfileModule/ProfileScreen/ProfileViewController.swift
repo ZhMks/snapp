@@ -399,7 +399,7 @@ class ProfileViewController: UIViewController {
 
     private func addGestureToView() {
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(removeSearchTextField))
-        tapGesture.numberOfTapsRequired = 1
+        tapGesture.numberOfTapsRequired = 2
         view.addGestureRecognizer(tapGesture)
     }
 }
