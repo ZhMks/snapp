@@ -135,7 +135,7 @@ protocol FireStoreServiceProtocol {
     /// - Parameters:
     ///   - post: documentID поста в БД.
     ///   - user: uid пользователя в БД.
-    func saveIntoFavourites(post: EachPost, for user: String)
+    func saveIntoFavourites(post: EachPost, for mainUser: String, user: String, completion: @escaping(Result<Bool, Error>) -> Void)
 
     /// Функция для получения ссылки на пост из БД.
     /// - Parameters:
@@ -254,7 +254,7 @@ protocol FireStoreServiceProtocol {
     /// - Parameters:
     ///   - user: uid текущего авторизованного пользователя.
     ///   - completion: возвращает либо массив постов, либо ошибку.
-    func fetchBookmarkedPosts(user: String, completion: @escaping (Result<[BookmarkedPost], Error>) -> Void)
+    func fetchBookmarkedPosts(user: String, completion: @escaping (Result<[EachPost], Error>) -> Void)
 
 
     /// Функция для удаления поста из папки "Закладки"
@@ -768,7 +768,7 @@ final class FireStoreService: FireStoreServiceProtocol {
 
     func createPost(date: String, text: String, image: UIImage?, for user: String, completion: @escaping (Result<EachPost, Error>) -> Void) {
         let postRef = Firestore.firestore().collection("Users").document(user).collection("posts")
-        var fireStorePost = EachPost(text: "", image: "", likes: 0, commentaries: 0, date: date, isCommentariesEnabled: true, isPinned: false)
+        var fireStorePost = EachPost(text: "", image: "", likes: 0, commentaries: 0, date: date, isCommentariesEnabled: true, isPinned: false, userHoldingPost: user)
 
         if let image = image {
             let postStorageRef = Storage.storage().reference().child("users").child(user).child("posts").child(date).child(image.description)
@@ -928,12 +928,37 @@ final class FireStoreService: FireStoreServiceProtocol {
         }
     }
 
-    func saveIntoFavourites(post: EachPost, for user: String) {
-        let docRef = Firestore.firestore().collection("Users").document(user).collection("Favourites")
-        do {
-            try docRef.addDocument(from: post)
-        } catch {
-            print(error.localizedDescription)
+    func saveIntoFavourites(post: EachPost, for mainUser: String, user: String, completion: @escaping(Result<Bool, Error>) -> Void) {
+        let docRef = Firestore.firestore().collection("Users").document(mainUser).collection("Favourites")
+        docRef.getDocuments { snapshot, error in
+            if let error = error {
+                completion(.failure(error))
+            }
+
+            if let snapshot = snapshot {
+                if snapshot.documents.isEmpty {
+                    do {
+                        try docRef.addDocument(from: post)
+                    } catch {
+                        print(error.localizedDescription)
+                    }
+                } else {
+                    for document in snapshot.documents {
+                        let dataText = document.data()["text"] as? String
+                        if dataText == post.text {
+                            completion(.success(false))
+                        } else {
+                            do {
+                                try docRef.addDocument(from: post)
+                                completion(.success(true))
+                            } catch {
+                                print(error.localizedDescription)
+                                completion(.failure(error))
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -947,7 +972,6 @@ final class FireStoreService: FireStoreServiceProtocol {
             if let snapshot = snapshot {
                 for document in snapshot.documents {
                     let documentText = document.data()["text"] as? String ?? "Cannot get Value"
-                    print(documentText)
                     if documentText == post.text {
                         let documentRef = Firestore.firestore().collection("Users").document(user).collection("Favourites").document(document.documentID)
                         documentRef.delete()
@@ -1088,25 +1112,33 @@ final class FireStoreService: FireStoreServiceProtocol {
     }
 
     func saveToBookMarks(mainUser: String, user: String, post: EachPost, completion: @escaping(Result<Bool, Error>) -> Void) {
-        guard let originalPostID = post.documentID else { return }
-        let bookmarkedPost = BookmarkedPost(text: post.text, image: post.image, likes: post.likes, commentaries: post.commentaries, date: post.date, userHoldingPost: user, originaPostID: originalPostID)
         let link = Firestore.firestore().collection("Users").document(mainUser).collection("Bookmarks")
         link.getDocuments { snapshot, error in
             if let error = error {
+                completion(.failure(error))
                 return
             }
 
             if let snapshot = snapshot {
-                for document in snapshot.documents {
-                    let documentText = document.data()["text"] as? String
-                    if documentText == bookmarkedPost.text {
-                        completion(.success(false))
-                    } else {
-                        do {
-                            try link.addDocument(from: bookmarkedPost)
-                            completion(.success(true))
-                        } catch {
-                            completion(.failure(error))
+                if snapshot.documents.isEmpty {
+                    do {
+                        try link.addDocument(from: post)
+                        completion(.success(true))
+                    } catch {
+                        completion(.failure(error))
+                    }
+                } else {
+                    for document in snapshot.documents {
+                        let documentText = document.data()["text"] as? String
+                        if documentText == post.text {
+                            completion(.success(false))
+                        } else {
+                            do {
+                                try link.addDocument(from: post)
+                                completion(.success(true))
+                            } catch {
+                                completion(.failure(error))
+                            }
                         }
                     }
                 }
@@ -1114,9 +1146,9 @@ final class FireStoreService: FireStoreServiceProtocol {
         }
     }
 
-    func fetchBookmarkedPosts(user: String, completion: @escaping (Result<[BookmarkedPost], Error>) -> Void) {
+    func fetchBookmarkedPosts(user: String, completion: @escaping (Result<[EachPost], Error>) -> Void) {
         let link = Firestore.firestore().collection("Users").document(user).collection("Bookmarks")
-        var decodedDocuments: [BookmarkedPost] = []
+        var decodedDocuments: [EachPost] = []
 
         link.getDocuments { snapshot, error in
             if let error = error {
@@ -1126,7 +1158,7 @@ final class FireStoreService: FireStoreServiceProtocol {
             if let snapshot = snapshot {
                 for document in snapshot.documents {
                     do {
-                        let decodedDoc = try document.data(as: BookmarkedPost.self)
+                        let decodedDoc = try document.data(as: EachPost.self)
                         decodedDocuments.append(decodedDoc)
                     } catch let DecodingError.dataCorrupted(context) {
                         print(context)

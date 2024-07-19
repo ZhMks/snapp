@@ -213,7 +213,6 @@ class MainSettingsViewController: UIViewController {
 
     @objc func uploadButtonTapped() {
         let filesViewController = FilesViewController()
-        guard let mainUserID = presenter.user.documentID else { return }
         let filesPresenter = FilesPresenter(view: filesViewController, mainUser: presenter.user)
         filesViewController.presenter = filesPresenter
         self.navigationController?.pushViewController(filesViewController, animated: true)

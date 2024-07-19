@@ -36,8 +36,6 @@ final class PhotoalbumPresenter: PhotoalbumPresenterProtocol {
                 let sortedDictionary = success.sorted { $0.key > $1.key }
                 let convertedDictionary = sortedDictionary.reduce(into: [String: [UIImage]?]()) { result, pair in
                     result[pair.key] = pair.value
-                    print("Result: \(result)")
-                    print("Pair: \(pair)")
                 }
                 self?.nsLock.lock()
                 self?.photoAlbum = convertedDictionary

@@ -184,7 +184,6 @@ extension FeedViewController: UICollectionViewDataSource {
 
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         guard let number = presenter.userStories?.keys.count else { return 2 }
-        print(number)
         return number
     }
 
@@ -251,6 +250,18 @@ extension FeedViewController: UITableViewDataSource {
         cell.showMenuForFeed = { [weak self] post in
             guard let self else { return }
             presenter.showMenuForFeed(post: post)
+        }
+
+        cell.bookmarkButtonTapHandler = { [weak self] (post, user) in
+            self?.presenter.addToBookmarks(post: post, user: user)
+        }
+
+        cell.incrementLikes = { [weak self] (post, user) in
+            self?.presenter.incrementLikes(post: post, user: user)
+        }
+
+        cell.decrementLikes = { [weak self] (post, user) in
+            self?.presenter.decrementLikes(post: post, user: user)
         }
 
         return cell

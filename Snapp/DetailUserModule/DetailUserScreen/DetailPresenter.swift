@@ -43,10 +43,6 @@ final class DetailPresenter: DetailPresenterProtocol {
         self.mainUserID = mainUserID
     }
 
-    deinit {
-        print("DetailUserPresenter Deinited")
-    }
-
     func updateData() {
         fetchImage()
         fetchPosts()
@@ -138,7 +134,6 @@ final class DetailPresenter: DetailPresenterProtocol {
                 self.fetchImage()
                 self.fetchPosts()
                 checkSubscribers()
-                print("Subscribers inside addObserver: \(user.subscribers)")
             case .failure(_):
                 return
             }
@@ -173,12 +168,12 @@ final class DetailPresenter: DetailPresenterProtocol {
         view?.showFeedMenu(post: post)
     }
 
-    func incrementLikes(post: EachPost) {
+    func incrementLikes(post: EachPost, user: FirebaseUser) {
         guard let userID = user.documentID, let postID = post.documentID else { return }
         FireStoreService.shared.incrementLikesForPost(user: userID, mainUser: mainUserID, post: postID)
     }
 
-    func decrementLikes(post: EachPost) {
+    func decrementLikes(post: EachPost, user: FirebaseUser) {
         guard let userID = user.documentID, let postID = post.documentID else { return }
         FireStoreService.shared.decrementLikesForPost(user: userID, mainUser: mainUserID, post: postID)
     }
@@ -187,11 +182,22 @@ final class DetailPresenter: DetailPresenterProtocol {
         view?.updateSubButton()
     }
 
-    func saveIntoFavourites(post: EachPost) {
-        FireStoreService.shared.saveIntoFavourites(post: post, for: mainUserID)
+    func saveIntoFavourites(post: EachPost, user: FirebaseUser) {
+        FireStoreService.shared.saveIntoFavourites(post: post, for: mainUserID, user: user.documentID!) { [weak self] result in
+            switch result {
+            case .success(let success):
+                if success {
+                    return
+                } else {
+                    self?.view?.showErrorAler(error: "Пост уже существует")
+                }
+            case .failure(let failure):
+                self?.view?.showErrorAler(error: failure.localizedDescription)
+            }
+        }
     }
 
-    func removeFromFavourites(post: EachPost) {
+    func removeFromFavourites(post: EachPost, user: FirebaseUser) {
         FireStoreService.shared.removeFromFavourites(user: mainUserID, post: post)
     }
 
@@ -213,5 +219,20 @@ final class DetailPresenter: DetailPresenterProtocol {
         guard let userID = user.documentID else { return }
         FireStoreService.shared.removeSubscribtion(sub: userID, for: mainUserID)
         FireStoreService.shared.removeSubscriber(sub: mainUserID, for: userID)
+    }
+
+    func addToBookmarks(post: EachPost, user: FirebaseUser) {
+        FireStoreService.shared.saveToBookMarks(mainUser: mainUserID, user: user.documentID!, post: post) { [weak self] result in
+            switch result {
+            case .success(let success):
+                if success {
+                    return
+                } else {
+                    self?.view?.showErrorAler(error: "Пост уже существует")
+                }
+            case .failure(let failure):
+                self?.view?.showErrorAler(error: failure.localizedDescription)
+            }
+        }
     }
 }

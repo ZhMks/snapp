@@ -60,7 +60,7 @@ extension FavouritesViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: FavouriteTableViewCell.identifier, for: indexPath) as? FavouriteTableViewCell else { return UITableViewCell() }
         guard let data = presenter.posts?[indexPath.row] else { return UITableViewCell() }
-        cell.updateView(post: data , user: presenter.user, date: data.date)
+        cell.updateView(post: data, mainuserID: self.presenter.mainUserID)
         return cell
     }
     

@@ -94,10 +94,13 @@ class FilesViewController: UIViewController {
 
 // MARK: - Presenter output
 extension FilesViewController: FilesViewProtocol {
+    func presentDocumentPicker(url: URL) {
+        FileManagerService.presentDocumentPicker(for: url, from: self)
+    }
+    
     func updateData() {
         pickDocumentButton.isHidden = true
         filesCollectionView.reloadData()
-        print("Successfully reloaded")
     }
 
 
@@ -116,22 +119,17 @@ extension FilesViewController: UICollectionViewDataSource {
         let keyForObject = Array(decodedObjects.keys)[indexPath.row]
         guard let dataForCell = decodedObjects[keyForObject] else { return UICollectionViewCell() }
         cell.updateDataForCell(object: dataForCell, name: keyForObject)
+
+         cell.buttonTapHandler = { [weak self] (object, objectName) in
+            self?.presenter.saveFileToLocalStorage(object: object, key: objectName)
+        }
         return cell
     }
 }
 
 // MARK: - UICollectionView Delegate
 extension FilesViewController: UICollectionViewDelegateFlowLayout {
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        guard let decodedObjects = presenter.decodedObjects else { return }
-        let keyForObject = Array(decodedObjects.keys)[indexPath.row]
-        guard let dataForCell = decodedObjects[keyForObject] else { return }
-        FileManagerService.saveImagesAndStringsToDocuments(object: dataForCell, key: keyForObject) { [weak self] url in
-            guard let self = self else { return }
-            guard let url = url else { return }
-            FileManagerService.presentDocumentPicker(for: url, from: self)
-        }
-    }
+    
 }
 
 // MARK: - DocumentPicker Delegate
@@ -139,7 +137,6 @@ extension FilesViewController: UIDocumentPickerDelegate {
 
     func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
         guard let localFile = urls.first else { return }
-        print(localFile.lastPathComponent)
         presenter.putFileToStorage(file: localFile)
     }
 

@@ -16,7 +16,7 @@ final class BookmarkedPostCell: UITableViewCell {
     static let identifier = "BookmarkedPostCell"
 
     var user: FirebaseUser?
-    var post: BookmarkedPost?
+    var post: EachPost?
     var likes: [Like]?
     var postcellstate: PostCellState?
     var mainUserID: String?
@@ -107,7 +107,7 @@ final class BookmarkedPostCell: UITableViewCell {
         let commentsLabel = UILabel()
         commentsLabel.translatesAutoresizingMaskIntoConstraints = false
         commentsLabel.font = UIFont(name: "Inter-Light", size: 14)
-        commentsLabel.text = "24"
+        commentsLabel.text = "0"
         commentsLabel.textColor = ColorCreator.shared.createTextColor()
         return commentsLabel
     }()
@@ -124,7 +124,7 @@ final class BookmarkedPostCell: UITableViewCell {
         let likesLabel = UILabel()
         likesLabel.translatesAutoresizingMaskIntoConstraints = false
         likesLabel.font = UIFont(name: "Inter-Light", size: 14)
-        likesLabel.text = "22"
+        likesLabel.text = "0"
         likesLabel.textColor = ColorCreator.shared.createTextColor()
         return likesLabel
     }()
@@ -195,7 +195,7 @@ final class BookmarkedPostCell: UITableViewCell {
 
     // MARK: -Funcs
 
-    func updateView(post: BookmarkedPost, user: FirebaseUser, state: PostCellState, mainUserID: String) {
+    func updateView(post: EachPost, user: FirebaseUser, state: PostCellState, mainUserID: String) {
 
         self.post = post
         self.user = user
@@ -213,17 +213,17 @@ final class BookmarkedPostCell: UITableViewCell {
         }
     }
 
-    private func configureLabels(post: BookmarkedPost, user: FirebaseUser, date: String) {
+    private func configureLabels(post: EachPost, user: FirebaseUser, date: String) {
         postTextLabel.text = post.text
         nameAndSurnameLabel.text = "\(user.name) \(user.surname)"
         jobLabel.text = user.job
         dateLabel.text = date
     }
 
-    private func fetchComments(for post: BookmarkedPost, user: FirebaseUser) {
-        guard let userID = user.documentID else { return }
+    private func fetchComments(for post: EachPost, user: FirebaseUser) {
+        guard let userID = user.documentID, let originalPostID = post.originalPostID else { return }
 
-        FireStoreService.shared.getComments(post: post.originaPostID, user: userID) { [weak self] result in
+        FireStoreService.shared.getComments(post: originalPostID, user: userID) { [weak self] result in
             guard let self = self else { return }
             switch result {
             case .success(let comments):
@@ -234,7 +234,7 @@ final class BookmarkedPostCell: UITableViewCell {
         }
     }
 
-    private func fetchPostImage(for post: BookmarkedPost) {
+    private func fetchPostImage(for post: EachPost) {
         guard let postImageURL = post.image else { return }
 
         if !postImageURL.isEmpty {
@@ -276,10 +276,8 @@ final class BookmarkedPostCell: UITableViewCell {
         }
     }
 
-    private func fetchLikes(for post: BookmarkedPost) {
-      let postID = post.originaPostID
-
-        print(postID, post.userHoldingPost)
+    private func fetchLikes(for post: EachPost) {
+        guard let postID = post.originalPostID else { return }
 
         FireStoreService.shared.getNumberOfLikesInpost(user: post.userHoldingPost, post: postID) { [weak self] result in
             guard let self = self else { return }
@@ -408,13 +406,13 @@ final class BookmarkedPostCell: UITableViewCell {
             footerView.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor),
 
             leftSeparatorView.centerYAnchor.constraint(equalTo: dateLabel.centerYAnchor),
-            leftSeparatorView.leadingAnchor.constraint(equalTo: footerView.leadingAnchor, constant: 18),
-            leftSeparatorView.trailingAnchor.constraint(equalTo: footerView.trailingAnchor, constant: -248),
+            leftSeparatorView.leadingAnchor.constraint(equalTo: footerView.leadingAnchor, constant: 10),
+            leftSeparatorView.trailingAnchor.constraint(equalTo: ellipseView.leadingAnchor, constant: -10),
             leftSeparatorView.heightAnchor.constraint(equalToConstant: 1),
 
             ellipseView.topAnchor.constraint(equalTo: footerView.topAnchor, constant: 10),
-            ellipseView.leadingAnchor.constraint(equalTo: leftSeparatorView.trailingAnchor, constant: 10),
-            ellipseView.trailingAnchor.constraint(equalTo: footerView.trailingAnchor, constant: -138),
+            ellipseView.centerXAnchor.constraint(equalTo: footerView.centerXAnchor),
+            ellipseView.widthAnchor.constraint(equalToConstant: 100),
             ellipseView.bottomAnchor.constraint(equalTo: footerView.bottomAnchor, constant: -10),
 
             dateLabel.topAnchor.constraint(equalTo: ellipseView.topAnchor, constant: 3),

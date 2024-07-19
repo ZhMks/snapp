@@ -21,7 +21,7 @@ protocol BookmarksPresenterProtocol: AnyObject {
 final class BookmarksPresenter: BookmarksPresenterProtocol {
     weak var view: BookmarksViewProtocol?
     let user: FirebaseUser
-    var posts: [[FirebaseUser: BookmarkedPost]]?
+    var posts: [[FirebaseUser: EachPost]]?
     let mainUserID: String
    
 
@@ -36,8 +36,7 @@ final class BookmarksPresenter: BookmarksPresenterProtocol {
         let dispatchGroup = DispatchGroup()
         let lock = NSLock()
         posts = []
-        guard let id = user.documentID else { return }
-        FireStoreService.shared.fetchBookmarkedPosts(user: id) { [weak self] result in
+        FireStoreService.shared.fetchBookmarkedPosts(user: mainUserID) { [weak self] result in
             guard let self else { return }
             switch result {
             case .success(let bookmarkedPosts):
@@ -50,7 +49,7 @@ final class BookmarksPresenter: BookmarksPresenterProtocol {
                             lock.lock()
                             self?.posts?.append(dict)
                             lock.unlock()
-                        case .failure(let failure):
+                        case .failure(_):
                             return
                         }
                     }

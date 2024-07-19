@@ -11,14 +11,23 @@ class SettingChangeViewController: UIViewController {
 
     var presenter: SettingChangePresenter!
 
+
     private lazy var logOutButton: UIButton = {
         let logOutButton = UIButton(type: .system)
         logOutButton.setTitle(.localized(string: "Выйти"), for: .normal)
-        logOutButton.titleLabel?.font = UIFont(name:"Inter-Medium", size: 12)
+        logOutButton.titleLabel?.font = UIFont(name:"Inter-Medium", size: 18)
+        logOutButton.layer.cornerRadius = 10.0
+        logOutButton.titleLabel?.textColor = ColorCreator.shared.createTextColor()
+        logOutButton.backgroundColor = ColorCreator.shared.createButtonColor()
         logOutButton.translatesAutoresizingMaskIntoConstraints = false
         logOutButton.addTarget(self, action: #selector(logOutButtonTapped), for: .touchUpInside)
         return logOutButton
     }()
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        tuneNavItem()
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -35,6 +44,24 @@ class SettingChangeViewController: UIViewController {
             onboardingVC.presener = onboardingPresenter
             (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootViewController(onboardingVC)
         }
+    }
+
+    private func tuneNavItem() {
+
+        let uiView = UIView(frame: CGRect(x: 0, y: 0, width: 25, height: 25))
+        let leftArrowButton = UIButton(type: .system)
+        leftArrowButton.frame = CGRect(x: 0, y: 0, width: 25, height: 25)
+        leftArrowButton.setBackgroundImage(UIImage(systemName: "arrow.left"), for: .normal)
+        leftArrowButton.tintColor = .systemOrange
+        leftArrowButton.addTarget(self, action: #selector(dismissViewController), for: .touchUpInside)
+
+        uiView.addSubview(leftArrowButton)
+        let leftButton = UIBarButtonItem(customView: uiView)
+        self.navigationItem.leftBarButtonItem = leftButton
+    }
+
+    @objc func dismissViewController() {
+        self.navigationController?.popViewController(animated: true)
     }
 }
 

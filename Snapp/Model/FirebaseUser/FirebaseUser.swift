@@ -49,17 +49,8 @@ struct EachPost: Codable {
     var date: String
     var isCommentariesEnabled: Bool
     var isPinned: Bool
-}
-
-struct BookmarkedPost: Codable {
-    @DocumentID var documentID: String?
-    var text: String
-    var image: String?
-    var likes: Int
-    var commentaries: Int
-    var date: String
     var userHoldingPost: String
-    var originaPostID: String
+    var originalPostID: String?
 }
 
 struct Comment: CommentOrAnswer {

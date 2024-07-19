@@ -37,7 +37,6 @@ final class DetailStoriePresenter: DetailStoriePresenterProtocol {
             networkService.fetchImage(string: storie) { [weak self] result in
                 switch result {
                 case .success(let image):
-                    print("Image Fetched: \(image)")
                     self?.storieImages?.append(image)
                 case .failure(let failure):
                     self?.view?.showError(descr: failure.localizedDescription)

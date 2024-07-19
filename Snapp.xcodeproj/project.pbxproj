@@ -339,9 +339,6 @@
 		B209E6282BC3FDBE0067D751 /* SettingModule */ = {
 			isa = PBXGroup;
 			children = (
-				B28A7D2B2C410FFE00FD5260 /* FilesModule */,
-				B2F004232C1DAA8500991CF5 /* BookmarksModule */,
-				B2F0041E2C1DA97900991CF5 /* ArchiveModule */,
 				B2E441FF2C3FB93A0098AFEA /* SettingChangeScreen */,
 				B297FB522BFCBDC500A8C463 /* DataChangeScreen */,
 				B209E62F2BC3FEA10067D751 /* ProfileChangeScreen */,
@@ -412,6 +409,9 @@
 		B211C1E62BBB3C2900C073EE /* Snapp */ = {
 			isa = PBXGroup;
 			children = (
+				B28A7D2B2C410FFE00FD5260 /* FilesModule */,
+				B2F0041E2C1DA97900991CF5 /* ArchiveModule */,
+				B2F004232C1DAA8500991CF5 /* BookmarksModule */,
 				B2B9026B2C21A7B40043FCCC /* DetailUserInformationModule */,
 				B209E6162BC1384F0067D751 /* FeedModule */,
 				B29D0AE52BD6809300101029 /* DetailUserModule */,

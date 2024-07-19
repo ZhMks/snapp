@@ -69,7 +69,6 @@ final class FeedPresenter: FeedPresenterProtocol {
         userStories = [:]
         for subscriber in mainUser.subscribtions {
             dispatchGroup.enter()
-            print("Entered group for uesr: \(subscriber)")
             FireStoreService.shared.getUser(id: subscriber) { [weak self] result in
                 switch result {
                 case .success(let user):
@@ -77,14 +76,12 @@ final class FeedPresenter: FeedPresenterProtocol {
                         networkService.fetchImage(string: userImageURL) { [weak self] result in
                             switch result {
                             case .success(let image):
-                                print("Fetched images: \(image)")
                                 self?.nsLock.lock()
                                 self?.userStories?.updateValue(image, forKey: user)
                                 self?.nsLock.unlock()
                             case .failure(let failure):
                                 self?.view?.showError(descr: failure.localizedDescription)
                             }
-                            print("Leaved group for user: \(subscriber)")
                             dispatchGroup.leave()
                         }
                     }
@@ -94,14 +91,12 @@ final class FeedPresenter: FeedPresenterProtocol {
             }
         }
         dispatchGroup.notify(queue: .main) { [weak self] in
-            print("Users stories: \(self?.userStories?.keys.count)")
             self?.view?.updateStorieView()
         }
     }
 
     func addUserListener() {
-        guard let userID = mainUser.documentID else { return }
-        FireStoreService.shared.addSnapshotListenerToUser(for: userID) { [weak self] result in
+        FireStoreService.shared.addSnapshotListenerToUser(for: mainUserID) { [weak self] result in
             guard let self = self else { return }
             switch result {
             case .success(let success):
@@ -168,5 +163,24 @@ final class FeedPresenter: FeedPresenterProtocol {
 
     func showMenuForFeed(post: EachPost) {
         view?.showMenuForFeed(post: post)
+    }
+
+    func addToBookmarks(post: EachPost, user: FirebaseUser) {
+        FireStoreService.shared.saveToBookMarks(mainUser: mainUserID, user: user.documentID!, post: post) { [weak self] result in
+            switch result {
+            case .success(_):
+                return
+            case .failure(let failure):
+                self?.view?.showError(descr: failure.localizedDescription)
+            }
+        }
+    }
+
+    func incrementLikes(post: EachPost, user: FirebaseUser) {
+        FireStoreService.shared.incrementLikesForPost(user: user.documentID!, mainUser: mainUserID, post: post.documentID!)
+    }
+
+    func decrementLikes(post: EachPost, user: FirebaseUser) {
+        FireStoreService.shared.decrementLikesForPost(user: user.documentID!, mainUser: mainUserID, post: post.documentID!)
     }
 }

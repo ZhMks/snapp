@@ -261,7 +261,6 @@ class ProfileViewController: UIViewController {
         searchTextField.translatesAutoresizingMaskIntoConstraints = false
         searchTextField.layer.cornerRadius = 8.0
         searchTextField.backgroundColor = .systemBackground
-        print("searchField initiated")
         return searchTextField
     }()
 
@@ -278,11 +277,11 @@ class ProfileViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
+        addGestureToView()
         tuneNavItem()
         addSubviews()
         layout()
         tuneTableView()
-    //    addTargetToview()
     }
 
     override func viewWillDisappear(_ animated: Bool) {
@@ -388,7 +387,6 @@ class ProfileViewController: UIViewController {
 
     private func filterArrayWithText(text: String) {
         guard let text = searchTextField.text else { return }
-        print(text)
         self.filteredArray = self.presenter.posts.filter { $0.text.lowercased().contains(text.lowercased()) }
         postsTableView.reloadData()
     }
@@ -397,7 +395,7 @@ class ProfileViewController: UIViewController {
        searchTextField.removeFromSuperview()
     }
 
-    private func addTargetToview() {
+    private func addGestureToView() {
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(removeSearchTextField))
         tapGesture.numberOfTapsRequired = 1
         view.addGestureRecognizer(tapGesture)
@@ -478,10 +476,8 @@ extension ProfileViewController: UITableViewDataSource {
 
         if !filteredArray.isEmpty {
             let data = filteredArray[indexPath.row]
-            print("Data inside filter: \(data)")
             cell.updateView(post: data, user: presenter.mainUser, state: .profileState, mainUserID: self.presenter.mainUserID)
         } else {
-            print("Data not inside filter: \(data)")
             cell.updateView(post: data, user: presenter.mainUser, state: .profileState, mainUserID: self.presenter.mainUserID)
         }
 
@@ -493,20 +489,20 @@ extension ProfileViewController: UITableViewDataSource {
             self?.postsTableView.reloadData()
         }
 
-        cell.incrementLikes = { [weak self, weak tableView]  post in
-            self?.presenter.incrementLikes(post: post)
-            self?.presenter.addToFavourites(post: post)
+        cell.incrementLikes = { [weak self, weak tableView]  (post, user) in
+            self?.presenter.incrementLikes(post: post, user: user)
+            self?.presenter.addToFavourites(post: post, user: user)
             tableView?.reloadRows(at: [indexPath], with: .automatic)
         }
 
-        cell.decrementLikes = { [weak self, weak tableView] post in
-            self?.presenter.decrementLikes(post: post)
-            self?.presenter.removeFromFavourites(post: post)
+        cell.decrementLikes = { [weak self, weak tableView] (post, user) in
+            self?.presenter.decrementLikes(post: post, user: user)
+            self?.presenter.removeFromFavourites(post: post, user: user)
             tableView?.reloadRows(at: [indexPath], with: .automatic)
         }
 
-        cell.bookmarkButtonTapHandler = { [weak self] post in
-            self?.presenter.addPostToBookMarks(post: post)
+        cell.bookmarkButtonTapHandler = { [weak self] (post, user) in
+            self?.presenter.addPostToBookMarks(post: post, user: user)
         }
         return cell
     }

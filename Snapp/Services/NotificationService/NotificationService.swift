@@ -29,7 +29,6 @@ class NotificationsService: NotificationManagerProtocol {
             }
 
             if isPermitted {
-                print("Success")
                 completion(.success(isPermitted))
             }
         }

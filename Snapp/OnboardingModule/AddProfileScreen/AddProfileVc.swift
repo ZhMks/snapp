@@ -215,8 +215,7 @@ extension AddProfileVc {
             scrollView.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor, constant: -30),
 
             profileView.topAnchor.constraint(equalTo: scrollView.topAnchor),
-            profileView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
-            profileView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
+            profileView.centerXAnchor.constraint(equalTo: safeArea.centerXAnchor),
             profileView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
 
             jobNameTextField.leadingAnchor.constraint(equalTo: profileView.leadingAnchor, constant: 20),

@@ -237,7 +237,7 @@ extension CreatePostViewController {
             separatorView.topAnchor.constraint(equalTo: sendPostButton.bottomAnchor, constant: 5),
             separatorView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 20),
             separatorView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -20),
-            separatorView.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor, constant: -688),
+            separatorView.heightAnchor.constraint(equalToConstant: 1),
 
             createPostTextView.topAnchor.constraint(equalTo: separatorView.bottomAnchor, constant: 5),
             createPostTextView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 5),

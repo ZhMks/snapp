@@ -49,7 +49,9 @@ final class CreatePostPresenter: CreatePostPresenterProtocol {
                                         image: firestorePost.image,
                                         likes: firestorePost.likes,
                                         commentaries: firestorePost.commentaries,
-                                        date: firestorePost.date, isCommentariesEnabled: true, isPinned: false)
+                                        date: firestorePost.date, isCommentariesEnabled: true,
+                                        isPinned: false,
+                                        userHoldingPost: userID)
                 nsLock.lock()
                 posts.append(eachPost)
                 nsLock.unlock()

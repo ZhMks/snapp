@@ -31,10 +31,6 @@ final class SearchPresenter: SearchPresenterProtocol {
         self.mainUserID = mainUser
     }
 
-    deinit {
-        print("SearchPresenter is deinited")
-    }
-
     func getAllUsers() {
         FireStoreService.shared.getAllUsers { [weak self] result in
             guard let self = self else { return }

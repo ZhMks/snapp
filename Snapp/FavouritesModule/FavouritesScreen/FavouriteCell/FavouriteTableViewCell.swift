@@ -11,7 +11,8 @@ import UIKit
 final class FavouriteTableViewCell: UITableViewCell {
 
     static let identifier = "FavouriteTableViewCell"
-    
+    var mainUserID: String?
+
     private lazy var headerView: UIView = {
         let headerView = UIView()
         headerView.translatesAutoresizingMaskIntoConstraints = false
@@ -97,7 +98,7 @@ final class FavouriteTableViewCell: UITableViewCell {
         let likesLabel = UILabel()
         likesLabel.translatesAutoresizingMaskIntoConstraints = false
         likesLabel.font = UIFont(name: "Inter-Light", size: 14)
-        likesLabel.text = "22"
+        likesLabel.text = "0"
         likesLabel.textColor = ColorCreator.shared.createTextColor()
         return likesLabel
     }()
@@ -114,7 +115,7 @@ final class FavouriteTableViewCell: UITableViewCell {
         let commentsLabel = UILabel()
         commentsLabel.translatesAutoresizingMaskIntoConstraints = false
         commentsLabel.font = UIFont(name: "Inter-Light", size: 14)
-        commentsLabel.text = "24"
+        commentsLabel.text = "0"
         commentsLabel.textColor = ColorCreator.shared.createTextColor()
         return commentsLabel
     }()
@@ -169,42 +170,112 @@ final class FavouriteTableViewCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
 
-    func updateView(post: EachPost, user: FirebaseUser, date: String) {
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        postImage.image = nil
+    }
+
+    func updateView(post: EachPost, mainuserID: String) {
+        FireStoreService.shared.getUser(id: post.userHoldingPost) { [weak self] result in
+            switch result {
+            case .success(let firebaseUser):
+                self?.configureLabels(post: post, user: firebaseUser, date: post.date)
+                self?.fetchLikes(for: post)
+                self?.fetchPostImage(for: post)
+                self?.fetchAvatarImage(user: firebaseUser.image!)
+                self?.fetchComments(for: post, user: firebaseUser)
+            case .failure(_):
+                return
+            }
+        }
+    }
+
+    private func configureLabels(post: EachPost, user: FirebaseUser, date: String) {
         postTextLabel.text = post.text
-        nameAndSurnameLabel.text = "\(user.name)" + "\(user.surname)"
-        jobLabel.text = "\(user.job)"
-        likesLabel.text = "\(post.likes)"
-        commentsLabel.text = "\(post.commentaries)"
+        nameAndSurnameLabel.text = "\(user.name) \(user.surname)"
+        jobLabel.text = user.job
         dateLabel.text = date
-        let networkService = NetworkService()
-        if let postImage = post.image {
-            networkService.fetchImage(string: postImage) { [weak self] result in
-                guard let self else { return }
+    }
+
+    private func fetchComments(for post: EachPost, user: FirebaseUser) {
+        guard let userID = user.documentID, let originalPostID = post.originalPostID else { return }
+
+        FireStoreService.shared.getComments(post: originalPostID, user: userID) { [weak self] result in
+            guard let self = self else { return }
+            switch result {
+            case .success(let comments):
+                self.commentsLabel.text = "\(comments.count)"
+            case .failure(let error):
+                print("Failed to fetch comments: \(error.localizedDescription)")
+            }
+        }
+    }
+
+    private func fetchPostImage(for post: EachPost) {
+        guard let postImageURL = post.image else { return }
+
+        if !postImageURL.isEmpty {
+            let networkService = NetworkService()
+            networkService.fetchImage(string: postImageURL) { [weak self] result in
+                guard let self = self else { return }
+
                 switch result {
                 case .success(let image):
-                    DispatchQueue.main.async {
+                    DispatchQueue.main.async { [weak self] in
+                        guard let self = self else { return }
                         self.postImage.image = image
                         self.postImage.clipsToBounds = true
                         self.postImage.layer.cornerRadius = 30
                         self.postImage.contentMode = .scaleAspectFill
                     }
-                case .failure(_):
-                    return
+                case .failure(let error):
+                    print("Failed to fetch post image: \(error.localizedDescription)")
                 }
             }
+        } else {
+            return
         }
-        guard let avatarImage = user.image else { return }
-        networkService.fetchImage(string: avatarImage) { [weak self] result in
-            guard let self else { return }
+    }
+
+    private func fetchAvatarImage(user: String) {
+        let networkService = NetworkService()
+        networkService.fetchImage(string: user) { [weak self] result in
             switch result {
             case .success(let image):
-                DispatchQueue.main.async {
-                    self.avatarImageView.image = image
-                    self.avatarImageView.clipsToBounds = true
-                    self.avatarImageView.layer.cornerRadius = self.avatarImageView.frame.width / 2
+                DispatchQueue.main.async { [weak self] in
+                    self?.avatarImageView.image = image
+                    self?.avatarImageView.clipsToBounds = true
+                    self?.avatarImageView.layer.cornerRadius = (self?.avatarImageView.frame.size.width)! / 2
                 }
             case .failure(_):
                 return
+            }
+        }
+    }
+
+    private func fetchLikes(for post: EachPost) {
+        guard let postID = post.originalPostID else { return }
+
+        FireStoreService.shared.getNumberOfLikesInpost(user: post.userHoldingPost, post: postID) { [weak self] result in
+            guard let self = self else { return }
+
+            switch result {
+            case .success(let likes):
+                if likes.isEmpty {
+                    self.likesLabel.text = "\(likes.count)"
+                    likesButton.setBackgroundImage(UIImage(systemName: "heart"), for: .normal)
+                } else {
+                    for like in likes {
+                        if like.documentID! == mainUserID {
+                            self.likesLabel.text = "\(likes.count)"
+                            likesButton.setBackgroundImage(UIImage(systemName: "heart.fill"), for: .normal)
+                        } else {
+                            self.likesLabel.text = "\(likes.count)"
+                        }
+                    }
+                }
+            case .failure(let error):
+                print("Failed to fetch likes: \(error.localizedDescription)")
             }
         }
     }
@@ -314,13 +385,13 @@ final class FavouriteTableViewCell: UITableViewCell {
             footerView.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor),
 
             leftSeparatorView.centerYAnchor.constraint(equalTo: dateLabel.centerYAnchor),
-            leftSeparatorView.leadingAnchor.constraint(equalTo: footerView.leadingAnchor, constant: 18),
-            leftSeparatorView.trailingAnchor.constraint(equalTo: footerView.trailingAnchor, constant: -248),
+            leftSeparatorView.leadingAnchor.constraint(equalTo: footerView.leadingAnchor, constant: 10),
+            leftSeparatorView.trailingAnchor.constraint(equalTo: ellipseView.leadingAnchor, constant: -10),
             leftSeparatorView.heightAnchor.constraint(equalToConstant: 1),
 
             ellipseView.topAnchor.constraint(equalTo: footerView.topAnchor, constant: 10),
-            ellipseView.leadingAnchor.constraint(equalTo: leftSeparatorView.trailingAnchor, constant: 10),
-            ellipseView.trailingAnchor.constraint(equalTo: footerView.trailingAnchor, constant: -138),
+            ellipseView.centerXAnchor.constraint(equalTo: footerView.centerXAnchor),
+            ellipseView.widthAnchor.constraint(equalToConstant: 100),
             ellipseView.bottomAnchor.constraint(equalTo: footerView.bottomAnchor, constant: -10),
 
             dateLabel.topAnchor.constraint(equalTo: ellipseView.topAnchor, constant: 3),

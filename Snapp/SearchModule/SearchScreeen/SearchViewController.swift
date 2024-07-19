@@ -32,10 +32,6 @@ class SearchViewController: UIViewController {
         presenter.getAllUsers()
     }
 
-    deinit {
-        print("SearchVC is deinited")
-    }
-
 
     //MARK: -Funcs
 }

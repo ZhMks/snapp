@@ -18,10 +18,10 @@ final class PostTableCell: UITableViewCell {
     static let identifier = "PostTableCell"
 
     var manuButtonTappedHandler: (() -> Void)?
-    var incrementLikes: ((_ post: EachPost) -> Void)?
-    var decrementLikes: ((_ post: EachPost) -> Void)?
+    var incrementLikes: ((_ post: EachPost, _ user: FirebaseUser) -> Void)?
+    var decrementLikes: ((_ post: EachPost, _ user: FirebaseUser) -> Void)?
     var showMenuForFeed: ((_ post: EachPost) -> Void)?
-    var bookmarkButtonTapHandler: ((EachPost) -> Void)?
+    var bookmarkButtonTapHandler: ((EachPost, _ user: FirebaseUser) -> Void)?
 
 
 
@@ -219,20 +219,16 @@ final class PostTableCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
 
-     deinit {
-        print("TableViewCell is deallocated")
-    }
-    
     // MARK: -Funcs
 
     @objc func likesButtonTapped() {
-        guard let post = post else { return }
+        guard let post = post, let user = self.user else { return }
         if self.likesButton.backgroundImage(for: .normal) == UIImage(systemName: "heart.fill") {
-            decrementLikes?(post)
+            decrementLikes?(post, user)
             self.likesButton.setBackgroundImage(UIImage(systemName: "heart"), for: .normal)
         }
         else {
-            incrementLikes?(post)
+            incrementLikes?(post, user)
             self.likesButton.setBackgroundImage(UIImage(systemName: "heart.fill"), for: .normal)
         }
     }
@@ -400,8 +396,8 @@ final class PostTableCell: UITableViewCell {
 
 
     @objc func bookmarkButtonTapped() {
-        guard let post = self.post else { return }
-        bookmarkButtonTapHandler?(post)
+        guard let post = self.post, let user = self.user else { return }
+        bookmarkButtonTapHandler?(post, user)
         self.bookmarkButton.tintColor = .systemOrange
         print("Bookmark")
     }

@@ -45,8 +45,7 @@ final class AddProfilePresenter: AddProfilePresenterProtocol {
                                         image: "",
                                         photoAlbum: [],
                                         sex: false)
-        FireStoreService.shared.saveImageIntoStorage(urlLink: ref, photo: image) { [weak self] result in
-            guard let self = self else { return }
+        FireStoreService.shared.saveImageIntoStorage(urlLink: ref, photo: image) { result in
             switch result {
             case .success(let success):
                 firebaseUser.image = success.absoluteString

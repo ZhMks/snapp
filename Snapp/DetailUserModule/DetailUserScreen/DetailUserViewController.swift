@@ -238,10 +238,6 @@ class DetailUserViewController: UIViewController {
         presenter.removeObserverForPosts()
     }
 
-    deinit {
-        print("DetailuserController is deinited")
-    }
-
     // MARK: -Funcs
 
     @objc func addToSubscribers() {
@@ -263,7 +259,7 @@ class DetailUserViewController: UIViewController {
         searchTextField.removeFromSuperview()
     }
 
-    @objc func addGestureRecognizerToView() {
+    func addGestureRecognizerToView() {
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(removeSearchTextField))
         tapGesture.numberOfTapsRequired = 1
         view.addGestureRecognizer(tapGesture)
@@ -289,9 +285,7 @@ class DetailUserViewController: UIViewController {
 
     private func filterArrayWithText(text: String) {
         guard let text = searchTextField.text else { return }
-        print(text)
         self.filteredArray = self.presenter.posts.filter { $0.text.lowercased().contains(text.lowercased()) }
-        print("Filterd array: \(filteredArray)")
         postsTableView.reloadData()
     }
 }
@@ -300,7 +294,6 @@ class DetailUserViewController: UIViewController {
 extension DetailUserViewController: DetailViewProtocol {
    
     func updateSubButton() {
-        print("Subscribers inside updateSUbBUtton: \(presenter.user.subscribers)")
         if presenter.user.subscribers.contains(presenter.mainUserID) {
             subscribeButton.setTitle(.localized(string: "Отписаться"), for: .normal)
         } else {
@@ -383,16 +376,20 @@ extension DetailUserViewController: UITableViewDataSource {
             self?.presenter.showFeedMenu(post: post)
         }
 
-        cell.incrementLikes = { [weak self, weak tableView] post in
-            self?.presenter.incrementLikes(post: post)
-            self?.presenter.saveIntoFavourites(post: post)
+        cell.incrementLikes = { [weak self, weak tableView] (post, user) in
+            self?.presenter.incrementLikes(post: post, user: user)
+            self?.presenter.saveIntoFavourites(post: post, user: user)
             tableView?.reloadRows(at: [indexPath], with: .fade)
         }
 
-        cell.decrementLikes = { [weak self, weak tableView] post in
-            self?.presenter.decrementLikes(post: post)
-            self?.presenter.removeFromFavourites(post: post)
+        cell.decrementLikes = { [weak self, weak tableView] (post, user) in
+            self?.presenter.decrementLikes(post: post, user: user)
+            self?.presenter.removeFromFavourites(post: post, user: user)
             tableView?.reloadRows(at: [indexPath], with: .fade)
+        }
+
+        cell.bookmarkButtonTapHandler = { [weak self] (post, user) in
+            self?.presenter.addToBookmarks(post: post, user: user)
         }
 
         return cell

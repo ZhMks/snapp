@@ -9,6 +9,7 @@ import Foundation
 
 protocol FilesViewProtocol: AnyObject {
     func updateData()
+    func presentDocumentPicker(url: URL)
 }
 
 protocol FilesPresenterProtocol: AnyObject {
@@ -46,14 +47,14 @@ final class FilesPresenter: FilesPresenterProtocol {
                 self?.nsLock.lock()
                 self?.mainUser = firebaseUser
                 self?.nsLock.unlock()
-                self?.getFileFromStorage(user: userID)
+                self?.fetchFilesFromStorage(user: userID)
             case .failure(let failure):
                 print(failure.localizedDescription)
             }
         }
     }
 
-    func getFileFromStorage(user: String) {
+    func fetchFilesFromStorage(user: String) {
         decodedObjects = [:]
         let networkService = NetworkService()
         let decoder = DecoderService()
@@ -79,5 +80,12 @@ final class FilesPresenter: FilesPresenterProtocol {
 
     func removeUserListener() {
         FireStoreService.shared.removeListenerForUser()
+    }
+
+    func saveFileToLocalStorage(object: Any?, key: String) {
+        FileManagerService.saveImagesAndStringsToDocuments(object: object, key: key) { [weak self] url in
+            guard let url = url else { return }
+            self?.view?.presentDocumentPicker(url:url)
+        }
     }
 }

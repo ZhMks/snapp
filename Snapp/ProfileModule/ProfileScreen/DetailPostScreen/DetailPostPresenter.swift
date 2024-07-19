@@ -227,10 +227,34 @@ final class DetailPostPresenter: DetailPostPresenterProtocol {
         case .mainUser:
             guard let postID = post.documentID else { return }
             FireStoreService.shared.incrementLikesForPost(user: mainUserID, mainUser: mainUserID, post: postID)
+            FireStoreService.shared.saveIntoFavourites(post: post, for: mainUserID, user: mainUserID) { [weak self] result in
+                switch result {
+                case .success(let success):
+                    if success {
+                        return
+                    } else {
+                        self?.view?.showError(descr: "Пост уже существует")
+                    }
+                case .failure(let failure):
+                    self?.view?.showError(descr: failure.localizedDescription)
+                }
+            }
             getLikes()
         case .notMainUser:
             guard let postID = post.documentID, let userID = user.documentID else { return }
             FireStoreService.shared.incrementLikesForPost(user: userID, mainUser: mainUserID, post: postID)
+            FireStoreService.shared.saveIntoFavourites(post: post, for: mainUserID, user: userID) { [weak self] result in
+                switch result {
+                case .success(let success):
+                    if success {
+                        return
+                    } else {
+                        self?.view?.showError(descr: "Пост уже существует")
+                    }
+                case .failure(let failure):
+                    self?.view?.showError(descr: failure.localizedDescription)
+                }
+            }
             getLikes()
         }
     }
@@ -238,6 +262,7 @@ final class DetailPostPresenter: DetailPostPresenterProtocol {
     func decrementLikesForPost() {
         guard let postID = post.documentID, let userID = user.documentID else { return }
         FireStoreService.shared.decrementLikesForPost(user: userID, mainUser: mainUserID, post: postID)
+        FireStoreService.shared.removeFromFavourites(user: mainUserID, post: post)
         getLikes()
     }
 
@@ -260,7 +285,6 @@ final class DetailPostPresenter: DetailPostPresenterProtocol {
                     self?.view?.showError(descr: failure.localizedDescription)
                 }
             }
-            checkBookmarkedPost()
         case .notMainUser:
             guard let userID = user.documentID else { return }
             FireStoreService.shared.saveToBookMarks(mainUser: mainUserID, user: userID, post: self.post) { [weak self] result in
@@ -311,12 +335,10 @@ final class DetailPostPresenter: DetailPostPresenterProtocol {
         switch userState {
         case .mainUser:
             guard  let postID = post.documentID else { return }
-            print("CommentID for like: \(commentID), userForComment: \(mainUserID), postFOrComment: \(postID), mainUSERID: \(mainUserID)")
             FireStoreService.shared.incrementLikesForComment(commentID: commentID, user: mainUserID, postID: postID, mainUserID: mainUserID)
             fetchComments()
         case .notMainUser:
             guard let userID = self.user.documentID, let postID = post.documentID else { return }
-            print("CommentID for like: \(commentID), userForComment: \(userID), postFOrComment: \(postID), mainUSERID: \(mainUserID)")
             FireStoreService.shared.incrementLikesForComment(commentID: commentID, user: userID, postID: postID, mainUserID: mainUserID)
             fetchComments()
         }

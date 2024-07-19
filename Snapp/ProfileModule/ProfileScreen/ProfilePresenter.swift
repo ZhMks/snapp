@@ -73,11 +73,22 @@ final class ProfilePresenter: ProfilePresenterProtocol {
         self.currentDate = stringFromDate
     }
 
-    func addToFavourites(post: EachPost) {
-        FireStoreService.shared.saveIntoFavourites(post: post, for: mainUserID)
+    func addToFavourites(post: EachPost, user: FirebaseUser) {
+        FireStoreService.shared.saveIntoFavourites(post: post, for: mainUserID, user: user.documentID!) { [weak self] result in
+            switch result {
+            case .success(let success):
+                if success {
+                    return
+                } else {
+                    self?.view?.showErrorAler(error: "Пост уже существует")
+                }
+            case .failure(let failure):
+                self?.view?.showErrorAler(error: failure.localizedDescription)
+            }
+        }
     }
 
-    func removeFromFavourites(post: EachPost) {
+    func removeFromFavourites(post: EachPost, user: FirebaseUser) {
         FireStoreService.shared.removeFromFavourites(user: mainUserID, post: post)
     }
 
@@ -105,8 +116,8 @@ final class ProfilePresenter: ProfilePresenterProtocol {
         }
     }
 
-    func addPostToBookMarks(post: EachPost) {
-        FireStoreService.shared.saveToBookMarks(mainUser: mainUserID, user: mainUserID, post: post) { [weak self] result in
+    func addPostToBookMarks(post: EachPost, user: FirebaseUser) {
+        FireStoreService.shared.saveToBookMarks(mainUser: mainUserID, user: user.documentID!, post: post) { [weak self] result in
             switch result {
             case .success(let success):
                 if success {
@@ -134,7 +145,6 @@ final class ProfilePresenter: ProfilePresenterProtocol {
                 view?.updateSubsribers()
                 view?.updateSubscriptions()
                 view?.updateTextData(user: self.mainUser)
-                print(posts)
             case .failure(let failure):
                 view?.showErrorAler(error: failure.localizedDescription)
             }
@@ -165,7 +175,6 @@ final class ProfilePresenter: ProfilePresenterProtocol {
                 switch result {
                 case .success(let urlLink):
                     FireStoreService.shared.saveImageIntoPhotoAlbum(image: urlLink.absoluteString, user: mainUserID)
-                    print("URL LINK OF IMAGE: \(urlLink.absoluteString)")
                 case .failure(let failure):
                     view?.showErrorAler(error: failure.localizedDescription)
                 }
@@ -182,7 +191,6 @@ final class ProfilePresenter: ProfilePresenterProtocol {
             networkService.fetchImage(string: imageUrl) { [weak self] result in
                 switch result {
                 case .success(let image):
-                    print("Image inside fetchMethod: \(image.size)")
                     self?.photoAlbum?.append(image)
                 case .failure(let failure):
                     self?.view?.showErrorAler(error: failure.localizedDescription)
@@ -220,13 +228,13 @@ final class ProfilePresenter: ProfilePresenterProtocol {
         FireStoreService.shared.removeListenerForUser()
     }
 
-    func incrementLikes(post: EachPost) {
+    func incrementLikes(post: EachPost, user: FirebaseUser) {
         guard let postID = post.documentID else { return }
-        FireStoreService.shared.incrementLikesForPost(user: mainUserID, mainUser: mainUserID, post: postID)
+        FireStoreService.shared.incrementLikesForPost(user: user.documentID!, mainUser: mainUserID, post: postID)
     }
 
-    func decrementLikes(post: EachPost) {
+    func decrementLikes(post: EachPost, user: FirebaseUser) {
         guard let postID = post.documentID else { return }
-        FireStoreService.shared.decrementLikesForPost(user: mainUserID, mainUser: mainUserID, post: postID)
+        FireStoreService.shared.decrementLikesForPost(user: user.documentID!, mainUser: mainUserID, post: postID)
     }
 }

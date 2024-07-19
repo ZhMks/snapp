@@ -13,6 +13,9 @@ final class FilesCollectionViewCell: UICollectionViewCell {
     // MARK: - Properties
 
     static let identifier = "FilesCollectionViewCell"
+    var buttonTapHandler: ((Any?, String) -> Void)?
+    var objectInsideCell: Any?
+    var objectName: String?
 
     private lazy var textFileButton: UIButton = {
         let textFileButton = UIButton(type: .system)
@@ -21,6 +24,7 @@ final class FilesCollectionViewCell: UICollectionViewCell {
         textFileButton.contentMode = .scaleAspectFill
         textFileButton.clipsToBounds = true
         textFileButton.tintColor = .systemGray
+        textFileButton.addTarget(self, action: #selector(buttonTapped), for: .touchUpInside)
         return textFileButton
     }()
 
@@ -30,6 +34,7 @@ final class FilesCollectionViewCell: UICollectionViewCell {
         imageFileButton.clipsToBounds = true
         imageFileButton.layer.masksToBounds = true
         imageFileButton.contentMode = .scaleAspectFill
+        imageFileButton.addTarget(self, action: #selector(buttonTapped), for: .touchUpInside)
         return imageFileButton
     }()
 
@@ -57,13 +62,17 @@ final class FilesCollectionViewCell: UICollectionViewCell {
     // MARK: - Funcs
 
     func updateDataForCell(object: Any?, name: String) {
-        if let _ = object as? String {
+        if let object = object as? String {
+            self.objectInsideCell = object
+            self.objectName = name
             fileName.text = name
             addSubviews(button: textFileButton)
             layout(button: textFileButton)
         }
 
         if let object = object as? UIImage {
+            self.objectInsideCell = object
+            self.objectName = name
             fileName.text = name
             imageFileButton.setBackgroundImage(object, for: .normal)
             addSubviews(button: imageFileButton)
@@ -82,8 +91,8 @@ final class FilesCollectionViewCell: UICollectionViewCell {
 
         NSLayoutConstraint.activate([
             button.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: 5),
-            button.widthAnchor.constraint(equalToConstant: 60),
-            button.heightAnchor.constraint(equalToConstant: 60),
+            button.widthAnchor.constraint(equalToConstant: 80),
+            button.heightAnchor.constraint(equalToConstant: 80),
 
             downloadImageView.topAnchor.constraint(equalTo: button.bottomAnchor, constant: -15),
             downloadImageView.trailingAnchor.constraint(equalTo: button.trailingAnchor, constant: -5),
@@ -94,5 +103,10 @@ final class FilesCollectionViewCell: UICollectionViewCell {
             fileName.heightAnchor.constraint(equalToConstant: 44),
             fileName.widthAnchor.constraint(equalToConstant: 80)
         ])
+    }
+
+    @objc func buttonTapped() {
+        guard let objectName = self.objectName else { return }
+        buttonTapHandler?(objectInsideCell, objectName)
     }
 }

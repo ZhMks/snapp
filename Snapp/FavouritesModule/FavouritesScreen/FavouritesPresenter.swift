@@ -12,25 +12,24 @@ protocol FavouritesViewProtocol: AnyObject {
 }
 
 protocol FavouritesPresenterProtocol: AnyObject {
-    init(view: FavouritesViewProtocol?, user: FirebaseUser)
+    init(view: FavouritesViewProtocol?, mainUserID: String)
 }
 
 final class FavouritesPresenter: FavouritesPresenterProtocol {
 
    weak var view: FavouritesViewProtocol?
-    var user: FirebaseUser
     var posts: [EachPost]?
     let nsLock = NSLock()
+    let mainUserID: String
 
-    init(view: FavouritesViewProtocol?, user: FirebaseUser) {
+    init(view: FavouritesViewProtocol?, mainUserID: String) {
         self.view = view
-        self.user = user
+        self.mainUserID = mainUserID
         fetchPosts()
     }
 
    private func fetchPosts() {
-        guard let userID = user.documentID else { return }
-        FireStoreService.shared.fetchFavourites(user: userID) { [weak self] result in
+        FireStoreService.shared.fetchFavourites(user: mainUserID) { [weak self] result in
             guard let self else { return }
             switch result {
             case .success(let success):
@@ -45,8 +44,7 @@ final class FavouritesPresenter: FavouritesPresenterProtocol {
     }
 
     func addSnapshotListenerToPost() {
-        guard let userID = user.documentID else { return }
-        FireStoreService.shared.addSnapshotListenerToFavourites(for: userID) { [weak self] result in
+        FireStoreService.shared.addSnapshotListenerToFavourites(for: mainUserID) { [weak self] result in
             guard let self else { return }
             switch result {
             case .success(let success):
