@@ -141,6 +141,7 @@ class DetailUserViewController: UIViewController {
         photogalleryButton.translatesAutoresizingMaskIntoConstraints = false
         photogalleryButton.setBackgroundImage(UIImage(systemName: "chevron.right"), for: .normal)
         photogalleryButton.tintColor = ColorCreator.shared.createButtonColor()
+        photogalleryButton.addTarget(self, action: #selector(tapOnPhotogalleryButton), for: .touchUpInside)
         return photogalleryButton
     }()
 
@@ -287,6 +288,14 @@ class DetailUserViewController: UIViewController {
         guard let text = searchTextField.text else { return }
         self.filteredArray = self.presenter.posts.filter { $0.text.lowercased().contains(text.lowercased()) }
         postsTableView.reloadData()
+    }
+
+    @objc func tapOnPhotogalleryButton() {
+        guard let userID = presenter.user.documentID else { return }
+        let photoAlbumVC = PhotoalbumViewController()
+        let photoAlbumPresenter = PhotoalbumPresenter(view: photoAlbumVC, mainUserID: userID)
+        photoAlbumVC.presenter = photoAlbumPresenter
+        navigationController?.pushViewController(photoAlbumVC, animated: true)
     }
 }
 
