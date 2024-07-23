@@ -186,7 +186,7 @@
 		B28A7D312C413CB400FD5260 /* DecoderService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DecoderService.swift; sourceTree = "<group>"; };
 		B28A7D342C414BDA00FD5260 /* FilesCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilesCollectionViewCell.swift; sourceTree = "<group>"; };
 		B28A7D372C45199E00FD5260 /* FileManagerService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileManagerService.swift; sourceTree = "<group>"; };
-		B28A7D392C465F1800FD5260 /* StoriesCollectionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = StoriesCollectionCell.swift; path = ../../../../../Documents/StoriesCollectionCell.swift; sourceTree = "<group>"; };
+		B28A7D392C465F1800FD5260 /* StoriesCollectionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoriesCollectionCell.swift; sourceTree = "<group>"; };
 		B297FB532BFCBDDA00A8C463 /* DataChangeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataChangeViewController.swift; sourceTree = "<group>"; };
 		B297FB552BFCBDE500A8C463 /* DataChangePresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataChangePresenter.swift; sourceTree = "<group>"; };
 		B29D0AD62BCEB17B00101029 /* NetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkService.swift; sourceTree = "<group>"; };
@@ -278,6 +278,7 @@
 		B209E6162BC1384F0067D751 /* FeedModule */ = {
 			isa = PBXGroup;
 			children = (
+				B2FB49822C4F750A00E852EF /* StoriesCollectionViewcell */,
 				B2E441F42C3962480098AFEA /* DetailStorieScreen */,
 				B209E6172BC1386C0067D751 /* FeedScreen */,
 			);
@@ -289,7 +290,6 @@
 			children = (
 				B209E6182BC138790067D751 /* FeedPresenter.swift */,
 				B209E61A2BC139000067D751 /* FeedViewController.swift */,
-				B28A7D392C465F1800FD5260 /* StoriesCollectionCell.swift */,
 			);
 			path = FeedScreen;
 			sourceTree = "<group>";
@@ -824,6 +824,14 @@
 				B2F004262C1DAAAD00991CF5 /* BookmarksViewController.swift */,
 			);
 			path = BookmarksModule;
+			sourceTree = "<group>";
+		};
+		B2FB49822C4F750A00E852EF /* StoriesCollectionViewcell */ = {
+			isa = PBXGroup;
+			children = (
+				B28A7D392C465F1800FD5260 /* StoriesCollectionCell.swift */,
+			);
+			path = StoriesCollectionViewcell;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

@@ -60,7 +60,6 @@ final class BookmarksPresenter: BookmarksPresenterProtocol {
             }
         }
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak self] in
-            print("Final posts count: \(self?.posts?.count)")
             self?.view?.updateTableView()
         }
     }
