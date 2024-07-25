@@ -11,8 +11,8 @@
 
 # Экран Онбординга №1: 
 
-<img src="https://github.com/user-attachments/assets/a7151ee6-538d-4a08-a266-0f9d731a541f" width="200" height="350"/>
-<img src="https://github.com/user-attachments/assets/25d5263c-f9cf-4fa2-80d4-34949fa43c22" width="200" height="350">
+<img src="https://github.com/user-attachments/assets/a7151ee6-538d-4a08-a266-0f9d731a541f" width="200" height="380"/>
+<img src="https://github.com/user-attachments/assets/25d5263c-f9cf-4fa2-80d4-34949fa43c22" width="200" height="380">
 
 Для регистрации используется номер телефона абонента.
 - Используется простая валидация номера на соответствие критериям (11 цифр, +7 и т.д).
@@ -20,7 +20,7 @@
 
 # Экран Онбординга №2: 
 
-<img src="https://github.com/user-attachments/assets/d881ca73-e961-4ac5-8956-e0616c29062d" width="200" height="350"/>
+<img src="https://github.com/user-attachments/assets/d881ca73-e961-4ac5-8956-e0616c29062d" width="200" height="380"/>
 
 Подтвреждение номера телефона происходит за счет отправски СМС-уведомления через сервисы гугл.
 
@@ -31,7 +31,7 @@
  возможность загружать фотографии, используя камеру мобильного телефона. 
  Обновление данных просиходит в реальном времени за счет связи через Firestore.listener.
 
-<img src="https://github.com/user-attachments/assets/0e66f1e2-68d6-44d4-8ca5-8074e720fa73" width="200" height="350"/>
+<img src="https://github.com/user-attachments/assets/0e66f1e2-68d6-44d4-8ca5-8074e720fa73" width="200" height="380"/>
 
 
 
@@ -40,5 +40,5 @@
 Детальный экран поста с возможностью оставлять комментарии, ответчать на комментарии, лайкать, добавлять в избранное и тд.
 Обновление также просиходит в реальном времени за счет связи через Listener.
 
-<img src="https://github.com/user-attachments/assets/80fb27ae-6be9-4bf4-8c69-909859a844fb" width="200" height="350"/>
+<img src="https://github.com/user-attachments/assets/80fb27ae-6be9-4bf4-8c69-909859a844fb" width="200" height="380"/>
 
